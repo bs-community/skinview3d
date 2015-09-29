@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>SkinPreview3D</title>
+	<style>
+		#canvas{
+			display: none;
+		}
+		
+		#canvas_container{
+			width: 470px;
+			background: #000;
+		}
+	</style>
+</head>
+<body>
+
+	<div id="canvas_container">
+		<canvas id="canvas" width="64" height="64"></canvas>
+	</div>
+
+	<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r71/three.min.js"></script>
+	
+	<script type="text/javascript" src="/js/skinpreview3d.js"></script>
+	
+	<script>
+		$(function() {
+			$("#canvas_container").skinPreview3D({
+				imageUrl: "/img/ref.png",
+				canvasID: "canvas"
+			});	
+		});
+	</script>
+	
+	<label>
+		<input id="head2" class="toggle-head" type="checkbox" checked> Head
+	</label>
+	<label>
+		<input class="toggle-layer2" type="checkbox" checked> Second Layer
+	</label>
+
+</body>
+</html>

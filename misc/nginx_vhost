@@ -1,0 +1,17 @@
+server {
+	listen 80;
+
+	root /var/www;
+	index index.html index.htm;
+	server_name localhost;
+	
+	sendfile off;
+	large_client_header_buffers 8 16k;
+	client_header_buffer_size 8k;
+	client_max_body_size 4m;
+
+	location / {
+		try_files $uri $uri/ /index.php;
+	}
+
+}
