@@ -3,7 +3,7 @@
 <head>
 	<title>SkinPreview3D</title>
 	<style>
-		#canvas{
+		#canvas, #cape{
 			display: none;
 		}
 		
@@ -17,6 +17,7 @@
 
 	<div id="canvas_container">
 		<canvas id="canvas" width="64" height="64"></canvas>
+		<canvas id="cape" width="22" height="17"></canvas>
 	</div>
 
 	<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
@@ -27,7 +28,8 @@
 	<script>
 		$(function() {
 			$("#canvas_container").skinPreview3D({
-				imageUrl: "/img/ref.png",
+				skinUrl: "/img/Dinnerbone.png",
+				capeUrl: "/img/cape.png",
 				canvasID: "canvas"
 			});	
 		});
@@ -38,6 +40,9 @@
 	</label>
 	<label>
 		<input class="toggle-layer2" type="checkbox" checked> Second Layer
+	</label>	
+	<label>
+		<input class="toggle-cape" type="checkbox" checked> Cape
 	</label>
 
 </body>

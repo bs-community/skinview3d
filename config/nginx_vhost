@@ -1,0 +1,10 @@
+server {
+	listen 80;
+
+	root /var/www;
+	index example.html;
+	server_name localhost;
+	
+	sendfile off; #needed for nfs
+	
+}

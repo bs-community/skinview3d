@@ -17,7 +17,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     # Shell provisioning
 	config.vm.provision "shell" do |s|
-        s.path = "misc/init.sh"
+        s.path = "config/init.sh"
     end
 
 end
