@@ -31,6 +31,5 @@ $(function() {
 
 # Todo
 * Create a demo hosted on github pages.
-* Move the index.html to an example folder.
 * Alex support (Slim arms).
 * Mouse wheel camera zoom.
