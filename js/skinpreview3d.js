@@ -1074,7 +1074,7 @@ function SkinPreview3D(model, skinCanvas, capeCanvas, canvasW, canvasH){
 
 		capePivot.rotation.x = 25 * (Math.PI/180);
 
-		renderer = new THREE.WebGLRenderer({angleRot: true, alpha: true, antialias: true});
+		renderer = new THREE.WebGLRenderer({angleRot: true, alpha: true, antialias: false});
 		renderer.setSize(canvasW, canvasH);
 
 		model.append(renderer.domElement);
