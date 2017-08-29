@@ -3,8 +3,6 @@ This is a Three.js powered Minecraft skin renderer packaged as a jQuery plugin.
 
 The code was originally created by [Kent Rasmussen](https://github.com/earthiverse). You can find out more about his project [here](https://github.com/earthiverse/3D-Minecraft-Skin-Viewer).
 
-[Github pages example](http://hacksore.github.io/skinpreview3d.js)
-
 # Features
 * 1.8 Skins
 * Capes
@@ -17,7 +15,8 @@ The code was originally created by [Kent Rasmussen](https://github.com/earthiver
 HTML
 ```html
 <div id="canvas_container">
-    <canvas id="canvas" width="64" height="64"></canvas>
+    <canvas id="skinCanvas"></canvas>
+    <canvas id="capeCanvas"></canvas>
 </div>
 ```
 
@@ -25,13 +24,13 @@ JS
 ```js
 $(function() {
     $("#canvas_container").skinPreview3D({
-        imageUrl: "/img/ref.png",
-        canvasID: "canvas"
+		skinUrl: "img/Dinnerbone.png",
+		capeUrl: "img/cape.png",
+		skinCanvas: $('#skinCanvas'),
+		capeCanvas: $('#capeCanvas')
     });
 });
 ```
 
-# Todo
-* Create a demo hosted on github pages.
+# TODOs
 * Alex support (Slim arms).
-* Mouse wheel camera zoom.
