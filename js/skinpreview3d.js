@@ -1076,6 +1076,7 @@ function SkinPreview3D(model, skinCanvas, capeCanvas, canvasW, canvasH){
 
 		renderer = new THREE.WebGLRenderer({angleRot: true, alpha: true, antialias: false});
 		renderer.setSize(canvasW, canvasH);
+		renderer.context.getShaderInfoLog = () => ''; // shut firefox up
 
 		model.append(renderer.domElement);
 	}
