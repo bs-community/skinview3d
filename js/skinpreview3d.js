@@ -1,6 +1,6 @@
 /*
 	A 3D Minecraft skin renderer
-	Project link: https://github.com/Hacksore/skinpreview3d.js
+	Project link: https://github.com/yushijinhun/skinpreview3d.js
 */
 
 function SkinUtil(){
