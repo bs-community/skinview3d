@@ -14,21 +14,18 @@ The code was originally created by [Kent Rasmussen](https://github.com/earthiver
 # Usage
 HTML
 ```html
-<div id="canvas_container">
-    <canvas id="skinCanvas"></canvas>
-    <canvas id="capeCanvas"></canvas>
-</div>
+<div id="skin_container"></div>
 ```
 
 JS
 ```js
-$(function() {
-    $("#canvas_container").skinPreview3D({
-		skinUrl: "img/Dinnerbone.png",
-		capeUrl: "img/cape.png",
-		skinCanvas: $('#skinCanvas'),
-		capeCanvas: $('#capeCanvas')
-    });
+$(() => {
+	$("#skin_container").skinPreview3D({
+		skinUrl: 'img/Dinnerbone.png',
+		capeUrl: 'img/cape.png',
+		width: 600,
+		height: 600
+	});
 });
 ```
 

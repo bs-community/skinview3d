@@ -4,7 +4,7 @@
 */
 
 function SkinUtil(){
-	this.convert6432To6464 = function(context) {
+	this.convert6432To6464 = context => {
 		this.copyImage(context, 4, 16, 4, 4, 20, 48, true);	// Top Leg
 		this.copyImage(context, 8, 16, 4, 4, 24, 48, true);	// Bottom Leg
 		this.copyImage(context, 0, 20, 4, 12, 24, 52, true);	// Outer Leg
@@ -20,7 +20,7 @@ function SkinUtil(){
 		this.copyImage(context, 52, 20, 4, 12, 44, 52, true);	// Back Arm
 	}
 
-	this.copyImage = function(context, sX, sY, w, h, dX, dY, flipHorizontal) {
+	this.copyImage = (context, sX, sY, w, h, dX, dY, flipHorizontal) => {
 		var imgData = context.getImageData(sX, sY, w, h);
 
 		if(flipHorizontal){
@@ -54,7 +54,7 @@ function SkinUtil(){
 		context.putImageData(imgData,dX,dY);
 	}
 
-	this.fixOverlay = function(context) {
+	this.fixOverlay = context => {
 		this.fixHead2(context);
 		this.fixBody2(context);
 		this.fixRightArm2(context);
@@ -63,7 +63,7 @@ function SkinUtil(){
 		this.fixLeftLeg2(context);
 	}
 
-	this.fixHead2 = function(context) {
+	this.fixHead2 = context => {
 		// Front
 		if(this.hasTransparency(context, 40, 8, 8, 8)) return;
 
@@ -83,7 +83,7 @@ function SkinUtil(){
 		context.clearRect(56, 8, 8, 8);
 	}
 
-	this.fixBody2 = function(context) {
+	this.fixBody2 = context => {
 		// Front
 		if(this.hasTransparency(context, 20, 36, 8, 12)) return;
 
@@ -103,7 +103,7 @@ function SkinUtil(){
 		context.clearRect(32, 36, 8, 12);
 	}
 
-	this.fixRightArm2 = function(context) {
+	this.fixRightArm2 = context => {
 		// Front
 		if(this.hasTransparency(context, 44, 36, 4, 12)) return;
 
@@ -123,7 +123,7 @@ function SkinUtil(){
 		context.clearRect(52, 36, 4, 12);
 	}
 
-	this.fixLeftArm2 = function(context) {
+	this.fixLeftArm2 = context => {
 		// Front
 		if(this.hasTransparency(context, 52, 52, 4, 12)) return;
 
@@ -143,7 +143,7 @@ function SkinUtil(){
 		context.clearRect(60, 52, 4, 12);
 	}
 
-	this.fixRightLeg2 = function(context) {
+	this.fixRightLeg2 = context => {
 		// Front
 		if(this.hasTransparency(context, 4, 36, 4, 12)) return;
 
@@ -163,7 +163,7 @@ function SkinUtil(){
 		context.clearRect(12, 36, 4, 12);
 	}
 
-	this.fixLeftLeg2 = function(context) {
+	this.fixLeftLeg2 = context => {
 		// Front
 		if(this.hasTransparency(context, 4, 52, 4, 12)) return;
 
@@ -183,7 +183,7 @@ function SkinUtil(){
 		context.clearRect(12, 52, 4, 12);
 	}
 
-	this.fixNonVisible = function(context) {
+	this.fixNonVisible = context => {
 		// 64x32 and 64x64 skin parts
 		context.clearRect(0, 0, 8, 8);
 		context.clearRect(24, 0, 16, 8);
@@ -206,7 +206,7 @@ function SkinUtil(){
 		context.clearRect(60, 48, 8, 4);
 	}
 
-	this.hasTransparency = function(context, x, y, w, h) {
+	this.hasTransparency = (context, x, y, w, h) => {
 		var imgData = context.getImageData(x, y, w, h);
 
 		for(y = 0; y < h; y++) {
@@ -221,11 +221,13 @@ function SkinUtil(){
 
 }
 
-(function ($) {
+(function($) {
 	'use strict';
 
 	$.fn.skinPreview3D = function (options) {
-		var sp = new SkinPreview3D(this, options.skinCanvas.get(0), options.capeCanvas.get(0));
+		var skinCanvas=document.createElement('canvas');
+		var capeCanvas=document.createElement('canvas');
+		var sp = new SkinPreview3D(this, skinCanvas, capeCanvas, options.width, options.height);
 		sp.setSkin(options.skinUrl);
 		if(options.capeUrl!=null){
 			sp.setCape(options.capeUrl);
@@ -234,17 +236,12 @@ function SkinUtil(){
 
 } (window.jQuery));
 
-function SkinPreview3D(model, skinCanvas, capeCanvas){
+function SkinPreview3D(model, skinCanvas, capeCanvas, canvasW, canvasH){
 	var scene, camera, renderer;
 	var geometry, mesh;
-
 	var rightLeg2Box, leftLeg2Box;
 
 	var radius = 32;
-
-	var canvasW = 470;
-	var canvasH = 620;
-
 	var isPaused = false;
 	var originMouseX = 0;
 	var rotating = false;
@@ -264,8 +261,8 @@ function SkinPreview3D(model, skinCanvas, capeCanvas){
 	var skinContext = skinCanvas.getContext("2d");
 
 	//Cape Part
-	capeCanvas.width = 22;
-	capeCanvas.height = 17;
+	capeCanvas.width = 32;
+	capeCanvas.height = 32;
 	var capeContext = capeCanvas.getContext("2d");
 	var capeTexture = new THREE.Texture(capeCanvas);
 	capeTexture.magFilter = THREE.NearestFilter;
@@ -276,7 +273,7 @@ function SkinPreview3D(model, skinCanvas, capeCanvas){
 	skinTexture.minFilter = THREE.NearestMipMapNearestFilter;
 
 	layer1Material = new THREE.MeshBasicMaterial({map: skinTexture, side: THREE.FrontSide});
-	layer2Material = new THREE.MeshBasicMaterial({map: skinTexture, transparent: true, opacity: 1, angleRotTest: 0.5, side: THREE.DoubleSide});
+	layer2Material = new THREE.MeshBasicMaterial({map: skinTexture, transparent: true, opacity: 1, side: THREE.DoubleSide});
 	capeMaterial = new THREE.MeshBasicMaterial({map: capeTexture});
 
 	var skinImg = new Image();
@@ -316,7 +313,7 @@ function SkinPreview3D(model, skinCanvas, capeCanvas){
 		capeContext.clearRect(0, 0, capeCanvas.width, capeCanvas.height);
 
 		// Draw the image to the canvas
-		capeContext.drawImage(capeImg, 0, 0);
+		capeContext.drawImage(capeImg, 0, 0, capeCanvas.width, capeCanvas.height);
 
 		capeTexture.needsUpdate = true;
 		capeMaterial.needsUpdate = true;
@@ -1077,7 +1074,7 @@ function SkinPreview3D(model, skinCanvas, capeCanvas){
 
 		capePivot.rotation.x = 25 * (Math.PI/180);
 
-		renderer = new THREE.WebGLRenderer({angleRot: true, alpha: true});
+		renderer = new THREE.WebGLRenderer({angleRot: true, alpha: true, antialias: true});
 		renderer.setSize(canvasW, canvasH);
 
 		model.append(renderer.domElement);
@@ -1128,11 +1125,9 @@ function SkinPreview3D(model, skinCanvas, capeCanvas){
 		mouseDown = true;
 	});
 
-	$(document).mouseup(function(){
-		mouseDown = false;
-	});
+	$(document).mouseup(() => mouseDown = false);
 
-	model.bind("contextmenu", function(e){
+	model.bind("contextmenu", e => {
 		e.preventDefault();
 		isPaused = !isPaused;
 	});

@@ -1,33 +1,23 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<meta charset="utf-8">
 	<title>SkinPreview3D</title>
-	<style>
-		#canvas, #cape{
-			display: none;
-		}
-		
-	</style>
 </head>
 <body>
 
-	<div id="canvas_container">
-		<canvas id="canvas"></canvas>
-		<canvas id="cape"></canvas>
-	</div>
+	<div id="skin_container"></div>
 
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/three.js/87/three.min.js"></script>
-	
 	<script type="text/javascript" src="js/skinpreview3d.js"></script>
-	
 	<script>
 		$(function() {
-			$("#canvas_container").skinPreview3D({
-				skinUrl: "img/Dinnerbone.png",
-				capeUrl: "img/cape.png",
-				skinCanvas: $('#canvas'),
-				capeCanvas: $('#cape')
+			$("#skin_container").skinPreview3D({
+				skinUrl: 'img/Dinnerbone.png',
+				capeUrl: 'img/cape.png',
+				width: 600,
+				height: 600
 			});
 		});
 	</script>
