@@ -7,43 +7,29 @@
 			display: none;
 		}
 		
-		#canvas_container{
-			width: 470px;
-			background: #000;
-		}
 	</style>
 </head>
 <body>
 
 	<div id="canvas_container">
-		<canvas id="canvas" width="64" height="64"></canvas>
-		<canvas id="cape" width="22" height="17"></canvas>
+		<canvas id="canvas"></canvas>
+		<canvas id="cape"></canvas>
 	</div>
 
-	<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r71/three.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/three.js/87/three.min.js"></script>
 	
-	<script type="text/javascript" src="/js/skinpreview3d.js"></script>
+	<script type="text/javascript" src="js/skinpreview3d.js"></script>
 	
 	<script>
 		$(function() {
 			$("#canvas_container").skinPreview3D({
-				skinUrl: "/img/Dinnerbone.png",
-				capeUrl: "/img/cape.png",
-				canvasID: "canvas"
-			});	
+				skinUrl: "img/Dinnerbone.png",
+				capeUrl: "img/cape.png",
+				skinCanvas: $('#canvas'),
+				capeCanvas: $('#cape')
+			});
 		});
 	</script>
-	
-	<label>
-		<input id="head2" class="toggle-head" type="checkbox" checked> Head
-	</label>
-	<label>
-		<input class="toggle-layer2" type="checkbox" checked> Second Layer
-	</label>	
-	<label>
-		<input class="toggle-cape" type="checkbox" checked> Cape
-	</label>
-
 </body>
 </html>
