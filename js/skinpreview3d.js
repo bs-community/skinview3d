@@ -7,18 +7,15 @@
 
 (function($) {
 	$.fn.skinPreview3D = function (options) {
-		var skinCanvas = document.createElement('canvas');
-		var capeCanvas = document.createElement('canvas');
-		var sp = new SkinPreview3D(this, skinCanvas, capeCanvas, options.width, options.height, options.slim === true);
+		var sp = new SkinPreview3D(this, options.width, options.height, options.slim === true);
 		sp.setSkin(options.skinUrl);
-		if(options.capeUrl != null){
+		if(options.capeUrl != null)
 			sp.setCape(options.capeUrl);
-		}
 	};
 
 } (window.jQuery));
 
-function SkinPreview3D(model, skinCanvas, capeCanvas, canvasW, canvasH, isSlim){
+function SkinPreview3D(model, canvasW, canvasH, isSlim){
 	var radius = 32;
 	var isPaused = false;
 	var originMouseX = 0;
@@ -32,6 +29,7 @@ function SkinPreview3D(model, skinCanvas, capeCanvas, canvasW, canvasH, isSlim){
 
 	var scene = new THREE.Scene();
 
+	var skinCanvas = document.createElement('canvas');
 	skinCanvas.width = 64;
 	skinCanvas.height = 64;
 	var skinContext = skinCanvas.getContext("2d");
@@ -39,6 +37,7 @@ function SkinPreview3D(model, skinCanvas, capeCanvas, canvasW, canvasH, isSlim){
 	skinTexture.magFilter = THREE.NearestFilter;
 	skinTexture.minFilter = THREE.NearestMipMapNearestFilter;
 
+	var capeCanvas = document.createElement('canvas');
 	capeCanvas.width = 32;
 	capeCanvas.height = 32;
 	var capeContext = capeCanvas.getContext("2d");
