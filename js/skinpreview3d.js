@@ -15,6 +15,58 @@
 
 } (window.jQuery));
 
+function SkinUtils(){
+	this.copyImage = (context, sX, sY, w, h, dX, dY, flipHorizontal) => {
+		var imgData = context.getImageData(sX, sY, w, h);
+		if(flipHorizontal){
+			for(var y = 0; y < h; y++) {
+				for(var x = 0; x < (w / 2); x++) {
+					var index = (x + y * w) * 4;
+					var index2 = ((w - x - 1) + y * w) * 4;
+					var pA1 = imgData.data[index];
+					var pA2 = imgData.data[index+1];
+					var pA3 = imgData.data[index+2];
+					var pA4 = imgData.data[index+3];
+
+					var pB1 = imgData.data[index2];
+					var pB2 = imgData.data[index2+1];
+					var pB3 = imgData.data[index2+2];
+					var pB4 = imgData.data[index2+3];
+
+					imgData.data[index] = pB1;
+					imgData.data[index+1] = pB2;
+					imgData.data[index+2] = pB3;
+					imgData.data[index+3] = pB4;
+
+					imgData.data[index2] = pA1;
+					imgData.data[index2+1] = pA2;
+					imgData.data[index2+2] = pA3;
+					imgData.data[index2+3] = pA4;
+				}
+			}
+		}
+		context.putImageData(imgData,dX,dY);
+	};
+
+	this.convertSkinTo1_8 = (context, width) => {
+		var scale = width/64.0;
+		var copySkin = (context, sX, sY, w, h, dX, dY, flipHorizontal) => this.copyImage(context, sX*scale, sY*scale, w*scale, h*scale, dX*scale, dY*scale, flipHorizontal);
+
+		copySkin(context, 4, 16, 4, 4, 20, 48, true); // Top Leg
+		copySkin(context, 8, 16, 4, 4, 24, 48, true); // Bottom Leg
+		copySkin(context, 0, 20, 4, 12, 24, 52, true); // Outer Leg
+		copySkin(context, 4, 20, 4, 12, 20, 52, true); // Front Leg
+		copySkin(context, 8, 20, 4, 12, 16, 52, true); // Inner Leg
+		copySkin(context, 12, 20, 4, 12, 28, 52, true); // Back Leg
+		copySkin(context, 44, 16, 4, 4, 36, 48, true); // Top Arm
+		copySkin(context, 48, 16, 4, 4, 40, 48, true); // Bottom Arm
+		copySkin(context, 40, 20, 4, 12, 40, 52, true); // Outer Arm
+		copySkin(context, 44, 20, 4, 12, 36, 52, true); // Front Arm
+		copySkin(context, 48, 20, 4, 12, 32, 52, true); // Inner Arm
+		copySkin(context, 52, 20, 4, 12, 44, 52, true); // Back Arm
+	};
+}
+
 function SkinPreview3D(model, canvasW, canvasH, isSlim){
 	var radius = 32;
 	var isPaused = false;
@@ -28,19 +80,16 @@ function SkinPreview3D(model, canvasW, canvasH, isSlim){
 	camera.position.y = -12;
 
 	var scene = new THREE.Scene();
+	var utils = new SkinUtils();
 
 	var skinCanvas = document.createElement('canvas');
-	skinCanvas.width = 64;
-	skinCanvas.height = 64;
-	var skinContext = skinCanvas.getContext("2d");
+	var skinContext = skinCanvas.getContext('2d');
 	var skinTexture = new THREE.Texture(skinCanvas);
 	skinTexture.magFilter = THREE.NearestFilter;
 	skinTexture.minFilter = THREE.NearestMipMapNearestFilter;
 
 	var capeCanvas = document.createElement('canvas');
-	capeCanvas.width = 32;
-	capeCanvas.height = 32;
-	var capeContext = capeCanvas.getContext("2d");
+	var capeContext = capeCanvas.getContext('2d');
 	var capeTexture = new THREE.Texture(capeCanvas);
 	capeTexture.magFilter = THREE.NearestFilter;
 	capeTexture.minFilter = THREE.NearestMipMapNearestFilter;
@@ -49,12 +98,40 @@ function SkinPreview3D(model, canvasW, canvasH, isSlim){
 	var layer2Material = new THREE.MeshBasicMaterial({map: skinTexture, transparent: true, opacity: 1, side: THREE.DoubleSide});
 	var capeMaterial = new THREE.MeshBasicMaterial({map: capeTexture});
 
+	this.setSkin = url => skinImg.src = url;
+	this.setCape = url => capeImg.src = url;
+
+	var renderer;
+	var capePivot;
+	var headBox, headMesh, bodyBox, bodyMesh, rightArmBox, rightArmMesh, leftArmBox, leftArmMesh, rightLegBox, rightLegMesh, leftLegBox, leftLegMesh, head2Box, head2Mesh, body2Box, body2Mesh, rightArm2Box, rightArm2Mesh, leftArm2Box, leftArm2Mesh, rightLeg2Box, rightLeg2Mesh, leftLeg2Box, leftLeg2Mesh, capeBox, capeMesh;
+
 	var skinImg = new Image();
 	skinImg.crossOrigin = '';
 	var hasAnimate = false;
 	skinImg.onload = () => {
-		skinContext.clearRect(0, 0, 64, 64);
-		skinContext.drawImage(skinImg, 0, 0);
+		var isOldFormat = false;
+		if (skinImg.width !== skinImg.height) {
+			if (skinImg.width === 2*skinImg.height) {
+				isOldFormat = true;
+			} else {
+				console.log('Bad skin size');
+				return;
+			}
+		}
+
+		if(isOldFormat){
+			var width = skinImg.width;
+			skinCanvas.width = width;
+			skinCanvas.height = width;
+			skinContext.clearRect(0, 0, width, width);
+			skinContext.drawImage(skinImg, 0, 0, width, width/2.0);
+			utils.convertSkinTo1_8(skinContext, width);
+		} else {
+			skinCanvas.width = skinImg.width;
+			skinCanvas.height = skinImg.height;
+			skinContext.clearRect(0, 0, skinCanvas.width, skinCanvas.height);
+			skinContext.drawImage(skinImg, 0, 0, skinCanvas.width, skinCanvas.height);
+		}
 
 		skinTexture.needsUpdate = true;
 		layer1Material.needsUpdate = true;
@@ -66,27 +143,27 @@ function SkinPreview3D(model, canvasW, canvasH, isSlim){
 			drawSkin();
 		}
 	};
-	skinImg.onerror = () => console.log("Failed loading " + skinImg.src);
+	skinImg.onerror = () => console.log('Failed loading ' + skinImg.src);
 
 	var capeImg = new Image();
 	capeImg.crossOrigin = '';
 	capeImg.onload = () => {
+		if (capeImg.width !== 2*capeImg.height) {
+			console.log('Bad cape size');
+			return;
+		}
+
 		capePivot.add(capeMesh);
 
+		capeCanvas.width = capeImg.width;
+		capeCanvas.height = capeImg.height;
 		capeContext.clearRect(0, 0, capeCanvas.width, capeCanvas.height);
 		capeContext.drawImage(capeImg, 0, 0, capeCanvas.width, capeCanvas.height);
 
 		capeTexture.needsUpdate = true;
 		capeMaterial.needsUpdate = true;
 	};
-	capeImg.onerror = () => console.log("Failed loading " + capeImg.src);
-
-	this.setSkin = url => skinImg.src = url;
-	this.setCape = url => capeImg.src = url;
-
-	var renderer;
-	var capePivot;
-	var headBox, headMesh, bodyBox, bodyMesh, rightArmBox, rightArmMesh, leftArmBox, leftArmMesh, rightLegBox, rightLegMesh, leftLegBox, leftLegMesh, head2Box, head2Mesh, body2Box, body2Mesh, rightArm2Box, rightArm2Mesh, leftArm2Box, leftArm2Mesh, rightLeg2Box, rightLeg2Mesh, leftLeg2Box, leftLeg2Mesh, capeBox, capeMesh;
+	capeImg.onerror = () => console.log('Failed loading ' + capeImg.src);
 
 	var initializeSkin = () => {
 		var toFaceVertices = (x1,y1,x2,y2,w,h) => [
@@ -96,7 +173,7 @@ function SkinPreview3D(model, canvasW, canvasH, isSlim){
 			new THREE.Vector2(x1/w, 1.0-y1/h)
 		];
 		var toSkinVertices = (x1,y1,x2,y2) => toFaceVertices(x1, y1, x2, y2, 64.0, 64.0);
-		var toCapeVertices = (x1,y1,x2,y2) => toFaceVertices(x1, y1, x2, y2, 22.0, 17.0);
+		var toCapeVertices = (x1,y1,x2,y2) => toFaceVertices(x1, y1, x2, y2, 64.0, 32.0);
 		var addVertices = (box,top,bottom,left,front,right,back) => {
 			box.faceVertexUvs[0] = [];
 			box.faceVertexUvs[0][0] = [right[3], right[0], right[2]];
@@ -124,7 +201,7 @@ function SkinPreview3D(model, canvasW, canvasH, isSlim){
 			toSkinVertices(24, 8, 32, 16)
 		);
 		headMesh = new THREE.Mesh(headBox, layer1Material);
-		headMesh.name = "head";
+		headMesh.name = 'head';
 		scene.add(headMesh);
 
 		// Body Parts
@@ -138,7 +215,7 @@ function SkinPreview3D(model, canvasW, canvasH, isSlim){
 			toSkinVertices(32, 20, 40, 32)
 		);
 		bodyMesh = new THREE.Mesh(bodyBox, layer1Material);
-		bodyMesh.name = "body";
+		bodyMesh.name = 'body';
 		bodyMesh.position.y = -10;
 		scene.add(bodyMesh);
 
@@ -164,7 +241,7 @@ function SkinPreview3D(model, canvasW, canvasH, isSlim){
 			);
 		}
 		rightArmMesh = new THREE.Mesh(rightArmBox, layer1Material);
-		rightArmMesh.name = "rightArm";
+		rightArmMesh.name = 'rightArm';
 		rightArmMesh.position.y = -10;
 		rightArmMesh.position.x = isSlim?-5.5:-6;
 		scene.add(rightArmMesh);
@@ -191,7 +268,7 @@ function SkinPreview3D(model, canvasW, canvasH, isSlim){
 			);
 		}
 		leftArmMesh = new THREE.Mesh(leftArmBox, layer1Material);
-		leftArmMesh.name = "leftArm";
+		leftArmMesh.name = 'leftArm';
 		leftArmMesh.position.y = -10;
 		leftArmMesh.position.x = isSlim?5.5:6;
 		scene.add(leftArmMesh);
@@ -207,7 +284,7 @@ function SkinPreview3D(model, canvasW, canvasH, isSlim){
 			toSkinVertices(12, 20, 16, 32)
 		);
 		rightLegMesh = new THREE.Mesh(rightLegBox, layer1Material);
-		rightLegMesh.name = "rightLeg"
+		rightLegMesh.name = 'rightLeg'
 		rightLegMesh.position.y = -22;
 		rightLegMesh.position.x = -2;
 		scene.add(rightLegMesh);
@@ -223,7 +300,7 @@ function SkinPreview3D(model, canvasW, canvasH, isSlim){
 			toSkinVertices(28, 52, 32, 64)
 		);
 		leftLegMesh = new THREE.Mesh(leftLegBox, layer1Material);
-		leftLegMesh.name = "leftLeg";
+		leftLegMesh.name = 'leftLeg';
 		leftLegMesh.position.y = -22;
 		leftLegMesh.position.x = 2;
 		scene.add(leftLegMesh);
@@ -239,7 +316,7 @@ function SkinPreview3D(model, canvasW, canvasH, isSlim){
 			toSkinVertices(56, 8, 64, 16)
 		);
 		head2Mesh = new THREE.Mesh(head2Box, layer2Material);
-		head2Mesh.name = "head2"
+		head2Mesh.name = 'head2'
 		scene.add(head2Mesh);
 
 		// Body Overlay Parts
@@ -253,7 +330,7 @@ function SkinPreview3D(model, canvasW, canvasH, isSlim){
 			toSkinVertices(32, 36, 40, 48)
 		);
 		body2Mesh = new THREE.Mesh(body2Box, layer2Material);
-		body2Mesh.name = "body2";
+		body2Mesh.name = 'body2';
 		body2Mesh.position.y = -10;
 		scene.add(body2Mesh);
 
@@ -279,7 +356,7 @@ function SkinPreview3D(model, canvasW, canvasH, isSlim){
 			);
 		}
 		rightArm2Mesh = new THREE.Mesh(rightArm2Box, layer2Material);
-		rightArm2Mesh.name = "rightArm2";
+		rightArm2Mesh.name = 'rightArm2';
 		rightArm2Mesh.position.y = -10;
 		rightArm2Mesh.position.x = -6;
 		scene.add(rightArm2Mesh);
@@ -306,7 +383,7 @@ function SkinPreview3D(model, canvasW, canvasH, isSlim){
 			);
 		}
 		leftArm2Mesh = new THREE.Mesh(leftArm2Box, layer2Material);
-		leftArm2Mesh.name = "leftArm2";
+		leftArm2Mesh.name = 'leftArm2';
 		leftArm2Mesh.position.y = -10;
 		leftArm2Mesh.position.x = 6;
 		// leftArm2Mesh.visible = true;
@@ -323,7 +400,7 @@ function SkinPreview3D(model, canvasW, canvasH, isSlim){
 			toSkinVertices(12, 36, 16, 48)
 		);
 		rightLeg2Mesh = new THREE.Mesh(rightLeg2Box, layer2Material);
-		rightLeg2Mesh.name = "rightLeg2"
+		rightLeg2Mesh.name = 'rightLeg2'
 		rightLeg2Mesh.position.y = -22;
 		rightLeg2Mesh.position.x = -2;
 		scene.add(rightLeg2Mesh);
@@ -339,7 +416,7 @@ function SkinPreview3D(model, canvasW, canvasH, isSlim){
 			toSkinVertices(12, 52, 16, 64)
 		);
 		leftLeg2Mesh = new THREE.Mesh(leftLeg2Box, layer2Material);
-		leftLeg2Mesh.name = "leftLeg2";
+		leftLeg2Mesh.name = 'leftLeg2';
 		leftLeg2Mesh.position.y = -22;
 		leftLeg2Mesh.position.x = 2;
 		scene.add(leftLeg2Mesh);
@@ -357,7 +434,7 @@ function SkinPreview3D(model, canvasW, canvasH, isSlim){
 			toCapeVertices(1, 1, 11, 17)
 		);
 		capeMesh = new THREE.Mesh(capeBox, capeMaterial);
-		capeMesh.name = "cape";
+		capeMesh.name = 'cape';
 		capeMesh.position.y = -12.75;
 		capeMesh.position.z = -0.55;
 		capePivot = new THREE.Group();
@@ -416,7 +493,7 @@ function SkinPreview3D(model, canvasW, canvasH, isSlim){
 
 	window.jQuery(document).mouseup(() => mouseDown = false);
 
-	model.bind("contextmenu", e => {
+	model.bind('contextmenu', e => {
 		e.preventDefault();
 		isPaused = !isPaused;
 	});
