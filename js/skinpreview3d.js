@@ -3,244 +3,22 @@
 	Project link: https://github.com/yushijinhun/skinpreview3d.js
 */
 
-function SkinUtil(){
-	this.convert6432To6464 = context => {
-		this.copyImage(context, 4, 16, 4, 4, 20, 48, true);	// Top Leg
-		this.copyImage(context, 8, 16, 4, 4, 24, 48, true);	// Bottom Leg
-		this.copyImage(context, 0, 20, 4, 12, 24, 52, true);	// Outer Leg
-		this.copyImage(context, 4, 20, 4, 12, 20, 52, true);	// Front Leg
-		this.copyImage(context, 8, 20, 4, 12, 16, 52, true);	// Inner Leg
-		this.copyImage(context, 12, 20, 4, 12, 28, 52, true);	// Back Leg
-
-		this.copyImage(context, 44, 16, 4, 4, 36, 48, true);	// Top Arm
-		this.copyImage(context, 48, 16, 4, 4, 40, 48, true);	// Bottom Arm
-		this.copyImage(context, 40, 20, 4, 12, 40, 52, true);	// Outer Arm
-		this.copyImage(context, 44, 20, 4, 12, 36, 52, true);	// Front Arm
-		this.copyImage(context, 48, 20, 4, 12, 32, 52, true);	// Inner Arm
-		this.copyImage(context, 52, 20, 4, 12, 44, 52, true);	// Back Arm
-	}
-
-	this.copyImage = (context, sX, sY, w, h, dX, dY, flipHorizontal) => {
-		var imgData = context.getImageData(sX, sY, w, h);
-
-		if(flipHorizontal){
-			for(y = 0; y < h; y++) {
-				for(x = 0; x < (w / 2); x++) {
-					index = (x + y * w) * 4;
-					index2 = ((w - x - 1) + y * w) * 4;
-					var pA1 = imgData.data[index];
-					var pA2 = imgData.data[index+1];
-					var pA3 = imgData.data[index+2];
-					var pA4 = imgData.data[index+3];
-
-					var pB1 = imgData.data[index2];
-					var pB2 = imgData.data[index2+1];
-					var pB3 = imgData.data[index2+2];
-					var pB4 = imgData.data[index2+3];
-
-					imgData.data[index] = pB1;
-					imgData.data[index+1] = pB2;
-					imgData.data[index+2] = pB3;
-					imgData.data[index+3] = pB4;
-
-					imgData.data[index2] = pA1;
-					imgData.data[index2+1] = pA2;
-					imgData.data[index2+2] = pA3;
-					imgData.data[index2+3] = pA4;
-				}
-			}
-		}
-
-		context.putImageData(imgData,dX,dY);
-	}
-
-	this.fixOverlay = context => {
-		this.fixHead2(context);
-		this.fixBody2(context);
-		this.fixRightArm2(context);
-		this.fixLeftArm2(context);
-		this.fixRightLeg2(context);
-		this.fixLeftLeg2(context);
-	}
-
-	this.fixHead2 = context => {
-		// Front
-		if(this.hasTransparency(context, 40, 8, 8, 8)) return;
-
-		// Top, Bottom, Right, Left, Back
-		if(this.hasTransparency(context, 40, 0, 8, 8)) return;
-		if(this.hasTransparency(context, 48, 0, 8, 8)) return;
-		if(this.hasTransparency(context, 32, 8, 8, 8)) return;
-		if(this.hasTransparency(context, 48, 8, 8, 8)) return;
-		if(this.hasTransparency(context, 56, 8, 8, 8)) return;
-
-		// Didn't have transparency, clearing the head overlay area.
-		context.clearRect(40, 0, 8, 8);
-		context.clearRect(48, 0, 8, 8);
-		context.clearRect(32, 8, 8, 8);
-		context.clearRect(40, 8, 8, 8);
-		context.clearRect(48, 8, 8, 8);
-		context.clearRect(56, 8, 8, 8);
-	}
-
-	this.fixBody2 = context => {
-		// Front
-		if(this.hasTransparency(context, 20, 36, 8, 12)) return;
-
-		// Top, Bottom, Right, Left, Back
-		if(this.hasTransparency(context, 20, 32, 8, 4)) return;
-		if(this.hasTransparency(context, 28, 32, 8, 4)) return;
-		if(this.hasTransparency(context, 16, 36, 4, 12)) return;
-		if(this.hasTransparency(context, 28, 36, 4, 12)) return;
-		if(this.hasTransparency(context, 32, 36, 8, 12)) return;
-
-		// Didn't have transparency, clearing the body overlay area.
-		context.clearRect(20, 32, 8, 4);
-		context.clearRect(28, 32, 8, 4);
-		context.clearRect(16, 36, 4, 12);
-		context.clearRect(20, 36, 8, 12);
-		context.clearRect(28, 36, 4, 12);
-		context.clearRect(32, 36, 8, 12);
-	}
-
-	this.fixRightArm2 = context => {
-		// Front
-		if(this.hasTransparency(context, 44, 36, 4, 12)) return;
-
-		// Top, Bottom, Right, Left, Back
-		if(this.hasTransparency(context, 44, 32, 4, 4)) return;
-		if(this.hasTransparency(context, 48, 32, 4, 4)) return;
-		if(this.hasTransparency(context, 40, 36, 4, 12)) return;
-		if(this.hasTransparency(context, 48, 36, 4, 12)) return;
-		if(this.hasTransparency(context, 52, 36, 4, 12)) return;
-
-		// Didn't have transparency, clearing the right arm overlay area.
-		context.clearRect(44, 32, 4, 4);
-		context.clearRect(48, 32, 4, 4);
-		context.clearRect(40, 36, 4, 12);
-		context.clearRect(44, 36, 4, 12);
-		context.clearRect(48, 36, 4, 12);
-		context.clearRect(52, 36, 4, 12);
-	}
-
-	this.fixLeftArm2 = context => {
-		// Front
-		if(this.hasTransparency(context, 52, 52, 4, 12)) return;
-
-		// Top, Bottom, Right, Left, Back
-		if(this.hasTransparency(context, 52, 48, 4, 4)) return;
-		if(this.hasTransparency(context, 56, 48, 4, 4)) return;
-		if(this.hasTransparency(context, 48, 52, 4, 12)) return;
-		if(this.hasTransparency(context, 56, 52, 4, 12)) return;
-		if(this.hasTransparency(context, 60, 52, 4, 12)) return;
-
-		// Didn't have transparency, clearing the left arm overlay area.
-		context.clearRect(52, 48, 4, 4);
-		context.clearRect(56, 48, 4, 4);
-		context.clearRect(48, 52, 4, 12);
-		context.clearRect(52, 52, 4, 12);
-		context.clearRect(56, 52, 4, 12);
-		context.clearRect(60, 52, 4, 12);
-	}
-
-	this.fixRightLeg2 = context => {
-		// Front
-		if(this.hasTransparency(context, 4, 36, 4, 12)) return;
-
-		// Top, Bottom, Right, Left, Back
-		if(this.hasTransparency(context, 4, 32, 4, 4)) return;
-		if(this.hasTransparency(context, 8, 32, 4, 4)) return;
-		if(this.hasTransparency(context, 0, 36, 4, 12)) return;
-		if(this.hasTransparency(context, 8, 36, 4, 12)) return;
-		if(this.hasTransparency(context, 12, 36, 4, 12)) return;
-
-		// Didn't have transparency, clearing the right leg overlay area.
-		context.clearRect(4, 32, 4, 4);
-		context.clearRect(8, 32, 4, 4);
-		context.clearRect(0, 36, 4, 12);
-		context.clearRect(4, 36, 4, 12);
-		context.clearRect(8, 36, 4, 12);
-		context.clearRect(12, 36, 4, 12);
-	}
-
-	this.fixLeftLeg2 = context => {
-		// Front
-		if(this.hasTransparency(context, 4, 52, 4, 12)) return;
-
-		// Top, Bottom, Right, Left, Back
-		if(this.hasTransparency(context, 4, 48, 4, 4)) return;
-		if(this.hasTransparency(context, 8, 48, 4, 4)) return;
-		if(this.hasTransparency(context, 0, 52, 4, 12)) return;
-		if(this.hasTransparency(context, 8, 52, 4, 12)) return;
-		if(this.hasTransparency(context, 12, 52, 4, 12)) return;
-
-		// Didn't have transparency, clearing the left leg overlay area.
-		context.clearRect(4, 48, 4, 4);
-		context.clearRect(8, 48, 4, 4);
-		context.clearRect(0, 52, 4, 12);
-		context.clearRect(4, 52, 4, 12);
-		context.clearRect(8, 52, 4, 12);
-		context.clearRect(12, 52, 4, 12);
-	}
-
-	this.fixNonVisible = context => {
-		// 64x32 and 64x64 skin parts
-		context.clearRect(0, 0, 8, 8);
-		context.clearRect(24, 0, 16, 8);
-		context.clearRect(56, 0, 8, 8);
-		context.clearRect(0, 16, 4, 4);
-		context.clearRect(12, 16, 8, 4);
-		context.clearRect(36, 16, 8, 4);
-		context.clearRect(52, 16, 4, 4);
-		context.clearRect(56, 16, 8, 32);
-
-		// 64x64 skin parts
-		context.clearRect(0, 32, 4, 4);
-		context.clearRect(12, 32, 8, 4);
-		context.clearRect(36, 32, 8, 4);
-		context.clearRect(52, 32, 4, 4);
-		context.clearRect(0, 48, 4, 4);
-		context.clearRect(12, 48, 8, 4);
-		context.clearRect(28, 48, 8, 4);
-		context.clearRect(44, 48, 8, 4);
-		context.clearRect(60, 48, 8, 4);
-	}
-
-	this.hasTransparency = (context, x, y, w, h) => {
-		var imgData = context.getImageData(x, y, w, h);
-
-		for(y = 0; y < h; y++) {
-			for(x = 0; x < w; x++) {
-				var index = (x + y * w) * 4;
-				if(imgData.data[index + 3] == 0) return true;	// Has transparency
-			}
-		}
-
-		return false;
-	}
-
-}
+'use strict';
 
 (function($) {
-	'use strict';
-
 	$.fn.skinPreview3D = function (options) {
-		var skinCanvas=document.createElement('canvas');
-		var capeCanvas=document.createElement('canvas');
-		var sp = new SkinPreview3D(this, skinCanvas, capeCanvas, options.width, options.height);
+		var skinCanvas = document.createElement('canvas');
+		var capeCanvas = document.createElement('canvas');
+		var sp = new SkinPreview3D(this, skinCanvas, capeCanvas, options.width, options.height, options.isSlim === true);
 		sp.setSkin(options.skinUrl);
-		if(options.capeUrl!=null){
+		if(options.capeUrl != null){
 			sp.setCape(options.capeUrl);
 		}
 	};
 
 } (window.jQuery));
 
-function SkinPreview3D(model, skinCanvas, capeCanvas, canvasW, canvasH){
-	var scene, camera, renderer;
-	var geometry, mesh;
-	var rightLeg2Box, leftLeg2Box;
-
+function SkinPreview3D(model, skinCanvas, capeCanvas, canvasW, canvasH, isSlim){ // TODO: isSlim
 	var radius = 32;
 	var isPaused = false;
 	var originMouseX = 0;
@@ -249,12 +27,10 @@ function SkinPreview3D(model, skinCanvas, capeCanvas, canvasW, canvasH){
 	var angleRot = 0;
 	var mouseDown = false;
 
-	var util = new SkinUtil();
-
-	camera = new THREE.PerspectiveCamera(75, canvasW / canvasH, 1, 10000);
+	var camera = new THREE.PerspectiveCamera(75, canvasW / canvasH, 1, 10000);
 	camera.position.y = -12;
 
-	scene = new THREE.Scene();
+	var scene = new THREE.Scene();
 
 	skinCanvas.width = 64;
 	skinCanvas.height = 64;
@@ -272,26 +48,18 @@ function SkinPreview3D(model, skinCanvas, capeCanvas, canvasW, canvasH){
 	skinTexture.magFilter = THREE.NearestFilter;
 	skinTexture.minFilter = THREE.NearestMipMapNearestFilter;
 
-	layer1Material = new THREE.MeshBasicMaterial({map: skinTexture, side: THREE.FrontSide});
-	layer2Material = new THREE.MeshBasicMaterial({map: skinTexture, transparent: true, opacity: 1, side: THREE.DoubleSide});
-	capeMaterial = new THREE.MeshBasicMaterial({map: capeTexture});
+	var layer1Material = new THREE.MeshBasicMaterial({map: skinTexture, side: THREE.FrontSide});
+	var layer2Material = new THREE.MeshBasicMaterial({map: skinTexture, transparent: true, opacity: 1, side: THREE.DoubleSide});
+	var capeMaterial = new THREE.MeshBasicMaterial({map: capeTexture});
 
 	var skinImg = new Image();
 	skinImg.crossOrigin = '';
 	var hasAnimate = false;
 	skinImg.onload = () => {
-
 		skinContext.clearRect(0, 0, 64, 64);
 		skinContext.drawImage(skinImg, 0, 0);
 
-		if(skinImg.height == 32) util.convert6432To6464(skinContext);
-
-		//these need work
-		//util.fixNonVisible(skinContext);
-		//util.fixOverlay(skinContext);
-
 		skinTexture.needsUpdate = true;
-
 		layer1Material.needsUpdate = true;
 		layer2Material.needsUpdate = true;
 
@@ -304,7 +72,7 @@ function SkinPreview3D(model, skinCanvas, capeCanvas, canvasW, canvasH){
 
 	skinImg.onerror = () => console.log("Failed loading " + skinImg.src);
 
-	var capeImg=new Image();
+	var capeImg = new Image();
 	capeImg.crossOrigin = '';
 	capeImg.onload = () => {
 		capePivot.add(capeMesh);
@@ -317,13 +85,15 @@ function SkinPreview3D(model, skinCanvas, capeCanvas, canvasW, canvasH){
 
 		capeTexture.needsUpdate = true;
 		capeMaterial.needsUpdate = true;
-
-		capeLoaded=true;
 	};
 	capeImg.onerror = () => console.log("Failed loading " + capeImg.src);
 
 	this.setSkin = url => skinImg.src = url;
 	this.setCape = url => capeImg.src = url;
+
+	var renderer;
+	var capePivot;
+	var headBox, headMesh, bodyBox, bodyMesh, rightArmBox, rightArmMesh, leftArmBox, leftArmMesh, rightLegBox, rightLegMesh, leftLegBox, leftLegMesh, head2Box, head2Mesh, body2Box, body2Mesh, rightArm2Box, rightArm2Mesh, leftArm2Box, leftArm2Mesh, rightLeg2Box, rightLeg2Mesh, leftLeg2Box, leftLeg2Mesh, capeBox, capeMesh;
 
 	function initializeSkin() {
 		// Head Parts
@@ -348,8 +118,8 @@ function SkinPreview3D(model, skinCanvas, capeCanvas, canvasW, canvasH){
 		var headFront = [
 			new THREE.Vector2(0.125, 0.75),
 			new THREE.Vector2(0.25, 0.75),
-			new THREE.Vector2(0.25 ,0.875),
-			new THREE.Vector2(0.125 ,0.875)
+			new THREE.Vector2(0.25 , 0.875),
+			new THREE.Vector2(0.125 , 0.875)
 		];
 		var headRight = [
 			new THREE.Vector2(0.25, 0.75),
@@ -723,7 +493,7 @@ function SkinPreview3D(model, skinCanvas, capeCanvas, canvasW, canvasH){
 		head2Box.faceVertexUvs[0][11] = [head2Back[0], head2Back[1], head2Back[2]];
 		head2Mesh = new THREE.Mesh(head2Box, layer2Material);
 		head2Mesh.name = "head2"
-			scene.add(head2Mesh);
+		scene.add(head2Mesh);
 
 		// Body Overlay Parts
 		var body2Top = [
@@ -992,7 +762,7 @@ function SkinPreview3D(model, skinCanvas, capeCanvas, canvasW, canvasH){
 			new THREE.Vector2(0.25, 0.1875),
 			new THREE.Vector2(0.1875, 0.1875)
 		];
-		var leftLeg2Box = new THREE.BoxGeometry(4.5, 13.5, 4.5, 0, 0, 0);
+		leftLeg2Box = new THREE.BoxGeometry(4.5, 13.5, 4.5, 0, 0, 0);
 		leftLeg2Box.faceVertexUvs[0] = [];
 		leftLeg2Box.faceVertexUvs[0][0] = [leftLeg2Right[3], leftLeg2Right[0], leftLeg2Right[2]];
 		leftLeg2Box.faceVertexUvs[0][1] = [leftLeg2Right[0], leftLeg2Right[1], leftLeg2Right[2]];
@@ -1049,7 +819,7 @@ function SkinPreview3D(model, skinCanvas, capeCanvas, canvasW, canvasH){
 			new THREE.Vector2(11/22, 16/17),
 			new THREE.Vector2(1/22, 16/17)
 		];
-		var capeBox = new THREE.BoxGeometry(10, 16, 1, 0, 0, 0);
+		capeBox = new THREE.BoxGeometry(10, 16, 1, 0, 0, 0);
 		capeBox.faceVertexUvs[0] = [];
 		capeBox.faceVertexUvs[0][0] = [capeRight[3], capeRight[0], capeRight[2]];
 		capeBox.faceVertexUvs[0][1] = [capeRight[0], capeRight[1], capeRight[2]];
@@ -1067,7 +837,7 @@ function SkinPreview3D(model, skinCanvas, capeCanvas, canvasW, canvasH){
 		capeMesh.name = "cape";
 
 		capePivot = new THREE.Group();
-		scene.add( capePivot );
+		scene.add(capePivot);
 
 		capeMesh.position.y = -12.75;
 		capeMesh.position.z = -0.55;
@@ -1115,10 +885,8 @@ function SkinPreview3D(model, skinCanvas, capeCanvas, canvasW, canvasH){
 
 		renderer.render(scene, camera);
 
-		if(angleRot > 360){
+		if(angleRot > 360)
 			angleRot = 0;
-		}
-
 	}
 
 	model.mousedown(function(e){
@@ -1126,7 +894,7 @@ function SkinPreview3D(model, skinCanvas, capeCanvas, canvasW, canvasH){
 		mouseDown = true;
 	});
 
-	$(document).mouseup(() => mouseDown = false);
+	window.jQuery(document).mouseup(() => mouseDown = false);
 
 	model.bind("contextmenu", e => {
 		e.preventDefault();
@@ -1134,7 +902,7 @@ function SkinPreview3D(model, skinCanvas, capeCanvas, canvasW, canvasH){
 	});
 
 	model.mousemove(function(e){
-		if(!mouseDown){ return; }
+		if(!mouseDown) return;
 		var x = (e.pageX - this.offsetLeft) - originMouseX;
 		modelRot = x;
 	});
