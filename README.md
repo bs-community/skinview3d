@@ -6,6 +6,7 @@ The code was originally created by [Kent Rasmussen](https://github.com/earthiver
 # Features
 * 1.8 Skins
 * Capes
+* Slim arms
 
 # Dependencies
 * [Three.js](https://github.com/mrdoob/three.js/)
@@ -21,13 +22,11 @@ JS
 ```js
 $(() => {
 	$("#skin_container").skinPreview3D({
-		skinUrl: 'img/Dinnerbone.png',
+		skinUrl: 'img/hatsune_miku.png',
 		capeUrl: 'img/cape.png',
+		slim: true,
 		width: 600,
 		height: 600
 	});
 });
 ```
-
-# TODOs
-* Alex support (Slim arms).
