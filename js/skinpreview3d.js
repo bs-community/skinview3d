@@ -70,14 +70,12 @@ function SkinUtils(){
 function SkinPreview3D(model, canvasW, canvasH, isSlim){
 	var radius = 32;
 	var isPaused = false;
-	var originMouseX = 0;
 	var rotating = false;
-	var modelRot = 0;
 	var angleRot = 0;
-	var mouseDown = false;
 
 	var camera = new THREE.PerspectiveCamera(75, canvasW / canvasH, 1, 10000);
 	camera.position.y = -12;
+	camera.position.z = radius;
 
 	var scene = new THREE.Scene();
 	var utils = new SkinUtils();
@@ -452,16 +450,8 @@ function SkinPreview3D(model, canvasW, canvasH, isSlim){
 	var drawSkin = () => {
 		requestAnimationFrame(drawSkin);
 		var time = (Date.now() - startTime)/1000;
-		if(!mouseDown && !isPaused){
-			modelRot += 0.5;
+		if(!isPaused)
 			angleRot += 0.01;
-		}
-
-		var ang = -(modelRot * Math.PI / 180);
-
-		camera.rotation.y = ang;
-		camera.position.z = radius*Math.cos(ang);
-		camera.position.x = radius*Math.sin(ang);
 
 		var speed = 3;
 		//Leg Swing
@@ -486,21 +476,8 @@ function SkinPreview3D(model, canvasW, canvasH, isSlim){
 			angleRot = 0;
 	}
 
-	model.mousedown(function(e){
-		originMouseX = (e.pageX - this.offsetLeft) - modelRot;
-		mouseDown = true;
-	});
-
-	window.jQuery(document).mouseup(() => mouseDown = false);
-
 	model.bind('contextmenu', e => {
 		e.preventDefault();
 		isPaused = !isPaused;
-	});
-
-	model.mousemove(function(e){
-		if(!mouseDown) return;
-		var x = (e.pageX - this.offsetLeft) - originMouseX;
-		modelRot = x;
 	});
 }
