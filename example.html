@@ -1,49 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>SkinPreview3D</title>
-	<style>
-		#canvas, #cape{
-			display: none;
-		}
-		
-		#canvas_container{
-			width: 470px;
-			background: #000;
-		}
-	</style>
+	<meta charset="utf-8">
+	<title>skinpreview3d.js</title>
 </head>
 <body>
 
-	<div id="canvas_container">
-		<canvas id="canvas" width="64" height="64"></canvas>
-		<canvas id="cape" width="22" height="17"></canvas>
-	</div>
+	<div id="skin_container"></div>
 
-	<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r71/three.min.js"></script>
-	
-	<script type="text/javascript" src="/js/skinpreview3d.js"></script>
-	
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/three.js/87/three.min.js"></script>
+	<script type="text/javascript" src="js/skinpreview3d.js"></script>
 	<script>
 		$(function() {
-			$("#canvas_container").skinPreview3D({
-				skinUrl: "/img/Dinnerbone.png",
-				capeUrl: "/img/cape.png",
-				canvasID: "canvas"
-			});	
+			$("#skin_container").skinPreview3D({
+				skinUrl: 'img/hatsune_miku.png',
+				capeUrl: 'img/mojang_cape.png',
+				slim: true,
+				width: 600,
+				height: 600
+			});
 		});
 	</script>
-	
-	<label>
-		<input id="head2" class="toggle-head" type="checkbox" checked> Head
-	</label>
-	<label>
-		<input class="toggle-layer2" type="checkbox" checked> Second Layer
-	</label>	
-	<label>
-		<input class="toggle-cape" type="checkbox" checked> Cape
-	</label>
-
 </body>
 </html>
