@@ -1,6 +1,6 @@
 /*
  * skinpreview3d.js
- * https://github.com/yushijinhun/skinpreview3d.js
+ * https://github.com/Hacksore/skinpreview3d.js
  */
 
 'use strict';
