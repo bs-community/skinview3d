@@ -13,6 +13,10 @@ The code was originally created by [Kent Rasmussen](https://github.com/earthiver
 * [Three.js](https://github.com/mrdoob/three.js/)
 * [jQuery](https://jquery.com/) (Optional)
 
+# Demos
+[jQuery](http://hacksore.github.io/skinpreview3d.js/demo_jquery.html)
+[Native javascript](http://hacksore.github.io/skinpreview3d.js/demo_purejs.html)
+
 # Usage
 HTML
 ```html
