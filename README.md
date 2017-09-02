@@ -13,10 +13,6 @@ The code was originally created by [Kent Rasmussen](https://github.com/earthiver
 * [Three.js](https://github.com/mrdoob/three.js/)
 * [jQuery](https://jquery.com/) (Optional)
 
-# Demos
-[jQuery](http://hacksore.github.io/skinpreview3d.js/demo_jquery.html)
-[Native javascript](http://hacksore.github.io/skinpreview3d.js/demo_purejs.html)
-
 # Usage
 HTML
 ```html
@@ -35,7 +31,9 @@ $(() => {
 	});
 });
 ```
-See `example_jquery.html` and `example_purejs.html` for more examples.
+# Demos
+* [Native javascript](http://hacksore.github.io/skinpreview3d.js/demo_purejs.html)
+* [jQuery](http://hacksore.github.io/skinpreview3d.js/demo_jquery.html)
 
 # License
 * `/img/mojang_cape.png` Copyright Mojang AB. [Link](https://minecraft.gamepedia.com/File:MojangCape2016.png)
