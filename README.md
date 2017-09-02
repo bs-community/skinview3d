@@ -22,9 +22,9 @@ HTML
 JS
 ```js
 $(() => {
-	$("#skin_container").skinPreview3D({
+	$("#skin_container").skinPreview3d({
 		skinUrl: 'img/hatsune_miku.png',
-		capeUrl: 'img/cape.png',
+		capeUrl: 'img/mojang_cape.png',
 		slim: true,
 		width: 600,
 		height: 600
