@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>skinpreview3d.js</title>
+	<title>skinpreview3d.js example using jquery</title>
 </head>
 <body>
 
@@ -12,11 +12,12 @@
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/three.js/87/three.min.js"></script>
 	<script type="text/javascript" src="js/skinpreview3d.js"></script>
 	<script>
-		$(function() {
-			$("#skin_container").skinPreview3D({
+		$(() => {
+			$("#skin_container").skinPreview3d({
 				skinUrl: 'img/hatsune_miku.png',
 				capeUrl: 'img/mojang_cape.png',
 				slim: true,
+				// disableControl: true,    // This disables the mouse control feature
 				width: 600,
 				height: 600
 			});
