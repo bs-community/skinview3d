@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>skinpreview3d.js example using pure javascript</title>
+</head>
+<body>
+
+	<div id="skin_container"></div>
+
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/three.js/87/three.min.js"></script>
+	<script type="text/javascript" src="js/skinpreview3d.js"></script>
+	<script>
+		var skinViewer = new skinpreview3d.SkinViewer(document.getElementById('skin_container'), 600, 600, true);
+		skinViewer.skinUrl = 'img/hatsune_miku.png';
+		skinViewer.capeUrl = 'img/mojang_cape.png';
+
+		// this enables the mouse control feature
+		var control = new skinpreview3d.SkinControl(skinViewer);
+
+		// this makes the animation paused
+		// skinViewer.animationPaused = true;
+
+		// this changes the animation speed
+		// skinViewer.animationSpeed = 8;
+
+		// this disables the 'right click to play/pause' feature
+		// control.enableAnimationControl = false;
+	</script>
+</body>
+</html>
