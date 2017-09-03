@@ -42,7 +42,7 @@ var skinpreview3d = new function(){
 
 	var convertSkinTo1_8 = (context, width) => {
 		var scale = width/64.0;
-		var copySkin = (context, sX, sY, w, h, dX, dY, flipHorizontal) => this.copyImage(context, sX*scale, sY*scale, w*scale, h*scale, dX*scale, dY*scale, flipHorizontal);
+		var copySkin = (context, sX, sY, w, h, dX, dY, flipHorizontal) => copyImage(context, sX*scale, sY*scale, w*scale, h*scale, dX*scale, dY*scale, flipHorizontal);
 
 		copySkin(context, 4, 16, 4, 4, 20, 48, true); // Top Leg
 		copySkin(context, 8, 16, 4, 4, 24, 48, true); // Bottom Leg
@@ -399,7 +399,7 @@ var skinpreview3d = new function(){
 			capePivot.rotation.x = 25 * (Math.PI/180);
 			this.scene.add(capePivot);
 
-			this.domElement.append(this.renderer.domElement);
+			this.domElement.appendChild(this.renderer.domElement);
 		}
 
 		skinImg.crossOrigin = '';
@@ -420,7 +420,7 @@ var skinpreview3d = new function(){
 				skinCanvas.height = width;
 				skinContext.clearRect(0, 0, width, width);
 				skinContext.drawImage(skinImg, 0, 0, width, width/2.0);
-				utils.convertSkinTo1_8(skinContext, width);
+				convertSkinTo1_8(skinContext, width);
 			} else {
 				skinCanvas.width = skinImg.width;
 				skinCanvas.height = skinImg.height;
