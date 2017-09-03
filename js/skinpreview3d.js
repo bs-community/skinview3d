@@ -86,7 +86,8 @@ var skinpreview3d = new function(){
 
 	this.SkinViewer = function(domElement, canvasW, canvasH, isSlim){
 		var angleRot = 0;
-		var initialized = false;
+		var skinInitialized = false;
+		var capeInitialized = false;
 
 		var skinImg = new Image();
 		var skinCanvas = document.createElement('canvas');
@@ -135,6 +136,7 @@ var skinpreview3d = new function(){
 		this.renderer = new THREE.WebGLRenderer({angleRot: true, alpha: true, antialias: false});
 		this.renderer.setSize(canvasW, canvasH);
 		this.renderer.context.getShaderInfoLog = () => ''; // shut firefox up
+		this.domElement.appendChild(this.renderer.domElement);
 
 		Object.defineProperties(this, {
 			'skinUrl': {
@@ -147,7 +149,7 @@ var skinpreview3d = new function(){
 			}
 		});
 
-		var initialize = () => {
+		var initializeSkin = () => {
 			// Head Parts
 			headBox = new THREE.BoxGeometry(8, 8, 8, 0, 0, 0);
 			addVertices(headBox,
@@ -379,27 +381,7 @@ var skinpreview3d = new function(){
 			leftLeg2Mesh.position.x = 2;
 			this.scene.add(leftLeg2Mesh);
 
-			// Cape Parts
-			// back = outside
-			// front = inside
-			capeBox = new THREE.BoxGeometry(10, 16, 1, 0, 0, 0);
-			addVertices(capeBox,
-				toCapeVertices(1, 0, 11, 0),
-				toCapeVertices(11, 0, 21, 0),
-				toCapeVertices(11, 1, 11, 17),
-				toCapeVertices(12, 1, 22, 17),
-				toCapeVertices(0, 1, 0, 17),
-				toCapeVertices(1, 1, 11, 17)
-			);
-			capeMesh = new THREE.Mesh(capeBox, capeMaterial);
-			capeMesh.name = 'cape';
-			capeMesh.position.y = -12.75;
-			capeMesh.position.z = -0.55;
-			capePivot = new THREE.Group();
-			capePivot.rotation.x = 25 * (Math.PI/180);
-			this.scene.add(capePivot);
-
-			this.domElement.appendChild(this.renderer.domElement);
+			skinInitialized = true;
 		}
 
 		skinImg.crossOrigin = '';
@@ -432,13 +414,36 @@ var skinpreview3d = new function(){
 			layer1Material.needsUpdate = true;
 			layer2Material.needsUpdate = true;
 
-			if(!initialized) {
-				initialize();
-				initialized = true;
-				drawSkin();
+			if(!skinInitialized) {
+				initializeSkin();
 			}
 		};
 		skinImg.onerror = () => console.log('Failed loading ' + skinImg.src);
+
+		var initializeCape = () => {
+			// Cape Parts
+			// back = outside
+			// front = inside
+			capeBox = new THREE.BoxGeometry(10, 16, 1, 0, 0, 0);
+			addVertices(capeBox,
+				toCapeVertices(1, 0, 11, 0),
+				toCapeVertices(11, 0, 21, 0),
+				toCapeVertices(11, 1, 11, 17),
+				toCapeVertices(12, 1, 22, 17),
+				toCapeVertices(0, 1, 0, 17),
+				toCapeVertices(1, 1, 11, 17)
+			);
+			capeMesh = new THREE.Mesh(capeBox, capeMaterial);
+			capeMesh.name = 'cape';
+			capeMesh.position.y = -12.75;
+			capeMesh.position.z = -0.55;
+			capePivot = new THREE.Group();
+			capePivot.rotation.x = 25 * (Math.PI/180);
+			capePivot.add(capeMesh);
+			this.scene.add(capePivot);
+
+			capeInitialized = true;
+		};
 
 		capeImg.crossOrigin = '';
 		capeImg.onload = () => {
@@ -447,8 +452,6 @@ var skinpreview3d = new function(){
 				return;
 			}
 
-			capePivot.add(capeMesh);
-
 			capeCanvas.width = capeImg.width;
 			capeCanvas.height = capeImg.height;
 			capeContext.clearRect(0, 0, capeCanvas.width, capeCanvas.height);
@@ -456,37 +459,45 @@ var skinpreview3d = new function(){
 
 			capeTexture.needsUpdate = true;
 			capeMaterial.needsUpdate = true;
+
+			if(!capeInitialized) {
+				initializeCape();
+			}
 		};
 		capeImg.onerror = () => console.log('Failed loading ' + capeImg.src);
 
 		var startTime = Date.now();
-		var drawSkin = () => {
-			requestAnimationFrame(drawSkin);
+		var draw = () => {
+			requestAnimationFrame(draw);
 			var time = (Date.now() - startTime)/1000;
-			if(!this.animationPaused)
-				angleRot += 0.01;
 
-			//Leg Swing
-			leftLeg2Mesh.rotation.x = leftLegMesh.rotation.x = Math.cos(angleRot*this.animationSpeed);
-			leftLeg2Mesh.position.z = leftLegMesh.position.z = 0 - 6*Math.sin(leftLegMesh.rotation.x);
-			leftLeg2Mesh.position.y = leftLegMesh.position.y = -16 - 6*Math.abs(Math.cos(leftLegMesh.rotation.x));
-			rightLeg2Mesh.rotation.x = rightLegMesh.rotation.x = Math.cos(angleRot*this.animationSpeed + (Math.PI));
-			rightLeg2Mesh.position.z = rightLegMesh.position.z = 0 - 6*Math.sin(rightLegMesh.rotation.x);
-			rightLeg2Mesh.position.y = rightLegMesh.position.y = -16 - 6*Math.abs(Math.cos(rightLegMesh.rotation.x));
+			if(skinInitialized) {
+				if(angleRot > 360)
+					angleRot = 0;
 
-			//Arm Swing
-			leftArm2Mesh.rotation.x = leftArmMesh.rotation.x = Math.cos(angleRot*this.animationSpeed + (Math.PI));
-			leftArm2Mesh.position.z = leftArmMesh.position.z = 0 - 6*Math.sin(leftArmMesh.rotation.x);
-			leftArm2Mesh.position.y = leftArmMesh.position.y = -4 - 6*Math.abs(Math.cos(leftArmMesh.rotation.x));
-			rightArm2Mesh.rotation.x = rightArmMesh.rotation.x = Math.cos(angleRot*this.animationSpeed);
-			rightArm2Mesh.position.z = rightArmMesh.position.z = 0 - 6*Math.sin(rightArmMesh.rotation.x);
-			rightArm2Mesh.position.y = rightArmMesh.position.y = -4 - 6*Math.abs(Math.cos(rightArmMesh.rotation.x));
+				if(!this.animationPaused)
+					angleRot += 0.01;
+
+				//Leg Swing
+				leftLeg2Mesh.rotation.x = leftLegMesh.rotation.x = Math.cos(angleRot*this.animationSpeed);
+				leftLeg2Mesh.position.z = leftLegMesh.position.z = 0 - 6*Math.sin(leftLegMesh.rotation.x);
+				leftLeg2Mesh.position.y = leftLegMesh.position.y = -16 - 6*Math.abs(Math.cos(leftLegMesh.rotation.x));
+				rightLeg2Mesh.rotation.x = rightLegMesh.rotation.x = Math.cos(angleRot*this.animationSpeed + (Math.PI));
+				rightLeg2Mesh.position.z = rightLegMesh.position.z = 0 - 6*Math.sin(rightLegMesh.rotation.x);
+				rightLeg2Mesh.position.y = rightLegMesh.position.y = -16 - 6*Math.abs(Math.cos(rightLegMesh.rotation.x));
+
+				//Arm Swing
+				leftArm2Mesh.rotation.x = leftArmMesh.rotation.x = Math.cos(angleRot*this.animationSpeed + (Math.PI));
+				leftArm2Mesh.position.z = leftArmMesh.position.z = 0 - 6*Math.sin(leftArmMesh.rotation.x);
+				leftArm2Mesh.position.y = leftArmMesh.position.y = -4 - 6*Math.abs(Math.cos(leftArmMesh.rotation.x));
+				rightArm2Mesh.rotation.x = rightArmMesh.rotation.x = Math.cos(angleRot*this.animationSpeed);
+				rightArm2Mesh.position.z = rightArmMesh.position.z = 0 - 6*Math.sin(rightArmMesh.rotation.x);
+				rightArm2Mesh.position.y = rightArmMesh.position.y = -4 - 6*Math.abs(Math.cos(rightArmMesh.rotation.x));
+			}
 
 			this.renderer.render(this.scene, this.camera);
-
-			if(angleRot > 360)
-				angleRot = 0;
 		}
+		draw();
 	}
 
 	// ====== OrbitControls ======
