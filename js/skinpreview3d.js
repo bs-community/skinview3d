@@ -399,7 +399,7 @@ var skinpreview3d = new function(){
 			capePivot.rotation.x = 25 * (Math.PI/180);
 			this.scene.add(capePivot);
 
-			this.domElement.append(this.renderer.domElement);
+			this.domElement.appendChild(this.renderer.domElement);
 		}
 
 		skinImg.crossOrigin = '';
