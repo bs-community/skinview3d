@@ -426,11 +426,11 @@ var skinpreview3d = new function(){
 			// front = inside
 			capeBox = new THREE.BoxGeometry(10, 16, 1, 0, 0, 0);
 			addVertices(capeBox,
-				toCapeVertices(1, 0, 11, 0),
-				toCapeVertices(11, 0, 21, 0),
-				toCapeVertices(11, 1, 11, 17),
+				toCapeVertices(1, 0, 11, 1),
+				toCapeVertices(11, 0, 21, 1),
+				toCapeVertices(11, 1, 12, 17),
 				toCapeVertices(12, 1, 22, 17),
-				toCapeVertices(0, 1, 0, 17),
+				toCapeVertices(0, 1, 1, 17),
 				toCapeVertices(1, 1, 11, 17)
 			);
 			capeMesh = new THREE.Mesh(capeBox, capeMaterial);
