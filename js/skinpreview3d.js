@@ -87,8 +87,6 @@ var skinpreview3d = new function(){
 	this.SkinViewer = function(options){
 		this.domElement = options.domElement;
 		this.slim = options.slim || false;
-		this.width = options.width;
-		this.height = options.height;
 
 		var angleRot = 0;
 		var skinInitialized = false;
@@ -133,14 +131,20 @@ var skinpreview3d = new function(){
 
 		this.scene = new THREE.Scene();
 
-		this.camera = new THREE.PerspectiveCamera(75, this.width / this.height, 1, 10000);
+		this.camera = new THREE.PerspectiveCamera(75);
 		this.camera.position.y = -12;
 		this.camera.position.z = 30;
 
 		this.renderer = new THREE.WebGLRenderer({angleRot: true, alpha: true, antialias: false});
-		this.renderer.setSize(this.width, this.height);
+		this.renderer.setSize(300, 300); // default size
 		this.renderer.context.getShaderInfoLog = () => ''; // shut firefox up
 		this.domElement.appendChild(this.renderer.domElement);
+
+		var setSize = (width,height) => {
+			this.camera.aspect = width / height;
+			this.camera.updateProjectionMatrix();
+			this.renderer.setSize(width, height);
+		};
 
 		Object.defineProperties(this, {
 			'skinUrl': {
@@ -150,6 +154,14 @@ var skinpreview3d = new function(){
 			'capeUrl': {
 				get: () => capeImg.src,
 				set: url => capeImg.src = url
+			},
+			'width': {
+				get: () => this.renderer.getSize().width,
+				set: newWidth => setSize(newWidth, this.height)
+			},
+			'height': {
+				get: () => this.renderer.getSize().height,
+				set: newHeight => setSize(this.width, newHeight)
 			}
 		});
 
@@ -505,10 +517,10 @@ var skinpreview3d = new function(){
 		}
 		draw();
 
-		if(options.skinUrl)
-			this.skinUrl = options.skinUrl;
-		if(options.capeUrl)
-			this.capeUrl = options.capeUrl;
+		if(options.skinUrl) this.skinUrl = options.skinUrl;
+		if(options.capeUrl) this.capeUrl = options.capeUrl;
+		if(options.width) this.width = options.width;
+		if(options.height) this.height = options.height;
 	}
 
 	// ====== OrbitControls ======
