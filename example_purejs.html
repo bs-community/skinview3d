@@ -11,9 +11,18 @@
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/three.js/87/three.min.js"></script>
 	<script type="text/javascript" src="js/skinpreview3d.js"></script>
 	<script>
-		var skinViewer = new skinpreview3d.SkinViewer(document.getElementById('skin_container'), 600, 600, true);
-		skinViewer.skinUrl = 'img/hatsune_miku.png';
-		skinViewer.capeUrl = 'img/mojang_cape.png';
+		var skinViewer = new skinpreview3d.SkinViewer({
+			domElement: document.getElementById('skin_container'),
+			slim: true,
+			width: 600,
+			height: 600,
+			skinUrl: 'img/hatsune_miku.png',
+			capeUrl: 'img/mojang_cape.png'
+		});
+
+		// skin and cape can also be changed at runtime
+		// skinViewer.skinUrl = 'img/hatsune_miku.png';
+		// skinViewer.capeUrl = 'img/mojang_cape.png';
 
 		// this enables the mouse control feature
 		var control = new skinpreview3d.SkinControl(skinViewer);
