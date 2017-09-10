@@ -154,6 +154,7 @@ var skinpreview3d = new function(){
 
 			// Right Arm
 			this.rightArm = new THREE.Group();
+			var rightArmPivot = new THREE.Group();
 
 			var rightArmBox = new THREE.BoxGeometry((isSlim?3:4)-esp, 12-esp, 4-esp, 0, 0, 0);
 			if (isSlim) {
@@ -176,7 +177,7 @@ var skinpreview3d = new function(){
 				);
 			}
 			var rightArmMesh = new THREE.Mesh(rightArmBox, layer1Material);
-			this.rightArm.add(rightArmMesh);
+			rightArmPivot.add(rightArmMesh);
 
 			var rightArm2Box = new THREE.BoxGeometry((isSlim?3.375:4.5)-esp, 13.5-esp, 4.5-esp, 0, 0, 0);
 			if (isSlim) {
@@ -200,15 +201,18 @@ var skinpreview3d = new function(){
 			}
 			var rightArm2Mesh = new THREE.Mesh(rightArm2Box, layer2Material);
 			rightArm2Mesh.renderOrder = 1;
-			this.rightArm.add(rightArm2Mesh);
+			rightArmPivot.add(rightArm2Mesh);
 
-			this.rightArm.position.y = -10;
+			rightArmPivot.position.y = -6;
+			this.rightArm.add(rightArmPivot);
+			this.rightArm.position.y = -4;
 			this.rightArm.position.x = isSlim?-5.5:-6;
 			this.add(this.rightArm);
 
 
 			// Left Arm
 			this.leftArm = new THREE.Group();
+			var leftArmPivot = new THREE.Group();
 
 			var leftArmBox = new THREE.BoxGeometry((isSlim?3:4)-esp, 12-esp, 4-esp, 0, 0, 0);
 			if (isSlim) {
@@ -231,7 +235,7 @@ var skinpreview3d = new function(){
 				);
 			}
 			var leftArmMesh = new THREE.Mesh(leftArmBox, layer1Material);
-			this.leftArm.add(leftArmMesh);
+			leftArmPivot.add(leftArmMesh);
 
 			var leftArm2Box = new THREE.BoxGeometry((isSlim?3.375:4.5)-esp, 13.5-esp, 4.5-esp, 0, 0, 0);
 			if (isSlim) {
@@ -255,15 +259,18 @@ var skinpreview3d = new function(){
 			}
 			var leftArm2Mesh = new THREE.Mesh(leftArm2Box, layer2Material);
 			leftArm2Mesh.renderOrder = 1;
-			this.leftArm.add(leftArm2Mesh);
+			leftArmPivot.add(leftArm2Mesh);
 
-			this.leftArm.position.y = -10;
+			leftArmPivot.position.y = -6;
+			this.leftArm.add(leftArmPivot);
+			this.leftArm.position.y = -4;
 			this.leftArm.position.x = isSlim?5.5:6;
 			this.add(this.leftArm);
 
 
 			// Right Leg
 			this.rightLeg = new THREE.Group();
+			var rightLegPivot = new THREE.Group();
 
 			var rightLegBox = new THREE.BoxGeometry(4-esp, 12-esp, 4-esp, 0, 0, 0);
 			addVertices(rightLegBox,
@@ -275,7 +282,7 @@ var skinpreview3d = new function(){
 				toSkinVertices(12, 20, 16, 32)
 			);
 			var rightLegMesh = new THREE.Mesh(rightLegBox, layer1Material);
-			this.rightLeg.add(rightLegMesh);
+			rightLegPivot.add(rightLegMesh);
 
 			var rightLeg2Box = new THREE.BoxGeometry(4.5-esp, 13.5-esp, 4.5-esp, 0, 0, 0);
 			addVertices(rightLeg2Box,
@@ -288,14 +295,17 @@ var skinpreview3d = new function(){
 			);
 			var rightLeg2Mesh = new THREE.Mesh(rightLeg2Box, layer2Material);
 			rightLeg2Mesh.renderOrder = 1;
-			this.rightLeg.add(rightLeg2Mesh);
+			rightLegPivot.add(rightLeg2Mesh);
 
-			this.rightLeg.position.y = -22;
+			rightLegPivot.position.y = -6;
+			this.rightLeg.add(rightLegPivot);
+			this.rightLeg.position.y = -16;
 			this.rightLeg.position.x = -2;
 			this.add(this.rightLeg);
 
 			// Left Leg
 			this.leftLeg = new THREE.Group();
+			var leftLegPivot = new THREE.Group();
 
 			var leftLegBox = new THREE.BoxGeometry(4-esp, 12-esp, 4-esp, 0, 0, 0);
 			addVertices(leftLegBox,
@@ -307,7 +317,7 @@ var skinpreview3d = new function(){
 				toSkinVertices(28, 52, 32, 64)
 			);
 			var leftLegMesh = new THREE.Mesh(leftLegBox, layer1Material);
-			this.leftLeg.add(leftLegMesh);
+			leftLegPivot.add(leftLegMesh);
 
 			var leftLeg2Box = new THREE.BoxGeometry(4.5-esp, 13.5-esp, 4.5-esp, 0, 0, 0);
 			addVertices(leftLeg2Box,
@@ -320,9 +330,11 @@ var skinpreview3d = new function(){
 			);
 			var leftLeg2Mesh = new THREE.Mesh(leftLeg2Box, layer2Material);
 			leftLeg2Mesh.renderOrder = 1;
-			this.leftLeg.add(leftLeg2Mesh);
+			leftLegPivot.add(leftLeg2Mesh);
 
-			this.leftLeg.position.y = -22;
+			leftLegPivot.position.y = -6;
+			this.leftLeg.add(leftLegPivot);
+			this.leftLeg.position.y = -16;
 			this.leftLeg.position.x = 2;
 			this.add(this.leftLeg);
 		}
@@ -373,27 +385,17 @@ var skinpreview3d = new function(){
 
 		// Leg Swing
 		skin.leftLeg.rotation.x = Math.cos(angleRot);
-		skin.leftLeg.position.z = 0 - 6*Math.sin(skin.leftLeg.rotation.x);
-		skin.leftLeg.position.y = -16 - 6*Math.abs(Math.cos(skin.leftLeg.rotation.x));
 		skin.rightLeg.rotation.x = Math.cos(angleRot + (Math.PI));
-		skin.rightLeg.position.z = 0 - 6*Math.sin(skin.rightLeg.rotation.x);
-		skin.rightLeg.position.y = -16 - 6*Math.abs(Math.cos(skin.rightLeg.rotation.x));
 
 		// Arm Swing
 		skin.leftArm.rotation.x = Math.cos(angleRot + (Math.PI));
-		skin.leftArm.position.z = 0 - 6*Math.sin(skin.leftArm.rotation.x);
-		skin.leftArm.position.y = -4 - 6*Math.abs(Math.cos(skin.leftArm.rotation.x));
 		skin.rightArm.rotation.x = Math.cos(angleRot);
-		skin.rightArm.position.z = 0 - 6*Math.sin(skin.rightArm.rotation.x);
-		skin.rightArm.position.y = -4 - 6*Math.abs(Math.cos(skin.rightArm.rotation.x));
 	}
 
 	this.SkinViewer = function(options){
 		this.domElement = options.domElement;
 		this.slim = options.slim || false;
 		this.animation = options.animation || null;
-
-		var angleRot = 0;
 
 		var skinImg = new Image();
 		var skinCanvas = document.createElement('canvas');
