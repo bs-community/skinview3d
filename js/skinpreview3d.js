@@ -84,6 +84,8 @@ var skinpreview3d = new function(){
 		box.faceVertexUvs[0][11] = [back[0], back[1], back[2]];
 	};
 
+	const esp = 0.002;
+
 	this.SkinObject = class extends THREE.Group {
 		constructor(isSlim, layer1Material, layer2Material) {
 			super();
@@ -153,7 +155,7 @@ var skinpreview3d = new function(){
 			// Right Arm
 			this.rightArm = new THREE.Group();
 
-			var rightArmBox = new THREE.BoxGeometry(isSlim?3:4, 12, 4, 0, 0, 0);
+			var rightArmBox = new THREE.BoxGeometry((isSlim?3:4)-esp, 12-esp, 4-esp, 0, 0, 0);
 			if (isSlim) {
 				addVertices(rightArmBox,
 					toSkinVertices(44, 16, 47, 20),
@@ -176,7 +178,7 @@ var skinpreview3d = new function(){
 			var rightArmMesh = new THREE.Mesh(rightArmBox, layer1Material);
 			this.rightArm.add(rightArmMesh);
 
-			var rightArm2Box = new THREE.BoxGeometry(isSlim?3.375:4.5, 13.5, 4.5, 0, 0, 0);
+			var rightArm2Box = new THREE.BoxGeometry((isSlim?3.375:4.5)-esp, 13.5-esp, 4.5-esp, 0, 0, 0);
 			if (isSlim) {
 				addVertices(rightArm2Box,
 					toSkinVertices(44, 32, 47, 36),
@@ -208,7 +210,7 @@ var skinpreview3d = new function(){
 			// Left Arm
 			this.leftArm = new THREE.Group();
 
-			var leftArmBox = new THREE.BoxGeometry(isSlim?3:4, 12, 4, 0, 0, 0);
+			var leftArmBox = new THREE.BoxGeometry((isSlim?3:4)-esp, 12-esp, 4-esp, 0, 0, 0);
 			if (isSlim) {
 				addVertices(leftArmBox,
 					toSkinVertices(36, 48, 39, 52),
@@ -231,7 +233,7 @@ var skinpreview3d = new function(){
 			var leftArmMesh = new THREE.Mesh(leftArmBox, layer1Material);
 			this.leftArm.add(leftArmMesh);
 
-			var leftArm2Box = new THREE.BoxGeometry(isSlim?3.375:4.5, 13.5, 4.5, 0, 0, 0);
+			var leftArm2Box = new THREE.BoxGeometry((isSlim?3.375:4.5)-esp, 13.5-esp, 4.5-esp, 0, 0, 0);
 			if (isSlim) {
 				addVertices(leftArm2Box,
 					toSkinVertices(52, 48, 55, 52),
@@ -263,7 +265,7 @@ var skinpreview3d = new function(){
 			// Right Leg
 			this.rightLeg = new THREE.Group();
 
-			var rightLegBox = new THREE.BoxGeometry(4, 12, 4, 0, 0, 0);
+			var rightLegBox = new THREE.BoxGeometry(4-esp, 12-esp, 4-esp, 0, 0, 0);
 			addVertices(rightLegBox,
 				toSkinVertices(4, 16, 8, 20),
 				toSkinVertices(8, 16, 12, 20),
@@ -275,7 +277,7 @@ var skinpreview3d = new function(){
 			var rightLegMesh = new THREE.Mesh(rightLegBox, layer1Material);
 			this.rightLeg.add(rightLegMesh);
 
-			var rightLeg2Box = new THREE.BoxGeometry(4.5, 13.5, 4.5, 0, 0, 0);
+			var rightLeg2Box = new THREE.BoxGeometry(4.5-esp, 13.5-esp, 4.5-esp, 0, 0, 0);
 			addVertices(rightLeg2Box,
 				toSkinVertices(4, 32, 8, 36),
 				toSkinVertices(8, 32, 12, 36),
@@ -295,7 +297,7 @@ var skinpreview3d = new function(){
 			// Left Leg
 			this.leftLeg = new THREE.Group();
 
-			var leftLegBox = new THREE.BoxGeometry(4, 12, 4, 0, 0, 0);
+			var leftLegBox = new THREE.BoxGeometry(4-esp, 12-esp, 4-esp, 0, 0, 0);
 			addVertices(leftLegBox,
 				toSkinVertices(20, 48, 24, 52),
 				toSkinVertices(24, 48, 28, 52),
@@ -307,7 +309,7 @@ var skinpreview3d = new function(){
 			var leftLegMesh = new THREE.Mesh(leftLegBox, layer1Material);
 			this.leftLeg.add(leftLegMesh);
 
-			var leftLeg2Box = new THREE.BoxGeometry(4.5, 13.5, 4.5, 0, 0, 0);
+			var leftLeg2Box = new THREE.BoxGeometry(4.5-esp, 13.5-esp, 4.5-esp, 0, 0, 0);
 			addVertices(leftLeg2Box,
 				toSkinVertices(4, 48, 8, 52),
 				toSkinVertices(8, 48, 12, 52),
