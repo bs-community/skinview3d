@@ -11,7 +11,7 @@
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/three.js/87/three.min.js"></script>
 	<script type="text/javascript" src="js/skinpreview3d.js"></script>
 	<script>
-		var skinViewer = new skinpreview3d.SkinViewer({
+		let skinViewer = new skinpreview3d.SkinViewer({
 			domElement: document.getElementById('skin_container'),
 			slim: true,
 			width: 600,
@@ -30,7 +30,7 @@
 		// skinViewer.height = 400;
 
 		// this enables the mouse control feature
-		var control = new skinpreview3d.SkinControl(skinViewer);
+		let control = new skinpreview3d.SkinControl(skinViewer);
 
 		// this makes the animation paused
 		// skinViewer.animationPaused = true;

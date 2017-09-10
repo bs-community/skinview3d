@@ -6,24 +6,24 @@
 'use strict';
 
 // namespace skinpreview3d
-var skinpreview3d = new function(){
+let skinpreview3d = new function(){
 
-	var copyImage = (context, sX, sY, w, h, dX, dY, flipHorizontal) => {
-		var imgData = context.getImageData(sX, sY, w, h);
+	let copyImage = (context, sX, sY, w, h, dX, dY, flipHorizontal) => {
+		let imgData = context.getImageData(sX, sY, w, h);
 		if(flipHorizontal){
-			for(var y = 0; y < h; y++) {
-				for(var x = 0; x < (w / 2); x++) {
-					var index = (x + y * w) * 4;
-					var index2 = ((w - x - 1) + y * w) * 4;
-					var pA1 = imgData.data[index];
-					var pA2 = imgData.data[index+1];
-					var pA3 = imgData.data[index+2];
-					var pA4 = imgData.data[index+3];
+			for(let y = 0; y < h; y++) {
+				for(let x = 0; x < (w / 2); x++) {
+					let index = (x + y * w) * 4;
+					let index2 = ((w - x - 1) + y * w) * 4;
+					let pA1 = imgData.data[index];
+					let pA2 = imgData.data[index+1];
+					let pA3 = imgData.data[index+2];
+					let pA4 = imgData.data[index+3];
 
-					var pB1 = imgData.data[index2];
-					var pB2 = imgData.data[index2+1];
-					var pB3 = imgData.data[index2+2];
-					var pB4 = imgData.data[index2+3];
+					let pB1 = imgData.data[index2];
+					let pB2 = imgData.data[index2+1];
+					let pB3 = imgData.data[index2+2];
+					let pB4 = imgData.data[index2+3];
 
 					imgData.data[index] = pB1;
 					imgData.data[index+1] = pB2;
@@ -40,9 +40,9 @@ var skinpreview3d = new function(){
 		context.putImageData(imgData,dX,dY);
 	};
 
-	var convertSkinTo1_8 = (context, width) => {
-		var scale = width/64.0;
-		var copySkin = (context, sX, sY, w, h, dX, dY, flipHorizontal) => copyImage(context, sX*scale, sY*scale, w*scale, h*scale, dX*scale, dY*scale, flipHorizontal);
+	let convertSkinTo1_8 = (context, width) => {
+		let scale = width/64.0;
+		let copySkin = (context, sX, sY, w, h, dX, dY, flipHorizontal) => copyImage(context, sX*scale, sY*scale, w*scale, h*scale, dX*scale, dY*scale, flipHorizontal);
 
 		copySkin(context, 4, 16, 4, 4, 20, 48, true); // Top Leg
 		copySkin(context, 8, 16, 4, 4, 24, 48, true); // Bottom Leg
@@ -58,17 +58,17 @@ var skinpreview3d = new function(){
 		copySkin(context, 52, 20, 4, 12, 44, 52, true); // Back Arm
 	};
 
-	var toFaceVertices = (x1,y1,x2,y2,w,h) => [
+	let toFaceVertices = (x1,y1,x2,y2,w,h) => [
 		new THREE.Vector2(x1/w, 1.0-y2/h),
 		new THREE.Vector2(x2/w, 1.0-y2/h),
 		new THREE.Vector2(x2/w, 1.0-y1/h),
 		new THREE.Vector2(x1/w, 1.0-y1/h)
 	];
 
-	var toSkinVertices = (x1,y1,x2,y2) => toFaceVertices(x1, y1, x2, y2, 64.0, 64.0);
-	var toCapeVertices = (x1,y1,x2,y2) => toFaceVertices(x1, y1, x2, y2, 64.0, 32.0);
+	let toSkinVertices = (x1,y1,x2,y2) => toFaceVertices(x1, y1, x2, y2, 64.0, 64.0);
+	let toCapeVertices = (x1,y1,x2,y2) => toFaceVertices(x1, y1, x2, y2, 64.0, 32.0);
 
-	var addVertices = (box,top,bottom,left,front,right,back) => {
+	let addVertices = (box,top,bottom,left,front,right,back) => {
 		box.faceVertexUvs[0] = [];
 		box.faceVertexUvs[0][0] = [right[3], right[0], right[2]];
 		box.faceVertexUvs[0][1] = [right[0], right[1], right[2]];
@@ -93,7 +93,7 @@ var skinpreview3d = new function(){
 			// Head
 			this.head = new THREE.Group();
 
-			var headBox = new THREE.BoxGeometry(8, 8, 8, 0, 0, 0);
+			let headBox = new THREE.BoxGeometry(8, 8, 8, 0, 0, 0);
 			addVertices(headBox,
 				toSkinVertices(8, 0, 16, 8),
 				toSkinVertices(16, 0, 24, 8),
@@ -102,10 +102,10 @@ var skinpreview3d = new function(){
 				toSkinVertices(16, 8, 24, 16),
 				toSkinVertices(24, 8, 32, 16)
 			);
-			var headMesh = new THREE.Mesh(headBox, layer1Material);
+			let headMesh = new THREE.Mesh(headBox, layer1Material);
 			this.head.add(headMesh);
 
-			var head2Box = new THREE.BoxGeometry(9, 9, 9, 0, 0, 0);
+			let head2Box = new THREE.BoxGeometry(9, 9, 9, 0, 0, 0);
 			addVertices(head2Box,
 				toSkinVertices(40, 0, 48, 8),
 				toSkinVertices(48, 0, 56, 8),
@@ -114,7 +114,7 @@ var skinpreview3d = new function(){
 				toSkinVertices(48, 8, 56, 16),
 				toSkinVertices(56, 8, 64, 16)
 			);
-			var head2Mesh = new THREE.Mesh(head2Box, layer2Material);
+			let head2Mesh = new THREE.Mesh(head2Box, layer2Material);
 			head2Mesh.renderOrder = -1;
 			this.head.add(head2Mesh);
 
@@ -124,7 +124,7 @@ var skinpreview3d = new function(){
 			// Body
 			this.body = new THREE.Group();
 
-			var bodyBox = new THREE.BoxGeometry(8, 12, 4, 0, 0, 0);
+			let bodyBox = new THREE.BoxGeometry(8, 12, 4, 0, 0, 0);
 			addVertices(bodyBox,
 				toSkinVertices(20, 16, 28, 20),
 				toSkinVertices(28, 16, 36, 20),
@@ -133,10 +133,10 @@ var skinpreview3d = new function(){
 				toSkinVertices(28, 20, 32, 32),
 				toSkinVertices(32, 20, 40, 32)
 			);
-			var bodyMesh = new THREE.Mesh(bodyBox, layer1Material);
+			let bodyMesh = new THREE.Mesh(bodyBox, layer1Material);
 			this.body.add(bodyMesh);
 
-			var body2Box = new THREE.BoxGeometry(9, 13.5, 4.5, 0, 0, 0);
+			let body2Box = new THREE.BoxGeometry(9, 13.5, 4.5, 0, 0, 0);
 			addVertices(body2Box,
 				toSkinVertices(20, 32, 28, 36),
 				toSkinVertices(28, 32, 36, 36),
@@ -145,7 +145,7 @@ var skinpreview3d = new function(){
 				toSkinVertices(28, 36, 32, 48),
 				toSkinVertices(32, 36, 40, 48)
 			);
-			var body2Mesh = new THREE.Mesh(body2Box, layer2Material);
+			let body2Mesh = new THREE.Mesh(body2Box, layer2Material);
 			this.body.add(body2Mesh);
 
 			this.body.position.y = -10;
@@ -154,9 +154,9 @@ var skinpreview3d = new function(){
 
 			// Right Arm
 			this.rightArm = new THREE.Group();
-			var rightArmPivot = new THREE.Group();
+			let rightArmPivot = new THREE.Group();
 
-			var rightArmBox = new THREE.BoxGeometry((isSlim?3:4)-esp, 12-esp, 4-esp, 0, 0, 0);
+			let rightArmBox = new THREE.BoxGeometry((isSlim?3:4)-esp, 12-esp, 4-esp, 0, 0, 0);
 			if (isSlim) {
 				addVertices(rightArmBox,
 					toSkinVertices(44, 16, 47, 20),
@@ -176,10 +176,10 @@ var skinpreview3d = new function(){
 					toSkinVertices(52, 20, 56, 32)
 				);
 			}
-			var rightArmMesh = new THREE.Mesh(rightArmBox, layer1Material);
+			let rightArmMesh = new THREE.Mesh(rightArmBox, layer1Material);
 			rightArmPivot.add(rightArmMesh);
 
-			var rightArm2Box = new THREE.BoxGeometry((isSlim?3.375:4.5)-esp, 13.5-esp, 4.5-esp, 0, 0, 0);
+			let rightArm2Box = new THREE.BoxGeometry((isSlim?3.375:4.5)-esp, 13.5-esp, 4.5-esp, 0, 0, 0);
 			if (isSlim) {
 				addVertices(rightArm2Box,
 					toSkinVertices(44, 32, 47, 36),
@@ -199,7 +199,7 @@ var skinpreview3d = new function(){
 					toSkinVertices(52, 36, 56, 48)
 				);
 			}
-			var rightArm2Mesh = new THREE.Mesh(rightArm2Box, layer2Material);
+			let rightArm2Mesh = new THREE.Mesh(rightArm2Box, layer2Material);
 			rightArm2Mesh.renderOrder = 1;
 			rightArmPivot.add(rightArm2Mesh);
 
@@ -212,9 +212,9 @@ var skinpreview3d = new function(){
 
 			// Left Arm
 			this.leftArm = new THREE.Group();
-			var leftArmPivot = new THREE.Group();
+			let leftArmPivot = new THREE.Group();
 
-			var leftArmBox = new THREE.BoxGeometry((isSlim?3:4)-esp, 12-esp, 4-esp, 0, 0, 0);
+			let leftArmBox = new THREE.BoxGeometry((isSlim?3:4)-esp, 12-esp, 4-esp, 0, 0, 0);
 			if (isSlim) {
 				addVertices(leftArmBox,
 					toSkinVertices(36, 48, 39, 52),
@@ -234,10 +234,10 @@ var skinpreview3d = new function(){
 					toSkinVertices(44, 52, 48, 64)
 				);
 			}
-			var leftArmMesh = new THREE.Mesh(leftArmBox, layer1Material);
+			let leftArmMesh = new THREE.Mesh(leftArmBox, layer1Material);
 			leftArmPivot.add(leftArmMesh);
 
-			var leftArm2Box = new THREE.BoxGeometry((isSlim?3.375:4.5)-esp, 13.5-esp, 4.5-esp, 0, 0, 0);
+			let leftArm2Box = new THREE.BoxGeometry((isSlim?3.375:4.5)-esp, 13.5-esp, 4.5-esp, 0, 0, 0);
 			if (isSlim) {
 				addVertices(leftArm2Box,
 					toSkinVertices(52, 48, 55, 52),
@@ -257,7 +257,7 @@ var skinpreview3d = new function(){
 					toSkinVertices(60, 52, 64, 64)
 				);
 			}
-			var leftArm2Mesh = new THREE.Mesh(leftArm2Box, layer2Material);
+			let leftArm2Mesh = new THREE.Mesh(leftArm2Box, layer2Material);
 			leftArm2Mesh.renderOrder = 1;
 			leftArmPivot.add(leftArm2Mesh);
 
@@ -270,9 +270,9 @@ var skinpreview3d = new function(){
 
 			// Right Leg
 			this.rightLeg = new THREE.Group();
-			var rightLegPivot = new THREE.Group();
+			let rightLegPivot = new THREE.Group();
 
-			var rightLegBox = new THREE.BoxGeometry(4-esp, 12-esp, 4-esp, 0, 0, 0);
+			let rightLegBox = new THREE.BoxGeometry(4-esp, 12-esp, 4-esp, 0, 0, 0);
 			addVertices(rightLegBox,
 				toSkinVertices(4, 16, 8, 20),
 				toSkinVertices(8, 16, 12, 20),
@@ -281,10 +281,10 @@ var skinpreview3d = new function(){
 				toSkinVertices(8, 20, 12, 32),
 				toSkinVertices(12, 20, 16, 32)
 			);
-			var rightLegMesh = new THREE.Mesh(rightLegBox, layer1Material);
+			let rightLegMesh = new THREE.Mesh(rightLegBox, layer1Material);
 			rightLegPivot.add(rightLegMesh);
 
-			var rightLeg2Box = new THREE.BoxGeometry(4.5-esp, 13.5-esp, 4.5-esp, 0, 0, 0);
+			let rightLeg2Box = new THREE.BoxGeometry(4.5-esp, 13.5-esp, 4.5-esp, 0, 0, 0);
 			addVertices(rightLeg2Box,
 				toSkinVertices(4, 32, 8, 36),
 				toSkinVertices(8, 32, 12, 36),
@@ -293,7 +293,7 @@ var skinpreview3d = new function(){
 				toSkinVertices(8, 36, 12, 48),
 				toSkinVertices(12, 36, 16, 48)
 			);
-			var rightLeg2Mesh = new THREE.Mesh(rightLeg2Box, layer2Material);
+			let rightLeg2Mesh = new THREE.Mesh(rightLeg2Box, layer2Material);
 			rightLeg2Mesh.renderOrder = 1;
 			rightLegPivot.add(rightLeg2Mesh);
 
@@ -305,9 +305,9 @@ var skinpreview3d = new function(){
 
 			// Left Leg
 			this.leftLeg = new THREE.Group();
-			var leftLegPivot = new THREE.Group();
+			let leftLegPivot = new THREE.Group();
 
-			var leftLegBox = new THREE.BoxGeometry(4-esp, 12-esp, 4-esp, 0, 0, 0);
+			let leftLegBox = new THREE.BoxGeometry(4-esp, 12-esp, 4-esp, 0, 0, 0);
 			addVertices(leftLegBox,
 				toSkinVertices(20, 48, 24, 52),
 				toSkinVertices(24, 48, 28, 52),
@@ -316,10 +316,10 @@ var skinpreview3d = new function(){
 				toSkinVertices(24, 52, 28, 64),
 				toSkinVertices(28, 52, 32, 64)
 			);
-			var leftLegMesh = new THREE.Mesh(leftLegBox, layer1Material);
+			let leftLegMesh = new THREE.Mesh(leftLegBox, layer1Material);
 			leftLegPivot.add(leftLegMesh);
 
-			var leftLeg2Box = new THREE.BoxGeometry(4.5-esp, 13.5-esp, 4.5-esp, 0, 0, 0);
+			let leftLeg2Box = new THREE.BoxGeometry(4.5-esp, 13.5-esp, 4.5-esp, 0, 0, 0);
 			addVertices(leftLeg2Box,
 				toSkinVertices(4, 48, 8, 52),
 				toSkinVertices(8, 48, 12, 52),
@@ -328,7 +328,7 @@ var skinpreview3d = new function(){
 				toSkinVertices(8, 52, 12, 64),
 				toSkinVertices(12, 52, 16, 64)
 			);
-			var leftLeg2Mesh = new THREE.Mesh(leftLeg2Box, layer2Material);
+			let leftLeg2Mesh = new THREE.Mesh(leftLeg2Box, layer2Material);
 			leftLeg2Mesh.renderOrder = 1;
 			leftLegPivot.add(leftLeg2Mesh);
 
@@ -338,7 +338,7 @@ var skinpreview3d = new function(){
 			this.leftLeg.position.x = 2;
 			this.add(this.leftLeg);
 		}
-	}
+	};
 
 	this.CapeObject = class extends THREE.Group {
 		constructor(capeMaterial) {
@@ -346,7 +346,7 @@ var skinpreview3d = new function(){
 
 			// back = outside
 			// front = inside
-			var capeBox = new THREE.BoxGeometry(10, 16, 1, 0, 0, 0);
+			let capeBox = new THREE.BoxGeometry(10, 16, 1, 0, 0, 0);
 			addVertices(capeBox,
 				toCapeVertices(1, 0, 11, 1),
 				toCapeVertices(11, 0, 21, 1),
@@ -360,13 +360,15 @@ var skinpreview3d = new function(){
 			this.cape.position.z = -0.5;
 			this.add(this.cape);
 		}
-	}
+	};
 
 	this.PlayerObject = class extends THREE.Group {
-		constructor(isSlim, layer1Material, layer2Material, capeMaterial){
+		constructor(slim, layer1Material, layer2Material, capeMaterial){
 			super();
 
-			this.skin = new skinpreview3d.SkinObject(isSlim, layer1Material, layer2Material);
+			this.slim = slim;
+
+			this.skin = new skinpreview3d.SkinObject(slim, layer1Material, layer2Material);
 			this.skin.visible = false;
 			this.add(this.skin);
 
@@ -377,11 +379,11 @@ var skinpreview3d = new function(){
 			this.cape.visible = false;
 			this.add(this.cape);
 		}
-	}
+	};
 
 	this.WalkAnimation = (player,time) => {
-		var skin = player.skin;
-		var angleRot = time + Math.PI/2;
+		let skin = player.skin;
+		let angleRot = time + Math.PI/2;
 
 		// Leg Swing
 		skin.leftLeg.rotation.x = Math.cos(angleRot);
@@ -390,144 +392,170 @@ var skinpreview3d = new function(){
 		// Arm Swing
 		skin.leftArm.rotation.x = Math.cos(angleRot + (Math.PI));
 		skin.rightArm.rotation.x = Math.cos(angleRot);
-	}
+	};
 
-	this.SkinViewer = function(options){
-		this.domElement = options.domElement;
-		this.slim = options.slim || false;
-		this.animation = options.animation || null;
+	this.SkinViewer = class {
+		constructor(options) {
+			this.domElement = options.domElement;
+			this.animation = options.animation || null;
+			this.animationPaused = false;
+			this.animationSpeed = 3;
+			this.animationTime = 0;
+			this.disposed = false;
 
-		var skinImg = new Image();
-		var skinCanvas = document.createElement('canvas');
-		var skinContext = skinCanvas.getContext('2d');
-		var skinTexture = new THREE.Texture(skinCanvas);
-		skinTexture.magFilter = THREE.NearestFilter;
-		skinTexture.minFilter = THREE.NearestMipMapNearestFilter;
+			// texture
+			this.skinImg = new Image();
+			this.skinCanvas = document.createElement('canvas');
+			this.skinTexture = new THREE.Texture(this.skinCanvas);
+			this.skinTexture.magFilter = THREE.NearestFilter;
+			this.skinTexture.minFilter = THREE.NearestMipMapNearestFilter;
 
-		var capeImg = new Image();
-		var capeCanvas = document.createElement('canvas');
-		var capeContext = capeCanvas.getContext('2d');
-		var capeTexture = new THREE.Texture(capeCanvas);
-		capeTexture.magFilter = THREE.NearestFilter;
-		capeTexture.minFilter = THREE.NearestMipMapNearestFilter;
+			this.capeImg = new Image();
+			this.capeCanvas = document.createElement('canvas');
+			this.capeTexture = new THREE.Texture(this.capeCanvas);
+			this.capeTexture.magFilter = THREE.NearestFilter;
+			this.capeTexture.minFilter = THREE.NearestMipMapNearestFilter;
 
-		var layer1Material = new THREE.MeshBasicMaterial({map: skinTexture, side: THREE.FrontSide});
-		var layer2Material = new THREE.MeshBasicMaterial({map: skinTexture, transparent: true, opacity: 1, side: THREE.DoubleSide});
-		var capeMaterial = new THREE.MeshBasicMaterial({map: capeTexture});
+			this.layer1Material = new THREE.MeshBasicMaterial({map: this.skinTexture, side: THREE.FrontSide});
+			this.layer2Material = new THREE.MeshBasicMaterial({map: this.skinTexture, transparent: true, opacity: 1, side: THREE.DoubleSide});
+			this.capeMaterial = new THREE.MeshBasicMaterial({map: this.capeTexture});
 
-		this.animationPaused = false;
-		this.animationSpeed = 3;
-		this.animationTime = 0;
+			// scene
+			this.scene = new THREE.Scene();
 
-		this.scene = new THREE.Scene();
+			this.camera = new THREE.PerspectiveCamera(75);
+			this.camera.position.y = -12;
+			this.camera.position.z = 30;
 
-		this.camera = new THREE.PerspectiveCamera(75);
-		this.camera.position.y = -12;
-		this.camera.position.z = 30;
+			this.renderer = new THREE.WebGLRenderer({angleRot: true, alpha: true, antialias: false});
+			this.renderer.setSize(300, 300); // default size
+			this.renderer.context.getShaderInfoLog = () => ''; // shut firefox up
+			this.domElement.appendChild(this.renderer.domElement);
 
-		this.renderer = new THREE.WebGLRenderer({angleRot: true, alpha: true, antialias: false});
-		this.renderer.setSize(300, 300); // default size
-		this.renderer.context.getShaderInfoLog = () => ''; // shut firefox up
-		this.domElement.appendChild(this.renderer.domElement);
+			this.playerObject = new skinpreview3d.PlayerObject(options.slim === true, this.layer1Material, this.layer2Material, this.capeMaterial);
+			this.scene.add(this.playerObject);
 
-		this.playerObject = new skinpreview3d.PlayerObject(this.slim, layer1Material, layer2Material, capeMaterial);
-		this.scene.add(this.playerObject);
+			// texture loading
+			this.skinImg.crossOrigin = '';
+			this.skinImg.onerror = () => console.log('Failed loading ' + this.skinImg.src);
+			this.skinImg.onload = () => {
+				let isOldFormat = false;
+				if (this.skinImg.width !== this.skinImg.height) {
+					if (this.skinImg.width === 2*this.skinImg.height) {
+						isOldFormat = true;
+					} else {
+						console.log('Bad skin size');
+						return;
+					}
+				}
 
-		var setSize = (width,height) => {
+				let skinContext = this.skinCanvas.getContext('2d');
+				if(isOldFormat){
+					let width = this.skinImg.width;
+					this.skinCanvas.width = width;
+					this.skinCanvas.height = width;
+					skinContext.clearRect(0, 0, width, width);
+					skinContext.drawImage(this.skinImg, 0, 0, width, width/2.0);
+					convertSkinTo1_8(skinContext, width);
+				} else {
+					this.skinCanvas.width = this.skinImg.width;
+					this.skinCanvas.height = this.skinImg.height;
+					skinContext.clearRect(0, 0, this.skinCanvas.width, this.skinCanvas.height);
+					skinContext.drawImage(this.skinImg, 0, 0, this.skinCanvas.width, this.skinCanvas.height);
+				}
+
+				this.skinTexture.needsUpdate = true;
+				this.layer1Material.needsUpdate = true;
+				this.layer2Material.needsUpdate = true;
+
+				this.playerObject.skin.visible = true;
+			};
+
+			this.capeImg.crossOrigin = '';
+			this.capeImg.onerror = () => console.log('Failed loading ' + this.capeImg.src);
+			this.capeImg.onload = () => {
+				if (this.capeImg.width !== 2*this.capeImg.height) {
+					console.log('Bad cape size');
+					return;
+				}
+
+				this.capeCanvas.width = this.capeImg.width;
+				this.capeCanvas.height = this.capeImg.height;
+				let capeContext = this.capeCanvas.getContext('2d');
+				capeContext.clearRect(0, 0, this.capeCanvas.width, this.capeCanvas.height);
+				capeContext.drawImage(this.capeImg, 0, 0, this.capeCanvas.width, this.capeCanvas.height);
+
+				this.capeTexture.needsUpdate = true;
+				this.capeMaterial.needsUpdate = true;
+
+				this.playerObject.cape.visible = true;
+			};
+
+			if(options.skinUrl) this.skinUrl = options.skinUrl;
+			if(options.capeUrl) this.capeUrl = options.capeUrl;
+			if(options.width) this.width = options.width;
+			if(options.height) this.height = options.height;
+
+			let draw = () => {
+				if(this.disposed) return;
+				window.requestAnimationFrame(draw);
+				if(!this.animationPaused){
+					this.animationTime++;
+					if(this.animation){
+						this.animation(this.playerObject,this.animationTime/100*this.animationSpeed);
+					}
+				}
+				this.renderer.render(this.scene, this.camera);
+			};
+			draw();
+		}
+
+		setSize(width, height){
 			this.camera.aspect = width / height;
 			this.camera.updateProjectionMatrix();
 			this.renderer.setSize(width, height);
-		};
-
-		Object.defineProperties(this, {
-			'skinUrl': {
-				get: () => skinImg.src,
-				set: url => skinImg.src = url
-			},
-			'capeUrl': {
-				get: () => capeImg.src,
-				set: url => capeImg.src = url
-			},
-			'width': {
-				get: () => this.renderer.getSize().width,
-				set: newWidth => setSize(newWidth, this.height)
-			},
-			'height': {
-				get: () => this.renderer.getSize().height,
-				set: newHeight => setSize(this.width, newHeight)
-			}
-		});
-
-		skinImg.crossOrigin = '';
-		skinImg.onload = () => {
-			var isOldFormat = false;
-			if (skinImg.width !== skinImg.height) {
-				if (skinImg.width === 2*skinImg.height) {
-					isOldFormat = true;
-				} else {
-					console.log('Bad skin size');
-					return;
-				}
-			}
-
-			if(isOldFormat){
-				var width = skinImg.width;
-				skinCanvas.width = width;
-				skinCanvas.height = width;
-				skinContext.clearRect(0, 0, width, width);
-				skinContext.drawImage(skinImg, 0, 0, width, width/2.0);
-				convertSkinTo1_8(skinContext, width);
-			} else {
-				skinCanvas.width = skinImg.width;
-				skinCanvas.height = skinImg.height;
-				skinContext.clearRect(0, 0, skinCanvas.width, skinCanvas.height);
-				skinContext.drawImage(skinImg, 0, 0, skinCanvas.width, skinCanvas.height);
-			}
-
-			skinTexture.needsUpdate = true;
-			layer1Material.needsUpdate = true;
-			layer2Material.needsUpdate = true;
-
-			this.playerObject.skin.visible = true;
-		};
-		skinImg.onerror = () => console.log('Failed loading ' + skinImg.src);
-
-		capeImg.crossOrigin = '';
-		capeImg.onload = () => {
-			if (capeImg.width !== 2*capeImg.height) {
-				console.log('Bad cape size');
-				return;
-			}
-
-			capeCanvas.width = capeImg.width;
-			capeCanvas.height = capeImg.height;
-			capeContext.clearRect(0, 0, capeCanvas.width, capeCanvas.height);
-			capeContext.drawImage(capeImg, 0, 0, capeCanvas.width, capeCanvas.height);
-
-			capeTexture.needsUpdate = true;
-			capeMaterial.needsUpdate = true;
-
-			this.playerObject.cape.visible = true;
-		};
-		capeImg.onerror = () => console.log('Failed loading ' + capeImg.src);
-
-		var draw = () => {
-			requestAnimationFrame(draw);
-			if(!this.animationPaused){
-				this.animationTime++;
-				if(this.animation){
-					this.animation(this.playerObject,this.animationTime/100*this.animationSpeed);
-				}
-			}
-			this.renderer.render(this.scene, this.camera);
 		}
-		draw();
 
-		if(options.skinUrl) this.skinUrl = options.skinUrl;
-		if(options.capeUrl) this.capeUrl = options.capeUrl;
-		if(options.width) this.width = options.width;
-		if(options.height) this.height = options.height;
-	}
+		dispose() {
+			this.disposed = true;
+			this.domElement.removeChild(this.renderer.domElement);
+			this.renderer.dispose();
+			this.skinTexture.dispose();
+			this.capeTexture.dispose();
+		}
+
+		get skinUrl(){
+			return this.skinImg.src;
+		}
+
+		set skinUrl(url){
+			this.skinImg.src = url;
+		}
+
+		get capeUrl(){
+			return this.capeImg.src;
+		}
+
+		set capeUrl(url){
+			this.capeImg.src = url;
+		}
+
+		get width(){
+			return this.renderer.getSize().width;
+		}
+
+		set width(newWidth){
+			this.setSize(newWidth, this.height);
+		}
+
+		get height(){
+			return this.renderer.getSize().height;
+		}
+
+		set height(newHeight){
+			this.setSize(this.width, newHeight);
+		}
+	};
 
 	// ====== OrbitControls ======
 	// The code was originally from https://github.com/mrdoob/three.js/blob/d45a042cf962e9b1aa9441810ba118647b48aacb/examples/js/controls/OrbitControls.js
@@ -667,18 +695,18 @@ var skinpreview3d = new function(){
 
 		// this method is exposed, but perhaps it would be better if we can make it private...
 		this.update = function () {
-			var offset = new THREE.Vector3();
+			let offset = new THREE.Vector3();
 
 			// so camera.up is the orbit axis
-			var quat = new THREE.Quaternion().setFromUnitVectors(object.up, new THREE.Vector3(0, 1, 0));
-			var quatInverse = quat.clone().inverse();
+			let quat = new THREE.Quaternion().setFromUnitVectors(object.up, new THREE.Vector3(0, 1, 0));
+			let quatInverse = quat.clone().inverse();
 
-			var lastPosition = new THREE.Vector3();
-			var lastQuaternion = new THREE.Quaternion();
+			let lastPosition = new THREE.Vector3();
+			let lastQuaternion = new THREE.Quaternion();
 
 			return function update() {
 
-				var position = scope.object.position;
+				let position = scope.object.position;
 
 				offset.copy(position).sub(scope.target);
 
@@ -777,37 +805,37 @@ var skinpreview3d = new function(){
 		// internals
 		//
 
-		var scope = this;
+		let scope = this;
 
-		var changeEvent = { type: 'change' };
-		var startEvent = { type: 'start' };
-		var endEvent = { type: 'end' };
+		let changeEvent = { type: 'change' };
+		let startEvent = { type: 'start' };
+		let endEvent = { type: 'end' };
 
-		var STATE = { NONE: - 1, ROTATE: 0, DOLLY: 1, PAN: 2, TOUCH_ROTATE: 3, TOUCH_DOLLY: 4, TOUCH_PAN: 5 };
+		let STATE = { NONE: - 1, ROTATE: 0, DOLLY: 1, PAN: 2, TOUCH_ROTATE: 3, TOUCH_DOLLY: 4, TOUCH_PAN: 5 };
 
-		var state = STATE.NONE;
+		let state = STATE.NONE;
 
-		var EPS = 0.000001;
+		let EPS = 0.000001;
 
 		// current position in spherical coordinates
-		var spherical = new THREE.Spherical();
-		var sphericalDelta = new THREE.Spherical();
+		let spherical = new THREE.Spherical();
+		let sphericalDelta = new THREE.Spherical();
 
-		var scale = 1;
-		var panOffset = new THREE.Vector3();
-		var zoomChanged = false;
+		let scale = 1;
+		let panOffset = new THREE.Vector3();
+		let zoomChanged = false;
 
-		var rotateStart = new THREE.Vector2();
-		var rotateEnd = new THREE.Vector2();
-		var rotateDelta = new THREE.Vector2();
+		let rotateStart = new THREE.Vector2();
+		let rotateEnd = new THREE.Vector2();
+		let rotateDelta = new THREE.Vector2();
 
-		var panStart = new THREE.Vector2();
-		var panEnd = new THREE.Vector2();
-		var panDelta = new THREE.Vector2();
+		let panStart = new THREE.Vector2();
+		let panEnd = new THREE.Vector2();
+		let panDelta = new THREE.Vector2();
 
-		var dollyStart = new THREE.Vector2();
-		var dollyEnd = new THREE.Vector2();
-		var dollyDelta = new THREE.Vector2();
+		let dollyStart = new THREE.Vector2();
+		let dollyEnd = new THREE.Vector2();
+		let dollyDelta = new THREE.Vector2();
 
 		function getAutoRotationAngle() {
 			return 2 * Math.PI / 60 / 60 * scope.autoRotateSpeed;
@@ -825,8 +853,8 @@ var skinpreview3d = new function(){
 			sphericalDelta.phi -= angle;
 		}
 
-		var panLeft = function () {
-			var v = new THREE.Vector3();
+		let panLeft = function () {
+			let v = new THREE.Vector3();
 			return function panLeft(distance, objectMatrix) {
 				v.setFromMatrixColumn(objectMatrix, 0); // get X column of objectMatrix
 				v.multiplyScalar(- distance);
@@ -835,8 +863,8 @@ var skinpreview3d = new function(){
 			};
 		}();
 
-		var panUp = function () {
-			var v = new THREE.Vector3();
+		let panUp = function () {
+			let v = new THREE.Vector3();
 			return function panUp(distance, objectMatrix) {
 				v.setFromMatrixColumn(objectMatrix, 1); // get Y column of objectMatrix
 				v.multiplyScalar(distance);
@@ -846,15 +874,15 @@ var skinpreview3d = new function(){
 		}();
 
 		// deltaX and deltaY are in pixels; right and down are positive
-		var pan = function () {
-			var offset = new THREE.Vector3();
+		let pan = function () {
+			let offset = new THREE.Vector3();
 			return function pan(deltaX, deltaY) {
-				var element = scope.domElement === document ? scope.domElement.body : scope.domElement;
+				let element = scope.domElement === document ? scope.domElement.body : scope.domElement;
 				if (scope.object instanceof THREE.PerspectiveCamera) {
 					// perspective
-					var position = scope.object.position;
+					let position = scope.object.position;
 					offset.copy(position).sub(scope.target);
-					var targetDistance = offset.length();
+					let targetDistance = offset.length();
 
 					// half of the fov is center to top of screen
 					targetDistance *= Math.tan((scope.object.fov / 2) * Math.PI / 180.0);
@@ -922,7 +950,7 @@ var skinpreview3d = new function(){
 		function handleMouseMoveRotate(event) {
 			rotateEnd.set(event.clientX, event.clientY);
 			rotateDelta.subVectors(rotateEnd, rotateStart);
-			var element = scope.domElement === document ? scope.domElement.body : scope.domElement;
+			let element = scope.domElement === document ? scope.domElement.body : scope.domElement;
 			// rotating across whole screen goes 360 degrees around
 			rotateLeft(2 * Math.PI * rotateDelta.x / element.clientWidth * scope.rotateSpeed);
 			// rotating up and down along whole screen attempts to go 360, but limited to 180
@@ -994,9 +1022,9 @@ var skinpreview3d = new function(){
 		}
 
 		function handleTouchStartDolly(event) {
-			var dx = event.touches[ 0 ].pageX - event.touches[ 1 ].pageX;
-			var dy = event.touches[ 0 ].pageY - event.touches[ 1 ].pageY;
-			var distance = Math.sqrt(dx * dx + dy * dy);
+			let dx = event.touches[ 0 ].pageX - event.touches[ 1 ].pageX;
+			let dy = event.touches[ 0 ].pageY - event.touches[ 1 ].pageY;
+			let distance = Math.sqrt(dx * dx + dy * dy);
 			dollyStart.set(0, distance);
 		}
 
@@ -1007,7 +1035,7 @@ var skinpreview3d = new function(){
 		function handleTouchMoveRotate(event) {
 			rotateEnd.set(event.touches[ 0 ].pageX, event.touches[ 0 ].pageY);
 			rotateDelta.subVectors(rotateEnd, rotateStart);
-			var element = scope.domElement === document ? scope.domElement.body : scope.domElement;
+			let element = scope.domElement === document ? scope.domElement.body : scope.domElement;
 			rotateLeft(2 * Math.PI * rotateDelta.x / element.clientWidth * scope.rotateSpeed);
 			rotateUp(2 * Math.PI * rotateDelta.y / element.clientHeight * scope.rotateSpeed);
 			rotateStart.copy(rotateEnd);
@@ -1016,9 +1044,9 @@ var skinpreview3d = new function(){
 		}
 
 		function handleTouchMoveDolly(event) {
-			var dx = event.touches[ 0 ].pageX - event.touches[ 1 ].pageX;
-			var dy = event.touches[ 0 ].pageY - event.touches[ 1 ].pageY;
-			var distance = Math.sqrt(dx * dx + dy * dy);
+			let dx = event.touches[ 0 ].pageX - event.touches[ 1 ].pageX;
+			let dy = event.touches[ 0 ].pageY - event.touches[ 1 ].pageY;
+			let distance = Math.sqrt(dx * dx + dy * dy);
 			dollyEnd.set(0, distance);
 			dollyDelta.subVectors(dollyEnd, dollyStart);
 			if (dollyDelta.y > 0) {
@@ -1213,33 +1241,41 @@ var skinpreview3d = new function(){
 	this.OrbitControls.prototype.constructor = this.OrbitControls;
 	// ============
 
-	this.SkinControl = function(skinViewer) {
-		this.enableAnimationControl = true;
-		this.skinViewer = skinViewer;
+	this.SkinControl = class {
+		constructor(skinViewer) {
+			this.enableAnimationControl = true;
+			this.skinViewer = skinViewer;
 
-		this.orbitControls = new skinpreview3d.OrbitControls(skinViewer.camera, skinViewer.renderer.domElement);
-		this.orbitControls.enablePan = false;
-		this.orbitControls.target = new THREE.Vector3(0, -12 ,0);
-		this.orbitControls.minDistance = 10;
-		this.orbitControls.maxDistance = 256;
-		this.orbitControls.update();
+			this.orbitControls = new skinpreview3d.OrbitControls(skinViewer.camera, skinViewer.renderer.domElement);
+			this.orbitControls.enablePan = false;
+			this.orbitControls.target = new THREE.Vector3(0, -12 ,0);
+			this.orbitControls.minDistance = 10;
+			this.orbitControls.maxDistance = 256;
+			this.orbitControls.update();
 
-		this.skinViewer.domElement.addEventListener('contextmenu', e => {
-			if(this.enableAnimationControl) {
-				e.preventDefault();
-				this.skinViewer.animationPaused = !this.skinViewer.animationPaused;
-			}
-		}, false);
-	}
+			this.animationPauseListener = e => {
+				if(this.enableAnimationControl) {
+					e.preventDefault();
+					this.skinViewer.animationPaused = !this.skinViewer.animationPaused;
+				}
+			};
+			this.skinViewer.domElement.addEventListener('contextmenu', this.animationPauseListener, false);
+		}
 
-}
+		dispose(){
+			this.skinViewer.domElement.removeEventListener('contextmenu', this.animationPauseListener, false);
+			this.orbitControls.dispose();
+		}
+	};
+
+}();
 
 if(window.jQuery){
 	(function($) {
 		$.fn.skinPreview3d = function (jqueryOptions) {
-			var options = Object.create(jqueryOptions);
+			let options = Object.create(jqueryOptions);
 			options.domElement = this.get(0);
-			var skinViewer = new skinpreview3d.SkinViewer(options);
+			let skinViewer = new skinpreview3d.SkinViewer(options);
 
 			if(options.disableControl !== true)
 				skinViewer.control = new skinpreview3d.SkinControl(skinViewer);
