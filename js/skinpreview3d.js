@@ -84,7 +84,12 @@ var skinpreview3d = new function(){
 		box.faceVertexUvs[0][11] = [back[0], back[1], back[2]];
 	};
 
-	this.SkinViewer = function(domElement, canvasW, canvasH, isSlim){
+	this.SkinViewer = function(options){
+		this.domElement = options.domElement;
+		this.slim = options.slim || false;
+		this.width = options.width;
+		this.height = options.height;
+
 		var angleRot = 0;
 		var skinInitialized = false;
 		var capeInitialized = false;
@@ -123,18 +128,17 @@ var skinpreview3d = new function(){
 			leftLeg2Box, leftLeg2Mesh,
 			capeBox, capeMesh;
 
-		this.domElement = domElement;
 		this.animationPaused = false;
 		this.animationSpeed = 3;
 
 		this.scene = new THREE.Scene();
 
-		this.camera = new THREE.PerspectiveCamera(75, canvasW / canvasH, 1, 10000);
+		this.camera = new THREE.PerspectiveCamera(75, this.width / this.height, 1, 10000);
 		this.camera.position.y = -12;
 		this.camera.position.z = 30;
 
 		this.renderer = new THREE.WebGLRenderer({angleRot: true, alpha: true, antialias: false});
-		this.renderer.setSize(canvasW, canvasH);
+		this.renderer.setSize(this.width, this.height);
 		this.renderer.context.getShaderInfoLog = () => ''; // shut firefox up
 		this.domElement.appendChild(this.renderer.domElement);
 
@@ -150,6 +154,8 @@ var skinpreview3d = new function(){
 		});
 
 		var initializeSkin = () => {
+			var isSlim = this.slim;
+
 			// Head Parts
 			headBox = new THREE.BoxGeometry(8, 8, 8, 0, 0, 0);
 			addVertices(headBox,
@@ -498,6 +504,11 @@ var skinpreview3d = new function(){
 			this.renderer.render(this.scene, this.camera);
 		}
 		draw();
+
+		if(options.skinUrl)
+			this.skinUrl = options.skinUrl;
+		if(options.capeUrl)
+			this.capeUrl = options.capeUrl;
 	}
 
 	// ====== OrbitControls ======
@@ -1207,11 +1218,10 @@ var skinpreview3d = new function(){
 
 if(window.jQuery){
 	(function($) {
-		$.fn.skinPreview3d = function (options) {
-			var skinViewer = new skinpreview3d.SkinViewer(this.get(0), options.width, options.height, options.slim === true);
-			skinViewer.skinUrl = options.skinUrl;
-			if(options.capeUrl != null)
-				skinViewer.capeUrl = options.capeUrl;
+		$.fn.skinPreview3d = function (jqueryOptions) {
+			var options = Object.create(jqueryOptions);
+			options.domElement = this.get(0);
+			var skinViewer = new skinpreview3d.SkinViewer(options);
 
 			if(options.disableControl !== true)
 				skinViewer.control = new skinpreview3d.SkinControl(skinViewer);
