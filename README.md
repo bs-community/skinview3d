@@ -23,8 +23,8 @@ JS
 ```js
 $(() => {
 	$("#skin_container").skinPreview3d({
-		skinUrl: 'img/hatsune_miku.png',
-		capeUrl: 'img/mojang_cape.png',
+		skinUrl: "img/hatsune_miku.png",
+		capeUrl: "img/mojang_cape.png",
 		slim: true,
 		width: 600,
 		height: 600
@@ -32,8 +32,8 @@ $(() => {
 });
 ```
 # Demos
-* [Native javascript](http://hacksore.github.io/skinpreview3d.js/demo_purejs.html)
-* [jQuery](http://hacksore.github.io/skinpreview3d.js/demo_jquery.html)
+* [Native javascript](https://hacksore.github.io/skinpreview3d.js/demo_purejs.html)
+* [jQuery](https://hacksore.github.io/skinpreview3d.js/demo_jquery.html)
 
 # License
 * `/img/mojang_cape.png` Copyright Mojang AB. [Link](https://minecraft.gamepedia.com/File:MojangCape2016.png)
