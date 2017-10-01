@@ -7,10 +7,10 @@ Three.js powered Minecraft skin viewer.
 * Capes
 * Slim arms
 
-# License
-* `/img/mojang_cape.png` Copyright Mojang AB. [Link](https://minecraft.gamepedia.com/File:MojangCape2016.png)
-* `/img/hatsune_miku.png` Copyright xilefian. [Link](http://www.minecraftforum.net/forums/mapping-and-modding/skins/2646900-hatsune-miku-skin-1-9-transparency-layers)
-* `/img/1_8_texturemap_redux.png` Copyright Mojang AB. [Link](https://minecraft.gamepedia.com/File:1_8_texturemap_redux.png)
-* `/img/steve_old.png` Copyright Mojang AB. [Link](https://minecraft.gamepedia.com/File:Char.png)
+# Build
+`npm run build` Concatenation only.
 
-Other parts of the repository are licensed under GPLv3 License.
+`npm run build-babel` Concatenate and compile using Babel (es2015).
+
+# License
+The repository is licensed under GPL-3.0 License.

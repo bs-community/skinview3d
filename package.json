@@ -1,0 +1,31 @@
+{
+	"name": "skinview3d",
+	"version": "1.0.0",
+	"description": "Three.js powered Minecraft skin viewer",
+	"main": "src/skinview3d.js",
+	"scripts": {
+		"build": "./node_modules/.bin/rollup -c rollup.config.default.js",
+		"build-babel": "./node_modules/.bin/rollup -c rollup.config.babel.js",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/to2mbn/skinview3d.git"
+	},
+	"author": "yushijinhun",
+	"license": "GPL-3.0",
+	"bugs": {
+		"url": "https://github.com/to2mbn/skinview3d/issues"
+	},
+	"homepage": "https://github.com/to2mbn/skinview3d",
+	"dependencies": {
+		"three": "^0.87.1"
+	},
+	"devDependencies": {
+		"babel-cli": "^6.26.0",
+		"babel-plugin-external-helpers": "^6.22.0",
+		"babel-preset-es2015": "^6.24.1",
+		"rollup": "^0.50.0",
+		"rollup-plugin-babel": "^3.0.2"
+	}
+}
