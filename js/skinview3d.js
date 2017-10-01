@@ -1,12 +1,28 @@
-/*
- * skinpreview3d.js
- * https://github.com/Hacksore/skinpreview3d.js
+/**
+ * skinview3d <https://github.com/to2mbn/skinview3d>
+ *
+ * Copyright (C) 2017 the original author or authors
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-'use strict';
-
-// namespace skinpreview3d
-let skinpreview3d = new function(){
+let skinview3d = new function(){
+	/**
+	 * @author yushijinhun <https://github.com/yushijinhun>
+	 * @author Hacksore <https://github.com/Hacksore>
+	 * @author Kent Rasmussen <https://github.com/earthiverse>
+	 */
+	"use strict";
 
 	let copyImage = (context, sX, sY, w, h, dX, dY, flipHorizontal) => {
 		let imgData = context.getImageData(sX, sY, w, h);
@@ -368,11 +384,11 @@ let skinpreview3d = new function(){
 
 			this.slim = slim;
 
-			this.skin = new skinpreview3d.SkinObject(slim, layer1Material, layer2Material);
+			this.skin = new skinview3d.SkinObject(slim, layer1Material, layer2Material);
 			this.skin.visible = false;
 			this.add(this.skin);
 
-			this.cape = new skinpreview3d.CapeObject(capeMaterial);
+			this.cape = new skinview3d.CapeObject(capeMaterial);
 			this.cape.position.z = -2;
 			this.cape.position.y = -4;
 			this.cape.rotation.x = 25*Math.PI/180;
@@ -405,13 +421,13 @@ let skinpreview3d = new function(){
 
 			// texture
 			this.skinImg = new Image();
-			this.skinCanvas = document.createElement('canvas');
+			this.skinCanvas = document.createElement("canvas");
 			this.skinTexture = new THREE.Texture(this.skinCanvas);
 			this.skinTexture.magFilter = THREE.NearestFilter;
 			this.skinTexture.minFilter = THREE.NearestMipMapNearestFilter;
 
 			this.capeImg = new Image();
-			this.capeCanvas = document.createElement('canvas');
+			this.capeCanvas = document.createElement("canvas");
 			this.capeTexture = new THREE.Texture(this.capeCanvas);
 			this.capeTexture.magFilter = THREE.NearestFilter;
 			this.capeTexture.minFilter = THREE.NearestMipMapNearestFilter;
@@ -429,27 +445,27 @@ let skinpreview3d = new function(){
 
 			this.renderer = new THREE.WebGLRenderer({angleRot: true, alpha: true, antialias: false});
 			this.renderer.setSize(300, 300); // default size
-			this.renderer.context.getShaderInfoLog = () => ''; // shut firefox up
+			this.renderer.context.getShaderInfoLog = () => ""; // shut firefox up
 			this.domElement.appendChild(this.renderer.domElement);
 
-			this.playerObject = new skinpreview3d.PlayerObject(options.slim === true, this.layer1Material, this.layer2Material, this.capeMaterial);
+			this.playerObject = new skinview3d.PlayerObject(options.slim === true, this.layer1Material, this.layer2Material, this.capeMaterial);
 			this.scene.add(this.playerObject);
 
 			// texture loading
-			this.skinImg.crossOrigin = '';
-			this.skinImg.onerror = () => console.log('Failed loading ' + this.skinImg.src);
+			this.skinImg.crossOrigin = "";
+			this.skinImg.onerror = () => console.log("Failed loading " + this.skinImg.src);
 			this.skinImg.onload = () => {
 				let isOldFormat = false;
 				if (this.skinImg.width !== this.skinImg.height) {
 					if (this.skinImg.width === 2*this.skinImg.height) {
 						isOldFormat = true;
 					} else {
-						console.log('Bad skin size');
+						console.log("Bad skin size");
 						return;
 					}
 				}
 
-				let skinContext = this.skinCanvas.getContext('2d');
+				let skinContext = this.skinCanvas.getContext("2d");
 				if(isOldFormat){
 					let width = this.skinImg.width;
 					this.skinCanvas.width = width;
@@ -471,17 +487,17 @@ let skinpreview3d = new function(){
 				this.playerObject.skin.visible = true;
 			};
 
-			this.capeImg.crossOrigin = '';
-			this.capeImg.onerror = () => console.log('Failed loading ' + this.capeImg.src);
+			this.capeImg.crossOrigin = "";
+			this.capeImg.onerror = () => console.log("Failed loading " + this.capeImg.src);
 			this.capeImg.onload = () => {
 				if (this.capeImg.width !== 2*this.capeImg.height) {
-					console.log('Bad cape size');
+					console.log("Bad cape size");
 					return;
 				}
 
 				this.capeCanvas.width = this.capeImg.width;
 				this.capeCanvas.height = this.capeImg.height;
-				let capeContext = this.capeCanvas.getContext('2d');
+				let capeContext = this.capeCanvas.getContext("2d");
 				capeContext.clearRect(0, 0, this.capeCanvas.width, this.capeCanvas.height);
 				capeContext.drawImage(this.capeImg, 0, 0, this.capeCanvas.width, this.capeCanvas.height);
 
@@ -562,7 +578,7 @@ let skinpreview3d = new function(){
 	/**
 	 * The MIT License
 	 *
-	 * Copyright © 2010-2017 three.js authors
+	 * Copyright (C) 2010-2017 three.js authors
 	 *
 	 * Permission is hereby granted, free of charge, to any person obtaining a copy
 	 * of this software and associated documentation files (the "Software"), to deal
@@ -785,20 +801,20 @@ let skinpreview3d = new function(){
 		}();
 
 		this.dispose = function () {
-			scope.domElement.removeEventListener('contextmenu', onContextMenu, false);
-			scope.domElement.removeEventListener('mousedown', onMouseDown, false);
-			scope.domElement.removeEventListener('wheel', onMouseWheel, false);
+			scope.domElement.removeEventListener("contextmenu", onContextMenu, false);
+			scope.domElement.removeEventListener("mousedown", onMouseDown, false);
+			scope.domElement.removeEventListener("wheel", onMouseWheel, false);
 
-			scope.domElement.removeEventListener('touchstart', onTouchStart, false);
-			scope.domElement.removeEventListener('touchend', onTouchEnd, false);
-			scope.domElement.removeEventListener('touchmove', onTouchMove, false);
+			scope.domElement.removeEventListener("touchstart", onTouchStart, false);
+			scope.domElement.removeEventListener("touchend", onTouchEnd, false);
+			scope.domElement.removeEventListener("touchmove", onTouchMove, false);
 
-			document.removeEventListener('mousemove', onMouseMove, false);
-			document.removeEventListener('mouseup', onMouseUp, false);
+			document.removeEventListener("mousemove", onMouseMove, false);
+			document.removeEventListener("mouseup", onMouseUp, false);
 
-			window.removeEventListener('keydown', onKeyDown, false);
+			window.removeEventListener("keydown", onKeyDown, false);
 
-			//scope.dispatchEvent({ type: 'dispose' }); // should this be added here?
+			//scope.dispatchEvent({ type: "dispose" }); // should this be added here?
 		};
 
 		//
@@ -807,9 +823,9 @@ let skinpreview3d = new function(){
 
 		let scope = this;
 
-		let changeEvent = { type: 'change' };
-		let startEvent = { type: 'start' };
-		let endEvent = { type: 'end' };
+		let changeEvent = { type: "change" };
+		let startEvent = { type: "start" };
+		let endEvent = { type: "end" };
 
 		let STATE = { NONE: - 1, ROTATE: 0, DOLLY: 1, PAN: 2, TOUCH_ROTATE: 3, TOUCH_DOLLY: 4, TOUCH_PAN: 5 };
 
@@ -896,7 +912,7 @@ let skinpreview3d = new function(){
 					panUp(deltaY * (scope.object.top - scope.object.bottom) / scope.object.zoom / element.clientHeight, scope.object.matrix);
 				} else {
 					// camera neither orthographic nor perspective
-					console.warn('WARNING: OrbitControls.js encountered an unknown camera type - pan disabled.');
+					console.warn("WARNING: OrbitControls.js encountered an unknown camera type - pan disabled.");
 					scope.enablePan = false;
 				}
 			};
@@ -910,7 +926,7 @@ let skinpreview3d = new function(){
 				scope.object.updateProjectionMatrix();
 				zoomChanged = true;
 			} else {
-				console.warn('WARNING: OrbitControls.js encountered an unknown camera type - dolly/zoom disabled.');
+				console.warn("WARNING: OrbitControls.js encountered an unknown camera type - dolly/zoom disabled.");
 				scope.enableZoom = false;
 			}
 		}
@@ -923,7 +939,7 @@ let skinpreview3d = new function(){
 				scope.object.updateProjectionMatrix();
 				zoomChanged = true;
 			} else {
-				console.warn('WARNING: OrbitControls.js encountered an unknown camera type - dolly/zoom disabled.');
+				console.warn("WARNING: OrbitControls.js encountered an unknown camera type - dolly/zoom disabled.");
 				scope.enableZoom = false;
 			}
 		}
@@ -1098,8 +1114,8 @@ let skinpreview3d = new function(){
 
 			event.preventDefault();
 			if (state !== STATE.NONE) {
-				document.addEventListener('mousemove', onMouseMove, false);
-				document.addEventListener('mouseup', onMouseUp, false);
+				document.addEventListener("mousemove", onMouseMove, false);
+				document.addEventListener("mouseup", onMouseUp, false);
 				scope.dispatchEvent(startEvent);
 			}
 		}
@@ -1128,8 +1144,8 @@ let skinpreview3d = new function(){
 		function onMouseUp(event) {
 			if (scope.enabled === false) return;
 			handleMouseUp(event);
-			document.removeEventListener('mousemove', onMouseMove, false);
-			document.removeEventListener('mouseup', onMouseUp, false);
+			document.removeEventListener("mousemove", onMouseMove, false);
+			document.removeEventListener("mouseup", onMouseUp, false);
 			scope.dispatchEvent(endEvent);
 			state = STATE.NONE;
 		}
@@ -1221,16 +1237,16 @@ let skinpreview3d = new function(){
 
 		//
 
-		scope.domElement.addEventListener('contextmenu', onContextMenu, false);
+		scope.domElement.addEventListener("contextmenu", onContextMenu, false);
 
-		scope.domElement.addEventListener('mousedown', onMouseDown, false);
-		scope.domElement.addEventListener('wheel', onMouseWheel, false);
+		scope.domElement.addEventListener("mousedown", onMouseDown, false);
+		scope.domElement.addEventListener("wheel", onMouseWheel, false);
 
-		scope.domElement.addEventListener('touchstart', onTouchStart, false);
-		scope.domElement.addEventListener('touchend', onTouchEnd, false);
-		scope.domElement.addEventListener('touchmove', onTouchMove, false);
+		scope.domElement.addEventListener("touchstart", onTouchStart, false);
+		scope.domElement.addEventListener("touchend", onTouchEnd, false);
+		scope.domElement.addEventListener("touchmove", onTouchMove, false);
 
-		window.addEventListener('keydown', onKeyDown, false);
+		window.addEventListener("keydown", onKeyDown, false);
 
 		// force an update at start
 
@@ -1246,7 +1262,7 @@ let skinpreview3d = new function(){
 			this.enableAnimationControl = true;
 			this.skinViewer = skinViewer;
 
-			this.orbitControls = new skinpreview3d.OrbitControls(skinViewer.camera, skinViewer.renderer.domElement);
+			this.orbitControls = new skinview3d.OrbitControls(skinViewer.camera, skinViewer.renderer.domElement);
 			this.orbitControls.enablePan = false;
 			this.orbitControls.target = new THREE.Vector3(0, -12 ,0);
 			this.orbitControls.minDistance = 10;
@@ -1259,26 +1275,13 @@ let skinpreview3d = new function(){
 					this.skinViewer.animationPaused = !this.skinViewer.animationPaused;
 				}
 			};
-			this.skinViewer.domElement.addEventListener('contextmenu', this.animationPauseListener, false);
+			this.skinViewer.domElement.addEventListener("contextmenu", this.animationPauseListener, false);
 		}
 
 		dispose(){
-			this.skinViewer.domElement.removeEventListener('contextmenu', this.animationPauseListener, false);
+			this.skinViewer.domElement.removeEventListener("contextmenu", this.animationPauseListener, false);
 			this.orbitControls.dispose();
 		}
 	};
 
 }();
-
-if(window.jQuery){
-	(function($) {
-		$.fn.skinPreview3d = function (jqueryOptions) {
-			let options = Object.create(jqueryOptions);
-			options.domElement = this.get(0);
-			let skinViewer = new skinpreview3d.SkinViewer(options);
-
-			if(options.disableControl !== true)
-				skinViewer.control = new skinpreview3d.SkinControl(skinViewer);
-		};
-	} (window.jQuery));
-}
