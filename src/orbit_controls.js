@@ -1,4 +1,5 @@
 /**
+ * @license
  * Copyright (C) 2010-2017 three.js authors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,12 +20,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-// The code was originally from https://github.com/mrdoob/three.js/blob/d45a042cf962e9b1aa9441810ba118647b48aacb/examples/js/controls/OrbitControls.js
-
+/**
+ * @preserve
+ * The code was originally from https://github.com/mrdoob/three.js/blob/d45a042cf962e9b1aa9441810ba118647b48aacb/examples/js/controls/OrbitControls.js
+ */
 import THREE from "three";
 
 class OrbitControls extends THREE.EventDispatcher {
 	/**
+	 * @preserve
 	 * @author qiao / https://github.com/qiao
 	 * @author mrdoob / http://mrdoob.com
 	 * @author alteredq / http://alteredqualia.com/

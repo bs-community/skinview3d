@@ -49,9 +49,7 @@ Three.js powered Minecraft skin viewer.
 ```
 
 # Build
-`npm run build` Concatenation only.
-
-`npm run build-babel` Concatenate and compile using Babel (es2015).
+`npm run build`
 
 
 [npm-badge]: https://img.shields.io/npm/v/skinview3d.svg

@@ -287,7 +287,7 @@ class SkinObject extends THREE.Group {
 		this.leftLeg.position.x = 2;
 		this.add(this.leftLeg);
 	}
-};
+}
 
 class CapeObject extends THREE.Group {
 	constructor(capeMaterial) {
@@ -309,7 +309,7 @@ class CapeObject extends THREE.Group {
 		this.cape.position.z = -0.5;
 		this.add(this.cape);
 	}
-};
+}
 
 class PlayerObject extends THREE.Group {
 	constructor(slim, layer1Material, layer2Material, capeMaterial) {
@@ -328,6 +328,6 @@ class PlayerObject extends THREE.Group {
 		this.cape.visible = false;
 		this.add(this.cape);
 	}
-};
+}
 
 export { SkinObject, CapeObject, PlayerObject };

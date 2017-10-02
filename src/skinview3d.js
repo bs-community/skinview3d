@@ -1,4 +1,5 @@
 /**
+ * @license
  * skinview3d <https://github.com/to2mbn/skinview3d>
  *
  * Copyright (C) 2017 the original author or authors

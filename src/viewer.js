@@ -213,7 +213,7 @@ class SkinViewer {
 	set height(newHeight) {
 		this.setSize(this.width, newHeight);
 	}
-};
+}
 
 class SkinControl {
 	constructor(skinViewer) {
@@ -240,6 +240,6 @@ class SkinControl {
 		this.skinViewer.domElement.removeEventListener("contextmenu", this.animationPauseListener, false);
 		this.orbitControls.dispose();
 	}
-};
+}
 
 export { SkinViewer, SkinControl };
