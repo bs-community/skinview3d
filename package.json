@@ -6,6 +6,7 @@
 	"scripts": {
 		"build": "./node_modules/.bin/rollup -c rollup.config.default.js",
 		"build-babel": "./node_modules/.bin/rollup -c rollup.config.babel.js",
+		"prepare": "rm -rf build && npm run build && npm run build-babel",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"repository": {
