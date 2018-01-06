@@ -25,4 +25,4 @@
 
 export { SkinObject, CapeObject, PlayerObject } from "./model";
 export { SkinViewer, SkinControl } from "./viewer";
-export { WalkAnimation } from "./animation";
+export { CompositeAnimation, WalkAnimation } from "./animation";

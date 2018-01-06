@@ -1,6 +1,7 @@
 import THREE from "three";
 import { PlayerObject } from "./model";
 import { OrbitControls } from "./orbit_controls";
+import { invokeAnimation } from "./animation";
 
 function copyImage(context, sX, sY, w, h, dX, dY, flipHorizontal) {
 	let imgData = context.getImageData(sX, sY, w, h);
@@ -160,7 +161,7 @@ class SkinViewer {
 			if (!this.animationPaused) {
 				this.animationTime++;
 				if (this.animation) {
-					this.animation(this.playerObject, this.animationTime / 100 * this.animationSpeed);
+					invokeAnimation(this.animation, this.playerObject, this.animationTime / 100.0 * this.animationSpeed);
 				}
 			}
 			this.renderer.render(this.scene, this.camera);

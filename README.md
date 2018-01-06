@@ -23,8 +23,7 @@ Three.js powered Minecraft skin viewer.
 		width: 600,
 		height: 600,
 		skinUrl: "img/skin.png",
-		capeUrl: "img/cape.png",
-		animation: skinview3d.WalkAnimation
+		capeUrl: "img/cape.png"
 	});
 
 	// change the skin and cape
@@ -38,14 +37,17 @@ Three.js powered Minecraft skin viewer.
 	// enable the mouse control feature
 	let control = new skinview3d.SkinControl(skinViewer);
 
-	// pause the animation
-	// skinViewer.animationPaused = true;
-
-	// change the animation speed
-	// skinViewer.animationSpeed = 8;
-
 	// disable the 'right click to play/pause' feature
 	// control.enableAnimationControl = false;
+
+	skinViewer.animation = new skinview3d.CompositeAnimation();
+
+	// add an animation
+	let walk = skinViewer.animation.add(skinview3d.WalkAnimation);
+
+	// set its speed and some others
+	walk.speed = 1.5;
+	// walk.paused = true;
 </script>
 ```
 
