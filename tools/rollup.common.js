@@ -1,23 +1,23 @@
-import uglify from 'rollup-plugin-uglify';
-import { minify } from 'uglify-es';
-import babel from 'rollup-plugin-babel';
+import uglify from "rollup-plugin-uglify";
+import { minify } from "uglify-es";
+import babel from "rollup-plugin-babel";
 let buildType = config => {
 	let options = {
-		input: 'src/skinview3d.js',
-		indent: '\t',
+		input: "src/skinview3d.js",
+		indent: "\t",
 		sourcemap: true,
-		external: ['three'],
+		external: ["three"],
 		globals: {
-			three: 'THREE'
+			three: "THREE"
 		},
 		output: [
 			{
-				format: 'umd',
-				name: 'skinview3d',
+				format: "umd",
+				name: "skinview3d",
 				file: `build/skinview3d${config.postfix}.js`
 			},
 			{
-				format: 'es',
+				format: "es",
 				file: `build/skinview3d${config.postfix}.module.js`
 			}
 		],
@@ -26,7 +26,7 @@ let buildType = config => {
 	if (config.babel) {
 		options.plugins.push(
 			babel({
-				exclude: 'node_modules/**',
+				exclude: "node_modules/**",
 			})
 		);
 	}

@@ -1,5 +1,5 @@
 import THREE from "three";
-import { SkinObject, CapeObject, PlayerObject } from "./model";
+import { PlayerObject } from "./model";
 import { OrbitControls } from "./orbit_controls";
 
 function copyImage(context, sX, sY, w, h, dX, dY, flipHorizontal) {
@@ -95,14 +95,14 @@ class SkinViewer {
 
 		// texture loading
 		this.skinImg.crossOrigin = "";
-		this.skinImg.onerror = () => console.log("Failed loading " + this.skinImg.src);
+		this.skinImg.onerror = () => console.error("Failed loading " + this.skinImg.src);
 		this.skinImg.onload = () => {
 			let isOldFormat = false;
 			if (this.skinImg.width !== this.skinImg.height) {
 				if (this.skinImg.width === 2 * this.skinImg.height) {
 					isOldFormat = true;
 				} else {
-					console.log("Bad skin size");
+					console.error("Bad skin size");
 					return;
 				}
 			}
@@ -130,10 +130,10 @@ class SkinViewer {
 		};
 
 		this.capeImg.crossOrigin = "";
-		this.capeImg.onerror = () => console.log("Failed loading " + this.capeImg.src);
+		this.capeImg.onerror = () => console.error("Failed loading " + this.capeImg.src);
 		this.capeImg.onload = () => {
 			if (this.capeImg.width !== 2 * this.capeImg.height) {
-				console.log("Bad cape size");
+				console.error("Bad cape size");
 				return;
 			}
 

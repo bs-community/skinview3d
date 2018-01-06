@@ -1,5 +1,3 @@
-import { SkinObject, CapeObject, PlayerObject } from "./skinview3d";
-
 let WalkAnimation = (player, time) => {
 	let skin = player.skin;
 	let angleRot = time + Math.PI / 2;
