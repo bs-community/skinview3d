@@ -2,10 +2,10 @@
 	"name": "skinview3d",
 	"version": "1.0.2",
 	"description": "Three.js powered Minecraft skin viewer",
-	"module": "build/skinview3d.babel.module.js",
-	"main": "build/skinview3d.babel.min.js",
+	"module": "build/skinview3d.module.js",
+	"main": "build/skinview3d.js",
 	"scripts": {
-		"build": "rollup -c tools/rollup.default.js && rollup -c tools/rollup.min.js && rollup -c tools/rollup.babel.js && rollup -c tools/rollup.babel.min.js",
+		"build": "rollup -c tools/rollup.module.js && rollup -c tools/rollup.browser.js && rollup -c tools/rollup.browser.min.js",
 		"prepare": "npm test && rm -rf build && npm run build",
 		"test": "eslint src/** tools/**"
 	},

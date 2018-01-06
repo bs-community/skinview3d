@@ -10,38 +10,43 @@ let buildType = config => {
 		globals: {
 			three: "THREE"
 		},
-		output: [
-			{
+		output: [],
+		plugins: []
+	};
+
+	switch (config.format) {
+		case "umd":
+			options.output.push({
 				format: "umd",
 				name: "skinview3d",
 				file: `build/skinview3d${config.postfix}.js`
-			},
-			{
+			});
+			break;
+
+		case "es":
+			options.output.push({
 				format: "es",
-				file: `build/skinview3d${config.postfix}.module.js`
-			}
-		],
-		plugins: []
-	};
+				file: `build/skinview3d${config.postfix}.js`
+			});
+			break;
+
+		default:
+			throw `Unknown format: ${config.format}`;
+	}
+
 	if (config.babel) {
 		options.plugins.push(
 			babel({
-				exclude: "node_modules/**",
+				exclude: "node_modules/**"
 			})
 		);
 	}
+
 	if (config.uglify) {
 		options.plugins.push(
 			uglify({
 				output: {
-					comments: (node, comment) => {
-						let text = comment.value;
-						let type = comment.type;
-						if (type == "comment2") {
-							// multiline comment
-							return /@preserve|@license|@cc_on/i.test(text);
-						}
-					}
+					comments: "some"
 				}
 			}, minify)
 		);
