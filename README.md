@@ -1,8 +1,9 @@
 skinview3d
 ========
 
-[![Latest NPM release][npm-badge]][npm-badge-url]
-[![License][license-badge]][license-badge-url]
+[![Travis](https://img.shields.io/travis/to2mbn/skinview3d.svg?style=flat-square)](https://travis-ci.org/to2mbn/skinview3d)
+[![npm](https://img.shields.io/npm/v/skinview3d.svg?style=flat-square)](https://www.npmjs.com/package/skinview3d)
+[![license](https://img.shields.io/github/license/to2mbn/skinview3d.svg?style=flat-square)](https://github.com/to2mbn/skinview3d/blob/master/LICENSE)
 
 Three.js powered Minecraft skin viewer.
 
@@ -50,9 +51,3 @@ Three.js powered Minecraft skin viewer.
 
 # Build
 `npm run build`
-
-
-[npm-badge]: https://img.shields.io/npm/v/skinview3d.svg
-[npm-badge-url]: https://www.npmjs.com/package/skinview3d
-[license-badge]: https://img.shields.io/npm/l/skinview3d.svg
-[license-badge-url]: ./LICENSE
