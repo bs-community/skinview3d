@@ -1,4 +1,4 @@
-import THREE from "three";
+import * as THREE from "three";
 import { PlayerObject } from "./model";
 import { OrbitControls } from "./orbit_controls";
 import { invokeAnimation } from "./animation";
