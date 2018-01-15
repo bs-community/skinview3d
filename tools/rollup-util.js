@@ -1,17 +1,23 @@
 import uglify from "rollup-plugin-uglify";
 import { minify } from "uglify-es";
 import babel from "rollup-plugin-babel";
+import resolve from "rollup-plugin-node-resolve";
+
 let buildType = config => {
 	let options = {
 		input: "src/skinview3d.js",
 		indent: "\t",
 		sourcemap: true,
-		external: ["three"],
-		globals: {
-			three: "THREE"
-		},
 		output: [],
-		plugins: []
+		external:[
+			"three"
+		],
+		globals: {
+			"three": "THREE"
+		},
+		plugins: [
+			resolve()
+		]
 	};
 
 	switch (config.format) {
