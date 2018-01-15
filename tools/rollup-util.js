@@ -6,15 +6,10 @@ import resolve from "rollup-plugin-node-resolve";
 let buildType = config => {
 	let options = {
 		input: "src/skinview3d.js",
-		indent: "\t",
-		sourcemap: true,
 		output: [],
 		external:[
 			"three"
 		],
-		globals: {
-			"three": "THREE"
-		},
 		plugins: [
 			resolve()
 		]
@@ -25,14 +20,21 @@ let buildType = config => {
 			options.output.push({
 				format: "umd",
 				name: "skinview3d",
-				file: `build/skinview3d${config.postfix}.js`
+				file: `build/skinview3d${config.postfix}.js`,
+				indent: "\t",
+				sourcemap: true,
+				globals: {
+					"three": "THREE"
+				}
 			});
 			break;
 
 		case "es":
 			options.output.push({
 				format: "es",
-				file: `build/skinview3d${config.postfix}.js`
+				file: `build/skinview3d${config.postfix}.js`,
+				indent: "\t",
+				sourcemap: true,
 			});
 			break;
 
