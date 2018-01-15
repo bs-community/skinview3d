@@ -1,4 +1,4 @@
-import THREE from "three";
+import * as THREE from "three";
 
 function toFaceVertices(x1, y1, x2, y2, w, h) {
 	return [
