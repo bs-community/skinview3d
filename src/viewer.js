@@ -58,7 +58,6 @@ class SkinViewer {
 		this.domElement = options.domElement;
 		this.animation = options.animation || null;
 		this.animationPaused = false;
-		this.animationSpeed = 3;
 		this.animationTime = 0;
 		this.disposed = false;
 
@@ -161,7 +160,7 @@ class SkinViewer {
 			if (!this.animationPaused) {
 				this.animationTime++;
 				if (this.animation) {
-					invokeAnimation(this.animation, this.playerObject, this.animationTime / 100.0 * this.animationSpeed);
+					invokeAnimation(this.animation, this.playerObject, this.animationTime / 100.0);
 				}
 			}
 			this.renderer.render(this.scene, this.camera);
