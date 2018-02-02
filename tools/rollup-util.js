@@ -1,5 +1,4 @@
 import uglify from "rollup-plugin-uglify";
-import { minify } from "uglify-es";
 import babel from "rollup-plugin-babel";
 import resolve from "rollup-plugin-node-resolve";
 
@@ -56,7 +55,7 @@ let buildType = config => {
 				output: {
 					comments: "some"
 				}
-			}, minify)
+			})
 		);
 	}
 	return options;
