@@ -1,23 +1,19 @@
 import { PlayerObject } from './model'
 
-declare function invokeAnimation(
-  animation: CompositeAnimation,
-  player: PlayerObject,
-  time: number
-): void
+export type Animation = CompositeAnimation | typeof WalkAnimation
 
 declare function invokeAnimation(
-  animation: typeof WalkAnimation,
+  animation: Animation,
   player: PlayerObject,
   time: number
 ): void
 
 declare class AnimationHandle {
-  animation: typeof WalkAnimation
+  animation: Animation
   paused: boolean
   speed: number
 
-  constructor(animation: typeof WalkAnimation)
+  constructor(animation: Animation)
 
   play(player: PlayerObject, time: number): void
 
@@ -29,7 +25,7 @@ export class CompositeAnimation {
 
   constructor()
 
-  add(animation: typeof WalkAnimation): AnimationHandle
+  add(animation: Animation): AnimationHandle
 
   play(player: PlayerObject, time: number): void
 }

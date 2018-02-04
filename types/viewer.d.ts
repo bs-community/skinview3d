@@ -1,8 +1,11 @@
-import { CompositeAnimation, WalkAnimation } from './animation';
+import * as THREE from 'three'
+import { CompositeAnimation, WalkAnimation } from './animation'
+import { Animation } from './animation'
+import { PlayerObject } from './model'
 
 interface SkinViewerOptions {
   domElement: Element
-  animation?: CompositeAnimation | typeof WalkAnimation
+  animation?: Animation
   slim?: boolean
   skinUrl?: string
   capeUrl?: string
@@ -15,6 +18,15 @@ export class SkinViewer {
   capeUrl: string
   width: number
   height: number
+  readonly domElement: Element
+  animation: Animation
+  animationPaused: boolean
+  animationTime: number
+  readonly playerObject: PlayerObject
+  readonly disposed: boolean
+  readonly camera: THREE.Camera
+  readonly renderer: THREE.Renderer
+  readonly scene: THREE.Scene
 
   constructor(options: SkinViewerOptions)
 
@@ -24,6 +36,9 @@ export class SkinViewer {
 }
 
 export class SkinControl {
+  enableAnimationControl: boolean
+  readonly skinViewer: SkinViewer
+
   constructor(skinViewer: SkinViewer)
 
   dispose(): void
