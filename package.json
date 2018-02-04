@@ -4,6 +4,7 @@
 	"description": "Three.js powered Minecraft skin viewer",
 	"module": "build/skinview3d.module.js",
 	"main": "build/skinview3d.js",
+	"typings": "types/skinview3d.d.ts",
 	"scripts": {
 		"build": "rollup -c tools/rollup.module.js && rollup -c tools/rollup.browser.js && rollup -c tools/rollup.browser.min.js",
 		"prepare": "npm test && rm -rf build && npm run build",
@@ -23,6 +24,7 @@
 		"three": "^0.89.0"
 	},
 	"devDependencies": {
+		"@types/three": "^0.89.6",
 		"babel-cli": "^6.26.0",
 		"babel-plugin-external-helpers": "^6.22.0",
 		"babel-preset-env": "^1.6.1",
