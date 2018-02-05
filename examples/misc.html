@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>skinview3d Advanced example</title>
+	<style>
+	body, html{
+		background: #444444;
+		color: #fff;
+	}
+
+	</style>
+</head>
+<body>
+
+	<h2>Miscellaneous example</h2>
+	<div id="skin_container"></div>
+
+	<h3>Hover the avatars</h3>
+	<div class="skins">
+		<img class="skin" onmouseover="setSkin('../img/haka.png')" src="https://crafatar.com/avatars/708b4298c9cd41fb8590aaf8297a9cb0?size=64"/>
+		<img class="skin" onmouseover="setSkin('../img/Hacksore.png')" src="https://crafatar.com/avatars/7fc5534623394276bc489fd0d0d9f142?size=64"/>
+		<img class="skin" onmouseover="setSkin('../img/sethbling.png')" src="https://crafatar.com/avatars/55a2e72e01614c85b191a0b227ff758a?size=64"/>
+	</div>
+
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/three.js/89/three.min.js"></script>
+	<script type="text/javascript" src="../js/skinview3d.min.js"></script>
+	<script>
+		let skinViewer = new skinview3d.SkinViewer({
+			domElement: document.getElementById("skin_container"),
+			slim: false,
+			width: 600,
+			height: 600,
+			skinUrl: "../img/1_8_texturemap_redux.png"
+		});
+
+		// enable the mouse control feature
+		let control = new skinview3d.SkinControl(skinViewer);
+
+		// setup the animation on the skinViewer object
+		skinViewer.animation = new skinview3d.CompositeAnimation();
+
+		// add an animation
+		let walk = skinViewer.animation.add(skinview3d.WalkAnimation);
+
+		// set its speed and some others
+		walk.speed = 1.5;
+
+		// custom skin change code on mouseover
+		function setSkin(url){
+			skinViewer.skinUrl = url;
+		}
+
+	</script>
+</body>
+</html>
