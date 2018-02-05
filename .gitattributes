@@ -1,0 +1,4 @@
+* text eol=lf
+js/* text=auto
+*.png binary
+*.jpg binary

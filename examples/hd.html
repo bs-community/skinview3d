@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>skinview3d example using Javascript</title>
+	<style>
+	body, html{
+		background: #444444;
+		color: #fff;
+	}
+
+	</style>
+</head>
+<body>
+
+	<h2>HD</h2>
+	<div id="skin_container"></div>
+
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/three.js/89/three.min.js"></script>
+	<script type="text/javascript" src="../js/skinview3d.min.js"></script>
+	<script>
+		let skinViewer = new skinview3d.SkinViewer({
+			domElement: document.getElementById("skin_container"),
+			slim: true,
+			width: 600,
+			height: 600,
+			skinUrl: "../img/ironman_hd.png"
+		});
+
+		// change the skin and cape
+		// skinViewer.skinUrl = "img/skin.png";
+		// skinViewer.capeUrl = "img/cape.png";
+
+		// change the width and height
+		// skinViewer.width = 300;
+		// skinViewer.height = 400;
+
+		// enable the mouse control feature
+		let control = new skinview3d.SkinControl(skinViewer);
+
+		// disable the 'right click to play/pause' feature
+		// control.enableAnimationControl = false;
+
+		skinViewer.animation = new skinview3d.CompositeAnimation();
+
+		// add an animation
+		let walk = skinViewer.animation.add(skinview3d.WalkAnimation);
+
+		// set its speed and some others
+		walk.speed = 1.5;
+		// walk.paused = true;
+	</script>
+</body>
+</html>
