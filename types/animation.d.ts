@@ -1,6 +1,16 @@
 import { PlayerObject } from './model'
 
-export type Animation = CompositeAnimation | typeof WalkAnimation
+type AnimationFn = (player: PlayerObject, time: number) => void
+interface IAnimation {
+  play(player: PlayerObject, time: number): void
+}
+export type Animation =
+  | AnimationFn
+  | IAnimation
+  | {
+    play(player: PlayerObject, time: number): void
+    [x: string]: any
+  }
 
 declare function invokeAnimation(
   animation: Animation,
@@ -8,8 +18,8 @@ declare function invokeAnimation(
   time: number
 ): void
 
-declare class AnimationHandle {
-  animation: Animation
+declare class AnimationHandle implements IAnimation {
+  readonly animation: Animation
   paused: boolean
   speed: number
 
@@ -20,8 +30,8 @@ declare class AnimationHandle {
   reset(): void
 }
 
-export class CompositeAnimation {
-  handles: Set<AnimationHandle>
+export class CompositeAnimation implements IAnimation {
+  readonly handles: Set<AnimationHandle>
 
   constructor()
 
@@ -30,4 +40,4 @@ export class CompositeAnimation {
   play(player: PlayerObject, time: number): void
 }
 
-export function WalkAnimation(player: PlayerObject, time: number): void
+export const WalkAnimation: AnimationFn
