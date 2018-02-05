@@ -25,7 +25,7 @@ declare class AnimationHandle implements IAnimation {
 }
 
 export class CompositeAnimation implements IAnimation {
-  readonly handles: Set<AnimationHandle>
+  private handles: Set<AnimationHandle>
 
   constructor()
 
