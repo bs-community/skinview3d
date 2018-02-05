@@ -4,13 +4,7 @@ type AnimationFn = (player: PlayerObject, time: number) => void
 interface IAnimation {
   play(player: PlayerObject, time: number): void
 }
-export type Animation =
-  | AnimationFn
-  | IAnimation
-  | {
-    play(player: PlayerObject, time: number): void
-    [x: string]: any
-  }
+export type Animation = AnimationFn | IAnimation
 
 declare function invokeAnimation(
   animation: Animation,
