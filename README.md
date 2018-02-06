@@ -4,6 +4,7 @@ skinview3d
 [![Travis](https://img.shields.io/travis/to2mbn/skinview3d.svg?style=flat-square)](https://travis-ci.org/to2mbn/skinview3d)
 [![npm](https://img.shields.io/npm/v/skinview3d.svg?style=flat-square)](https://www.npmjs.com/package/skinview3d)
 [![license](https://img.shields.io/github/license/to2mbn/skinview3d.svg?style=flat-square)](https://github.com/to2mbn/skinview3d/blob/master/LICENSE)
+[![Gitter chat](https://img.shields.io/gitter/room/TechnologyAdvice/Stardust.svg?style=flat-square)](https://gitter.im/skinview3d/Lobby)
 
 Three.js powered Minecraft skin viewer.
 
@@ -14,6 +15,7 @@ Three.js powered Minecraft skin viewer.
 * Slim arms
 
 # Usage
+[Examples of using the viewer](https://to2mbn.github.io/skinview3d/)
 ```html
 <div id="skin_container"></div>
 <script>
