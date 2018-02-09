@@ -21,8 +21,6 @@ export interface AnimationHandle extends IAnimation {
 }
 
 export class CompositeAnimation implements IAnimation {
-	private handles: Set<AnimationHandle>;
-
 	constructor();
 
 	public add(animation: Animation): AnimationHandle;
