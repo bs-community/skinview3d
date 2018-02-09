@@ -1,13 +1,13 @@
 import * as THREE from "three";
 
 export class SkinObject extends THREE.Group {
-	readonly slim: boolean;
-	readonly head: THREE.Group;
-	readonly body: THREE.Group;
-	readonly rightArm: THREE.Group;
-	readonly leftArm: THREE.Group;
-	readonly rightLeg: THREE.Group;
-	readonly leftLeg: THREE.Group;
+	public readonly slim: boolean;
+	public readonly head: THREE.Group;
+	public readonly body: THREE.Group;
+	public readonly rightArm: THREE.Group;
+	public readonly leftArm: THREE.Group;
+	public readonly rightLeg: THREE.Group;
+	public readonly leftLeg: THREE.Group;
 
 	constructor(
 		slim: boolean,
@@ -17,14 +17,14 @@ export class SkinObject extends THREE.Group {
 }
 
 export class CapeObject extends THREE.Group {
-	readonly cape: THREE.Mesh;
+	public readonly cape: THREE.Mesh;
 
 	constructor(capeMaterial: THREE.Material);
 }
 
 export class PlayerObject extends THREE.Group {
-	readonly skin: SkinObject;
-	readonly cape: CapeObject;
+	public readonly skin: SkinObject;
+	public readonly cape: CapeObject;
 
 	constructor(
 		slim: boolean,

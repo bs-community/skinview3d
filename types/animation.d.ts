@@ -13,15 +13,15 @@ declare function invokeAnimation(
 ): void;
 
 declare class AnimationHandle implements IAnimation {
-	readonly animation: Animation;
-	paused: boolean;
-	speed: number;
+	public readonly animation: Animation;
+	public paused: boolean;
+	public speed: number;
 
 	constructor(animation: Animation);
 
-	play(player: PlayerObject, time: number): void;
+	public play(player: PlayerObject, time: number): void;
 
-	reset(): void;
+	public reset(): void;
 }
 
 export class CompositeAnimation implements IAnimation {
@@ -29,9 +29,9 @@ export class CompositeAnimation implements IAnimation {
 
 	constructor();
 
-	add(animation: Animation): AnimationHandle;
+	public add(animation: Animation): AnimationHandle;
 
-	play(player: PlayerObject, time: number): void;
+	public play(player: PlayerObject, time: number): void;
 }
 
 export const WalkAnimation: AnimationFn;
