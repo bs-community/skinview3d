@@ -4,7 +4,7 @@ import { Animation } from "./animation";
 import { PlayerObject } from "./model";
 
 interface SkinViewerOptions {
-	domElement: Element;
+	domElement: Node;
 	animation?: Animation;
 	slim?: boolean;
 	skinUrl?: string;
@@ -18,7 +18,7 @@ export class SkinViewer {
 	public capeUrl: string;
 	public width: number;
 	public height: number;
-	public readonly domElement: Element;
+	public readonly domElement: Node;
 	public animation: Animation;
 	public animationPaused: boolean;
 	public animationTime: number;
