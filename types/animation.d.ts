@@ -1,37 +1,31 @@
-import { PlayerObject } from './model'
+import { PlayerObject } from "./model";
 
-type AnimationFn = (player: PlayerObject, time: number) => void
-interface IAnimation {
-  play(player: PlayerObject, time: number): void
+export interface IAnimation {
+	play(player: PlayerObject, time: number): void;
 }
-export type Animation = AnimationFn | IAnimation
+export type AnimationFn = (player: PlayerObject, time: number) => void;
+export type Animation = AnimationFn | IAnimation;
 
-declare function invokeAnimation(
-  animation: Animation,
-  player: PlayerObject,
-  time: number
-): void
+export function invokeAnimation(
+	animation: Animation,
+	player: PlayerObject,
+	time: number,
+): void;
 
-declare class AnimationHandle implements IAnimation {
-  readonly animation: Animation
-  paused: boolean
-  speed: number
+export interface AnimationHandle extends IAnimation {
+	readonly animation: Animation;
+	paused: boolean;
+	speed: number;
 
-  constructor(animation: Animation)
-
-  play(player: PlayerObject, time: number): void
-
-  reset(): void
+	reset(): void;
 }
 
 export class CompositeAnimation implements IAnimation {
-  private handles: Set<AnimationHandle>
+	constructor();
 
-  constructor()
+	public add(animation: Animation): AnimationHandle;
 
-  add(animation: Animation): AnimationHandle
-
-  play(player: PlayerObject, time: number): void
+	public play(player: PlayerObject, time: number): void;
 }
 
-export const WalkAnimation: AnimationFn
+export const WalkAnimation: AnimationFn;

@@ -8,7 +8,7 @@
 	"scripts": {
 		"build": "rollup -c tools/rollup.module.js && rollup -c tools/rollup.browser.js && rollup -c tools/rollup.browser.min.js",
 		"prepare": "npm test && rm -rf build && npm run build",
-		"test": "eslint src/** tools/**"
+		"test": "eslint src/** tools/** && tslint -c tslint.json types/**.ts"
 	},
 	"repository": {
 		"type": "git",
@@ -33,6 +33,8 @@
 		"rollup-plugin-babel": "^3.0.3",
 		"rollup-plugin-node-resolve": "^3.0.2",
 		"rollup-plugin-uglify": "^3.0.0",
+		"tslint": "^5.9.1",
+		"typescript": "^2.7.1",
 		"uglify-es": "^3.3.9"
 	}
 }
