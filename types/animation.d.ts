@@ -6,7 +6,7 @@ interface IAnimation {
 }
 export type Animation = AnimationFn | IAnimation;
 
-declare function invokeAnimation(
+export function invokeAnimation(
 	animation: Animation,
 	player: PlayerObject,
 	time: number,
