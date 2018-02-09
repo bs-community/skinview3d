@@ -132,16 +132,28 @@ class SkinViewer {
 		this.capeImg.crossOrigin = "";
 		this.capeImg.onerror = () => console.error("Failed loading " + this.capeImg.src);
 		this.capeImg.onload = () => {
+			let isOldFormat = false;
 			if (this.capeImg.width !== 2 * this.capeImg.height) {
-				console.error("Bad cape size");
-				return;
+				if (this.capeImg.width * 17 == this.capeImg.height * 22) {
+					// width/height = 22/17
+					isOldFormat = true;
+				} else {
+					console.error("Bad cape size");
+					return;
+				}
 			}
 
-			this.capeCanvas.width = this.capeImg.width;
-			this.capeCanvas.height = this.capeImg.height;
 			let capeContext = this.capeCanvas.getContext("2d");
+			if (isOldFormat) {
+				let width = this.capeImg.width * 64 / 22;
+				this.capeCanvas.width = width;
+				this.capeCanvas.height = width / 2;
+			} else {
+				this.capeCanvas.width = this.capeImg.width;
+				this.capeCanvas.height = this.capeImg.height;
+			}
 			capeContext.clearRect(0, 0, this.capeCanvas.width, this.capeCanvas.height);
-			capeContext.drawImage(this.capeImg, 0, 0, this.capeCanvas.width, this.capeCanvas.height);
+			capeContext.drawImage(this.capeImg, 0, 0, this.capeImg.width, this.capeImg.height);
 
 			this.capeTexture.needsUpdate = true;
 			this.capeMaterial.needsUpdate = true;
