@@ -1,9 +1,9 @@
 import { PlayerObject } from "./model";
 
-type AnimationFn = (player: PlayerObject, time: number) => void;
-interface IAnimation {
+export interface IAnimation {
 	play(player: PlayerObject, time: number): void;
 }
+export type AnimationFn = (player: PlayerObject, time: number) => void;
 export type Animation = AnimationFn | IAnimation;
 
 export function invokeAnimation(
