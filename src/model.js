@@ -36,8 +36,10 @@ function addVertices(box, top, bottom, left, front, right, back) {
 const esp = 0.002;
 
 class SkinObject extends THREE.Group {
-	constructor(isSlim, layer1Material, layer2Material) {
+	constructor(slim, layer1Material, layer2Material) {
 		super();
+
+		this.slim = slim;
 
 		// Head
 		this.head = new THREE.Group();
@@ -105,8 +107,8 @@ class SkinObject extends THREE.Group {
 		this.rightArm = new THREE.Group();
 		let rightArmPivot = new THREE.Group();
 
-		let rightArmBox = new THREE.BoxGeometry((isSlim ? 3 : 4) - esp, 12 - esp, 4 - esp, 0, 0, 0);
-		if (isSlim) {
+		let rightArmBox = new THREE.BoxGeometry((slim ? 3 : 4) - esp, 12 - esp, 4 - esp, 0, 0, 0);
+		if (slim) {
 			addVertices(rightArmBox,
 				toSkinVertices(44, 16, 47, 20),
 				toSkinVertices(47, 16, 50, 20),
@@ -128,8 +130,8 @@ class SkinObject extends THREE.Group {
 		let rightArmMesh = new THREE.Mesh(rightArmBox, layer1Material);
 		rightArmPivot.add(rightArmMesh);
 
-		let rightArm2Box = new THREE.BoxGeometry((isSlim ? 3.375 : 4.5) - esp, 13.5 - esp, 4.5 - esp, 0, 0, 0);
-		if (isSlim) {
+		let rightArm2Box = new THREE.BoxGeometry((slim ? 3.375 : 4.5) - esp, 13.5 - esp, 4.5 - esp, 0, 0, 0);
+		if (slim) {
 			addVertices(rightArm2Box,
 				toSkinVertices(44, 32, 47, 36),
 				toSkinVertices(47, 32, 50, 36),
@@ -155,7 +157,7 @@ class SkinObject extends THREE.Group {
 		rightArmPivot.position.y = -6;
 		this.rightArm.add(rightArmPivot);
 		this.rightArm.position.y = -4;
-		this.rightArm.position.x = isSlim ? -5.5 : -6;
+		this.rightArm.position.x = slim ? -5.5 : -6;
 		this.add(this.rightArm);
 
 
@@ -163,8 +165,8 @@ class SkinObject extends THREE.Group {
 		this.leftArm = new THREE.Group();
 		let leftArmPivot = new THREE.Group();
 
-		let leftArmBox = new THREE.BoxGeometry((isSlim ? 3 : 4) - esp, 12 - esp, 4 - esp, 0, 0, 0);
-		if (isSlim) {
+		let leftArmBox = new THREE.BoxGeometry((slim ? 3 : 4) - esp, 12 - esp, 4 - esp, 0, 0, 0);
+		if (slim) {
 			addVertices(leftArmBox,
 				toSkinVertices(36, 48, 39, 52),
 				toSkinVertices(39, 48, 42, 52),
@@ -186,8 +188,8 @@ class SkinObject extends THREE.Group {
 		let leftArmMesh = new THREE.Mesh(leftArmBox, layer1Material);
 		leftArmPivot.add(leftArmMesh);
 
-		let leftArm2Box = new THREE.BoxGeometry((isSlim ? 3.375 : 4.5) - esp, 13.5 - esp, 4.5 - esp, 0, 0, 0);
-		if (isSlim) {
+		let leftArm2Box = new THREE.BoxGeometry((slim ? 3.375 : 4.5) - esp, 13.5 - esp, 4.5 - esp, 0, 0, 0);
+		if (slim) {
 			addVertices(leftArm2Box,
 				toSkinVertices(52, 48, 55, 52),
 				toSkinVertices(55, 48, 58, 52),
@@ -213,7 +215,7 @@ class SkinObject extends THREE.Group {
 		leftArmPivot.position.y = -6;
 		this.leftArm.add(leftArmPivot);
 		this.leftArm.position.y = -4;
-		this.leftArm.position.x = isSlim ? 5.5 : 6;
+		this.leftArm.position.x = slim ? 5.5 : 6;
 		this.add(this.leftArm);
 
 
@@ -314,8 +316,6 @@ class CapeObject extends THREE.Group {
 class PlayerObject extends THREE.Group {
 	constructor(slim, layer1Material, layer2Material, capeMaterial) {
 		super();
-
-		this.slim = slim;
 
 		this.skin = new SkinObject(slim, layer1Material, layer2Material);
 		this.skin.visible = false;
