@@ -12,16 +12,12 @@ export function invokeAnimation(
 	time: number,
 ): void;
 
-declare class AnimationHandle implements IAnimation {
-	public readonly animation: Animation;
-	public paused: boolean;
-	public speed: number;
+export interface AnimationHandle extends IAnimation {
+	readonly animation: Animation;
+	paused: boolean;
+	speed: number;
 
-	constructor(animation: Animation);
-
-	public play(player: PlayerObject, time: number): void;
-
-	public reset(): void;
+	reset(): void;
 }
 
 export class CompositeAnimation implements IAnimation {
