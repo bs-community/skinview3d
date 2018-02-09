@@ -1,11 +1,11 @@
 export {
-  CompositeAnimation,
-  WalkAnimation,
-  Animation,
-  AnimationFn,
-  IAnimation
-} from './animation'
+	CompositeAnimation,
+	WalkAnimation,
+	Animation,
+	AnimationFn,
+	IAnimation,
+} from "./animation";
 
-export { SkinViewer, SkinControl } from './viewer'
+export { SkinViewer, SkinControl } from "./viewer";
 
-export { SkinObject, CapeObject, PlayerObject } from './model'
+export { SkinObject, CapeObject, PlayerObject } from "./model";

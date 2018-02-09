@@ -1,9 +1,21 @@
 {
 	"defaultSeverity": "error",
 	"extends": [
-		"tslint:recommended"
+		"tslint:latest"
 	],
 	"jsRules": {},
-	"rules": {},
+	"rules": {
+		"indent": [
+			true,
+			"tabs"
+		],
+		"eofline": true,
+		"linebreak-style": [
+			true,
+			"LF"
+		],
+		"max-classes-per-file": false,
+		"interface-name": false
+	},
 	"rulesDirectory": []
 }
