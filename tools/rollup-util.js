@@ -1,12 +1,14 @@
 import uglify from "rollup-plugin-uglify";
 import babel from "rollup-plugin-babel";
 import resolve from "rollup-plugin-node-resolve";
+import license from "rollup-plugin-license";
+import fs from "fs";
 
 let buildType = config => {
 	let options = {
 		input: "src/skinview3d.js",
 		output: [],
-		external:[
+		external: [
 			"three"
 		],
 		plugins: [
@@ -58,6 +60,17 @@ let buildType = config => {
 			})
 		);
 	}
+
+	options.plugins.push(
+		license({
+			sourcemap: true,
+			banner: `
+				skinview3d (https://github.com/to2mbn/skinview3d)
+
+				${fs.readFileSync("LICENSE").toString()}
+				`
+		})
+	);
 	return options;
 };
 export { buildType };
