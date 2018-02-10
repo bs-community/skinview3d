@@ -8,14 +8,19 @@
 	"scripts": {
 		"build": "rollup -c tools/rollup.module.js && rollup -c tools/rollup.browser.js && rollup -c tools/rollup.browser.min.js",
 		"prepare": "npm test && rm -rf build && npm run build",
-		"test": "eslint src/** tools/**"
+		"test": "eslint --env browser src/** && eslint --env node tools/** && tslint -c tslint.json types/**.ts"
 	},
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/to2mbn/skinview3d.git"
 	},
-	"author": "yushijinhun",
-	"license": "GPL-3.0",
+	"author": "Haowei Wen <yushijinhun@gmail.com> (https://github.com/yushijinhun)",
+	"contributors": [
+		"Sean Boult <hacksore@mcskinsearch.com> (https://github.com/Hacksore)",
+		"Pig Fang <g-plane@hotmail.com> (https://github.com/g-plane)",
+		"Kent Rasmussen <hyprkookeez@gmail.com> (https://github.com/earthiverse)"
+	],
+	"license": "MIT",
 	"bugs": {
 		"url": "https://github.com/to2mbn/skinview3d/issues"
 	},
@@ -31,8 +36,11 @@
 		"eslint": "^4.16.0",
 		"rollup": "^0.55.3",
 		"rollup-plugin-babel": "^3.0.3",
+		"rollup-plugin-license": "^0.5.0",
 		"rollup-plugin-node-resolve": "^3.0.2",
 		"rollup-plugin-uglify": "^3.0.0",
+		"tslint": "^5.9.1",
+		"typescript": "^2.7.1",
 		"uglify-es": "^3.3.9"
 	}
 }

@@ -1,35 +1,35 @@
-import * as THREE from 'three'
+import * as THREE from "three";
 
 export class SkinObject extends THREE.Group {
-  readonly head: THREE.Group
-  readonly body: THREE.Group
-  readonly rightArm: THREE.Group
-  readonly leftArm: THREE.Group
-  readonly rightLeg: THREE.Group
-  readonly leftLeg: THREE.Group
+	public readonly slim: boolean;
+	public readonly head: THREE.Group;
+	public readonly body: THREE.Group;
+	public readonly rightArm: THREE.Group;
+	public readonly leftArm: THREE.Group;
+	public readonly rightLeg: THREE.Group;
+	public readonly leftLeg: THREE.Group;
 
-  constructor(
-    isSlim: boolean,
-    layer1Material: THREE.Material,
-    layer2Material: THREE.Material
-  )
+	constructor(
+		slim: boolean,
+		layer1Material: THREE.Material,
+		layer2Material: THREE.Material,
+	);
 }
 
 export class CapeObject extends THREE.Group {
-  readonly cape: THREE.Mesh
+	public readonly cape: THREE.Mesh;
 
-  constructor(capeMaterial: THREE.Material)
+	constructor(capeMaterial: THREE.Material);
 }
 
 export class PlayerObject extends THREE.Group {
-  readonly slim: boolean
-  readonly skin: SkinObject
-  readonly cape: CapeObject
+	public readonly skin: SkinObject;
+	public readonly cape: CapeObject;
 
-  constructor(
-    isSlim: boolean,
-    layer1Material: THREE.Material,
-    layer2Material: THREE.Material,
-    capeMaterial: THREE.Material
-  )
+	constructor(
+		slim: boolean,
+		layer1Material: THREE.Material,
+		layer2Material: THREE.Material,
+		capeMaterial: THREE.Material,
+	);
 }
