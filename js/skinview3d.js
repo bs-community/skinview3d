@@ -1,3 +1,30 @@
+/**
+ * skinview3d (https://github.com/to2mbn/skinview3d)
+ *
+ * MIT License
+ *
+ * Original work Copyright (c) 2014-2018 Kent Rasmussen
+ * Modified work Copyright (c) 2017-2018 Haowei Wen, Sean Boult, Pig Fang and contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('three')) :
 	typeof define === 'function' && define.amd ? define(['exports', 'three'], factory) :
@@ -103,12 +130,14 @@
 	var SkinObject = function (_THREE$Group) {
 		inherits(SkinObject, _THREE$Group);
 
-		function SkinObject(isSlim, layer1Material, layer2Material) {
+		function SkinObject(slim, layer1Material, layer2Material) {
 			classCallCheck(this, SkinObject);
 
-			// Head
 			var _this = possibleConstructorReturn(this, (SkinObject.__proto__ || Object.getPrototypeOf(SkinObject)).call(this));
 
+			_this.slim = slim;
+
+			// Head
 			_this.head = new THREE.Group();
 
 			var headBox = new THREE.BoxGeometry(8, 8, 8, 0, 0, 0);
@@ -144,8 +173,8 @@
 			_this.rightArm = new THREE.Group();
 			var rightArmPivot = new THREE.Group();
 
-			var rightArmBox = new THREE.BoxGeometry((isSlim ? 3 : 4) - esp, 12 - esp, 4 - esp, 0, 0, 0);
-			if (isSlim) {
+			var rightArmBox = new THREE.BoxGeometry((slim ? 3 : 4) - esp, 12 - esp, 4 - esp, 0, 0, 0);
+			if (slim) {
 				addVertices(rightArmBox, toSkinVertices(44, 16, 47, 20), toSkinVertices(47, 16, 50, 20), toSkinVertices(40, 20, 44, 32), toSkinVertices(44, 20, 47, 32), toSkinVertices(47, 20, 51, 32), toSkinVertices(51, 20, 54, 32));
 			} else {
 				addVertices(rightArmBox, toSkinVertices(44, 16, 48, 20), toSkinVertices(48, 16, 52, 20), toSkinVertices(40, 20, 44, 32), toSkinVertices(44, 20, 48, 32), toSkinVertices(48, 20, 52, 32), toSkinVertices(52, 20, 56, 32));
@@ -153,8 +182,8 @@
 			var rightArmMesh = new THREE.Mesh(rightArmBox, layer1Material);
 			rightArmPivot.add(rightArmMesh);
 
-			var rightArm2Box = new THREE.BoxGeometry((isSlim ? 3.375 : 4.5) - esp, 13.5 - esp, 4.5 - esp, 0, 0, 0);
-			if (isSlim) {
+			var rightArm2Box = new THREE.BoxGeometry((slim ? 3.375 : 4.5) - esp, 13.5 - esp, 4.5 - esp, 0, 0, 0);
+			if (slim) {
 				addVertices(rightArm2Box, toSkinVertices(44, 32, 47, 36), toSkinVertices(47, 32, 50, 36), toSkinVertices(40, 36, 44, 48), toSkinVertices(44, 36, 47, 48), toSkinVertices(47, 36, 51, 48), toSkinVertices(51, 36, 54, 48));
 			} else {
 				addVertices(rightArm2Box, toSkinVertices(44, 32, 48, 36), toSkinVertices(48, 32, 52, 36), toSkinVertices(40, 36, 44, 48), toSkinVertices(44, 36, 48, 48), toSkinVertices(48, 36, 52, 48), toSkinVertices(52, 36, 56, 48));
@@ -166,15 +195,15 @@
 			rightArmPivot.position.y = -6;
 			_this.rightArm.add(rightArmPivot);
 			_this.rightArm.position.y = -4;
-			_this.rightArm.position.x = isSlim ? -5.5 : -6;
+			_this.rightArm.position.x = slim ? -5.5 : -6;
 			_this.add(_this.rightArm);
 
 			// Left Arm
 			_this.leftArm = new THREE.Group();
 			var leftArmPivot = new THREE.Group();
 
-			var leftArmBox = new THREE.BoxGeometry((isSlim ? 3 : 4) - esp, 12 - esp, 4 - esp, 0, 0, 0);
-			if (isSlim) {
+			var leftArmBox = new THREE.BoxGeometry((slim ? 3 : 4) - esp, 12 - esp, 4 - esp, 0, 0, 0);
+			if (slim) {
 				addVertices(leftArmBox, toSkinVertices(36, 48, 39, 52), toSkinVertices(39, 48, 42, 52), toSkinVertices(32, 52, 36, 64), toSkinVertices(36, 52, 39, 64), toSkinVertices(39, 52, 43, 64), toSkinVertices(43, 52, 46, 64));
 			} else {
 				addVertices(leftArmBox, toSkinVertices(36, 48, 40, 52), toSkinVertices(40, 48, 44, 52), toSkinVertices(32, 52, 36, 64), toSkinVertices(36, 52, 40, 64), toSkinVertices(40, 52, 44, 64), toSkinVertices(44, 52, 48, 64));
@@ -182,8 +211,8 @@
 			var leftArmMesh = new THREE.Mesh(leftArmBox, layer1Material);
 			leftArmPivot.add(leftArmMesh);
 
-			var leftArm2Box = new THREE.BoxGeometry((isSlim ? 3.375 : 4.5) - esp, 13.5 - esp, 4.5 - esp, 0, 0, 0);
-			if (isSlim) {
+			var leftArm2Box = new THREE.BoxGeometry((slim ? 3.375 : 4.5) - esp, 13.5 - esp, 4.5 - esp, 0, 0, 0);
+			if (slim) {
 				addVertices(leftArm2Box, toSkinVertices(52, 48, 55, 52), toSkinVertices(55, 48, 58, 52), toSkinVertices(48, 52, 52, 64), toSkinVertices(52, 52, 55, 64), toSkinVertices(55, 52, 59, 64), toSkinVertices(59, 52, 62, 64));
 			} else {
 				addVertices(leftArm2Box, toSkinVertices(52, 48, 56, 52), toSkinVertices(56, 48, 60, 52), toSkinVertices(48, 52, 52, 64), toSkinVertices(52, 52, 56, 64), toSkinVertices(56, 52, 60, 64), toSkinVertices(60, 52, 64, 64));
@@ -195,7 +224,7 @@
 			leftArmPivot.position.y = -6;
 			_this.leftArm.add(leftArmPivot);
 			_this.leftArm.position.y = -4;
-			_this.leftArm.position.x = isSlim ? 5.5 : 6;
+			_this.leftArm.position.x = slim ? 5.5 : 6;
 			_this.add(_this.leftArm);
 
 			// Right Leg
@@ -274,8 +303,6 @@
 			classCallCheck(this, PlayerObject);
 
 			var _this3 = possibleConstructorReturn(this, (PlayerObject.__proto__ || Object.getPrototypeOf(PlayerObject)).call(this));
-
-			_this3.slim = slim;
 
 			_this3.skin = new SkinObject(slim, layer1Material, layer2Material);
 			_this3.skin.visible = false;
@@ -874,6 +901,7 @@
 			this.speed = this._speed = 1.0;
 			this._lastChange = null;
 			this._lastChangeX = null;
+			this._animationNaturalSpeed = animation.naturalSpeed;
 		}
 
 		createClass(AnimationHandle, [{
@@ -893,7 +921,7 @@
 				}
 				if (this.paused === false) {
 					var _dt = time - this._lastChange;
-					var x = this._lastChangeX + this.speed * _dt;
+					var x = this._lastChangeX + this.speed * this._animationNaturalSpeed * _dt;
 					invokeAnimation(this.animation, player, x);
 				}
 			}
@@ -936,18 +964,69 @@
 		return CompositeAnimation;
 	}();
 
-	var WalkAnimation = function WalkAnimation(player, time) {
+	var WalkingAnimation = function WalkingAnimation(player, time) {
 		var skin = player.skin;
-		var angleRot = time + Math.PI / 2;
 
-		// Leg Swing
-		skin.leftLeg.rotation.x = Math.cos(angleRot);
-		skin.rightLeg.rotation.x = Math.cos(angleRot + Math.PI);
+		// Leg swing
+		skin.leftLeg.rotation.x = Math.sin(time) * 0.3;
+		skin.rightLeg.rotation.x = Math.sin(time + Math.PI) * 0.3;
 
-		// Arm Swing
-		skin.leftArm.rotation.x = Math.cos(angleRot + Math.PI);
-		skin.rightArm.rotation.x = Math.cos(angleRot);
+		// Arm swing
+		skin.leftArm.rotation.x = Math.sin(time + Math.PI) * 0.5;
+		skin.rightArm.rotation.x = Math.sin(time) * 0.5;
+		var basicArmRotationZ = Math.PI * 0.02;
+		skin.leftArm.rotation.z = Math.cos(time) * 0.03 + basicArmRotationZ;
+		skin.rightArm.rotation.z = Math.cos(time + Math.PI) * 0.03 - basicArmRotationZ;
+
+		// Head shaking with different frequency & amplitude
+		skin.head.rotation.y = Math.sin(time / 2) * 0.2;
+		skin.head.rotation.x = Math.sin(time / 3) * 0.15;
+
+		// Always add an angle for cape around the x axis
+		var basicCapeRotationX = Math.PI * 0.06;
+		player.cape.rotation.x = Math.sin(time / 1.5) * 0.06 + basicCapeRotationX;
 	};
+
+	WalkingAnimation.naturalSpeed = 5;
+
+	var RunningAnimation = function RunningAnimation(player, time) {
+		var skin = player.skin;
+
+		// Leg swing with larger amplitude
+		skin.leftLeg.rotation.x = Math.cos(time + Math.PI) * 1.3;
+		skin.rightLeg.rotation.x = Math.cos(time) * 1.3;
+
+		// Arm swing
+		skin.leftArm.rotation.x = Math.cos(time) * 1.5;
+		skin.rightArm.rotation.x = Math.cos(time + Math.PI) * 1.5;
+		var basicArmRotationZ = Math.PI * 0.1;
+		skin.leftArm.rotation.z = Math.cos(time) * 0.1 + basicArmRotationZ;
+		skin.rightArm.rotation.z = Math.cos(time + Math.PI) * 0.1 - basicArmRotationZ;
+
+		// Jumping
+		player.position.y = Math.cos(time * 2);
+		// Dodging when running
+		player.position.x = Math.cos(time) * 0.15;
+		// Slightly tilting when running
+		player.rotation.z = Math.cos(time + Math.PI) * 0.01;
+
+		// Apply higher swing frequency, lower amplitude,
+		// and greater basic rotation around x axis,
+		// to cape when running.
+		var basicCapeRotationX = Math.PI * 0.3;
+		player.cape.rotation.x = Math.sin(time * 2) * 0.1 + basicCapeRotationX;
+
+		// What about head shaking?
+		// You shouldn't glance right and left when running dude :P
+	};
+
+	RunningAnimation.naturalSpeed = 13;
+
+	var RotatingAnimation = function RotatingAnimation(player, time) {
+		player.rotation.y = time;
+	};
+
+	RotatingAnimation.naturalSpeed = 1;
 
 	function copyImage(context, sX, sY, w, h, dX, dY, flipHorizontal) {
 		var imgData = context.getImageData(sX, sY, w, h);
@@ -1033,9 +1112,10 @@
 			// scene
 			this.scene = new THREE.Scene();
 
-			this.camera = new THREE.PerspectiveCamera(75);
+			// Use smaller fov to avoid distortion
+			this.camera = new THREE.PerspectiveCamera(40);
 			this.camera.position.y = -12;
-			this.camera.position.z = 30;
+			this.camera.position.z = 60;
 
 			this.renderer = new THREE.WebGLRenderer({ angleRot: true, alpha: true, antialias: false });
 			this.renderer.setSize(300, 300); // default size
@@ -1090,16 +1170,28 @@
 				return console.error("Failed loading " + _this.capeImg.src);
 			};
 			this.capeImg.onload = function () {
+				var isOldFormat = false;
 				if (_this.capeImg.width !== 2 * _this.capeImg.height) {
-					console.error("Bad cape size");
-					return;
+					if (_this.capeImg.width * 17 == _this.capeImg.height * 22) {
+						// width/height = 22/17
+						isOldFormat = true;
+					} else {
+						console.error("Bad cape size");
+						return;
+					}
 				}
 
-				_this.capeCanvas.width = _this.capeImg.width;
-				_this.capeCanvas.height = _this.capeImg.height;
 				var capeContext = _this.capeCanvas.getContext("2d");
+				if (isOldFormat) {
+					var width = _this.capeImg.width * 64 / 22;
+					_this.capeCanvas.width = width;
+					_this.capeCanvas.height = width / 2;
+				} else {
+					_this.capeCanvas.width = _this.capeImg.width;
+					_this.capeCanvas.height = _this.capeImg.height;
+				}
 				capeContext.clearRect(0, 0, _this.capeCanvas.width, _this.capeCanvas.height);
-				capeContext.drawImage(_this.capeImg, 0, 0, _this.capeCanvas.width, _this.capeCanvas.height);
+				capeContext.drawImage(_this.capeImg, 0, 0, _this.capeImg.width, _this.capeImg.height);
 
 				_this.capeTexture.needsUpdate = true;
 				_this.capeMaterial.needsUpdate = true;
@@ -1178,13 +1270,10 @@
 		return SkinViewer;
 	}();
 
-	var SkinControl = function () {
-		function SkinControl(skinViewer) {
-			var _this2 = this;
+	var MouseControl = function () {
+		function MouseControl(skinViewer) {
+			classCallCheck(this, MouseControl);
 
-			classCallCheck(this, SkinControl);
-
-			this.enableAnimationControl = true;
 			this.skinViewer = skinViewer;
 
 			this.orbitControls = new OrbitControls(skinViewer.camera, skinViewer.renderer.domElement);
@@ -1193,58 +1282,51 @@
 			this.orbitControls.minDistance = 10;
 			this.orbitControls.maxDistance = 256;
 			this.orbitControls.update();
-
-			this.animationPauseListener = function (e) {
-				if (_this2.enableAnimationControl) {
-					e.preventDefault();
-					_this2.skinViewer.animationPaused = !_this2.skinViewer.animationPaused;
-				}
-			};
-			this.skinViewer.domElement.addEventListener("contextmenu", this.animationPauseListener, false);
 		}
 
-		createClass(SkinControl, [{
+		createClass(MouseControl, [{
 			key: "dispose",
 			value: function dispose() {
-				this.skinViewer.domElement.removeEventListener("contextmenu", this.animationPauseListener, false);
 				this.orbitControls.dispose();
 			}
+		}, {
+			key: "rotation",
+			get: function get$$1() {
+				return this.orbitControls.enableRotate;
+			},
+			set: function set$$1(value) {
+				this.orbitControls.enableRotate = value;
+			}
+		}, {
+			key: "zoom",
+			get: function get$$1() {
+				return this.orbitControls.enableZoom;
+			},
+			set: function set$$1(value) {
+				this.orbitControls.enableZoom = value;
+			}
+		}, {
+			key: "pan",
+			get: function get$$1() {
+				return this.orbitControls.enablePan;
+			},
+			set: function set$$1(value) {
+				this.orbitControls.enablePan = value;
+			}
 		}]);
-		return SkinControl;
+		return MouseControl;
 	}();
-
-	/**
-	 * @license
-	 * skinview3d <https://github.com/to2mbn/skinview3d>
-	 *
-	 * Copyright (C) 2017 the original author or authors
-	 *
-	 * This program is free software: you can redistribute it and/or modify
-	 * it under the terms of the GNU General Public License as published by
-	 * the Free Software Foundation, either version 3 of the License, or
-	 * (at your option) any later version.
-	 *
-	 * This program is distributed in the hope that it will be useful,
-	 * but WITHOUT ANY WARRANTY; without even the implied warranty of
-	 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	 * GNU General Public License for more details.
-	 *
-	 * You should have received a copy of the GNU General Public License
-	 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-	 *
-	 *
-	 * @author yushijinhun <https://github.com/yushijinhun>
-	 * @author Hacksore <https://github.com/Hacksore>
-	 * @author Kent Rasmussen <https://github.com/earthiverse>
-	 */
 
 	exports.SkinObject = SkinObject;
 	exports.CapeObject = CapeObject;
 	exports.PlayerObject = PlayerObject;
 	exports.SkinViewer = SkinViewer;
-	exports.SkinControl = SkinControl;
+	exports.MouseControl = MouseControl;
+	exports.invokeAnimation = invokeAnimation;
 	exports.CompositeAnimation = CompositeAnimation;
-	exports.WalkAnimation = WalkAnimation;
+	exports.WalkingAnimation = WalkingAnimation;
+	exports.RunningAnimation = RunningAnimation;
+	exports.RotatingAnimation = RotatingAnimation;
 
 	Object.defineProperty(exports, '__esModule', { value: true });
 

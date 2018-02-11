@@ -7,62 +7,149 @@
 	body, html{
 		background: #444444;
 		color: #fff;
-		margin: 0;
-		padding: 0;
-		overflow: hidden;
 	}
 
-	.btn{
-		font-family: Verdana;
-		padding: 32px 12px 32px 12px;
-		width: 100%;
-		height: auto;
-		background: #333333;
-		display: block;
-		text-align: center;
-		color: #fff;
-		text-decoration: none;
-		font-weight: bold;
-		font-size: 32px;
+	canvas {
+	    border: 1px solid white;
 	}
-
-	.btn:hover{
-		color: #a7c1e2;
-		background: #2d2d2d;
-	}
-
-	.description{
-		margin: 24px 0 12px 0;
-		text-align: center;
-		font-weight: bold;
-		font-size: 24px;
-	}
-
-	a{
-		text-decoration: none;
-		color: #6a90dd;
-	}
-
 	</style>
 </head>
 <body>
+	<br>
+	<div id="skin_container"></div>
 
-	<div class="description">
-	<a target="_blank" href="https://github.com/to2mbn/skinview3d">skinview3d</a> lets you display Minecraft charecters on the web with Three.js.
-	</div>
+	<p> Animate:
+		<button type="button" onclick="walk()">Walk</button>
+		<button type="button" onclick="run()">Run!</button>
+		<button type="button" onclick="rotate()">Rotate</button>
+		<button type="button" onclick="pause()">Pause / Resume</button>
+		<button type="button" onclick="initSkinViewer()">Reset</button>
+		<br>
+		Global Animation Speed: x<input type="text" id="speed" value="1" title="1 for default" size="5"></input>
+		<button type="button" onclick="setGlobalAnimationSpeed()">Set</button>
+	</p>
 
-	<a href="examples/javascript.html" class="btn">
-	Basic example
-	</a>
+	<p> Animation Mouse Control:
+		<input type="checkbox" id="rotate" checked="checked" onclick="control.rotation = this.checked"><label for="rotate">Enable Rotate</label>
+		<input type="checkbox" id="zoom" checked="checked" onclick="control.zoom = this.checked"><label for="zoom">Enable Zoom</label>
+		<input type="checkbox" id="pan" onclick="control.pan = this.checked"><label for="pan">Enable Pan</label>
+	</p>
 
-	<a href="examples/hd.html" class="btn">
-	HD Skin example
-	</a>
+	<p> Width:  <input type="text" id="width"  value="600" size="5"></input>
+		Height: <input type="text" id="height" value="600" size="5"></input>
+		<button type="button" onclick="resizeSkinViewer()">Change Size</button>
+	</p>
 
-	<a href="examples/misc.html" class="btn">
-	Miscellaneous example
-	</a>
+	<p> Skin Url:
+		<input type="text" id="skin_url" value="img/hatsune_miku.png"></input>
+		<input type="checkbox" id="alex" checked="checked" onclick="initSkinViewer()">
+		<label for="alex">Load alex(slim) model</label><br>
+		Cape Url:
+		<input type="text" id="cape_url" value="img/mojang_cape.png"></input>
+		<button type="button" onclick="hotReloadTextures()">Load Textures</button>
+	</p>
 
+	<p> All textures available to load:
+		<ul>
+			<li>img/1_8_texturemap_redux.png</li>
+			<li>img/cape.png</li>
+			<li>img/Hacksore.png</li>
+			<li>img/haka.png</li>
+			<li>img/hatsune_miku.png</li>
+			<li>img/ironman_hd.png</li>
+			<li>img/mojang_cape.png</li>
+			<li>img/sethbling.png</li>
+		</ul>
+	</p>
 
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/three.js/89/three.min.js"></script>
+	<script type="text/javascript" src="js/skinview3d.min.js"></script>
+	<script>
+		var skinViewer, control, handles = {};
+
+		var globalAnimationSpeed = 1;
+
+		function initSkinViewer() {
+			if (skinViewer instanceof skinview3d.SkinViewer) {
+				skinViewer.dispose();
+				handles = {};
+				control = undefined;
+			}
+
+			// Reset animation speed
+			document.getElementById('speed').value = globalAnimationSpeed = 1;
+
+			skinViewer = new skinview3d.SkinViewer({
+				domElement: document.getElementById("skin_container"),
+				slim: document.getElementById('alex').checked,
+				width: document.getElementById('width').value,
+				height: document.getElementById('height').value,
+				skinUrl: document.getElementById('skin_url').value,
+				capeUrl: document.getElementById('cape_url').value
+			});
+
+			skinViewer.animation = new skinview3d.CompositeAnimation();
+
+			control = new skinview3d.MouseControl(skinViewer);
+		}
+
+		function hotReloadTextures() {
+			skinViewer.skinUrl = document.getElementById('skin_url').value;
+			skinViewer.capeUrl = document.getElementById('cape_url').value;
+		}
+
+		function resizeSkinViewer() {
+			skinViewer.width = document.getElementById('width').value;
+			skinViewer.height = document.getElementById('height').value;
+		}
+
+		function pause() {
+			skinViewer.animationPaused = !skinViewer.animationPaused;
+		}
+
+		function walk() {
+			if (handles.run) {
+				handles.run.remove();
+				delete handles.run;
+			}
+
+			handles.walk = handles.walk || skinViewer.animation.add(skinview3d.WalkingAnimation);
+			handles.walk.speed = globalAnimationSpeed;
+		}
+
+		function run() {
+			if (handles.walk) {
+				handles.walk.remove();
+				delete handles.walk;
+			}
+
+			handles.run = handles.run || skinViewer.animation.add(skinview3d.RunningAnimation);
+			handles.run.speed = globalAnimationSpeed;
+		}
+
+		function rotate() {
+			if (handles.rotate) {
+				handles.rotate.paused = !handles.rotate.paused;
+			} else {
+				handles.rotate = skinViewer.animation.add(skinview3d.RotatingAnimation);
+				handles.rotate.speed = globalAnimationSpeed;
+			}
+		}
+
+		function setGlobalAnimationSpeed() {
+			var currentSpeed = document.getElementById('speed').value;
+
+			if (! isNaN(currentSpeed)) {
+				globalAnimationSpeed = currentSpeed;
+
+				for (let key in handles) {
+					handles[key].speed = currentSpeed;
+				}
+			}
+		}
+
+		initSkinViewer();
+		walk();
+	</script>
 </body>
 </html>
