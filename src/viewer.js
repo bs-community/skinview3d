@@ -81,9 +81,10 @@ class SkinViewer {
 		// scene
 		this.scene = new THREE.Scene();
 
-		this.camera = new THREE.PerspectiveCamera(75);
+		// Use smaller fov to avoid distortion
+		this.camera = new THREE.PerspectiveCamera(40);
 		this.camera.position.y = -12;
-		this.camera.position.z = 30;
+		this.camera.position.z = 60;
 
 		this.renderer = new THREE.WebGLRenderer({ angleRot: true, alpha: true, antialias: false });
 		this.renderer.setSize(300, 300); // default size
