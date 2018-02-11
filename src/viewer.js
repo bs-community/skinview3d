@@ -227,9 +227,9 @@ class SkinViewer {
 	}
 }
 
-class SkinControl {
+class MouseControl {
 	constructor(skinViewer) {
-		this.enableAnimationControl = true;
+		this.enableMouseControl = true;
 		this.skinViewer = skinViewer;
 
 		this.orbitControls = new OrbitControls(skinViewer.camera, skinViewer.renderer.domElement);
@@ -238,20 +238,19 @@ class SkinControl {
 		this.orbitControls.minDistance = 10;
 		this.orbitControls.maxDistance = 256;
 		this.orbitControls.update();
+	}
 
-		this.animationPauseListener = e => {
-			if (this.enableAnimationControl) {
-				e.preventDefault();
-				this.skinViewer.animationPaused = !this.skinViewer.animationPaused;
-			}
-		};
-		this.skinViewer.domElement.addEventListener("contextmenu", this.animationPauseListener, false);
+	enable() {
+		this.enableMouseControl = this.orbitControls.enableRotate = this.orbitControls.enableZoom = true;
+	}
+
+	disable() {
+		this.enableMouseControl = this.orbitControls.enableRotate = this.orbitControls.enableZoom = false;
 	}
 
 	dispose() {
-		this.skinViewer.domElement.removeEventListener("contextmenu", this.animationPauseListener, false);
 		this.orbitControls.dispose();
 	}
 }
 
-export { SkinViewer, SkinControl };
+export { SkinViewer, MouseControl };
