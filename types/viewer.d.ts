@@ -40,7 +40,8 @@ export class MouseControl {
 
 	constructor(skinViewer: SkinViewer);
 
-	public enable(): void;
-	public disable(): void;
+	public togglePan(): void;
+	public toggleZoom(): void;
+	public toggleRotate(): void;
 	public dispose(): void;
 }

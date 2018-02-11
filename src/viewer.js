@@ -230,7 +230,6 @@ class SkinViewer {
 
 class MouseControl {
 	constructor(skinViewer) {
-		this.enableMouseControl = true;
 		this.skinViewer = skinViewer;
 
 		this.orbitControls = new OrbitControls(skinViewer.camera, skinViewer.renderer.domElement);
@@ -241,12 +240,16 @@ class MouseControl {
 		this.orbitControls.update();
 	}
 
-	enable() {
-		this.enableMouseControl = this.orbitControls.enableRotate = this.orbitControls.enableZoom = true;
+	togglePan(value) {
+		this.orbitControls.enablePan = (typeof value === "boolean") ? value : !this.orbitControls.enablePan;
 	}
 
-	disable() {
-		this.enableMouseControl = this.orbitControls.enableRotate = this.orbitControls.enableZoom = false;
+	toggleZoom(value) {
+		this.orbitControls.enableZoom  = (typeof value === "boolean") ? value : !this.orbitControls.enableZoom;
+	}
+
+	toggleRotate(value) {
+		this.orbitControls.enableRotate = (typeof value === "boolean") ? value : !this.orbitControls.enableRotate;
 	}
 
 	dispose() {
