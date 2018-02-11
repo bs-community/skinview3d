@@ -1,3 +1,9 @@
 export { SkinObject, CapeObject, PlayerObject } from "./model";
-export { SkinViewer, SkinControl } from "./viewer";
-export { invokeAnimation, CompositeAnimation, WalkAnimation } from "./animation";
+export { SkinViewer, MouseControl } from "./viewer";
+export {
+	invokeAnimation,
+	CompositeAnimation,
+	WalkingAnimation,
+	RunningAnimation,
+	RotatingAnimation
+} from "./animation";

@@ -29,3 +29,5 @@ export class CompositeAnimation implements IAnimation {
 }
 
 export const WalkAnimation: AnimationFn;
+export const RunningAnimation: AnimationFn;
+export const RotatingAnimation: AnimationFn;
