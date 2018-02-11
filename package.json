@@ -8,7 +8,7 @@
 	"scripts": {
 		"build": "rollup -c tools/rollup.module.js && rollup -c tools/rollup.browser.js && rollup -c tools/rollup.browser.min.js",
 		"prepare": "npm test && rm -rf build && npm run build",
-		"test": "eslint --env browser src/** && eslint --env node tools/** && tslint -c tslint.json types/**.ts"
+		"test": "eslint src/** tools/** && tslint -c tslint.json types/**.ts"
 	},
 	"repository": {
 		"type": "git",
