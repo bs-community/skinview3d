@@ -35,13 +35,12 @@ export class SkinViewer {
 }
 
 export class MouseControl {
-	public enableMouseControl: boolean;
+	public pan: boolean;
+	public zoom: boolean;
+	public rotation: boolean;
 	public readonly skinViewer: SkinViewer;
 
 	constructor(skinViewer: SkinViewer);
 
-	public togglePan(): void;
-	public toggleZoom(): void;
-	public toggleRotate(): void;
 	public dispose(): void;
 }

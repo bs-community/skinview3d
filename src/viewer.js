@@ -240,16 +240,28 @@ class MouseControl {
 		this.orbitControls.update();
 	}
 
-	togglePan(value) {
-		this.orbitControls.enablePan = (typeof value === "boolean") ? value : !this.orbitControls.enablePan;
+	get rotation() {
+		return this.orbitControls.enableRotate;
 	}
 
-	toggleZoom(value) {
-		this.orbitControls.enableZoom  = (typeof value === "boolean") ? value : !this.orbitControls.enableZoom;
+	set rotation(value) {
+		this.orbitControls.enableRotate = value;
 	}
 
-	toggleRotate(value) {
-		this.orbitControls.enableRotate = (typeof value === "boolean") ? value : !this.orbitControls.enableRotate;
+	get zoom() {
+		return this.orbitControls.enableZoom;
+	}
+
+	set zoom(value) {
+		this.orbitControls.enableZoom = value;
+	}
+
+	get pan() {
+		return this.orbitControls.enablePan;
+	}
+
+	set pan(value) {
+		this.orbitControls.enablePan = value;
 	}
 
 	dispose() {
