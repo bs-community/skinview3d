@@ -1,6 +1,5 @@
 import * as THREE from "three";
 import { PlayerObject } from "./model";
-import { OrbitControls } from "./orbit_controls";
 import { invokeAnimation } from "./animation";
 
 function copyImage(context, sX, sY, w, h, dX, dY, flipHorizontal) {
@@ -228,45 +227,4 @@ class SkinViewer {
 	}
 }
 
-class MouseControl {
-	constructor(skinViewer) {
-		this.skinViewer = skinViewer;
-
-		this.orbitControls = new OrbitControls(skinViewer.camera, skinViewer.renderer.domElement);
-		this.orbitControls.enablePan = false;
-		this.orbitControls.target = new THREE.Vector3(0, -12, 0);
-		this.orbitControls.minDistance = 10;
-		this.orbitControls.maxDistance = 256;
-		this.orbitControls.update();
-	}
-
-	get rotation() {
-		return this.orbitControls.enableRotate;
-	}
-
-	set rotation(value) {
-		this.orbitControls.enableRotate = value;
-	}
-
-	get zoom() {
-		return this.orbitControls.enableZoom;
-	}
-
-	set zoom(value) {
-		this.orbitControls.enableZoom = value;
-	}
-
-	get pan() {
-		return this.orbitControls.enablePan;
-	}
-
-	set pan(value) {
-		this.orbitControls.enablePan = value;
-	}
-
-	dispose() {
-		this.orbitControls.dispose();
-	}
-}
-
-export { SkinViewer, MouseControl };
+export { SkinViewer };
