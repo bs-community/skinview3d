@@ -593,4 +593,17 @@ class OrbitControls extends THREE.EventDispatcher {
 	}
 }
 
-export { OrbitControls };
+function createOrbitControls(skinViewer) {
+	let control = new OrbitControls(skinViewer.camera, skinViewer.renderer.domElement);
+
+	// default configuration
+	control.enablePan = false;
+	control.target = new THREE.Vector3(0, -12, 0);
+	control.minDistance = 10;
+	control.maxDistance = 256;
+	control.update();
+
+	return control;
+}
+
+export { OrbitControls, createOrbitControls };

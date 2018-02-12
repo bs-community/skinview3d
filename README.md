@@ -28,28 +28,37 @@ Three.js powered Minecraft skin viewer.
 		capeUrl: "img/cape.png"
 	});
 
-	// change the skin and cape
-	// skinViewer.skinUrl = "img/skin.png";
-	// skinViewer.capeUrl = "img/cape.png";
+	// Change the textures
+	skinViewer.skinUrl = "img/skin2.png";
+	skinViewer.capeUrl = "img/cape2.png";
 
-	// change the width and height
-	// skinViewer.width = 300;
-	// skinViewer.height = 400;
+	// Resize the skin viewer
+	skinViewer.width = 300;
+	skinViewer.height = 400;
 
-	// enable the mouse control feature
-	let control = new skinview3d.SkinControl(skinViewer);
-
-	// disable the 'right click to play/pause' feature
-	// control.enableAnimationControl = false;
+	// Control objects with your mouse!
+	let control = skinview3d.createOrbitControls(skinViewer);
+	control.enableRotate = true;
+	control.enableZoom = false;
+	control.enablePan = false;
 
 	skinViewer.animation = new skinview3d.CompositeAnimation();
 
-	// add an animation
-	let walk = skinViewer.animation.add(skinview3d.WalkAnimation);
+	// Add an animation
+	let walk = skinViewer.animation.add(skinview3d.WalkingAnimation);
+	// Add another animation
+	let rotate = skinViewer.animation.add(skinview3d.RotatingAnimation);
+	// Remove an animation, stop walking dude
+	walk.remove();
+	// And run for now!
+	let run = skinViewer.animation.add(skinview3d.RunningAnimation);
 
-	// set its speed and some others
-	walk.speed = 1.5;
-	// walk.paused = true;
+	// Set the speed of an animation
+	run.speed = 3;
+	// Pause single animation
+	run.paused = true;
+	// Pause all animations!
+	skinViewer.animationPaused = true;
 </script>
 ```
 

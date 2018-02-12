@@ -34,8 +34,10 @@ export class SkinViewer {
 	public dispose(): void;
 }
 
-export class SkinControl {
-	public enableAnimationControl: boolean;
+export class MouseControl {
+	public pan: boolean;
+	public zoom: boolean;
+	public rotation: boolean;
 	public readonly skinViewer: SkinViewer;
 
 	constructor(skinViewer: SkinViewer);

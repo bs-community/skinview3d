@@ -1,6 +1,5 @@
 import * as THREE from "three";
 import { PlayerObject } from "./model";
-import { OrbitControls } from "./orbit_controls";
 import { invokeAnimation } from "./animation";
 
 function copyImage(context, sX, sY, w, h, dX, dY, flipHorizontal) {
@@ -81,9 +80,10 @@ class SkinViewer {
 		// scene
 		this.scene = new THREE.Scene();
 
-		this.camera = new THREE.PerspectiveCamera(75);
+		// Use smaller fov to avoid distortion
+		this.camera = new THREE.PerspectiveCamera(40);
 		this.camera.position.y = -12;
-		this.camera.position.z = 30;
+		this.camera.position.z = 60;
 
 		this.renderer = new THREE.WebGLRenderer({ angleRot: true, alpha: true, antialias: false });
 		this.renderer.setSize(300, 300); // default size
@@ -227,31 +227,4 @@ class SkinViewer {
 	}
 }
 
-class SkinControl {
-	constructor(skinViewer) {
-		this.enableAnimationControl = true;
-		this.skinViewer = skinViewer;
-
-		this.orbitControls = new OrbitControls(skinViewer.camera, skinViewer.renderer.domElement);
-		this.orbitControls.enablePan = false;
-		this.orbitControls.target = new THREE.Vector3(0, -12, 0);
-		this.orbitControls.minDistance = 10;
-		this.orbitControls.maxDistance = 256;
-		this.orbitControls.update();
-
-		this.animationPauseListener = e => {
-			if (this.enableAnimationControl) {
-				e.preventDefault();
-				this.skinViewer.animationPaused = !this.skinViewer.animationPaused;
-			}
-		};
-		this.skinViewer.domElement.addEventListener("contextmenu", this.animationPauseListener, false);
-	}
-
-	dispose() {
-		this.skinViewer.domElement.removeEventListener("contextmenu", this.animationPauseListener, false);
-		this.orbitControls.dispose();
-	}
-}
-
-export { SkinViewer, SkinControl };
+export { SkinViewer };
