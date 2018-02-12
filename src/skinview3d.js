@@ -1,5 +1,6 @@
 export { SkinObject, CapeObject, PlayerObject } from "./model";
-export { SkinViewer, MouseControl } from "./viewer";
+export { SkinViewer } from "./viewer";
+export { OrbitControls, createOrbitControls } from "./orbit_controls";
 export {
 	invokeAnimation,
 	CompositeAnimation,

@@ -37,10 +37,10 @@ Three.js powered Minecraft skin viewer.
 	skinViewer.height = 400;
 
 	// Control objects with your mouse!
-	let control = new skinview3d.SkinControl(skinViewer);
-	control.rotation = true;
-	control.zoom = false;
-	control.pan = false;
+	let control = skinview3d.createOrbitControls(skinViewer);
+	control.enableRotate = true;
+	control.enableZoom = false;
+	control.enablePan = false;
 
 	skinViewer.animation = new skinview3d.CompositeAnimation();
 
