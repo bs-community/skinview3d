@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>skinview3d</title>
+	<link href="https://fonts.googleapis.com/css?family=Archivo+Black" rel="stylesheet">
+
+</head>
+<body>
+
+	<div id="skin_container"></div>
+
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/three.js/89/three.min.js"></script>
+	<script type="text/javascript" src="../build/skinview3d.js"></script>
+
+	<script>
+		let skinViewer = new skinview3d.SkinViewer({
+			domElement: document.getElementById("skin_container"),
+			slim: true,
+			width: 400,
+			height: 400,
+			skinUrl: "./1_8_texturemap_redux.png"
+		});
+
+		let control = new skinview3d.SkinControl(skinViewer);
+		skinViewer.animation = new skinview3d.CompositeAnimation();
+
+		let walk = skinViewer.animation.add(skinview3d.WalkAnimation);
+		walk.speed = 1.5;
+
+	</script>
+
+
+</body>
+</html>
