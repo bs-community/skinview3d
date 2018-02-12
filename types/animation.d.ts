@@ -1,9 +1,10 @@
 import { PlayerObject } from "./model";
 
 export interface IAnimation {
+	naturalSpeed?: number;
 	play(player: PlayerObject, time: number): void;
 }
-export type AnimationFn = (player: PlayerObject, time: number) => void;
+export type AnimationFn = ((player: PlayerObject, time: number) => void) & { naturalSpeed?: number };
 export type Animation = AnimationFn | IAnimation;
 
 export function invokeAnimation(
@@ -28,6 +29,6 @@ export class CompositeAnimation implements IAnimation {
 	public play(player: PlayerObject, time: number): void;
 }
 
-export const WalkingAnimation: AnimationFn & { naturalSpeed?: number };
-export const RunningAnimation: AnimationFn & { naturalSpeed?: number };
-export const RotatingAnimation: AnimationFn & { naturalSpeed?: number };
+export const WalkingAnimation: AnimationFn;
+export const RunningAnimation: AnimationFn;
+export const RotatingAnimation: AnimationFn;
