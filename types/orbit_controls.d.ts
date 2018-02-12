@@ -39,9 +39,9 @@ export class OrbitControls {
 	public enableKeys: boolean;
 	public keys: { LEFT: number, UP: number, RIGHT: number, BOTTOM: number };
 
-	public mouseButtons = { ORBIT: THREE.MOUSE, ZOOM: THREE.MOUSE, PAN: THREE.MOUSE };
+	public mouseButtons: { ORBIT: THREE.MOUSE, ZOOM: THREE.MOUSE, PAN: THREE.MOUSE };
 
-	constructor(object: THREE.Camera, domElement: HTMLElement);
+	constructor(object: THREE.Camera, domElement?: HTMLElement);
 
 	public getPolarAngle(): number;
 	public getAzimuthalAngle(): number;
@@ -49,7 +49,7 @@ export class OrbitControls {
 	public saveState(): void;
 	public reset(): void;
 
-	public update(): void;
+	public update(): boolean;
 
 	public dispose(): void;
 }
