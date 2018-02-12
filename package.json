@@ -10,7 +10,7 @@
 		"prepare": "npm test && rm -rf build && npm run build",
 		"test": "eslint src/** tools/** && tslint -c tslint.json types/**.ts",
 		"dev": "npm-run-all --parallel watch serve",
-		"watch": "rollup -w -c tools/rollup.browser.min.js",
+		"watch": "rollup -w -c tools/rollup.browser.js",
 		"serve": "ws"
 	},
 	"repository": {
