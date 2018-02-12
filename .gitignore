@@ -61,3 +61,5 @@ build/
 _ignore/
 
 package.json.lock
+
+!js/build/
