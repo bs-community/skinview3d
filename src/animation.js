@@ -15,7 +15,6 @@ class AnimationHandle {
 		this.speed = this._speed = 1.0;
 		this._lastChange = null;
 		this._lastChangeX = null;
-		this._animationNaturalSpeed = animation.naturalSpeed || 1.0;
 	}
 	play(player, time) {
 		if (this._lastChange === null) {
@@ -32,7 +31,7 @@ class AnimationHandle {
 		}
 		if (this.paused === false) {
 			let dt = time - this._lastChange;
-			let x = this._lastChangeX + (this.speed * this._animationNaturalSpeed) * dt;
+			let x = this._lastChangeX + this.speed * dt;
 			invokeAnimation(this.animation, player, x);
 		}
 	}
@@ -59,40 +58,43 @@ class CompositeAnimation {
 let WalkingAnimation = (player, time) => {
 	let skin = player.skin;
 
+	// Multiply by animation's natural speed
+	time *= 8;
+
 	// Leg swing
-	skin.leftLeg.rotation.x = Math.sin(time) * 0.3;
-	skin.rightLeg.rotation.x = Math.sin(time + Math.PI) * 0.3;
+	skin.leftLeg.rotation.x  = Math.sin(time) * 0.5;
+	skin.rightLeg.rotation.x = Math.sin(time + Math.PI) * 0.5;
 
 	// Arm swing
-	skin.leftArm.rotation.x = Math.sin(time + Math.PI) * 0.5;
+	skin.leftArm.rotation.x  = Math.sin(time + Math.PI) * 0.5;
 	skin.rightArm.rotation.x = Math.sin(time) * 0.5;
-	let basicArmRotationZ = Math.PI * 0.02;
-	skin.leftArm.rotation.z = Math.cos(time) * 0.03 + basicArmRotationZ;
+	let basicArmRotationZ    = Math.PI * 0.02;
+	skin.leftArm.rotation.z  = Math.cos(time) * 0.03 + basicArmRotationZ;
 	skin.rightArm.rotation.z = Math.cos(time + Math.PI) * 0.03 - basicArmRotationZ;
 
 	// Head shaking with different frequency & amplitude
-	skin.head.rotation.y = Math.sin(time / 2) * 0.2;
-	skin.head.rotation.x = Math.sin(time / 3) * 0.15;
+	skin.head.rotation.y = Math.sin(time / 4) * 0.2;
+	skin.head.rotation.x = Math.sin(time / 5) * 0.1;
 
 	// Always add an angle for cape around the x axis
 	let basicCapeRotationX = Math.PI * 0.06;
 	player.cape.rotation.x = Math.sin(time / 1.5) * 0.06 + basicCapeRotationX;
 };
 
-WalkingAnimation.naturalSpeed = 5;
-
 let RunningAnimation = (player, time) => {
 	let skin = player.skin;
 
+	time *= 15;
+
 	// Leg swing with larger amplitude
-	skin.leftLeg.rotation.x = Math.cos(time + Math.PI) * 1.3;
+	skin.leftLeg.rotation.x  = Math.cos(time + Math.PI) * 1.3;
 	skin.rightLeg.rotation.x = Math.cos(time) * 1.3;
 
 	// Arm swing
-	skin.leftArm.rotation.x = Math.cos(time) * 1.5;
+	skin.leftArm.rotation.x  = Math.cos(time) * 1.5;
 	skin.rightArm.rotation.x = Math.cos(time + Math.PI) * 1.5;
-	let basicArmRotationZ = Math.PI * 0.1;
-	skin.leftArm.rotation.z = Math.cos(time) * 0.1 + basicArmRotationZ;
+	let basicArmRotationZ    = Math.PI * 0.1;
+	skin.leftArm.rotation.z  = Math.cos(time) * 0.1 + basicArmRotationZ;
 	skin.rightArm.rotation.z = Math.cos(time + Math.PI) * 0.1 - basicArmRotationZ;
 
 	// Jumping
@@ -112,13 +114,9 @@ let RunningAnimation = (player, time) => {
 	// You shouldn't glance right and left when running dude :P
 };
 
-RunningAnimation.naturalSpeed = 13;
-
 let RotatingAnimation = (player, time) => {
 	player.rotation.y = time;
 };
-
-RotatingAnimation.naturalSpeed = 1;
 
 export {
 	CompositeAnimation,

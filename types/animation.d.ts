@@ -1,10 +1,9 @@
 import { PlayerObject } from "./model";
 
 export interface IAnimation {
-	naturalSpeed?: number;
 	play(player: PlayerObject, time: number): void;
 }
-export type AnimationFn = ((player: PlayerObject, time: number) => void) & { naturalSpeed?: number };
+export type AnimationFn = (player: PlayerObject, time: number) => void;
 export type Animation = AnimationFn | IAnimation;
 
 export function invokeAnimation(
