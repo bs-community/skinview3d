@@ -15,7 +15,7 @@ class AnimationHandle {
 		this.speed = this._speed = 1.0;
 		this._lastChange = null;
 		this._lastChangeX = null;
-		this._animationNaturalSpeed = animation.naturalSpeed;
+		this._animationNaturalSpeed = animation.naturalSpeed || 1.0;
 	}
 	play(player, time) {
 		if (this._lastChange === null) {

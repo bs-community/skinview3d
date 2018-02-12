@@ -28,6 +28,6 @@ export class CompositeAnimation implements IAnimation {
 	public play(player: PlayerObject, time: number): void;
 }
 
-export const WalkAnimation: AnimationFn;
-export const RunningAnimation: AnimationFn;
-export const RotatingAnimation: AnimationFn;
+export const WalkingAnimation: AnimationFn & { naturalSpeed?: number };
+export const RunningAnimation: AnimationFn & { naturalSpeed?: number };
+export const RotatingAnimation: AnimationFn & { naturalSpeed?: number };
