@@ -94,7 +94,7 @@ class SkinViewer {
 		this.scene.add(this.playerObject);
 
 		// texture loading
-		this.skinImg.crossOrigin = "";
+		this.skinImg.crossOrigin = "anonymous";
 		this.skinImg.onerror = () => console.error("Failed loading " + this.skinImg.src);
 		this.skinImg.onload = () => {
 			let isOldFormat = false;
@@ -129,7 +129,7 @@ class SkinViewer {
 			this.playerObject.skin.visible = true;
 		};
 
-		this.capeImg.crossOrigin = "";
+		this.capeImg.crossOrigin = "anonymous";
 		this.capeImg.onerror = () => console.error("Failed loading " + this.capeImg.src);
 		this.capeImg.onload = () => {
 			let isOldFormat = false;
