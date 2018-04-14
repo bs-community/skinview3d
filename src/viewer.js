@@ -75,7 +75,7 @@ class SkinViewer {
 
 		this.layer1Material = new THREE.MeshBasicMaterial({ map: this.skinTexture, side: THREE.FrontSide });
 		this.layer2Material = new THREE.MeshBasicMaterial({ map: this.skinTexture, transparent: true, opacity: 1, side: THREE.DoubleSide });
-		this.capeMaterial = new THREE.MeshBasicMaterial({ map: this.capeTexture });
+		this.capeMaterial = new THREE.MeshBasicMaterial({ map: this.capeTexture, transparent: true });
 
 		// scene
 		this.scene = new THREE.Scene();
