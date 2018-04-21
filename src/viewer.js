@@ -65,13 +65,13 @@ class SkinViewer {
 		this.skinCanvas = document.createElement("canvas");
 		this.skinTexture = new THREE.Texture(this.skinCanvas);
 		this.skinTexture.magFilter = THREE.NearestFilter;
-		this.skinTexture.minFilter = THREE.NearestMipMapNearestFilter;
+		this.skinTexture.minFilter = THREE.NearestFilter;
 
 		this.capeImg = new Image();
 		this.capeCanvas = document.createElement("canvas");
 		this.capeTexture = new THREE.Texture(this.capeCanvas);
 		this.capeTexture.magFilter = THREE.NearestFilter;
-		this.capeTexture.minFilter = THREE.NearestMipMapNearestFilter;
+		this.capeTexture.minFilter = THREE.NearestFilter;
 
 		this.layer1Material = new THREE.MeshBasicMaterial({ map: this.skinTexture, side: THREE.FrontSide });
 		this.layer2Material = new THREE.MeshBasicMaterial({ map: this.skinTexture, transparent: true, opacity: 1, side: THREE.DoubleSide, alphaTest: 0.5 });
