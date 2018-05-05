@@ -33,19 +33,19 @@
 		"three": "^0.92.0"
 	},
 	"devDependencies": {
-		"@types/three": "^0.91.10",
+		"@types/three": "^0.91.11",
 		"babel-cli": "^6.26.0",
 		"babel-plugin-external-helpers": "^6.22.0",
 		"babel-preset-env": "^1.6.1",
 		"eslint": "^4.19.1",
-		"local-web-server": "^2.5.1",
+		"local-web-server": "^2.5.2",
 		"npm-run-all": "^4.1.2",
-		"rollup": "^0.58.1",
-		"rollup-plugin-babel": "^3.0.3",
+		"rollup": "^0.58.2",
+		"rollup-plugin-babel": "^3.0.4",
 		"rollup-plugin-license": "^0.6.0",
 		"rollup-plugin-node-resolve": "^3.3.0",
 		"rollup-plugin-uglify": "^3.0.0",
-		"tslint": "^5.9.1",
+		"tslint": "^5.10.0",
 		"typescript": "^2.8.3",
 		"uglify-es": "^3.3.10"
 	}
