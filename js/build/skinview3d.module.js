@@ -25,7 +25,7 @@
  * SOFTWARE.
  */
 
-import { Vector2, Group, BoxGeometry, Mesh, Texture, NearestFilter, NearestMipMapNearestFilter, MeshBasicMaterial, FrontSide, DoubleSide, Scene, PerspectiveCamera, WebGLRenderer, Vector3, MOUSE, Quaternion, Spherical, OrthographicCamera, EventDispatcher } from 'three';
+import { Vector2, Group, BoxGeometry, Mesh, Texture, NearestFilter, MeshBasicMaterial, FrontSide, DoubleSide, Scene, PerspectiveCamera, WebGLRenderer, Vector3, MOUSE, Quaternion, Spherical, OrthographicCamera, EventDispatcher } from 'three';
 
 var classCallCheck = function (instance, Constructor) {
   if (!(instance instanceof Constructor)) {
@@ -51,14 +51,6 @@ var createClass = function () {
   };
 }();
 
-
-
-
-
-
-
-
-
 var inherits = function (subClass, superClass) {
   if (typeof superClass !== "function" && superClass !== null) {
     throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
@@ -74,16 +66,6 @@ var inherits = function (subClass, superClass) {
   });
   if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
 };
-
-
-
-
-
-
-
-
-
-
 
 var possibleConstructorReturn = function (self, call) {
   if (!self) {
@@ -529,17 +511,17 @@ var SkinViewer = function () {
 		this.skinCanvas = document.createElement("canvas");
 		this.skinTexture = new Texture(this.skinCanvas);
 		this.skinTexture.magFilter = NearestFilter;
-		this.skinTexture.minFilter = NearestMipMapNearestFilter;
+		this.skinTexture.minFilter = NearestFilter;
 
 		this.capeImg = new Image();
 		this.capeCanvas = document.createElement("canvas");
 		this.capeTexture = new Texture(this.capeCanvas);
 		this.capeTexture.magFilter = NearestFilter;
-		this.capeTexture.minFilter = NearestMipMapNearestFilter;
+		this.capeTexture.minFilter = NearestFilter;
 
 		this.layer1Material = new MeshBasicMaterial({ map: this.skinTexture, side: FrontSide });
-		this.layer2Material = new MeshBasicMaterial({ map: this.skinTexture, transparent: true, opacity: 1, side: DoubleSide });
-		this.capeMaterial = new MeshBasicMaterial({ map: this.capeTexture });
+		this.layer2Material = new MeshBasicMaterial({ map: this.skinTexture, transparent: true, opacity: 1, side: DoubleSide, alphaTest: 0.5 });
+		this.capeMaterial = new MeshBasicMaterial({ map: this.capeTexture, transparent: true, opacity: 1, side: DoubleSide, alphaTest: 0.5 });
 
 		// scene
 		this.scene = new Scene();
@@ -560,7 +542,7 @@ var SkinViewer = function () {
 		this.scene.add(this.playerObject);
 
 		// texture loading
-		this.skinImg.crossOrigin = "";
+		this.skinImg.crossOrigin = "anonymous";
 		this.skinImg.onerror = function () {
 			return console.error("Failed loading " + _this.skinImg.src);
 		};
@@ -597,7 +579,7 @@ var SkinViewer = function () {
 			_this.playerObject.skin.visible = true;
 		};
 
-		this.capeImg.crossOrigin = "";
+		this.capeImg.crossOrigin = "anonymous";
 		this.capeImg.onerror = function () {
 			return console.error("Failed loading " + _this.capeImg.src);
 		};
@@ -1121,6 +1103,9 @@ var OrbitControls = function (_THREE$EventDispatche) {
 			panStart.copy(panEnd);
 			scope.update();
 		}
+		//
+		// event handlers - FSM: listen for events and reset state
+		//
 		function onMouseDown(event) {
 			if (scope.enabled === false) return;
 			switch (event.button) {

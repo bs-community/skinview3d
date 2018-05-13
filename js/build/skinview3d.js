@@ -55,14 +55,6 @@
 	  };
 	}();
 
-
-
-
-
-
-
-
-
 	var inherits = function (subClass, superClass) {
 	  if (typeof superClass !== "function" && superClass !== null) {
 	    throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
@@ -78,16 +70,6 @@
 	  });
 	  if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
 	};
-
-
-
-
-
-
-
-
-
-
 
 	var possibleConstructorReturn = function (self, call) {
 	  if (!self) {
@@ -533,17 +515,17 @@
 			this.skinCanvas = document.createElement("canvas");
 			this.skinTexture = new THREE.Texture(this.skinCanvas);
 			this.skinTexture.magFilter = THREE.NearestFilter;
-			this.skinTexture.minFilter = THREE.NearestMipMapNearestFilter;
+			this.skinTexture.minFilter = THREE.NearestFilter;
 
 			this.capeImg = new Image();
 			this.capeCanvas = document.createElement("canvas");
 			this.capeTexture = new THREE.Texture(this.capeCanvas);
 			this.capeTexture.magFilter = THREE.NearestFilter;
-			this.capeTexture.minFilter = THREE.NearestMipMapNearestFilter;
+			this.capeTexture.minFilter = THREE.NearestFilter;
 
 			this.layer1Material = new THREE.MeshBasicMaterial({ map: this.skinTexture, side: THREE.FrontSide });
-			this.layer2Material = new THREE.MeshBasicMaterial({ map: this.skinTexture, transparent: true, opacity: 1, side: THREE.DoubleSide });
-			this.capeMaterial = new THREE.MeshBasicMaterial({ map: this.capeTexture });
+			this.layer2Material = new THREE.MeshBasicMaterial({ map: this.skinTexture, transparent: true, opacity: 1, side: THREE.DoubleSide, alphaTest: 0.5 });
+			this.capeMaterial = new THREE.MeshBasicMaterial({ map: this.capeTexture, transparent: true, opacity: 1, side: THREE.DoubleSide, alphaTest: 0.5 });
 
 			// scene
 			this.scene = new THREE.Scene();
@@ -564,7 +546,7 @@
 			this.scene.add(this.playerObject);
 
 			// texture loading
-			this.skinImg.crossOrigin = "";
+			this.skinImg.crossOrigin = "anonymous";
 			this.skinImg.onerror = function () {
 				return console.error("Failed loading " + _this.skinImg.src);
 			};
@@ -601,7 +583,7 @@
 				_this.playerObject.skin.visible = true;
 			};
 
-			this.capeImg.crossOrigin = "";
+			this.capeImg.crossOrigin = "anonymous";
 			this.capeImg.onerror = function () {
 				return console.error("Failed loading " + _this.capeImg.src);
 			};
@@ -1125,6 +1107,9 @@
 				panStart.copy(panEnd);
 				scope.update();
 			}
+			//
+			// event handlers - FSM: listen for events and reset state
+			//
 			function onMouseDown(event) {
 				if (scope.enabled === false) return;
 				switch (event.button) {
