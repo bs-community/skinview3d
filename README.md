@@ -64,3 +64,7 @@ Three.js powered Minecraft skin viewer.
 
 # Build
 `npm run build`
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fto2mbn%2Fskinview3d.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fto2mbn%2Fskinview3d?ref=badge_large)
