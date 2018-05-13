@@ -5,7 +5,6 @@ skinview3d
 [![npm](https://img.shields.io/npm/v/skinview3d.svg?style=flat-square)](https://www.npmjs.com/package/skinview3d)
 [![license](https://img.shields.io/badge/license-MIT-yellowgreen.svg?style=flat-square)](https://github.com/to2mbn/skinview3d/blob/master/LICENSE)
 [![Gitter chat](https://img.shields.io/gitter/room/TechnologyAdvice/Stardust.svg?style=flat-square)](https://gitter.im/skinview3d/Lobby)
-[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fto2mbn%2Fskinview3d.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fto2mbn%2Fskinview3d?ref=badge_shield)
 
 Three.js powered Minecraft skin viewer.
 
