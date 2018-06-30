@@ -15,7 +15,7 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/to2mbn/skinview3d.git"
+		"url": "git+https://github.com/bs-community/skinview3d.git"
 	},
 	"author": "Haowei Wen <yushijinhun@gmail.com> (https://github.com/yushijinhun)",
 	"contributors": [
@@ -26,9 +26,9 @@
 	],
 	"license": "MIT",
 	"bugs": {
-		"url": "https://github.com/to2mbn/skinview3d/issues"
+		"url": "https://github.com/bs-community/skinview3d/issues"
 	},
-	"homepage": "https://github.com/to2mbn/skinview3d",
+	"homepage": "https://github.com/bs-community/skinview3d",
 	"dependencies": {
 		"three": "^0.92.0"
 	},
