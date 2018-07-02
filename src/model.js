@@ -17,7 +17,7 @@ function toCapeVertices(x1, y1, x2, y2) {
 	return toFaceVertices(x1, y1, x2, y2, 64.0, 32.0);
 }
 
-function addVertices(box, top, bottom, left, front, right, back) {
+function setVertices(box, top, bottom, left, front, right, back) {
 	box.faceVertexUvs[0] = [];
 	box.faceVertexUvs[0][0] = [right[3], right[0], right[2]];
 	box.faceVertexUvs[0][1] = [right[0], right[1], right[2]];
@@ -45,7 +45,7 @@ class SkinObject extends THREE.Group {
 		this.head = new THREE.Group();
 
 		let headBox = new THREE.BoxGeometry(8, 8, 8, 0, 0, 0);
-		addVertices(headBox,
+		setVertices(headBox,
 			toSkinVertices(8, 0, 16, 8),
 			toSkinVertices(16, 0, 24, 8),
 			toSkinVertices(0, 8, 8, 16),
@@ -57,7 +57,7 @@ class SkinObject extends THREE.Group {
 		this.head.add(headMesh);
 
 		let head2Box = new THREE.BoxGeometry(9, 9, 9, 0, 0, 0);
-		addVertices(head2Box,
+		setVertices(head2Box,
 			toSkinVertices(40, 0, 48, 8),
 			toSkinVertices(48, 0, 56, 8),
 			toSkinVertices(32, 8, 40, 16),
@@ -76,7 +76,7 @@ class SkinObject extends THREE.Group {
 		this.body = new THREE.Group();
 
 		let bodyBox = new THREE.BoxGeometry(8, 12, 4, 0, 0, 0);
-		addVertices(bodyBox,
+		setVertices(bodyBox,
 			toSkinVertices(20, 16, 28, 20),
 			toSkinVertices(28, 16, 36, 20),
 			toSkinVertices(16, 20, 20, 32),
@@ -88,7 +88,7 @@ class SkinObject extends THREE.Group {
 		this.body.add(bodyMesh);
 
 		let body2Box = new THREE.BoxGeometry(9, 13.5, 4.5, 0, 0, 0);
-		addVertices(body2Box,
+		setVertices(body2Box,
 			toSkinVertices(20, 32, 28, 36),
 			toSkinVertices(28, 32, 36, 36),
 			toSkinVertices(16, 36, 20, 48),
@@ -109,7 +109,7 @@ class SkinObject extends THREE.Group {
 
 		let rightArmBox = new THREE.BoxGeometry((slim ? 3 : 4) - esp, 12 - esp, 4 - esp, 0, 0, 0);
 		if (slim) {
-			addVertices(rightArmBox,
+			setVertices(rightArmBox,
 				toSkinVertices(44, 16, 47, 20),
 				toSkinVertices(47, 16, 50, 20),
 				toSkinVertices(40, 20, 44, 32),
@@ -118,7 +118,7 @@ class SkinObject extends THREE.Group {
 				toSkinVertices(51, 20, 54, 32)
 			);
 		} else {
-			addVertices(rightArmBox,
+			setVertices(rightArmBox,
 				toSkinVertices(44, 16, 48, 20),
 				toSkinVertices(48, 16, 52, 20),
 				toSkinVertices(40, 20, 44, 32),
@@ -132,7 +132,7 @@ class SkinObject extends THREE.Group {
 
 		let rightArm2Box = new THREE.BoxGeometry((slim ? 3.375 : 4.5) - esp, 13.5 - esp, 4.5 - esp, 0, 0, 0);
 		if (slim) {
-			addVertices(rightArm2Box,
+			setVertices(rightArm2Box,
 				toSkinVertices(44, 32, 47, 36),
 				toSkinVertices(47, 32, 50, 36),
 				toSkinVertices(40, 36, 44, 48),
@@ -141,7 +141,7 @@ class SkinObject extends THREE.Group {
 				toSkinVertices(51, 36, 54, 48)
 			);
 		} else {
-			addVertices(rightArm2Box,
+			setVertices(rightArm2Box,
 				toSkinVertices(44, 32, 48, 36),
 				toSkinVertices(48, 32, 52, 36),
 				toSkinVertices(40, 36, 44, 48),
@@ -167,7 +167,7 @@ class SkinObject extends THREE.Group {
 
 		let leftArmBox = new THREE.BoxGeometry((slim ? 3 : 4) - esp, 12 - esp, 4 - esp, 0, 0, 0);
 		if (slim) {
-			addVertices(leftArmBox,
+			setVertices(leftArmBox,
 				toSkinVertices(36, 48, 39, 52),
 				toSkinVertices(39, 48, 42, 52),
 				toSkinVertices(32, 52, 36, 64),
@@ -176,7 +176,7 @@ class SkinObject extends THREE.Group {
 				toSkinVertices(43, 52, 46, 64)
 			);
 		} else {
-			addVertices(leftArmBox,
+			setVertices(leftArmBox,
 				toSkinVertices(36, 48, 40, 52),
 				toSkinVertices(40, 48, 44, 52),
 				toSkinVertices(32, 52, 36, 64),
@@ -190,7 +190,7 @@ class SkinObject extends THREE.Group {
 
 		let leftArm2Box = new THREE.BoxGeometry((slim ? 3.375 : 4.5) - esp, 13.5 - esp, 4.5 - esp, 0, 0, 0);
 		if (slim) {
-			addVertices(leftArm2Box,
+			setVertices(leftArm2Box,
 				toSkinVertices(52, 48, 55, 52),
 				toSkinVertices(55, 48, 58, 52),
 				toSkinVertices(48, 52, 52, 64),
@@ -199,7 +199,7 @@ class SkinObject extends THREE.Group {
 				toSkinVertices(59, 52, 62, 64)
 			);
 		} else {
-			addVertices(leftArm2Box,
+			setVertices(leftArm2Box,
 				toSkinVertices(52, 48, 56, 52),
 				toSkinVertices(56, 48, 60, 52),
 				toSkinVertices(48, 52, 52, 64),
@@ -224,7 +224,7 @@ class SkinObject extends THREE.Group {
 		let rightLegPivot = new THREE.Group();
 
 		let rightLegBox = new THREE.BoxGeometry(4 - esp, 12 - esp, 4 - esp, 0, 0, 0);
-		addVertices(rightLegBox,
+		setVertices(rightLegBox,
 			toSkinVertices(4, 16, 8, 20),
 			toSkinVertices(8, 16, 12, 20),
 			toSkinVertices(0, 20, 4, 32),
@@ -236,7 +236,7 @@ class SkinObject extends THREE.Group {
 		rightLegPivot.add(rightLegMesh);
 
 		let rightLeg2Box = new THREE.BoxGeometry(4.5 - esp, 13.5 - esp, 4.5 - esp, 0, 0, 0);
-		addVertices(rightLeg2Box,
+		setVertices(rightLeg2Box,
 			toSkinVertices(4, 32, 8, 36),
 			toSkinVertices(8, 32, 12, 36),
 			toSkinVertices(0, 36, 4, 48),
@@ -259,7 +259,7 @@ class SkinObject extends THREE.Group {
 		let leftLegPivot = new THREE.Group();
 
 		let leftLegBox = new THREE.BoxGeometry(4 - esp, 12 - esp, 4 - esp, 0, 0, 0);
-		addVertices(leftLegBox,
+		setVertices(leftLegBox,
 			toSkinVertices(20, 48, 24, 52),
 			toSkinVertices(24, 48, 28, 52),
 			toSkinVertices(16, 52, 20, 64),
@@ -271,7 +271,7 @@ class SkinObject extends THREE.Group {
 		leftLegPivot.add(leftLegMesh);
 
 		let leftLeg2Box = new THREE.BoxGeometry(4.5 - esp, 13.5 - esp, 4.5 - esp, 0, 0, 0);
-		addVertices(leftLeg2Box,
+		setVertices(leftLeg2Box,
 			toSkinVertices(4, 48, 8, 52),
 			toSkinVertices(8, 48, 12, 52),
 			toSkinVertices(0, 52, 4, 64),
@@ -298,7 +298,7 @@ class CapeObject extends THREE.Group {
 		// back = outside
 		// front = inside
 		let capeBox = new THREE.BoxGeometry(10, 16, 1, 0, 0, 0);
-		addVertices(capeBox,
+		setVertices(capeBox,
 			toCapeVertices(1, 0, 11, 1),
 			toCapeVertices(11, 0, 21, 1),
 			toCapeVertices(11, 1, 12, 17),
