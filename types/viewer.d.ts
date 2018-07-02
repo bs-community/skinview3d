@@ -9,6 +9,7 @@ export interface SkinViewerOptions {
 	capeUrl?: string;
 	width?: number;
 	height?: number;
+	detectModel?: boolean;
 }
 
 export class SkinViewer {
@@ -21,6 +22,7 @@ export class SkinViewer {
 	public animation: Animation;
 	public animationPaused: boolean;
 	public animationTime: number;
+	public detectModel: boolean;
 	public readonly playerObject: PlayerObject;
 	public readonly scene: THREE.Scene;
 	public readonly camera: THREE.PerspectiveCamera;

@@ -21,6 +21,10 @@
 			skinUrl: "./1_8_texturemap_redux.png"
 		});
 
+		// By default, the skin model is automatically detected. You can turn it off in this way:
+		// skinViewer.detectModel = false;
+		// skinViewer.playerObject.skin.slim = true;
+
 		let control = new skinview3d.createOrbitControls(skinViewer);
 		skinViewer.animation = new skinview3d.CompositeAnimation();
 

@@ -123,6 +123,7 @@ class SkinViewer {
 	constructor(options) {
 		this.domElement = options.domElement;
 		this.animation = options.animation || null;
+		this.detectModel = options.animation !== false; // true by default
 		this.animationPaused = false;
 		this.animationTime = 0;
 		this.disposed = false;
@@ -189,7 +190,9 @@ class SkinViewer {
 				skinContext.drawImage(this.skinImg, 0, 0, this.skinCanvas.width, this.skinCanvas.height);
 			}
 
-			this.playerObject.skin.slim = isSlimSkin(skinContext, this.skinCanvas.width);
+			if (this.detectModel) {
+				this.playerObject.skin.slim = isSlimSkin(skinContext, this.skinCanvas.width);
+			}
 
 			this.skinTexture.needsUpdate = true;
 			this.layer1Material.needsUpdate = true;
