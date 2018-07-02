@@ -29,6 +29,10 @@
 		"url": "https://github.com/bs-community/skinview3d/issues"
 	},
 	"homepage": "https://github.com/bs-community/skinview3d",
+	"files": [
+		"types",
+		"build"
+	],
 	"dependencies": {
 		"three": "^0.92.0"
 	},
