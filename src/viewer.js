@@ -34,8 +34,25 @@ function copyImage(context, sX, sY, w, h, dX, dY, flipHorizontal) {
 	context.putImageData(imgData, dX, dY);
 }
 
+function hasTransparency(context, x0, y0, w, h) {
+	let imgData = context.getImageData(x0, y0, w, h);
+	for (let x = 0; x < w; x++) {
+		for (let y = 0; y < h; y++) {
+			let offset = (x + y * w) * 4;
+			if (imgData.data[offset + 3] !== 0xff) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+function computeSkinScale(width) {
+	return width / 64.0;
+}
+
 function convertSkinTo1_8(context, width) {
-	let scale = width / 64.0;
+	let scale = computeSkinScale(width);
 	let copySkin = (context, sX, sY, w, h, dX, dY, flipHorizontal) => copyImage(context, sX * scale, sY * scale, w * scale, h * scale, dX * scale, dY * scale, flipHorizontal);
 
 	copySkin(context, 4, 16, 4, 4, 20, 48, true); // Top Leg
@@ -50,6 +67,56 @@ function convertSkinTo1_8(context, width) {
 	copySkin(context, 44, 20, 4, 12, 36, 52, true); // Front Arm
 	copySkin(context, 48, 20, 4, 12, 32, 52, true); // Inner Arm
 	copySkin(context, 52, 20, 4, 12, 44, 52, true); // Back Arm
+}
+
+function isSlimSkin(skinContext, width) {
+	// Detects whether the skin is default or slim.
+	//
+	// The right arm area of *default* skins:
+	// (44,16)->*-------*-------*
+	// (40,20)  |top    |bottom |
+	// \|/      |4x4    |4x4    |
+	//  *-------*-------*-------*-------*
+	//  |right  |front  |left   |back   |
+	//  |4x12   |4x12   |4x12   |4x12   |
+	//  *-------*-------*-------*-------*
+	// The right arm area of *slim* skins:
+	// (44,16)->*------*------*-*
+	// (40,20)  |top   |bottom| |<----[x0=50,y0=16,w=2,h=4]
+	// \|/      |3x4   |3x4   | |
+	//  *-------*------*------***-----*-*
+	//  |right  |front |left   |back  | |<----[x0=54,y0=20,w=2,h=12]
+	//  |4x12   |3x12  |4x12   |3x12  | |
+	//  *-------*------*-------*------*-*
+	// Compared with default right arms, slim right arms have 2 unused areas.
+	//
+	// The same is true for left arm:
+	// The left arm area of *default* skins:
+	// (36,48)->*-------*-------*
+	// (32,52)  |top    |bottom |
+	// \|/      |4x4    |4x4    |
+	//  *-------*-------*-------*-------*
+	//  |right  |front  |left   |back   |
+	//  |4x12   |4x12   |4x12   |4x12   |
+	//  *-------*-------*-------*-------*
+	// The left arm area of *slim* skins:
+	// (36,48)->*------*------*-*
+	// (32,52)  |top   |bottom| |<----[x0=42,y0=48,w=2,h=4]
+	// \|/      |3x4   |3x4   | |
+	//  *-------*------*------***-----*-*
+	//  |right  |front |left   |back  | |<----[x0=46,y0=52,w=2,h=12]
+	//  |4x12   |3x12  |4x12   |3x12  | |
+	//  *-------*------*-------*------*-*
+	//
+	// If there is a transparent pixel in any of the 4 unused areas, the skin must be slim,
+	// as transparent pixels are not allowed in the first layer.
+
+	let scale = computeSkinScale(width);
+	let checkArea = (x, y, w, h) => hasTransparency(skinContext, x * scale, y * scale, w * scale, h * scale);
+	return checkArea(50, 16, 2, 4) ||
+		checkArea(54, 20, 2, 12) ||
+		checkArea(42, 48, 2, 4) ||
+		checkArea(46, 52, 2, 12);
 }
 
 class SkinViewer {
@@ -91,7 +158,6 @@ class SkinViewer {
 		this.domElement.appendChild(this.renderer.domElement);
 
 		this.playerObject = new PlayerObject(this.layer1Material, this.layer2Material, this.capeMaterial);
-		this.playerObject.skin.slim = options.slim === true;
 		this.scene.add(this.playerObject);
 
 		// texture loading
@@ -122,6 +188,8 @@ class SkinViewer {
 				skinContext.clearRect(0, 0, this.skinCanvas.width, this.skinCanvas.height);
 				skinContext.drawImage(this.skinImg, 0, 0, this.skinCanvas.width, this.skinCanvas.height);
 			}
+
+			this.playerObject.skin.slim = isSlimSkin(skinContext, this.skinCanvas.width);
 
 			this.skinTexture.needsUpdate = true;
 			this.layer1Material.needsUpdate = true;

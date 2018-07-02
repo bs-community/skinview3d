@@ -5,7 +5,6 @@ import { PlayerObject } from "./model";
 export interface SkinViewerOptions {
 	domElement: Node;
 	animation?: Animation;
-	slim?: boolean;
 	skinUrl?: string;
 	capeUrl?: string;
 	width?: number;
