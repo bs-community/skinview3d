@@ -1,7 +1,7 @@
 import * as THREE from "three";
 
 export class SkinObject extends THREE.Group {
-	public readonly slim: boolean;
+	public slim: boolean;
 	public readonly head: THREE.Group;
 	public readonly body: THREE.Group;
 	public readonly rightArm: THREE.Group;
@@ -10,7 +10,6 @@ export class SkinObject extends THREE.Group {
 	public readonly leftLeg: THREE.Group;
 
 	constructor(
-		slim: boolean,
 		layer1Material: THREE.Material,
 		layer2Material: THREE.Material,
 	);
@@ -27,7 +26,6 @@ export class PlayerObject extends THREE.Group {
 	public readonly cape: CapeObject;
 
 	constructor(
-		slim: boolean,
 		layer1Material: THREE.Material,
 		layer2Material: THREE.Material,
 		capeMaterial: THREE.Material,

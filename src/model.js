@@ -36,10 +36,10 @@ function setVertices(box, top, bottom, left, front, right, back) {
 const esp = 0.002;
 
 class SkinObject extends THREE.Group {
-	constructor(slim, layer1Material, layer2Material) {
+	constructor(layer1Material, layer2Material) {
 		super();
 
-		this.slim = slim;
+		this.modelListeners = []; // called when model(slim property) is changed
 
 		// Head
 		this.head = new THREE.Group();
@@ -107,57 +107,73 @@ class SkinObject extends THREE.Group {
 		this.rightArm = new THREE.Group();
 		let rightArmPivot = new THREE.Group();
 
-		let rightArmBox = new THREE.BoxGeometry((slim ? 3 : 4) - esp, 12 - esp, 4 - esp, 0, 0, 0);
-		if (slim) {
-			setVertices(rightArmBox,
-				toSkinVertices(44, 16, 47, 20),
-				toSkinVertices(47, 16, 50, 20),
-				toSkinVertices(40, 20, 44, 32),
-				toSkinVertices(44, 20, 47, 32),
-				toSkinVertices(47, 20, 51, 32),
-				toSkinVertices(51, 20, 54, 32)
-			);
-		} else {
-			setVertices(rightArmBox,
-				toSkinVertices(44, 16, 48, 20),
-				toSkinVertices(48, 16, 52, 20),
-				toSkinVertices(40, 20, 44, 32),
-				toSkinVertices(44, 20, 48, 32),
-				toSkinVertices(48, 20, 52, 32),
-				toSkinVertices(52, 20, 56, 32)
-			);
-		}
+		let rightArmBox = new THREE.BoxGeometry(1, 1, 1, 0, 0, 0); // w/d/h is model-related
 		let rightArmMesh = new THREE.Mesh(rightArmBox, layer1Material);
 		rightArmPivot.add(rightArmMesh);
+		this.modelListeners.push(() => {
+			rightArmMesh.scale.x = (this.slim ? 3 : 4) - esp;
+			rightArmMesh.scale.y = 12 - esp;
+			rightArmMesh.scale.z = 4 - esp;
+			if (this.slim) {
+				setVertices(rightArmBox,
+					toSkinVertices(44, 16, 47, 20),
+					toSkinVertices(47, 16, 50, 20),
+					toSkinVertices(40, 20, 44, 32),
+					toSkinVertices(44, 20, 47, 32),
+					toSkinVertices(47, 20, 51, 32),
+					toSkinVertices(51, 20, 54, 32)
+				);
+			} else {
+				setVertices(rightArmBox,
+					toSkinVertices(44, 16, 48, 20),
+					toSkinVertices(48, 16, 52, 20),
+					toSkinVertices(40, 20, 44, 32),
+					toSkinVertices(44, 20, 48, 32),
+					toSkinVertices(48, 20, 52, 32),
+					toSkinVertices(52, 20, 56, 32)
+				);
+			}
+			rightArmBox.uvsNeedUpdate = true;
+			rightArmBox.elementsNeedUpdate = true;
+		});
 
-		let rightArm2Box = new THREE.BoxGeometry((slim ? 3.375 : 4.5) - esp, 13.5 - esp, 4.5 - esp, 0, 0, 0);
-		if (slim) {
-			setVertices(rightArm2Box,
-				toSkinVertices(44, 32, 47, 36),
-				toSkinVertices(47, 32, 50, 36),
-				toSkinVertices(40, 36, 44, 48),
-				toSkinVertices(44, 36, 47, 48),
-				toSkinVertices(47, 36, 51, 48),
-				toSkinVertices(51, 36, 54, 48)
-			);
-		} else {
-			setVertices(rightArm2Box,
-				toSkinVertices(44, 32, 48, 36),
-				toSkinVertices(48, 32, 52, 36),
-				toSkinVertices(40, 36, 44, 48),
-				toSkinVertices(44, 36, 48, 48),
-				toSkinVertices(48, 36, 52, 48),
-				toSkinVertices(52, 36, 56, 48)
-			);
-		}
+		let rightArm2Box = new THREE.BoxGeometry(1, 1, 1, 0, 0, 0); // w/d/h is model-related
 		let rightArm2Mesh = new THREE.Mesh(rightArm2Box, layer2Material);
 		rightArm2Mesh.renderOrder = 1;
 		rightArmPivot.add(rightArm2Mesh);
+		this.modelListeners.push(() => {
+			rightArm2Mesh.scale.x = (this.slim ? 3.375 : 4.5) - esp;
+			rightArm2Mesh.scale.y = 13.5 - esp;
+			rightArm2Mesh.scale.z = 4.5 - esp;
+			if (this.slim) {
+				setVertices(rightArm2Box,
+					toSkinVertices(44, 32, 47, 36),
+					toSkinVertices(47, 32, 50, 36),
+					toSkinVertices(40, 36, 44, 48),
+					toSkinVertices(44, 36, 47, 48),
+					toSkinVertices(47, 36, 51, 48),
+					toSkinVertices(51, 36, 54, 48)
+				);
+			} else {
+				setVertices(rightArm2Box,
+					toSkinVertices(44, 32, 48, 36),
+					toSkinVertices(48, 32, 52, 36),
+					toSkinVertices(40, 36, 44, 48),
+					toSkinVertices(44, 36, 48, 48),
+					toSkinVertices(48, 36, 52, 48),
+					toSkinVertices(52, 36, 56, 48)
+				);
+			}
+			rightArm2Box.uvsNeedUpdate = true;
+			rightArm2Box.elementsNeedUpdate = true;
+		});
 
 		rightArmPivot.position.y = -6;
 		this.rightArm.add(rightArmPivot);
 		this.rightArm.position.y = -4;
-		this.rightArm.position.x = slim ? -5.5 : -6;
+		this.modelListeners.push(() => {
+			this.rightArm.position.x = this.slim ? -5.5 : -6;
+		});
 		this.add(this.rightArm);
 
 
@@ -165,57 +181,73 @@ class SkinObject extends THREE.Group {
 		this.leftArm = new THREE.Group();
 		let leftArmPivot = new THREE.Group();
 
-		let leftArmBox = new THREE.BoxGeometry((slim ? 3 : 4) - esp, 12 - esp, 4 - esp, 0, 0, 0);
-		if (slim) {
-			setVertices(leftArmBox,
-				toSkinVertices(36, 48, 39, 52),
-				toSkinVertices(39, 48, 42, 52),
-				toSkinVertices(32, 52, 36, 64),
-				toSkinVertices(36, 52, 39, 64),
-				toSkinVertices(39, 52, 43, 64),
-				toSkinVertices(43, 52, 46, 64)
-			);
-		} else {
-			setVertices(leftArmBox,
-				toSkinVertices(36, 48, 40, 52),
-				toSkinVertices(40, 48, 44, 52),
-				toSkinVertices(32, 52, 36, 64),
-				toSkinVertices(36, 52, 40, 64),
-				toSkinVertices(40, 52, 44, 64),
-				toSkinVertices(44, 52, 48, 64)
-			);
-		}
+		let leftArmBox = new THREE.BoxGeometry(1, 1, 1, 0, 0, 0); // w/d/h is model-related
 		let leftArmMesh = new THREE.Mesh(leftArmBox, layer1Material);
 		leftArmPivot.add(leftArmMesh);
+		this.modelListeners.push(() => {
+			leftArmMesh.scale.x = (this.slim ? 3 : 4) - esp;
+			leftArmMesh.scale.y = 12 - esp;
+			leftArmMesh.scale.z = 4 - esp;
+			if (this.slim) {
+				setVertices(leftArmBox,
+					toSkinVertices(36, 48, 39, 52),
+					toSkinVertices(39, 48, 42, 52),
+					toSkinVertices(32, 52, 36, 64),
+					toSkinVertices(36, 52, 39, 64),
+					toSkinVertices(39, 52, 43, 64),
+					toSkinVertices(43, 52, 46, 64)
+				);
+			} else {
+				setVertices(leftArmBox,
+					toSkinVertices(36, 48, 40, 52),
+					toSkinVertices(40, 48, 44, 52),
+					toSkinVertices(32, 52, 36, 64),
+					toSkinVertices(36, 52, 40, 64),
+					toSkinVertices(40, 52, 44, 64),
+					toSkinVertices(44, 52, 48, 64)
+				);
+			}
+			leftArmBox.uvsNeedUpdate = true;
+			leftArmBox.elementsNeedUpdate=true;
+		});
 
-		let leftArm2Box = new THREE.BoxGeometry((slim ? 3.375 : 4.5) - esp, 13.5 - esp, 4.5 - esp, 0, 0, 0);
-		if (slim) {
-			setVertices(leftArm2Box,
-				toSkinVertices(52, 48, 55, 52),
-				toSkinVertices(55, 48, 58, 52),
-				toSkinVertices(48, 52, 52, 64),
-				toSkinVertices(52, 52, 55, 64),
-				toSkinVertices(55, 52, 59, 64),
-				toSkinVertices(59, 52, 62, 64)
-			);
-		} else {
-			setVertices(leftArm2Box,
-				toSkinVertices(52, 48, 56, 52),
-				toSkinVertices(56, 48, 60, 52),
-				toSkinVertices(48, 52, 52, 64),
-				toSkinVertices(52, 52, 56, 64),
-				toSkinVertices(56, 52, 60, 64),
-				toSkinVertices(60, 52, 64, 64)
-			);
-		}
+		let leftArm2Box = new THREE.BoxGeometry(1, 1, 1, 0, 0, 0); // w/d/h is model-related
 		let leftArm2Mesh = new THREE.Mesh(leftArm2Box, layer2Material);
 		leftArm2Mesh.renderOrder = 1;
 		leftArmPivot.add(leftArm2Mesh);
+		this.modelListeners.push(() => {
+			leftArm2Mesh.scale.x = (this.slim ? 3.375 : 4.5) - esp;
+			leftArm2Mesh.scale.y = 13.5 - esp;
+			leftArm2Mesh.scale.z = 4.5 - esp;
+			if (this.slim) {
+				setVertices(leftArm2Box,
+					toSkinVertices(52, 48, 55, 52),
+					toSkinVertices(55, 48, 58, 52),
+					toSkinVertices(48, 52, 52, 64),
+					toSkinVertices(52, 52, 55, 64),
+					toSkinVertices(55, 52, 59, 64),
+					toSkinVertices(59, 52, 62, 64)
+				);
+			} else {
+				setVertices(leftArm2Box,
+					toSkinVertices(52, 48, 56, 52),
+					toSkinVertices(56, 48, 60, 52),
+					toSkinVertices(48, 52, 52, 64),
+					toSkinVertices(52, 52, 56, 64),
+					toSkinVertices(56, 52, 60, 64),
+					toSkinVertices(60, 52, 64, 64)
+				);
+			}
+			leftArm2Box.uvsNeedUpdate = true;
+			leftArm2Box.elementsNeedUpdate = true;
+		});
 
 		leftArmPivot.position.y = -6;
 		this.leftArm.add(leftArmPivot);
 		this.leftArm.position.y = -4;
-		this.leftArm.position.x = slim ? 5.5 : 6;
+		this.modelListeners.push(() => {
+			this.leftArm.position.x = this.slim ? 5.5 : 6;
+		});
 		this.add(this.leftArm);
 
 
@@ -288,6 +320,19 @@ class SkinObject extends THREE.Group {
 		this.leftLeg.position.y = -16;
 		this.leftLeg.position.x = 2;
 		this.add(this.leftLeg);
+
+		this.slim = false;
+	}
+
+	get slim() {
+		return this._slim;
+	}
+
+	set slim(value) {
+		if (this._slim !== value) {
+			this._slim = value;
+			this.modelListeners.forEach(listener => listener());
+		}
 	}
 }
 
@@ -314,10 +359,10 @@ class CapeObject extends THREE.Group {
 }
 
 class PlayerObject extends THREE.Group {
-	constructor(slim, layer1Material, layer2Material, capeMaterial) {
+	constructor(layer1Material, layer2Material, capeMaterial) {
 		super();
 
-		this.skin = new SkinObject(slim, layer1Material, layer2Material);
+		this.skin = new SkinObject(layer1Material, layer2Material);
 		this.skin.visible = false;
 		this.add(this.skin);
 
