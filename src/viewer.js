@@ -90,7 +90,8 @@ class SkinViewer {
 		this.renderer.context.getShaderInfoLog = () => ""; // shut firefox up
 		this.domElement.appendChild(this.renderer.domElement);
 
-		this.playerObject = new PlayerObject(options.slim === true, this.layer1Material, this.layer2Material, this.capeMaterial);
+		this.playerObject = new PlayerObject(this.layer1Material, this.layer2Material, this.capeMaterial);
+		this.playerObject.skin.slim = options.slim === true;
 		this.scene.add(this.playerObject);
 
 		// texture loading
