@@ -21,7 +21,6 @@ Three.js powered Minecraft skin viewer.
 <script>
 	let skinViewer = new skinview3d.SkinViewer({
 		domElement: document.getElementById("skin_container"),
-		slim: true,
 		width: 600,
 		height: 600,
 		skinUrl: "img/skin.png",

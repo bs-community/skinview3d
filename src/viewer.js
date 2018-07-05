@@ -1,61 +1,13 @@
 import * as THREE from "three";
 import { PlayerObject } from "./model";
 import { invokeAnimation } from "./animation";
-
-function copyImage(context, sX, sY, w, h, dX, dY, flipHorizontal) {
-	let imgData = context.getImageData(sX, sY, w, h);
-	if (flipHorizontal) {
-		for (let y = 0; y < h; y++) {
-			for (let x = 0; x < (w / 2); x++) {
-				let index = (x + y * w) * 4;
-				let index2 = ((w - x - 1) + y * w) * 4;
-				let pA1 = imgData.data[index];
-				let pA2 = imgData.data[index + 1];
-				let pA3 = imgData.data[index + 2];
-				let pA4 = imgData.data[index + 3];
-
-				let pB1 = imgData.data[index2];
-				let pB2 = imgData.data[index2 + 1];
-				let pB3 = imgData.data[index2 + 2];
-				let pB4 = imgData.data[index2 + 3];
-
-				imgData.data[index] = pB1;
-				imgData.data[index + 1] = pB2;
-				imgData.data[index + 2] = pB3;
-				imgData.data[index + 3] = pB4;
-
-				imgData.data[index2] = pA1;
-				imgData.data[index2 + 1] = pA2;
-				imgData.data[index2 + 2] = pA3;
-				imgData.data[index2 + 3] = pA4;
-			}
-		}
-	}
-	context.putImageData(imgData, dX, dY);
-}
-
-function convertSkinTo1_8(context, width) {
-	let scale = width / 64.0;
-	let copySkin = (context, sX, sY, w, h, dX, dY, flipHorizontal) => copyImage(context, sX * scale, sY * scale, w * scale, h * scale, dX * scale, dY * scale, flipHorizontal);
-
-	copySkin(context, 4, 16, 4, 4, 20, 48, true); // Top Leg
-	copySkin(context, 8, 16, 4, 4, 24, 48, true); // Bottom Leg
-	copySkin(context, 0, 20, 4, 12, 24, 52, true); // Outer Leg
-	copySkin(context, 4, 20, 4, 12, 20, 52, true); // Front Leg
-	copySkin(context, 8, 20, 4, 12, 16, 52, true); // Inner Leg
-	copySkin(context, 12, 20, 4, 12, 28, 52, true); // Back Leg
-	copySkin(context, 44, 16, 4, 4, 36, 48, true); // Top Arm
-	copySkin(context, 48, 16, 4, 4, 40, 48, true); // Bottom Arm
-	copySkin(context, 40, 20, 4, 12, 40, 52, true); // Outer Arm
-	copySkin(context, 44, 20, 4, 12, 36, 52, true); // Front Arm
-	copySkin(context, 48, 20, 4, 12, 32, 52, true); // Inner Arm
-	copySkin(context, 52, 20, 4, 12, 44, 52, true); // Back Arm
-}
+import { loadSkinToCanvas,loadCapeToCanvas, isSlimSkin } from "./utils";
 
 class SkinViewer {
 	constructor(options) {
 		this.domElement = options.domElement;
 		this.animation = options.animation || null;
+		this.detectModel = options.animation !== false; // true by default
 		this.animationPaused = false;
 		this.animationTime = 0;
 		this.disposed = false;
@@ -91,36 +43,16 @@ class SkinViewer {
 		this.domElement.appendChild(this.renderer.domElement);
 
 		this.playerObject = new PlayerObject(this.layer1Material, this.layer2Material, this.capeMaterial);
-		this.playerObject.skin.slim = options.slim === true;
 		this.scene.add(this.playerObject);
 
 		// texture loading
 		this.skinImg.crossOrigin = "anonymous";
 		this.skinImg.onerror = () => console.error("Failed loading " + this.skinImg.src);
 		this.skinImg.onload = () => {
-			let isOldFormat = false;
-			if (this.skinImg.width !== this.skinImg.height) {
-				if (this.skinImg.width === 2 * this.skinImg.height) {
-					isOldFormat = true;
-				} else {
-					console.error("Bad skin size");
-					return;
-				}
-			}
+			loadSkinToCanvas(this.skinCanvas, this.skinImg);
 
-			let skinContext = this.skinCanvas.getContext("2d");
-			if (isOldFormat) {
-				let width = this.skinImg.width;
-				this.skinCanvas.width = width;
-				this.skinCanvas.height = width;
-				skinContext.clearRect(0, 0, width, width);
-				skinContext.drawImage(this.skinImg, 0, 0, width, width / 2.0);
-				convertSkinTo1_8(skinContext, width);
-			} else {
-				this.skinCanvas.width = this.skinImg.width;
-				this.skinCanvas.height = this.skinImg.height;
-				skinContext.clearRect(0, 0, this.skinCanvas.width, this.skinCanvas.height);
-				skinContext.drawImage(this.skinImg, 0, 0, this.skinCanvas.width, this.skinCanvas.height);
+			if (this.detectModel) {
+				this.playerObject.skin.slim = isSlimSkin(this.skinCanvas);
 			}
 
 			this.skinTexture.needsUpdate = true;
@@ -133,28 +65,7 @@ class SkinViewer {
 		this.capeImg.crossOrigin = "anonymous";
 		this.capeImg.onerror = () => console.error("Failed loading " + this.capeImg.src);
 		this.capeImg.onload = () => {
-			let isOldFormat = false;
-			if (this.capeImg.width !== 2 * this.capeImg.height) {
-				if (this.capeImg.width * 17 == this.capeImg.height * 22) {
-					// width/height = 22/17
-					isOldFormat = true;
-				} else {
-					console.error("Bad cape size");
-					return;
-				}
-			}
-
-			let capeContext = this.capeCanvas.getContext("2d");
-			if (isOldFormat) {
-				let width = this.capeImg.width * 64 / 22;
-				this.capeCanvas.width = width;
-				this.capeCanvas.height = width / 2;
-			} else {
-				this.capeCanvas.width = this.capeImg.width;
-				this.capeCanvas.height = this.capeImg.height;
-			}
-			capeContext.clearRect(0, 0, this.capeCanvas.width, this.capeCanvas.height);
-			capeContext.drawImage(this.capeImg, 0, 0, this.capeImg.width, this.capeImg.height);
+			loadCapeToCanvas(this.capeCanvas, this.capeImg);
 
 			this.capeTexture.needsUpdate = true;
 			this.capeMaterial.needsUpdate = true;
