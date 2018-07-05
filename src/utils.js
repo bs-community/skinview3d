@@ -47,9 +47,9 @@ function computeSkinScale(width) {
 	return width / 64.0;
 }
 
-function convertSkinTo1_8(skinContext, width) {
+function convertSkinTo1_8(context, width) {
 	let scale = computeSkinScale(width);
-	let copySkin = (sX, sY, w, h, dX, dY, flipHorizontal) => copyImage(skinContext, sX * scale, sY * scale, w * scale, h * scale, dX * scale, dY * scale, flipHorizontal);
+	let copySkin = (sX, sY, w, h, dX, dY, flipHorizontal) => copyImage(context, sX * scale, sY * scale, w * scale, h * scale, dX * scale, dY * scale, flipHorizontal);
 
 	copySkin(4, 16, 4, 4, 20, 48, true); // Top Leg
 	copySkin(8, 16, 4, 4, 24, 48, true); // Bottom Leg
@@ -65,7 +65,57 @@ function convertSkinTo1_8(skinContext, width) {
 	copySkin(52, 20, 4, 12, 44, 52, true); // Back Arm
 }
 
-function isSlimSkin(skinContext, width) {
+function loadSkinToCanvas(canvas, image) {
+	let isOldFormat = false;
+	if (image.width !== image.height) {
+		if (image.width === 2 * image.height) {
+			isOldFormat = true;
+		} else {
+			throw `Bad skin size: ${image.width}x${image.height}`;
+		}
+	}
+
+	let context = canvas.getContext("2d");
+	if (isOldFormat) {
+		let sideLength = image.width;
+		canvas.width = sideLength;
+		canvas.height = sideLength;
+		context.clearRect(0, 0, sideLength, sideLength);
+		context.drawImage(image, 0, 0, sideLength, sideLength / 2.0);
+		convertSkinTo1_8(context, sideLength);
+	} else {
+		canvas.width = image.width;
+		canvas.height = image.height;
+		context.clearRect(0, 0, image.width, image.height);
+		context.drawImage(image, 0, 0, canvas.width, canvas.height);
+	}
+}
+
+function loadCapeToCanvas(canvas, image) {
+	let isOldFormat = false;
+	if (image.width !== 2 * image.height) {
+		if (image.width * 17 == image.height * 22) {
+			// width/height = 22/17
+			isOldFormat = true;
+		} else {
+			throw `Bad cape size: ${image.width}x${image.height}`;
+		}
+	}
+
+	let context = canvas.getContext("2d");
+	if (isOldFormat) {
+		let width = image.width * 64 / 22;
+		canvas.width = width;
+		canvas.height = width / 2;
+	} else {
+		canvas.width = image.width;
+		canvas.height = image.height;
+	}
+	context.clearRect(0, 0, canvas.width, canvas.height);
+	context.drawImage(image, 0, 0, image.width, image.height);
+}
+
+function isSlimSkin(canvas) {
 	// Detects whether the skin is default or slim.
 	//
 	// The right arm area of *default* skins:
@@ -107,12 +157,13 @@ function isSlimSkin(skinContext, width) {
 	// If there is a transparent pixel in any of the 4 unused areas, the skin must be slim,
 	// as transparent pixels are not allowed in the first layer.
 
-	let scale = computeSkinScale(width);
-	let checkArea = (x, y, w, h) => hasTransparency(skinContext, x * scale, y * scale, w * scale, h * scale);
+	let scale = computeSkinScale(canvas.width);
+	let context = canvas.getContext("2d");
+	let checkArea = (x, y, w, h) => hasTransparency(context, x * scale, y * scale, w * scale, h * scale);
 	return checkArea(50, 16, 2, 4) ||
 		checkArea(54, 20, 2, 12) ||
 		checkArea(42, 48, 2, 4) ||
 		checkArea(46, 52, 2, 12);
 }
 
-export { convertSkinTo1_8, isSlimSkin };
+export { isSlimSkin, loadSkinToCanvas, loadCapeToCanvas };

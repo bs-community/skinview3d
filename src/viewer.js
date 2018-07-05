@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { PlayerObject } from "./model";
 import { invokeAnimation } from "./animation";
-import { convertSkinTo1_8, isSlimSkin} from "./utils";
+import { loadSkinToCanvas,loadCapeToCanvas, isSlimSkin } from "./utils";
 
 class SkinViewer {
 	constructor(options) {
@@ -49,33 +49,10 @@ class SkinViewer {
 		this.skinImg.crossOrigin = "anonymous";
 		this.skinImg.onerror = () => console.error("Failed loading " + this.skinImg.src);
 		this.skinImg.onload = () => {
-			let isOldFormat = false;
-			if (this.skinImg.width !== this.skinImg.height) {
-				if (this.skinImg.width === 2 * this.skinImg.height) {
-					isOldFormat = true;
-				} else {
-					console.error("Bad skin size");
-					return;
-				}
-			}
-
-			let skinContext = this.skinCanvas.getContext("2d");
-			if (isOldFormat) {
-				let width = this.skinImg.width;
-				this.skinCanvas.width = width;
-				this.skinCanvas.height = width;
-				skinContext.clearRect(0, 0, width, width);
-				skinContext.drawImage(this.skinImg, 0, 0, width, width / 2.0);
-				convertSkinTo1_8(skinContext, width);
-			} else {
-				this.skinCanvas.width = this.skinImg.width;
-				this.skinCanvas.height = this.skinImg.height;
-				skinContext.clearRect(0, 0, this.skinCanvas.width, this.skinCanvas.height);
-				skinContext.drawImage(this.skinImg, 0, 0, this.skinCanvas.width, this.skinCanvas.height);
-			}
+			loadSkinToCanvas(this.skinCanvas, this.skinImg);
 
 			if (this.detectModel) {
-				this.playerObject.skin.slim = isSlimSkin(skinContext, this.skinCanvas.width);
+				this.playerObject.skin.slim = isSlimSkin(this.skinCanvas);
 			}
 
 			this.skinTexture.needsUpdate = true;
@@ -88,28 +65,7 @@ class SkinViewer {
 		this.capeImg.crossOrigin = "anonymous";
 		this.capeImg.onerror = () => console.error("Failed loading " + this.capeImg.src);
 		this.capeImg.onload = () => {
-			let isOldFormat = false;
-			if (this.capeImg.width !== 2 * this.capeImg.height) {
-				if (this.capeImg.width * 17 == this.capeImg.height * 22) {
-					// width/height = 22/17
-					isOldFormat = true;
-				} else {
-					console.error("Bad cape size");
-					return;
-				}
-			}
-
-			let capeContext = this.capeCanvas.getContext("2d");
-			if (isOldFormat) {
-				let width = this.capeImg.width * 64 / 22;
-				this.capeCanvas.width = width;
-				this.capeCanvas.height = width / 2;
-			} else {
-				this.capeCanvas.width = this.capeImg.width;
-				this.capeCanvas.height = this.capeImg.height;
-			}
-			capeContext.clearRect(0, 0, this.capeCanvas.width, this.capeCanvas.height);
-			capeContext.drawImage(this.capeImg, 0, 0, this.capeImg.width, this.capeImg.height);
+			loadCapeToCanvas(this.capeCanvas, this.capeImg);
 
 			this.capeTexture.needsUpdate = true;
 			this.capeMaterial.needsUpdate = true;
