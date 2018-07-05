@@ -1,6 +1,18 @@
-export { SkinObject, CapeObject, PlayerObject } from "./model";
-export { SkinViewer } from "./viewer";
-export { OrbitControls, createOrbitControls } from "./orbit_controls";
+export {
+	SkinObject,
+	CapeObject,
+	PlayerObject
+} from "./model";
+
+export {
+	SkinViewer
+} from "./viewer";
+
+export {
+	OrbitControls,
+	createOrbitControls
+} from "./orbit_controls";
+
 export {
 	invokeAnimation,
 	CompositeAnimation,
@@ -8,3 +20,7 @@ export {
 	RunningAnimation,
 	RotatingAnimation
 } from "./animation";
+
+export {
+	isSlimSkin
+} from "./utils";

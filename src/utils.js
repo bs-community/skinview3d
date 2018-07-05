@@ -115,7 +115,7 @@ function loadCapeToCanvas(canvas, image) {
 	context.drawImage(image, 0, 0, image.width, image.height);
 }
 
-function isSlimSkin(canvas) {
+function isSlimSkin(canvasOrImage) {
 	// Detects whether the skin is default or slim.
 	//
 	// The right arm area of *default* skins:
@@ -157,13 +157,23 @@ function isSlimSkin(canvas) {
 	// If there is a transparent pixel in any of the 4 unused areas, the skin must be slim,
 	// as transparent pixels are not allowed in the first layer.
 
-	let scale = computeSkinScale(canvas.width);
-	let context = canvas.getContext("2d");
-	let checkArea = (x, y, w, h) => hasTransparency(context, x * scale, y * scale, w * scale, h * scale);
-	return checkArea(50, 16, 2, 4) ||
-		checkArea(54, 20, 2, 12) ||
-		checkArea(42, 48, 2, 4) ||
-		checkArea(46, 52, 2, 12);
+	if (canvasOrImage instanceof HTMLCanvasElement) {
+		let canvas = canvasOrImage;
+		let scale = computeSkinScale(canvas.width);
+		let context = canvas.getContext("2d");
+		let checkArea = (x, y, w, h) => hasTransparency(context, x * scale, y * scale, w * scale, h * scale);
+		return checkArea(50, 16, 2, 4) ||
+			checkArea(54, 20, 2, 12) ||
+			checkArea(42, 48, 2, 4) ||
+			checkArea(46, 52, 2, 12);
+	} else if (canvasOrImage instanceof HTMLImageElement) {
+		let image = canvasOrImage;
+		let canvas = document.createElement("canvas");
+		loadSkinToCanvas(canvas, image);
+		return isSlimSkin(canvas);
+	} else {
+		throw `Illegal argument: ${canvasOrImage}`;
+	}
 }
 
 export { isSlimSkin, loadSkinToCanvas, loadCapeToCanvas };
