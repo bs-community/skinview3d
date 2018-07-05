@@ -47,9 +47,26 @@ function computeSkinScale(width) {
 	return width / 64.0;
 }
 
+function fixOpaqueSkin(context, width) {
+	// Some ancient skins don't have transparent pixels (nor have helm).
+	// We have to make the helm area transparent, otherwise it will be rendered as black.
+	if (!hasTransparency(context, 0, 0, width, width / 2)) {
+		let scale = computeSkinScale(width);
+		let clearArea = (x, y, w, h) => context.clearRect(x * scale, y * scale, w * scale, h * scale);
+		clearArea(40, 0, 8, 8); // Helm Top
+		clearArea(48, 0, 8, 8); // Helm Bottom
+		clearArea(32, 8, 8, 8); // Helm Right
+		clearArea(40, 8, 8, 8); // Helm Front
+		clearArea(48, 8, 8, 8); // Helm Left
+		clearArea(56, 8, 8, 8); // Helm Back
+	}
+}
+
 function convertSkinTo1_8(context, width) {
 	let scale = computeSkinScale(width);
 	let copySkin = (sX, sY, w, h, dX, dY, flipHorizontal) => copyImage(context, sX * scale, sY * scale, w * scale, h * scale, dX * scale, dY * scale, flipHorizontal);
+
+	fixOpaqueSkin(context, width);
 
 	copySkin(4, 16, 4, 4, 20, 48, true); // Top Leg
 	copySkin(8, 16, 4, 4, 24, 48, true); // Bottom Leg
