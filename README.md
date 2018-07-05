@@ -12,7 +12,8 @@ Three.js powered Minecraft skin viewer.
 * 1.8 Skins
 * HD Skins
 * Capes
-* Slim arms
+* Slim Arms
+  * Automatic model detection (Slim / Default)
 
 # Usage
 [Examples of using the viewer](https://bs-community.github.io/skinview3d/)
