@@ -32,7 +32,13 @@ module.exports = function (config) {
 		colors: true,
 		logLevel: config.LOG_WARN,
 		autoWatch: false,
-		browsers: ["ChromeHeadless"],
+		browsers: [process.env.TRAVIS ? "ChromeHeadlessNoSandbox" : "ChromeHeadless"],
+		customLaunchers: {
+			ChromeHeadlessNoSandbox: {
+				base: "ChromeHeadless",
+				flags: ["--no-sandbox"]
+			}
+		},
 		singleRun: true,
 		concurrency: Infinity
 	});
