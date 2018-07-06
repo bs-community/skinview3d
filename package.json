@@ -8,7 +8,8 @@
 	"scripts": {
 		"build": "rollup -c tools/rollup.module.js && rollup -c tools/rollup.browser.js && rollup -c tools/rollup.browser.min.js",
 		"prepare": "npm test && rm -rf build && npm run build",
-		"test": "eslint src/** tools/** && tslint -c tslint.json types/**.ts",
+		"test": "karma start && npm run lint",
+		"lint": "eslint src/** tools/** && tslint -c tslint.json types/**.ts",
 		"dev": "npm-run-all --parallel watch serve",
 		"watch": "rollup -w -c tools/rollup.browser.js",
 		"serve": "ws"
@@ -41,9 +42,16 @@
 		"babel-cli": "^6.26.0",
 		"babel-plugin-external-helpers": "^6.22.0",
 		"babel-preset-env": "^1.6.1",
+		"chai": "^4.1.2",
 		"eslint": "^4.19.1",
+		"karma": "^2.0.4",
+		"karma-chrome-launcher": "^2.2.0",
+		"karma-mocha": "^1.3.0",
+		"karma-webpack": "^3.0.0",
 		"local-web-server": "^2.5.2",
+		"mocha": "^5.2.0",
 		"npm-run-all": "^4.1.2",
+		"puppeteer": "^1.5.0",
 		"rollup": "^0.58.2",
 		"rollup-plugin-babel": "^3.0.4",
 		"rollup-plugin-license": "^0.6.0",
@@ -51,6 +59,8 @@
 		"rollup-plugin-uglify": "^3.0.0",
 		"tslint": "^5.10.0",
 		"typescript": "^2.8.3",
-		"uglify-es": "^3.3.10"
+		"uglify-es": "^3.3.10",
+		"url-loader": "^1.0.1",
+		"webpack": "^4.15.1"
 	}
 }
