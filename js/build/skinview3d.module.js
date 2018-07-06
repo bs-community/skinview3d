@@ -87,7 +87,7 @@ function toCapeVertices(x1, y1, x2, y2) {
 	return toFaceVertices(x1, y1, x2, y2, 64.0, 32.0);
 }
 
-function addVertices(box, top, bottom, left, front, right, back) {
+function setVertices(box, top, bottom, left, front, right, back) {
 	box.faceVertexUvs[0] = [];
 	box.faceVertexUvs[0][0] = [right[3], right[0], right[2]];
 	box.faceVertexUvs[0][1] = [right[0], right[1], right[2]];
@@ -108,23 +108,23 @@ var esp = 0.002;
 var SkinObject = function (_THREE$Group) {
 	inherits(SkinObject, _THREE$Group);
 
-	function SkinObject(slim, layer1Material, layer2Material) {
+	function SkinObject(layer1Material, layer2Material) {
 		classCallCheck(this, SkinObject);
 
 		var _this = possibleConstructorReturn(this, (SkinObject.__proto__ || Object.getPrototypeOf(SkinObject)).call(this));
 
-		_this.slim = slim;
+		_this.modelListeners = []; // called when model(slim property) is changed
 
 		// Head
 		_this.head = new Group();
 
 		var headBox = new BoxGeometry(8, 8, 8, 0, 0, 0);
-		addVertices(headBox, toSkinVertices(8, 0, 16, 8), toSkinVertices(16, 0, 24, 8), toSkinVertices(0, 8, 8, 16), toSkinVertices(8, 8, 16, 16), toSkinVertices(16, 8, 24, 16), toSkinVertices(24, 8, 32, 16));
+		setVertices(headBox, toSkinVertices(8, 0, 16, 8), toSkinVertices(16, 0, 24, 8), toSkinVertices(0, 8, 8, 16), toSkinVertices(8, 8, 16, 16), toSkinVertices(16, 8, 24, 16), toSkinVertices(24, 8, 32, 16));
 		var headMesh = new Mesh(headBox, layer1Material);
 		_this.head.add(headMesh);
 
 		var head2Box = new BoxGeometry(9, 9, 9, 0, 0, 0);
-		addVertices(head2Box, toSkinVertices(40, 0, 48, 8), toSkinVertices(48, 0, 56, 8), toSkinVertices(32, 8, 40, 16), toSkinVertices(40, 8, 48, 16), toSkinVertices(48, 8, 56, 16), toSkinVertices(56, 8, 64, 16));
+		setVertices(head2Box, toSkinVertices(40, 0, 48, 8), toSkinVertices(48, 0, 56, 8), toSkinVertices(32, 8, 40, 16), toSkinVertices(40, 8, 48, 16), toSkinVertices(48, 8, 56, 16), toSkinVertices(56, 8, 64, 16));
 		var head2Mesh = new Mesh(head2Box, layer2Material);
 		head2Mesh.renderOrder = -1;
 		_this.head.add(head2Mesh);
@@ -135,12 +135,12 @@ var SkinObject = function (_THREE$Group) {
 		_this.body = new Group();
 
 		var bodyBox = new BoxGeometry(8, 12, 4, 0, 0, 0);
-		addVertices(bodyBox, toSkinVertices(20, 16, 28, 20), toSkinVertices(28, 16, 36, 20), toSkinVertices(16, 20, 20, 32), toSkinVertices(20, 20, 28, 32), toSkinVertices(28, 20, 32, 32), toSkinVertices(32, 20, 40, 32));
+		setVertices(bodyBox, toSkinVertices(20, 16, 28, 20), toSkinVertices(28, 16, 36, 20), toSkinVertices(16, 20, 20, 32), toSkinVertices(20, 20, 28, 32), toSkinVertices(28, 20, 32, 32), toSkinVertices(32, 20, 40, 32));
 		var bodyMesh = new Mesh(bodyBox, layer1Material);
 		_this.body.add(bodyMesh);
 
 		var body2Box = new BoxGeometry(9, 13.5, 4.5, 0, 0, 0);
-		addVertices(body2Box, toSkinVertices(20, 32, 28, 36), toSkinVertices(28, 32, 36, 36), toSkinVertices(16, 36, 20, 48), toSkinVertices(20, 36, 28, 48), toSkinVertices(28, 36, 32, 48), toSkinVertices(32, 36, 40, 48));
+		setVertices(body2Box, toSkinVertices(20, 32, 28, 36), toSkinVertices(28, 32, 36, 36), toSkinVertices(16, 36, 20, 48), toSkinVertices(20, 36, 28, 48), toSkinVertices(28, 36, 32, 48), toSkinVertices(32, 36, 40, 48));
 		var body2Mesh = new Mesh(body2Box, layer2Material);
 		_this.body.add(body2Mesh);
 
@@ -151,58 +151,90 @@ var SkinObject = function (_THREE$Group) {
 		_this.rightArm = new Group();
 		var rightArmPivot = new Group();
 
-		var rightArmBox = new BoxGeometry((slim ? 3 : 4) - esp, 12 - esp, 4 - esp, 0, 0, 0);
-		if (slim) {
-			addVertices(rightArmBox, toSkinVertices(44, 16, 47, 20), toSkinVertices(47, 16, 50, 20), toSkinVertices(40, 20, 44, 32), toSkinVertices(44, 20, 47, 32), toSkinVertices(47, 20, 51, 32), toSkinVertices(51, 20, 54, 32));
-		} else {
-			addVertices(rightArmBox, toSkinVertices(44, 16, 48, 20), toSkinVertices(48, 16, 52, 20), toSkinVertices(40, 20, 44, 32), toSkinVertices(44, 20, 48, 32), toSkinVertices(48, 20, 52, 32), toSkinVertices(52, 20, 56, 32));
-		}
+		var rightArmBox = new BoxGeometry(1, 1, 1, 0, 0, 0); // w/d/h is model-related
 		var rightArmMesh = new Mesh(rightArmBox, layer1Material);
 		rightArmPivot.add(rightArmMesh);
+		_this.modelListeners.push(function () {
+			rightArmMesh.scale.x = (_this.slim ? 3 : 4) - esp;
+			rightArmMesh.scale.y = 12 - esp;
+			rightArmMesh.scale.z = 4 - esp;
+			if (_this.slim) {
+				setVertices(rightArmBox, toSkinVertices(44, 16, 47, 20), toSkinVertices(47, 16, 50, 20), toSkinVertices(40, 20, 44, 32), toSkinVertices(44, 20, 47, 32), toSkinVertices(47, 20, 51, 32), toSkinVertices(51, 20, 54, 32));
+			} else {
+				setVertices(rightArmBox, toSkinVertices(44, 16, 48, 20), toSkinVertices(48, 16, 52, 20), toSkinVertices(40, 20, 44, 32), toSkinVertices(44, 20, 48, 32), toSkinVertices(48, 20, 52, 32), toSkinVertices(52, 20, 56, 32));
+			}
+			rightArmBox.uvsNeedUpdate = true;
+			rightArmBox.elementsNeedUpdate = true;
+		});
 
-		var rightArm2Box = new BoxGeometry((slim ? 3.375 : 4.5) - esp, 13.5 - esp, 4.5 - esp, 0, 0, 0);
-		if (slim) {
-			addVertices(rightArm2Box, toSkinVertices(44, 32, 47, 36), toSkinVertices(47, 32, 50, 36), toSkinVertices(40, 36, 44, 48), toSkinVertices(44, 36, 47, 48), toSkinVertices(47, 36, 51, 48), toSkinVertices(51, 36, 54, 48));
-		} else {
-			addVertices(rightArm2Box, toSkinVertices(44, 32, 48, 36), toSkinVertices(48, 32, 52, 36), toSkinVertices(40, 36, 44, 48), toSkinVertices(44, 36, 48, 48), toSkinVertices(48, 36, 52, 48), toSkinVertices(52, 36, 56, 48));
-		}
+		var rightArm2Box = new BoxGeometry(1, 1, 1, 0, 0, 0); // w/d/h is model-related
 		var rightArm2Mesh = new Mesh(rightArm2Box, layer2Material);
 		rightArm2Mesh.renderOrder = 1;
 		rightArmPivot.add(rightArm2Mesh);
+		_this.modelListeners.push(function () {
+			rightArm2Mesh.scale.x = (_this.slim ? 3.375 : 4.5) - esp;
+			rightArm2Mesh.scale.y = 13.5 - esp;
+			rightArm2Mesh.scale.z = 4.5 - esp;
+			if (_this.slim) {
+				setVertices(rightArm2Box, toSkinVertices(44, 32, 47, 36), toSkinVertices(47, 32, 50, 36), toSkinVertices(40, 36, 44, 48), toSkinVertices(44, 36, 47, 48), toSkinVertices(47, 36, 51, 48), toSkinVertices(51, 36, 54, 48));
+			} else {
+				setVertices(rightArm2Box, toSkinVertices(44, 32, 48, 36), toSkinVertices(48, 32, 52, 36), toSkinVertices(40, 36, 44, 48), toSkinVertices(44, 36, 48, 48), toSkinVertices(48, 36, 52, 48), toSkinVertices(52, 36, 56, 48));
+			}
+			rightArm2Box.uvsNeedUpdate = true;
+			rightArm2Box.elementsNeedUpdate = true;
+		});
 
 		rightArmPivot.position.y = -6;
 		_this.rightArm.add(rightArmPivot);
 		_this.rightArm.position.y = -4;
-		_this.rightArm.position.x = slim ? -5.5 : -6;
+		_this.modelListeners.push(function () {
+			_this.rightArm.position.x = _this.slim ? -5.5 : -6;
+		});
 		_this.add(_this.rightArm);
 
 		// Left Arm
 		_this.leftArm = new Group();
 		var leftArmPivot = new Group();
 
-		var leftArmBox = new BoxGeometry((slim ? 3 : 4) - esp, 12 - esp, 4 - esp, 0, 0, 0);
-		if (slim) {
-			addVertices(leftArmBox, toSkinVertices(36, 48, 39, 52), toSkinVertices(39, 48, 42, 52), toSkinVertices(32, 52, 36, 64), toSkinVertices(36, 52, 39, 64), toSkinVertices(39, 52, 43, 64), toSkinVertices(43, 52, 46, 64));
-		} else {
-			addVertices(leftArmBox, toSkinVertices(36, 48, 40, 52), toSkinVertices(40, 48, 44, 52), toSkinVertices(32, 52, 36, 64), toSkinVertices(36, 52, 40, 64), toSkinVertices(40, 52, 44, 64), toSkinVertices(44, 52, 48, 64));
-		}
+		var leftArmBox = new BoxGeometry(1, 1, 1, 0, 0, 0); // w/d/h is model-related
 		var leftArmMesh = new Mesh(leftArmBox, layer1Material);
 		leftArmPivot.add(leftArmMesh);
+		_this.modelListeners.push(function () {
+			leftArmMesh.scale.x = (_this.slim ? 3 : 4) - esp;
+			leftArmMesh.scale.y = 12 - esp;
+			leftArmMesh.scale.z = 4 - esp;
+			if (_this.slim) {
+				setVertices(leftArmBox, toSkinVertices(36, 48, 39, 52), toSkinVertices(39, 48, 42, 52), toSkinVertices(32, 52, 36, 64), toSkinVertices(36, 52, 39, 64), toSkinVertices(39, 52, 43, 64), toSkinVertices(43, 52, 46, 64));
+			} else {
+				setVertices(leftArmBox, toSkinVertices(36, 48, 40, 52), toSkinVertices(40, 48, 44, 52), toSkinVertices(32, 52, 36, 64), toSkinVertices(36, 52, 40, 64), toSkinVertices(40, 52, 44, 64), toSkinVertices(44, 52, 48, 64));
+			}
+			leftArmBox.uvsNeedUpdate = true;
+			leftArmBox.elementsNeedUpdate = true;
+		});
 
-		var leftArm2Box = new BoxGeometry((slim ? 3.375 : 4.5) - esp, 13.5 - esp, 4.5 - esp, 0, 0, 0);
-		if (slim) {
-			addVertices(leftArm2Box, toSkinVertices(52, 48, 55, 52), toSkinVertices(55, 48, 58, 52), toSkinVertices(48, 52, 52, 64), toSkinVertices(52, 52, 55, 64), toSkinVertices(55, 52, 59, 64), toSkinVertices(59, 52, 62, 64));
-		} else {
-			addVertices(leftArm2Box, toSkinVertices(52, 48, 56, 52), toSkinVertices(56, 48, 60, 52), toSkinVertices(48, 52, 52, 64), toSkinVertices(52, 52, 56, 64), toSkinVertices(56, 52, 60, 64), toSkinVertices(60, 52, 64, 64));
-		}
+		var leftArm2Box = new BoxGeometry(1, 1, 1, 0, 0, 0); // w/d/h is model-related
 		var leftArm2Mesh = new Mesh(leftArm2Box, layer2Material);
 		leftArm2Mesh.renderOrder = 1;
 		leftArmPivot.add(leftArm2Mesh);
+		_this.modelListeners.push(function () {
+			leftArm2Mesh.scale.x = (_this.slim ? 3.375 : 4.5) - esp;
+			leftArm2Mesh.scale.y = 13.5 - esp;
+			leftArm2Mesh.scale.z = 4.5 - esp;
+			if (_this.slim) {
+				setVertices(leftArm2Box, toSkinVertices(52, 48, 55, 52), toSkinVertices(55, 48, 58, 52), toSkinVertices(48, 52, 52, 64), toSkinVertices(52, 52, 55, 64), toSkinVertices(55, 52, 59, 64), toSkinVertices(59, 52, 62, 64));
+			} else {
+				setVertices(leftArm2Box, toSkinVertices(52, 48, 56, 52), toSkinVertices(56, 48, 60, 52), toSkinVertices(48, 52, 52, 64), toSkinVertices(52, 52, 56, 64), toSkinVertices(56, 52, 60, 64), toSkinVertices(60, 52, 64, 64));
+			}
+			leftArm2Box.uvsNeedUpdate = true;
+			leftArm2Box.elementsNeedUpdate = true;
+		});
 
 		leftArmPivot.position.y = -6;
 		_this.leftArm.add(leftArmPivot);
 		_this.leftArm.position.y = -4;
-		_this.leftArm.position.x = slim ? 5.5 : 6;
+		_this.modelListeners.push(function () {
+			_this.leftArm.position.x = _this.slim ? 5.5 : 6;
+		});
 		_this.add(_this.leftArm);
 
 		// Right Leg
@@ -210,12 +242,12 @@ var SkinObject = function (_THREE$Group) {
 		var rightLegPivot = new Group();
 
 		var rightLegBox = new BoxGeometry(4 - esp, 12 - esp, 4 - esp, 0, 0, 0);
-		addVertices(rightLegBox, toSkinVertices(4, 16, 8, 20), toSkinVertices(8, 16, 12, 20), toSkinVertices(0, 20, 4, 32), toSkinVertices(4, 20, 8, 32), toSkinVertices(8, 20, 12, 32), toSkinVertices(12, 20, 16, 32));
+		setVertices(rightLegBox, toSkinVertices(4, 16, 8, 20), toSkinVertices(8, 16, 12, 20), toSkinVertices(0, 20, 4, 32), toSkinVertices(4, 20, 8, 32), toSkinVertices(8, 20, 12, 32), toSkinVertices(12, 20, 16, 32));
 		var rightLegMesh = new Mesh(rightLegBox, layer1Material);
 		rightLegPivot.add(rightLegMesh);
 
 		var rightLeg2Box = new BoxGeometry(4.5 - esp, 13.5 - esp, 4.5 - esp, 0, 0, 0);
-		addVertices(rightLeg2Box, toSkinVertices(4, 32, 8, 36), toSkinVertices(8, 32, 12, 36), toSkinVertices(0, 36, 4, 48), toSkinVertices(4, 36, 8, 48), toSkinVertices(8, 36, 12, 48), toSkinVertices(12, 36, 16, 48));
+		setVertices(rightLeg2Box, toSkinVertices(4, 32, 8, 36), toSkinVertices(8, 32, 12, 36), toSkinVertices(0, 36, 4, 48), toSkinVertices(4, 36, 8, 48), toSkinVertices(8, 36, 12, 48), toSkinVertices(12, 36, 16, 48));
 		var rightLeg2Mesh = new Mesh(rightLeg2Box, layer2Material);
 		rightLeg2Mesh.renderOrder = 1;
 		rightLegPivot.add(rightLeg2Mesh);
@@ -231,12 +263,12 @@ var SkinObject = function (_THREE$Group) {
 		var leftLegPivot = new Group();
 
 		var leftLegBox = new BoxGeometry(4 - esp, 12 - esp, 4 - esp, 0, 0, 0);
-		addVertices(leftLegBox, toSkinVertices(20, 48, 24, 52), toSkinVertices(24, 48, 28, 52), toSkinVertices(16, 52, 20, 64), toSkinVertices(20, 52, 24, 64), toSkinVertices(24, 52, 28, 64), toSkinVertices(28, 52, 32, 64));
+		setVertices(leftLegBox, toSkinVertices(20, 48, 24, 52), toSkinVertices(24, 48, 28, 52), toSkinVertices(16, 52, 20, 64), toSkinVertices(20, 52, 24, 64), toSkinVertices(24, 52, 28, 64), toSkinVertices(28, 52, 32, 64));
 		var leftLegMesh = new Mesh(leftLegBox, layer1Material);
 		leftLegPivot.add(leftLegMesh);
 
 		var leftLeg2Box = new BoxGeometry(4.5 - esp, 13.5 - esp, 4.5 - esp, 0, 0, 0);
-		addVertices(leftLeg2Box, toSkinVertices(4, 48, 8, 52), toSkinVertices(8, 48, 12, 52), toSkinVertices(0, 52, 4, 64), toSkinVertices(4, 52, 8, 64), toSkinVertices(8, 52, 12, 64), toSkinVertices(12, 52, 16, 64));
+		setVertices(leftLeg2Box, toSkinVertices(4, 48, 8, 52), toSkinVertices(8, 48, 12, 52), toSkinVertices(0, 52, 4, 64), toSkinVertices(4, 52, 8, 64), toSkinVertices(8, 52, 12, 64), toSkinVertices(12, 52, 16, 64));
 		var leftLeg2Mesh = new Mesh(leftLeg2Box, layer2Material);
 		leftLeg2Mesh.renderOrder = 1;
 		leftLegPivot.add(leftLeg2Mesh);
@@ -246,9 +278,25 @@ var SkinObject = function (_THREE$Group) {
 		_this.leftLeg.position.y = -16;
 		_this.leftLeg.position.x = 2;
 		_this.add(_this.leftLeg);
+
+		_this.slim = false;
 		return _this;
 	}
 
+	createClass(SkinObject, [{
+		key: "slim",
+		get: function get$$1() {
+			return this._slim;
+		},
+		set: function set$$1(value) {
+			if (this._slim !== value) {
+				this._slim = value;
+				this.modelListeners.forEach(function (listener) {
+					return listener();
+				});
+			}
+		}
+	}]);
 	return SkinObject;
 }(Group);
 
@@ -263,7 +311,7 @@ var CapeObject = function (_THREE$Group2) {
 		var _this2 = possibleConstructorReturn(this, (CapeObject.__proto__ || Object.getPrototypeOf(CapeObject)).call(this));
 
 		var capeBox = new BoxGeometry(10, 16, 1, 0, 0, 0);
-		addVertices(capeBox, toCapeVertices(1, 0, 11, 1), toCapeVertices(11, 0, 21, 1), toCapeVertices(11, 1, 12, 17), toCapeVertices(12, 1, 22, 17), toCapeVertices(0, 1, 1, 17), toCapeVertices(1, 1, 11, 17));
+		setVertices(capeBox, toCapeVertices(1, 0, 11, 1), toCapeVertices(11, 0, 21, 1), toCapeVertices(11, 1, 12, 17), toCapeVertices(12, 1, 22, 17), toCapeVertices(0, 1, 1, 17), toCapeVertices(1, 1, 11, 17));
 		_this2.cape = new Mesh(capeBox, capeMaterial);
 		_this2.cape.position.y = -8;
 		_this2.cape.position.z = -0.5;
@@ -277,12 +325,12 @@ var CapeObject = function (_THREE$Group2) {
 var PlayerObject = function (_THREE$Group3) {
 	inherits(PlayerObject, _THREE$Group3);
 
-	function PlayerObject(slim, layer1Material, layer2Material, capeMaterial) {
+	function PlayerObject(layer1Material, layer2Material, capeMaterial) {
 		classCallCheck(this, PlayerObject);
 
 		var _this3 = possibleConstructorReturn(this, (PlayerObject.__proto__ || Object.getPrototypeOf(PlayerObject)).call(this));
 
-		_this3.skin = new SkinObject(slim, layer1Material, layer2Material);
+		_this3.skin = new SkinObject(layer1Material, layer2Material);
 		_this3.skin.visible = false;
 		_this3.add(_this3.skin);
 
@@ -474,24 +522,170 @@ function copyImage(context, sX, sY, w, h, dX, dY, flipHorizontal) {
 	context.putImageData(imgData, dX, dY);
 }
 
+function hasTransparency(context, x0, y0, w, h) {
+	var imgData = context.getImageData(x0, y0, w, h);
+	for (var x = 0; x < w; x++) {
+		for (var y = 0; y < h; y++) {
+			var offset = (x + y * w) * 4;
+			if (imgData.data[offset + 3] !== 0xff) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+function computeSkinScale(width) {
+	return width / 64.0;
+}
+
+function fixOpaqueSkin(context, width) {
+	// Some ancient skins don't have transparent pixels (nor have helm).
+	// We have to make the helm area transparent, otherwise it will be rendered as black.
+	if (!hasTransparency(context, 0, 0, width, width / 2)) {
+		var scale = computeSkinScale(width);
+		var clearArea = function clearArea(x, y, w, h) {
+			return context.clearRect(x * scale, y * scale, w * scale, h * scale);
+		};
+		clearArea(40, 0, 8, 8); // Helm Top
+		clearArea(48, 0, 8, 8); // Helm Bottom
+		clearArea(32, 8, 8, 8); // Helm Right
+		clearArea(40, 8, 8, 8); // Helm Front
+		clearArea(48, 8, 8, 8); // Helm Left
+		clearArea(56, 8, 8, 8); // Helm Back
+	}
+}
+
 function convertSkinTo1_8(context, width) {
-	var scale = width / 64.0;
-	var copySkin = function copySkin(context, sX, sY, w, h, dX, dY, flipHorizontal) {
+	var scale = computeSkinScale(width);
+	var copySkin = function copySkin(sX, sY, w, h, dX, dY, flipHorizontal) {
 		return copyImage(context, sX * scale, sY * scale, w * scale, h * scale, dX * scale, dY * scale, flipHorizontal);
 	};
 
-	copySkin(context, 4, 16, 4, 4, 20, 48, true); // Top Leg
-	copySkin(context, 8, 16, 4, 4, 24, 48, true); // Bottom Leg
-	copySkin(context, 0, 20, 4, 12, 24, 52, true); // Outer Leg
-	copySkin(context, 4, 20, 4, 12, 20, 52, true); // Front Leg
-	copySkin(context, 8, 20, 4, 12, 16, 52, true); // Inner Leg
-	copySkin(context, 12, 20, 4, 12, 28, 52, true); // Back Leg
-	copySkin(context, 44, 16, 4, 4, 36, 48, true); // Top Arm
-	copySkin(context, 48, 16, 4, 4, 40, 48, true); // Bottom Arm
-	copySkin(context, 40, 20, 4, 12, 40, 52, true); // Outer Arm
-	copySkin(context, 44, 20, 4, 12, 36, 52, true); // Front Arm
-	copySkin(context, 48, 20, 4, 12, 32, 52, true); // Inner Arm
-	copySkin(context, 52, 20, 4, 12, 44, 52, true); // Back Arm
+	fixOpaqueSkin(context, width);
+
+	copySkin(4, 16, 4, 4, 20, 48, true); // Top Leg
+	copySkin(8, 16, 4, 4, 24, 48, true); // Bottom Leg
+	copySkin(0, 20, 4, 12, 24, 52, true); // Outer Leg
+	copySkin(4, 20, 4, 12, 20, 52, true); // Front Leg
+	copySkin(8, 20, 4, 12, 16, 52, true); // Inner Leg
+	copySkin(12, 20, 4, 12, 28, 52, true); // Back Leg
+	copySkin(44, 16, 4, 4, 36, 48, true); // Top Arm
+	copySkin(48, 16, 4, 4, 40, 48, true); // Bottom Arm
+	copySkin(40, 20, 4, 12, 40, 52, true); // Outer Arm
+	copySkin(44, 20, 4, 12, 36, 52, true); // Front Arm
+	copySkin(48, 20, 4, 12, 32, 52, true); // Inner Arm
+	copySkin(52, 20, 4, 12, 44, 52, true); // Back Arm
+}
+
+function loadSkinToCanvas(canvas, image) {
+	var isOldFormat = false;
+	if (image.width !== image.height) {
+		if (image.width === 2 * image.height) {
+			isOldFormat = true;
+		} else {
+			throw "Bad skin size: " + image.width + "x" + image.height;
+		}
+	}
+
+	var context = canvas.getContext("2d");
+	if (isOldFormat) {
+		var sideLength = image.width;
+		canvas.width = sideLength;
+		canvas.height = sideLength;
+		context.clearRect(0, 0, sideLength, sideLength);
+		context.drawImage(image, 0, 0, sideLength, sideLength / 2.0);
+		convertSkinTo1_8(context, sideLength);
+	} else {
+		canvas.width = image.width;
+		canvas.height = image.height;
+		context.clearRect(0, 0, image.width, image.height);
+		context.drawImage(image, 0, 0, canvas.width, canvas.height);
+	}
+}
+
+function loadCapeToCanvas(canvas, image) {
+	var isOldFormat = false;
+	if (image.width !== 2 * image.height) {
+		if (image.width * 17 == image.height * 22) {
+			// width/height = 22/17
+			isOldFormat = true;
+		} else {
+			throw "Bad cape size: " + image.width + "x" + image.height;
+		}
+	}
+
+	var context = canvas.getContext("2d");
+	if (isOldFormat) {
+		var width = image.width * 64 / 22;
+		canvas.width = width;
+		canvas.height = width / 2;
+	} else {
+		canvas.width = image.width;
+		canvas.height = image.height;
+	}
+	context.clearRect(0, 0, canvas.width, canvas.height);
+	context.drawImage(image, 0, 0, image.width, image.height);
+}
+
+function isSlimSkin(canvasOrImage) {
+	// Detects whether the skin is default or slim.
+	//
+	// The right arm area of *default* skins:
+	// (44,16)->*-------*-------*
+	// (40,20)  |top    |bottom |
+	// \|/      |4x4    |4x4    |
+	//  *-------*-------*-------*-------*
+	//  |right  |front  |left   |back   |
+	//  |4x12   |4x12   |4x12   |4x12   |
+	//  *-------*-------*-------*-------*
+	// The right arm area of *slim* skins:
+	// (44,16)->*------*------*-*
+	// (40,20)  |top   |bottom| |<----[x0=50,y0=16,w=2,h=4]
+	// \|/      |3x4   |3x4   | |
+	//  *-------*------*------***-----*-*
+	//  |right  |front |left   |back  | |<----[x0=54,y0=20,w=2,h=12]
+	//  |4x12   |3x12  |4x12   |3x12  | |
+	//  *-------*------*-------*------*-*
+	// Compared with default right arms, slim right arms have 2 unused areas.
+	//
+	// The same is true for left arm:
+	// The left arm area of *default* skins:
+	// (36,48)->*-------*-------*
+	// (32,52)  |top    |bottom |
+	// \|/      |4x4    |4x4    |
+	//  *-------*-------*-------*-------*
+	//  |right  |front  |left   |back   |
+	//  |4x12   |4x12   |4x12   |4x12   |
+	//  *-------*-------*-------*-------*
+	// The left arm area of *slim* skins:
+	// (36,48)->*------*------*-*
+	// (32,52)  |top   |bottom| |<----[x0=42,y0=48,w=2,h=4]
+	// \|/      |3x4   |3x4   | |
+	//  *-------*------*------***-----*-*
+	//  |right  |front |left   |back  | |<----[x0=46,y0=52,w=2,h=12]
+	//  |4x12   |3x12  |4x12   |3x12  | |
+	//  *-------*------*-------*------*-*
+	//
+	// If there is a transparent pixel in any of the 4 unused areas, the skin must be slim,
+	// as transparent pixels are not allowed in the first layer.
+
+	if (canvasOrImage instanceof HTMLCanvasElement) {
+		var canvas = canvasOrImage;
+		var scale = computeSkinScale(canvas.width);
+		var context = canvas.getContext("2d");
+		var checkArea = function checkArea(x, y, w, h) {
+			return hasTransparency(context, x * scale, y * scale, w * scale, h * scale);
+		};
+		return checkArea(50, 16, 2, 4) || checkArea(54, 20, 2, 12) || checkArea(42, 48, 2, 4) || checkArea(46, 52, 2, 12);
+	} else if (canvasOrImage instanceof HTMLImageElement) {
+		var image = canvasOrImage;
+		var _canvas = document.createElement("canvas");
+		loadSkinToCanvas(_canvas, image);
+		return isSlimSkin(_canvas);
+	} else {
+		throw "Illegal argument: " + canvasOrImage;
+	}
 }
 
 var SkinViewer = function () {
@@ -502,6 +696,7 @@ var SkinViewer = function () {
 
 		this.domElement = options.domElement;
 		this.animation = options.animation || null;
+		this.detectModel = options.animation !== false; // true by default
 		this.animationPaused = false;
 		this.animationTime = 0;
 		this.disposed = false;
@@ -538,7 +733,7 @@ var SkinViewer = function () {
 		}; // shut firefox up
 		this.domElement.appendChild(this.renderer.domElement);
 
-		this.playerObject = new PlayerObject(options.slim === true, this.layer1Material, this.layer2Material, this.capeMaterial);
+		this.playerObject = new PlayerObject(this.layer1Material, this.layer2Material, this.capeMaterial);
 		this.scene.add(this.playerObject);
 
 		// texture loading
@@ -547,29 +742,10 @@ var SkinViewer = function () {
 			return console.error("Failed loading " + _this.skinImg.src);
 		};
 		this.skinImg.onload = function () {
-			var isOldFormat = false;
-			if (_this.skinImg.width !== _this.skinImg.height) {
-				if (_this.skinImg.width === 2 * _this.skinImg.height) {
-					isOldFormat = true;
-				} else {
-					console.error("Bad skin size");
-					return;
-				}
-			}
+			loadSkinToCanvas(_this.skinCanvas, _this.skinImg);
 
-			var skinContext = _this.skinCanvas.getContext("2d");
-			if (isOldFormat) {
-				var width = _this.skinImg.width;
-				_this.skinCanvas.width = width;
-				_this.skinCanvas.height = width;
-				skinContext.clearRect(0, 0, width, width);
-				skinContext.drawImage(_this.skinImg, 0, 0, width, width / 2.0);
-				convertSkinTo1_8(skinContext, width);
-			} else {
-				_this.skinCanvas.width = _this.skinImg.width;
-				_this.skinCanvas.height = _this.skinImg.height;
-				skinContext.clearRect(0, 0, _this.skinCanvas.width, _this.skinCanvas.height);
-				skinContext.drawImage(_this.skinImg, 0, 0, _this.skinCanvas.width, _this.skinCanvas.height);
+			if (_this.detectModel) {
+				_this.playerObject.skin.slim = isSlimSkin(_this.skinCanvas);
 			}
 
 			_this.skinTexture.needsUpdate = true;
@@ -584,28 +760,7 @@ var SkinViewer = function () {
 			return console.error("Failed loading " + _this.capeImg.src);
 		};
 		this.capeImg.onload = function () {
-			var isOldFormat = false;
-			if (_this.capeImg.width !== 2 * _this.capeImg.height) {
-				if (_this.capeImg.width * 17 == _this.capeImg.height * 22) {
-					// width/height = 22/17
-					isOldFormat = true;
-				} else {
-					console.error("Bad cape size");
-					return;
-				}
-			}
-
-			var capeContext = _this.capeCanvas.getContext("2d");
-			if (isOldFormat) {
-				var width = _this.capeImg.width * 64 / 22;
-				_this.capeCanvas.width = width;
-				_this.capeCanvas.height = width / 2;
-			} else {
-				_this.capeCanvas.width = _this.capeImg.width;
-				_this.capeCanvas.height = _this.capeImg.height;
-			}
-			capeContext.clearRect(0, 0, _this.capeCanvas.width, _this.capeCanvas.height);
-			capeContext.drawImage(_this.capeImg, 0, 0, _this.capeImg.width, _this.capeImg.height);
+			loadCapeToCanvas(_this.capeCanvas, _this.capeImg);
 
 			_this.capeTexture.needsUpdate = true;
 			_this.capeMaterial.needsUpdate = true;
@@ -1262,5 +1417,5 @@ function createOrbitControls(skinViewer) {
 	return control;
 }
 
-export { SkinObject, CapeObject, PlayerObject, SkinViewer, OrbitControls, createOrbitControls, invokeAnimation, CompositeAnimation, WalkingAnimation, RunningAnimation, RotatingAnimation };
+export { SkinObject, CapeObject, PlayerObject, SkinViewer, OrbitControls, createOrbitControls, invokeAnimation, CompositeAnimation, WalkingAnimation, RunningAnimation, RotatingAnimation, isSlimSkin };
 //# sourceMappingURL=skinview3d.module.js.map
