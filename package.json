@@ -7,7 +7,7 @@
 	"typings": "types/skinview3d.d.ts",
 	"scripts": {
 		"build": "rollup -c tools/rollup.module.js && rollup -c tools/rollup.browser.js && rollup -c tools/rollup.browser.min.js",
-		"prepare": "npm test && rm -rf build && npm run build",
+		"prepare": "npm test && rimraf build && npm run build",
 		"test": "karma start && npm run lint",
 		"lint": "eslint src/** tools/** && tslint -c tslint.json types/**.ts",
 		"dev": "npm-run-all --parallel watch serve",
@@ -52,6 +52,7 @@
 		"mocha": "^5.2.0",
 		"npm-run-all": "^4.1.2",
 		"puppeteer": "^1.5.0",
+		"rimraf": "^2.6.2",
 		"rollup": "^0.62.0",
 		"rollup-plugin-babel": "^3.0.4",
 		"rollup-plugin-license": "^0.7.0",
