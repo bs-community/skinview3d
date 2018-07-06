@@ -18,7 +18,6 @@ function initSkinViewer() {
 
     skinViewer = new skinview3d.SkinViewer({
         domElement: el("skin_container"),
-        slim:       el('alex').checked,
         width:      el('width').value,
         height:     el('height').value,
         skinUrl:    el('skin_url').value,
