@@ -1,0 +1,4 @@
+extends: ../.eslintrc.js
+env:
+  mocha: true
+  browser: true
