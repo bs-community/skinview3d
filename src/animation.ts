@@ -1,3 +1,5 @@
+import { PlayerObject } from "./model"
+
 function invokeAnimation(animation, player, time) {
 	if (animation instanceof CompositeAnimation) {
 		animation.play(player, time);
@@ -8,14 +10,25 @@ function invokeAnimation(animation, player, time) {
 	}
 }
 
-class AnimationHandle {
+interface IAnimation {
+	play(player: PlayerObject, time: number): void;
+
+}
+
+class AnimationHandle implements IAnimation {
+	animation: Animation;
+	paused = false;
+	speed: number = 1.0;
+
+	private _paused = false;
+	private _lastChange: number = null;
+	private _speed: number = 1.0;
+	private _lastChangeX: number = null;
+
 	constructor(animation) {
-		this.animation = animation;
-		this.paused = this._paused = false;
-		this.speed = this._speed = 1.0;
-		this._lastChange = null;
-		this._lastChangeX = null;
+
 	}
+
 	play(player, time) {
 		if (this._lastChange === null) {
 			this._lastChange = time;
@@ -35,20 +48,29 @@ class AnimationHandle {
 			invokeAnimation(this.animation, player, x);
 		}
 	}
-	reset(){
+
+	reset() {
 		this._lastChange = null;
+	}
+
+	remove(animHandle: AnimationHandle) {
+		// stub get's overriden 
 	}
 }
 
 class CompositeAnimation {
+	handle: AnimationHandle;
+	handles: Set<AnimationHandle>;
+
 	constructor() {
 		this.handles = new Set();
 	}
 	add(animation) {
-		let handle = new AnimationHandle(animation);
-		handle.remove = () => this.handles.delete(handle);
-		this.handles.add(handle);
-		return handle;
+		this.handle = new AnimationHandle(animation);
+		this.handle
+		this.handle.remove = () => this.handles.delete(this.handle);
+		this.handles.add(this.handle);
+		return this.handle;
 	}
 	play(player, time) {
 		this.handles.forEach(handle => handle.play(player, time));
@@ -62,14 +84,14 @@ let WalkingAnimation = (player, time) => {
 	time *= 8;
 
 	// Leg swing
-	skin.leftLeg.rotation.x  = Math.sin(time) * 0.5;
+	skin.leftLeg.rotation.x = Math.sin(time) * 0.5;
 	skin.rightLeg.rotation.x = Math.sin(time + Math.PI) * 0.5;
 
 	// Arm swing
-	skin.leftArm.rotation.x  = Math.sin(time + Math.PI) * 0.5;
+	skin.leftArm.rotation.x = Math.sin(time + Math.PI) * 0.5;
 	skin.rightArm.rotation.x = Math.sin(time) * 0.5;
-	let basicArmRotationZ    = Math.PI * 0.02;
-	skin.leftArm.rotation.z  = Math.cos(time) * 0.03 + basicArmRotationZ;
+	let basicArmRotationZ = Math.PI * 0.02;
+	skin.leftArm.rotation.z = Math.cos(time) * 0.03 + basicArmRotationZ;
 	skin.rightArm.rotation.z = Math.cos(time + Math.PI) * 0.03 - basicArmRotationZ;
 
 	// Head shaking with different frequency & amplitude
@@ -87,14 +109,14 @@ let RunningAnimation = (player, time) => {
 	time *= 15;
 
 	// Leg swing with larger amplitude
-	skin.leftLeg.rotation.x  = Math.cos(time + Math.PI) * 1.3;
+	skin.leftLeg.rotation.x = Math.cos(time + Math.PI) * 1.3;
 	skin.rightLeg.rotation.x = Math.cos(time) * 1.3;
 
 	// Arm swing
-	skin.leftArm.rotation.x  = Math.cos(time) * 1.5;
+	skin.leftArm.rotation.x = Math.cos(time) * 1.5;
 	skin.rightArm.rotation.x = Math.cos(time + Math.PI) * 1.5;
-	let basicArmRotationZ    = Math.PI * 0.1;
-	skin.leftArm.rotation.z  = Math.cos(time) * 0.1 + basicArmRotationZ;
+	let basicArmRotationZ = Math.PI * 0.1;
+	skin.leftArm.rotation.z = Math.cos(time) * 0.1 + basicArmRotationZ;
 	skin.rightArm.rotation.z = Math.cos(time + Math.PI) * 0.1 - basicArmRotationZ;
 
 	// Jumping

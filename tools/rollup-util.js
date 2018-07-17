@@ -6,7 +6,7 @@ import fs from "fs";
 
 let buildType = config => {
 	let options = {
-		input: "src/skinview3d.js",
+		input: "dist/skinview3d.js",
 		output: [],
 		external: [
 			"three"

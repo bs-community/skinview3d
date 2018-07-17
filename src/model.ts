@@ -1,5 +1,6 @@
 import * as THREE from "three";
 
+// TODO move to a util class
 function toFaceVertices(x1, y1, x2, y2, w, h) {
 	return [
 		new THREE.Vector2(x1 / w, 1.0 - y2 / h),
@@ -9,14 +10,17 @@ function toFaceVertices(x1, y1, x2, y2, w, h) {
 	];
 }
 
+// TODO move to a util class
 function toSkinVertices(x1, y1, x2, y2) {
 	return toFaceVertices(x1, y1, x2, y2, 64.0, 64.0);
 }
 
+// TODO move to a util class
 function toCapeVertices(x1, y1, x2, y2) {
 	return toFaceVertices(x1, y1, x2, y2, 64.0, 32.0);
 }
 
+// TODO move to a util class
 function setVertices(box, top, bottom, left, front, right, back) {
 	box.faceVertexUvs[0] = [];
 	box.faceVertexUvs[0][0] = [right[3], right[0], right[2]];
@@ -33,9 +37,23 @@ function setVertices(box, top, bottom, left, front, right, back) {
 	box.faceVertexUvs[0][11] = [back[0], back[1], back[2]];
 }
 
+// why is this a global constant?
 const esp = 0.002;
 
 class SkinObject extends THREE.Group {
+
+	// parts
+	head: THREE.Group;
+	body: THREE.Group;
+	rightArm: THREE.Group;
+	leftArm: THREE.Group;
+	rightLeg: THREE.Group;
+	leftLeg: THREE.Group;
+
+	modelListeners: Array<Function>;
+
+	slim = false;
+
 	constructor(layer1Material, layer2Material) {
 		super();
 
@@ -208,7 +226,7 @@ class SkinObject extends THREE.Group {
 				);
 			}
 			leftArmBox.uvsNeedUpdate = true;
-			leftArmBox.elementsNeedUpdate=true;
+			leftArmBox.elementsNeedUpdate = true;
 		});
 
 		let leftArm2Box = new THREE.BoxGeometry(1, 1, 1, 0, 0, 0); // w/d/h is model-related
@@ -324,19 +342,22 @@ class SkinObject extends THREE.Group {
 		this.slim = false;
 	}
 
-	get slim() {
-		return this._slim;
-	}
+	// get slim() {
+	// 	return this._slim;
+	// }
 
-	set slim(value) {
-		if (this._slim !== value) {
-			this._slim = value;
-			this.modelListeners.forEach(listener => listener());
-		}
-	}
+	// set slim(value) {
+	// 	if (this._slim !== value) {
+	// 		this._slim = value;
+	// 		this.modelListeners.forEach(listener => listener());
+	// 	}
+	// }
 }
 
 class CapeObject extends THREE.Group {
+
+	cape: THREE.Mesh;
+
 	constructor(capeMaterial) {
 		super();
 
@@ -359,6 +380,10 @@ class CapeObject extends THREE.Group {
 }
 
 class PlayerObject extends THREE.Group {
+
+	skin: SkinObject;
+	cape: CapeObject;
+
 	constructor(layer1Material, layer2Material, capeMaterial) {
 		super();
 

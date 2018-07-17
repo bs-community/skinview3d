@@ -1,9 +1,36 @@
 import * as THREE from "three";
 import { PlayerObject } from "./model";
 import { invokeAnimation } from "./animation";
-import { loadSkinToCanvas,loadCapeToCanvas, isSlimSkin } from "./utils";
+import { loadSkinToCanvas, loadCapeToCanvas, isSlimSkin } from "./utils";
 
 class SkinViewer {
+
+	domElement: HTMLElement;
+	animation: Animation;
+	detectModel: boolean = false;
+	animationPaused: boolean = false;
+	animationTime: number = 0;
+	disposed: boolean = false;
+
+	skinImg: HTMLImageElement;
+	skinCanvas: HTMLCanvasElement;
+	skinTexture: THREE.Texture;
+
+	capeImg: HTMLImageElement;
+	capeCanvas: HTMLCanvasElement;
+	capeTexture: THREE.Texture;
+
+	layer1Material: THREE.MeshBasicMaterial;
+	layer2Material: THREE.MeshBasicMaterial;
+
+	scene: THREE.Scene;
+	camera: THREE.PerspectiveCamera;
+
+	capeMaterial: THREE.MeshBasicMaterial;
+	renderer: THREE.WebGLRenderer;
+
+	playerObject: PlayerObject;
+
 	constructor(options) {
 		this.domElement = options.domElement;
 		this.animation = options.animation || null;
@@ -37,7 +64,7 @@ class SkinViewer {
 		this.camera.position.y = -12;
 		this.camera.position.z = 60;
 
-		this.renderer = new THREE.WebGLRenderer({ angleRot: true, alpha: true, antialias: false });
+		this.renderer = new THREE.WebGLRenderer({ alpha: true, antialias: false });
 		this.renderer.setSize(300, 300); // default size
 		this.renderer.context.getShaderInfoLog = () => ""; // shut firefox up
 		this.domElement.appendChild(this.renderer.domElement);
@@ -73,10 +100,19 @@ class SkinViewer {
 			this.playerObject.cape.visible = true;
 		};
 
-		if (options.skinUrl) this.skinUrl = options.skinUrl;
-		if (options.capeUrl) this.capeUrl = options.capeUrl;
-		if (options.width) this.width = options.width;
-		if (options.height) this.height = options.height;
+
+		if (options.skinUrl) this.skinImg.src = options.skinUrl;
+		if (options.capeUrl) this.capeImg.src = options.capeUrl;
+		if (options.width) {
+			this.setSize(options.width, this.renderer.getSize().height);
+		}
+		if (options.height) {
+			this.setSize(this.renderer.getSize().width, options.height);
+		}
+		// if (options.skinUrl) this.skinUrl = options.skinUrl;
+		// if (options.capeUrl) this.capeUrl = options.capeUrl;
+		// if (options.width) this.width = options.width;
+		// if (options.height) this.height = options.height;
 
 		let draw = () => {
 			if (this.disposed) return;
@@ -106,37 +142,37 @@ class SkinViewer {
 		this.capeTexture.dispose();
 	}
 
-	get skinUrl() {
-		return this.skinImg.src;
-	}
+	// get skinUrl() {
+	// 	return this.skinImg.src;
+	// }
 
-	set skinUrl(url) {
-		this.skinImg.src = url;
-	}
+	// set skinUrl(url) {
+	// 	this.skinImg.src = url;
+	// }
 
-	get capeUrl() {
-		return this.capeImg.src;
-	}
+	// get capeUrl() {
+	// 	return this.capeImg.src;
+	// }
 
-	set capeUrl(url) {
-		this.capeImg.src = url;
-	}
+	// set capeUrl(url) {
+	// 	this.capeImg.src = url;
+	// }
 
-	get width() {
-		return this.renderer.getSize().width;
-	}
+	// get width() {
+	// 	return this.renderer.getSize().width;
+	// }
 
-	set width(newWidth) {
-		this.setSize(newWidth, this.height);
-	}
+	// set width(newWidth) {
+	// 	this.setSize(newWidth, this.height);
+	// }
 
-	get height() {
-		return this.renderer.getSize().height;
-	}
+	// get height() {
+	// 	return this.renderer.getSize().height;
+	// }
 
-	set height(newHeight) {
-		this.setSize(this.width, newHeight);
-	}
+	// set height(newHeight) {
+	// 	this.setSize(this.width, newHeight);
+	// }
 }
 
 export { SkinViewer };

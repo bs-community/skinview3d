@@ -1,17 +1,24 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 	<meta charset="utf-8">
 	<title>skinview3d</title>
 	<link href="https://fonts.googleapis.com/css?family=Archivo+Black" rel="stylesheet">
 
 </head>
+
 <body>
 
 	<div id="skin_container"></div>
 
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/three.js/92/three.min.js"></script>
-	<script type="text/javascript" src="../build/skinview3d.js"></script>
+	<script type="text/javascript" src="../build/utils.js"></script>
+	<script type="text/javascript" src="../build/orbit_controls.js"></script>
+	<script type="text/javascript" src="../build/animation.js"></script>
+	<script type="text/javascript" src="../build/model.js"></script>
+	<script type="text/javascript" src="../build/viewer.js"></script>
+
 
 	<script>
 		let skinViewer = new skinview3d.SkinViewer({
@@ -35,4 +42,5 @@
 
 
 </body>
+
 </html>
