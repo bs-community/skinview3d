@@ -1,6 +1,6 @@
 import { PlayerObject } from "./model"
 
-function invokeAnimation(animation, player, time) {
+function invokeAnimation(animation: Animation, player: PlayerObject, time: number) {
 	if (animation instanceof CompositeAnimation) {
 		animation.play(player, time);
 	} else if (animation instanceof Function) {
@@ -12,8 +12,10 @@ function invokeAnimation(animation, player, time) {
 
 interface IAnimation {
 	play(player: PlayerObject, time: number): void;
-
 }
+
+type AnimationFn = (player: PlayerObject, time: number) => void;
+type Animation = AnimationFn | IAnimation;
 
 class AnimationHandle implements IAnimation {
 	animation: Animation;
@@ -25,11 +27,11 @@ class AnimationHandle implements IAnimation {
 	private _speed: number = 1.0;
 	private _lastChangeX: number = null;
 
-	constructor(animation) {
-
+	constructor(animation: Animation) {
+		this.animation = animation;
 	}
 
-	play(player, time) {
+	play(player: PlayerObject, time: number) {
 		if (this._lastChange === null) {
 			this._lastChange = time;
 			this._lastChangeX = 0;
@@ -54,30 +56,29 @@ class AnimationHandle implements IAnimation {
 	}
 
 	remove(animHandle: AnimationHandle) {
-		// stub get's overriden 
+		// stub get's overriden
 	}
 }
 
 class CompositeAnimation {
-	handle: AnimationHandle;
+
 	handles: Set<AnimationHandle>;
 
 	constructor() {
 		this.handles = new Set();
 	}
-	add(animation) {
-		this.handle = new AnimationHandle(animation);
-		this.handle
-		this.handle.remove = () => this.handles.delete(this.handle);
-		this.handles.add(this.handle);
-		return this.handle;
+	add(animation: Animation) {
+		const handle = new AnimationHandle(animation);
+		handle.remove = () => this.handles.delete(handle);
+		this.handles.add(handle);
+		return handle;
 	}
-	play(player, time) {
+	play(player: PlayerObject, time: number) {
 		this.handles.forEach(handle => handle.play(player, time));
 	}
 }
 
-let WalkingAnimation = (player, time) => {
+let WalkingAnimation: Animation = (player: PlayerObject, time: number) => {
 	let skin = player.skin;
 
 	// Multiply by animation's natural speed
@@ -103,7 +104,7 @@ let WalkingAnimation = (player, time) => {
 	player.cape.rotation.x = Math.sin(time / 1.5) * 0.06 + basicCapeRotationX;
 };
 
-let RunningAnimation = (player, time) => {
+let RunningAnimation: Animation = (player: PlayerObject, time: number) => {
 	let skin = player.skin;
 
 	time *= 15;
@@ -136,7 +137,7 @@ let RunningAnimation = (player, time) => {
 	// You shouldn't glance right and left when running dude :P
 };
 
-let RotatingAnimation = (player, time) => {
+let RotatingAnimation: Animation = (player: PlayerObject, time: number) => {
 	player.rotation.y = time;
 };
 

@@ -1,7 +1,7 @@
 import * as THREE from "three";
 
 // TODO move to a util class
-function toFaceVertices(x1, y1, x2, y2, w, h) {
+function toFaceVertices(x1: number, y1: number, x2: number, y2: number, w: number, h: number) {
 	return [
 		new THREE.Vector2(x1 / w, 1.0 - y2 / h),
 		new THREE.Vector2(x2 / w, 1.0 - y2 / h),
@@ -11,17 +11,19 @@ function toFaceVertices(x1, y1, x2, y2, w, h) {
 }
 
 // TODO move to a util class
-function toSkinVertices(x1, y1, x2, y2) {
+function toSkinVertices(x1: number, y1: number, x2: number, y2: number) {
 	return toFaceVertices(x1, y1, x2, y2, 64.0, 64.0);
 }
 
 // TODO move to a util class
-function toCapeVertices(x1, y1, x2, y2) {
+function toCapeVertices(x1: number, y1: number, x2: number, y2: number) {
 	return toFaceVertices(x1, y1, x2, y2, 64.0, 32.0);
 }
 
 // TODO move to a util class
-function setVertices(box, top, bottom, left, front, right, back) {
+function setVertices(box: THREE.BoxGeometry, top: Array<THREE.Vector2>, bottom: Array<THREE.Vector2>,
+	left: Array<THREE.Vector2>, front: Array<THREE.Vector2>, right: Array<THREE.Vector2>, back: Array<THREE.Vector2>) {
+
 	box.faceVertexUvs[0] = [];
 	box.faceVertexUvs[0][0] = [right[3], right[0], right[2]];
 	box.faceVertexUvs[0][1] = [right[0], right[1], right[2]];
@@ -42,7 +44,7 @@ const esp = 0.002;
 
 class SkinObject extends THREE.Group {
 
-	// parts
+	// body parts
 	head: THREE.Group;
 	body: THREE.Group;
 	rightArm: THREE.Group;
@@ -50,11 +52,10 @@ class SkinObject extends THREE.Group {
 	rightLeg: THREE.Group;
 	leftLeg: THREE.Group;
 
-	modelListeners: Array<Function>;
+	private modelListeners: Array<Function>;
+	private _slim = false;
 
-	slim = false;
-
-	constructor(layer1Material, layer2Material) {
+	constructor(layer1Material: THREE.MeshBasicMaterial, layer2Material: THREE.MeshBasicMaterial) {
 		super();
 
 		this.modelListeners = []; // called when model(slim property) is changed
@@ -342,23 +343,23 @@ class SkinObject extends THREE.Group {
 		this.slim = false;
 	}
 
-	// get slim() {
-	// 	return this._slim;
-	// }
+	get slim() {
+		return this._slim;
+	}
 
-	// set slim(value) {
-	// 	if (this._slim !== value) {
-	// 		this._slim = value;
-	// 		this.modelListeners.forEach(listener => listener());
-	// 	}
-	// }
+	set slim(value) {
+		if (this._slim !== value) {
+			this._slim = value;
+			this.modelListeners.forEach(listener => listener());
+		}
+	}
 }
 
 class CapeObject extends THREE.Group {
 
 	cape: THREE.Mesh;
 
-	constructor(capeMaterial) {
+	constructor(capeMaterial: THREE.MeshBasicMaterial) {
 		super();
 
 		// back = outside
@@ -384,7 +385,7 @@ class PlayerObject extends THREE.Group {
 	skin: SkinObject;
 	cape: CapeObject;
 
-	constructor(layer1Material, layer2Material, capeMaterial) {
+	constructor(layer1Material: THREE.MeshBasicMaterial, layer2Material: THREE.MeshBasicMaterial, capeMaterial: THREE.MeshBasicMaterial) {
 		super();
 
 		this.skin = new SkinObject(layer1Material, layer2Material);

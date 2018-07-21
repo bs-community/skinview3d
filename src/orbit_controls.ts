@@ -689,4 +689,3 @@ export function createOrbitControls(skinViewer) {
 
 	return control;
 }
-

@@ -80,6 +80,7 @@ class SkinViewer {
 
 			if (this.detectModel) {
 				this.playerObject.skin.slim = isSlimSkin(this.skinCanvas);
+				console.log("Loading Slim: " + this.playerObject.skin.slim);
 			}
 
 			this.skinTexture.needsUpdate = true;
@@ -100,19 +101,10 @@ class SkinViewer {
 			this.playerObject.cape.visible = true;
 		};
 
-
-		if (options.skinUrl) this.skinImg.src = options.skinUrl;
-		if (options.capeUrl) this.capeImg.src = options.capeUrl;
-		if (options.width) {
-			this.setSize(options.width, this.renderer.getSize().height);
-		}
-		if (options.height) {
-			this.setSize(this.renderer.getSize().width, options.height);
-		}
-		// if (options.skinUrl) this.skinUrl = options.skinUrl;
-		// if (options.capeUrl) this.capeUrl = options.capeUrl;
-		// if (options.width) this.width = options.width;
-		// if (options.height) this.height = options.height;
+		if (options.skinUrl) this.skinUrl = options.skinUrl;
+		if (options.capeUrl) this.capeUrl = options.capeUrl;
+		if (options.width) this.width = options.width;
+		if (options.height) this.height = options.height;
 
 		let draw = () => {
 			if (this.disposed) return;
@@ -142,37 +134,37 @@ class SkinViewer {
 		this.capeTexture.dispose();
 	}
 
-	// get skinUrl() {
-	// 	return this.skinImg.src;
-	// }
+	get skinUrl() {
+		return this.skinImg.src;
+	}
 
-	// set skinUrl(url) {
-	// 	this.skinImg.src = url;
-	// }
+	set skinUrl(url) {
+		this.skinImg.src = url;
+	}
 
-	// get capeUrl() {
-	// 	return this.capeImg.src;
-	// }
+	get capeUrl() {
+		return this.capeImg.src;
+	}
 
-	// set capeUrl(url) {
-	// 	this.capeImg.src = url;
-	// }
+	set capeUrl(url) {
+		this.capeImg.src = url;
+	}
 
-	// get width() {
-	// 	return this.renderer.getSize().width;
-	// }
+	get width() {
+		return this.renderer.getSize().width;
+	}
 
-	// set width(newWidth) {
-	// 	this.setSize(newWidth, this.height);
-	// }
+	set width(newWidth) {
+		this.setSize(newWidth, this.height);
+	}
 
-	// get height() {
-	// 	return this.renderer.getSize().height;
-	// }
+	get height() {
+		return this.renderer.getSize().height;
+	}
 
-	// set height(newHeight) {
-	// 	this.setSize(this.width, newHeight);
-	// }
+	set height(newHeight) {
+		this.setSize(this.width, newHeight);
+	}
 }
 
 export { SkinViewer };

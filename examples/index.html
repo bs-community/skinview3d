@@ -14,7 +14,7 @@
 
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/three.js/92/three.min.js"></script>
 
-	<!-- need to bundle into one single js file -->
+	<script type="text/javascript" src="../build/skinview3d.js"></script>
 
 	<script>
 		let skinViewer = new skinview3d.SkinViewer({
@@ -32,7 +32,7 @@
 		skinViewer.animation = new skinview3d.CompositeAnimation();
 
 		let walk = skinViewer.animation.add(skinview3d.WalkingAnimation);
-		walk.speed = 1.5;
+		//walk.speed = 1.5;
 
 	</script>
 
