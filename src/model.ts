@@ -335,7 +335,7 @@ class SkinObject extends THREE.Group {
 		this.leftLeg.position.x = 2;
 		this.add(this.leftLeg);
 
-		// this.slim = false;
+		this.slim = false;
 	}
 
 	get slim() {
