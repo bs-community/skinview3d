@@ -5,6 +5,16 @@
 	],
 	"jsRules": {},
 	"rules": {
+		"curly": false,
+		"ordered-imports": false,
+		"member-access": false,
+		"trailing-comma": [ false, {"multiline": "never", "singleline": "never"} ],
+		"max-line-length": false,
+		"variable-name": false,
+		"object-literal-sort-keys": false,
+		"arrow-parens": [true, "ban-single-arg-parens"],
+		"array-type": [true, "generic"],
+		"no-console": false,
 		"indent": [
 			true,
 			"tabs"
