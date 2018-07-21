@@ -340,7 +340,7 @@ class SkinObject extends THREE.Group {
 		this.leftLeg.position.x = 2;
 		this.add(this.leftLeg);
 
-		this.slim = false;
+		// this.slim = false;
 	}
 
 	get slim() {
@@ -348,10 +348,8 @@ class SkinObject extends THREE.Group {
 	}
 
 	set slim(value) {
-		if (this._slim !== value) {
-			this._slim = value;
-			this.modelListeners.forEach(listener => listener());
-		}
+		this._slim = value;
+		this.modelListeners.forEach(listener => listener());
 	}
 }
 
