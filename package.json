@@ -8,7 +8,7 @@
 	"scripts": {
 		"build": "tsc --p tsconfig.json && rollup -c tools/rollup.module.js && rollup -c tools/rollup.browser.js && rollup -c tools/rollup.browser.min.js",
 		"prepare": "npm test && rimraf build && npm run build",
-		"lint": "eslint src/** tools/** && tslint -c tslint.json types/**.ts",
+		"lint": "tslint -c tslint.json src/**.ts",
 		"dev": "npm-run-all --parallel watch serve",
 		"watch": "rollup -w -c tools/rollup.browser.js",
 		"test": "karma start && npm run lint",
@@ -38,6 +38,8 @@
 		"three": "^0.94.0"
 	},
 	"devDependencies": {
+		"@types/chai": "^4.1.4",
+		"@types/mocha": "^5.2.5",
 		"@types/three": "^0.92.12",
 		"babel-cli": "^6.26.0",
 		"babel-plugin-external-helpers": "^6.22.0",

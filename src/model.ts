@@ -21,8 +21,7 @@ function toCapeVertices(x1: number, y1: number, x2: number, y2: number) {
 }
 
 // TODO move to a util class
-function setVertices(box: THREE.BoxGeometry, top: Array<THREE.Vector2>, bottom: Array<THREE.Vector2>,
-	left: Array<THREE.Vector2>, front: Array<THREE.Vector2>, right: Array<THREE.Vector2>, back: Array<THREE.Vector2>) {
+function setVertices(box: THREE.BoxGeometry, top: Array<THREE.Vector2>, bottom: Array<THREE.Vector2>, left: Array<THREE.Vector2>, front: Array<THREE.Vector2>, right: Array<THREE.Vector2>, back: Array<THREE.Vector2>) {
 
 	box.faceVertexUvs[0] = [];
 	box.faceVertexUvs[0][0] = [right[3], right[0], right[2]];
@@ -52,7 +51,7 @@ class SkinObject extends THREE.Group {
 	rightLeg: THREE.Group;
 	leftLeg: THREE.Group;
 
-	private modelListeners: Array<Function>;
+	private modelListeners: Array<() => void>;
 	private _slim = false;
 
 	constructor(layer1Material: THREE.MeshBasicMaterial, layer2Material: THREE.MeshBasicMaterial) {
@@ -63,7 +62,7 @@ class SkinObject extends THREE.Group {
 		// Head
 		this.head = new THREE.Group();
 
-		let headBox = new THREE.BoxGeometry(8, 8, 8, 0, 0, 0);
+		const headBox = new THREE.BoxGeometry(8, 8, 8, 0, 0, 0);
 		setVertices(headBox,
 			toSkinVertices(8, 0, 16, 8),
 			toSkinVertices(16, 0, 24, 8),
@@ -72,10 +71,10 @@ class SkinObject extends THREE.Group {
 			toSkinVertices(16, 8, 24, 16),
 			toSkinVertices(24, 8, 32, 16)
 		);
-		let headMesh = new THREE.Mesh(headBox, layer1Material);
+		const headMesh = new THREE.Mesh(headBox, layer1Material);
 		this.head.add(headMesh);
 
-		let head2Box = new THREE.BoxGeometry(9, 9, 9, 0, 0, 0);
+		const head2Box = new THREE.BoxGeometry(9, 9, 9, 0, 0, 0);
 		setVertices(head2Box,
 			toSkinVertices(40, 0, 48, 8),
 			toSkinVertices(48, 0, 56, 8),
@@ -84,17 +83,16 @@ class SkinObject extends THREE.Group {
 			toSkinVertices(48, 8, 56, 16),
 			toSkinVertices(56, 8, 64, 16)
 		);
-		let head2Mesh = new THREE.Mesh(head2Box, layer2Material);
+		const head2Mesh = new THREE.Mesh(head2Box, layer2Material);
 		head2Mesh.renderOrder = -1;
 		this.head.add(head2Mesh);
 
 		this.add(this.head);
 
-
 		// Body
 		this.body = new THREE.Group();
 
-		let bodyBox = new THREE.BoxGeometry(8, 12, 4, 0, 0, 0);
+		const bodyBox = new THREE.BoxGeometry(8, 12, 4, 0, 0, 0);
 		setVertices(bodyBox,
 			toSkinVertices(20, 16, 28, 20),
 			toSkinVertices(28, 16, 36, 20),
@@ -103,10 +101,10 @@ class SkinObject extends THREE.Group {
 			toSkinVertices(28, 20, 32, 32),
 			toSkinVertices(32, 20, 40, 32)
 		);
-		let bodyMesh = new THREE.Mesh(bodyBox, layer1Material);
+		const bodyMesh = new THREE.Mesh(bodyBox, layer1Material);
 		this.body.add(bodyMesh);
 
-		let body2Box = new THREE.BoxGeometry(9, 13.5, 4.5, 0, 0, 0);
+		const body2Box = new THREE.BoxGeometry(9, 13.5, 4.5, 0, 0, 0);
 		setVertices(body2Box,
 			toSkinVertices(20, 32, 28, 36),
 			toSkinVertices(28, 32, 36, 36),
@@ -115,19 +113,18 @@ class SkinObject extends THREE.Group {
 			toSkinVertices(28, 36, 32, 48),
 			toSkinVertices(32, 36, 40, 48)
 		);
-		let body2Mesh = new THREE.Mesh(body2Box, layer2Material);
+		const body2Mesh = new THREE.Mesh(body2Box, layer2Material);
 		this.body.add(body2Mesh);
 
 		this.body.position.y = -10;
 		this.add(this.body);
 
-
 		// Right Arm
 		this.rightArm = new THREE.Group();
-		let rightArmPivot = new THREE.Group();
+		const rightArmPivot = new THREE.Group();
 
-		let rightArmBox = new THREE.BoxGeometry(1, 1, 1, 0, 0, 0); // w/d/h is model-related
-		let rightArmMesh = new THREE.Mesh(rightArmBox, layer1Material);
+		const rightArmBox = new THREE.BoxGeometry(1, 1, 1, 0, 0, 0); // w/d/h is model-related
+		const rightArmMesh = new THREE.Mesh(rightArmBox, layer1Material);
 		rightArmPivot.add(rightArmMesh);
 		this.modelListeners.push(() => {
 			rightArmMesh.scale.x = (this.slim ? 3 : 4) - esp;
@@ -156,8 +153,8 @@ class SkinObject extends THREE.Group {
 			rightArmBox.elementsNeedUpdate = true;
 		});
 
-		let rightArm2Box = new THREE.BoxGeometry(1, 1, 1, 0, 0, 0); // w/d/h is model-related
-		let rightArm2Mesh = new THREE.Mesh(rightArm2Box, layer2Material);
+		const rightArm2Box = new THREE.BoxGeometry(1, 1, 1, 0, 0, 0); // w/d/h is model-related
+		const rightArm2Mesh = new THREE.Mesh(rightArm2Box, layer2Material);
 		rightArm2Mesh.renderOrder = 1;
 		rightArmPivot.add(rightArm2Mesh);
 		this.modelListeners.push(() => {
@@ -195,13 +192,12 @@ class SkinObject extends THREE.Group {
 		});
 		this.add(this.rightArm);
 
-
 		// Left Arm
 		this.leftArm = new THREE.Group();
-		let leftArmPivot = new THREE.Group();
+		const leftArmPivot = new THREE.Group();
 
-		let leftArmBox = new THREE.BoxGeometry(1, 1, 1, 0, 0, 0); // w/d/h is model-related
-		let leftArmMesh = new THREE.Mesh(leftArmBox, layer1Material);
+		const leftArmBox = new THREE.BoxGeometry(1, 1, 1, 0, 0, 0); // w/d/h is model-related
+		const leftArmMesh = new THREE.Mesh(leftArmBox, layer1Material);
 		leftArmPivot.add(leftArmMesh);
 		this.modelListeners.push(() => {
 			leftArmMesh.scale.x = (this.slim ? 3 : 4) - esp;
@@ -230,8 +226,8 @@ class SkinObject extends THREE.Group {
 			leftArmBox.elementsNeedUpdate = true;
 		});
 
-		let leftArm2Box = new THREE.BoxGeometry(1, 1, 1, 0, 0, 0); // w/d/h is model-related
-		let leftArm2Mesh = new THREE.Mesh(leftArm2Box, layer2Material);
+		const leftArm2Box = new THREE.BoxGeometry(1, 1, 1, 0, 0, 0); // w/d/h is model-related
+		const leftArm2Mesh = new THREE.Mesh(leftArm2Box, layer2Material);
 		leftArm2Mesh.renderOrder = 1;
 		leftArmPivot.add(leftArm2Mesh);
 		this.modelListeners.push(() => {
@@ -269,12 +265,11 @@ class SkinObject extends THREE.Group {
 		});
 		this.add(this.leftArm);
 
-
 		// Right Leg
 		this.rightLeg = new THREE.Group();
-		let rightLegPivot = new THREE.Group();
+		const rightLegPivot = new THREE.Group();
 
-		let rightLegBox = new THREE.BoxGeometry(4 - esp, 12 - esp, 4 - esp, 0, 0, 0);
+		const rightLegBox = new THREE.BoxGeometry(4 - esp, 12 - esp, 4 - esp, 0, 0, 0);
 		setVertices(rightLegBox,
 			toSkinVertices(4, 16, 8, 20),
 			toSkinVertices(8, 16, 12, 20),
@@ -283,10 +278,10 @@ class SkinObject extends THREE.Group {
 			toSkinVertices(8, 20, 12, 32),
 			toSkinVertices(12, 20, 16, 32)
 		);
-		let rightLegMesh = new THREE.Mesh(rightLegBox, layer1Material);
+		const rightLegMesh = new THREE.Mesh(rightLegBox, layer1Material);
 		rightLegPivot.add(rightLegMesh);
 
-		let rightLeg2Box = new THREE.BoxGeometry(4.5 - esp, 13.5 - esp, 4.5 - esp, 0, 0, 0);
+		const rightLeg2Box = new THREE.BoxGeometry(4.5 - esp, 13.5 - esp, 4.5 - esp, 0, 0, 0);
 		setVertices(rightLeg2Box,
 			toSkinVertices(4, 32, 8, 36),
 			toSkinVertices(8, 32, 12, 36),
@@ -295,7 +290,7 @@ class SkinObject extends THREE.Group {
 			toSkinVertices(8, 36, 12, 48),
 			toSkinVertices(12, 36, 16, 48)
 		);
-		let rightLeg2Mesh = new THREE.Mesh(rightLeg2Box, layer2Material);
+		const rightLeg2Mesh = new THREE.Mesh(rightLeg2Box, layer2Material);
 		rightLeg2Mesh.renderOrder = 1;
 		rightLegPivot.add(rightLeg2Mesh);
 
@@ -307,9 +302,9 @@ class SkinObject extends THREE.Group {
 
 		// Left Leg
 		this.leftLeg = new THREE.Group();
-		let leftLegPivot = new THREE.Group();
+		const leftLegPivot = new THREE.Group();
 
-		let leftLegBox = new THREE.BoxGeometry(4 - esp, 12 - esp, 4 - esp, 0, 0, 0);
+		const leftLegBox = new THREE.BoxGeometry(4 - esp, 12 - esp, 4 - esp, 0, 0, 0);
 		setVertices(leftLegBox,
 			toSkinVertices(20, 48, 24, 52),
 			toSkinVertices(24, 48, 28, 52),
@@ -318,10 +313,10 @@ class SkinObject extends THREE.Group {
 			toSkinVertices(24, 52, 28, 64),
 			toSkinVertices(28, 52, 32, 64)
 		);
-		let leftLegMesh = new THREE.Mesh(leftLegBox, layer1Material);
+		const leftLegMesh = new THREE.Mesh(leftLegBox, layer1Material);
 		leftLegPivot.add(leftLegMesh);
 
-		let leftLeg2Box = new THREE.BoxGeometry(4.5 - esp, 13.5 - esp, 4.5 - esp, 0, 0, 0);
+		const leftLeg2Box = new THREE.BoxGeometry(4.5 - esp, 13.5 - esp, 4.5 - esp, 0, 0, 0);
 		setVertices(leftLeg2Box,
 			toSkinVertices(4, 48, 8, 52),
 			toSkinVertices(8, 48, 12, 52),
@@ -330,7 +325,7 @@ class SkinObject extends THREE.Group {
 			toSkinVertices(8, 52, 12, 64),
 			toSkinVertices(12, 52, 16, 64)
 		);
-		let leftLeg2Mesh = new THREE.Mesh(leftLeg2Box, layer2Material);
+		const leftLeg2Mesh = new THREE.Mesh(leftLeg2Box, layer2Material);
 		leftLeg2Mesh.renderOrder = 1;
 		leftLegPivot.add(leftLeg2Mesh);
 
@@ -362,7 +357,7 @@ class CapeObject extends THREE.Group {
 
 		// back = outside
 		// front = inside
-		let capeBox = new THREE.BoxGeometry(10, 16, 1, 0, 0, 0);
+		const capeBox = new THREE.BoxGeometry(10, 16, 1, 0, 0, 0);
 		setVertices(capeBox,
 			toCapeVertices(1, 0, 11, 1),
 			toCapeVertices(11, 0, 21, 1),

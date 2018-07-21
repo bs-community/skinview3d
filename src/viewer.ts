@@ -5,31 +5,31 @@ import { loadSkinToCanvas, loadCapeToCanvas, isSlimSkin } from "./utils";
 
 class SkinViewer {
 
-	domElement: HTMLElement;
-	animation: Animation;
-	detectModel: boolean = false;
-	animationPaused: boolean = false;
-	animationTime: number = 0;
-	disposed: boolean = false;
+	public domElement: HTMLElement;
+	public animation: Animation;
+	public detectModel: boolean = false;
+	public animationPaused: boolean = false;
+	public animationTime: number = 0;
+	public disposed: boolean = false;
 
-	skinImg: HTMLImageElement;
-	skinCanvas: HTMLCanvasElement;
-	skinTexture: THREE.Texture;
+	public skinImg: HTMLImageElement;
+	public skinCanvas: HTMLCanvasElement;
+	public skinTexture: THREE.Texture;
 
-	capeImg: HTMLImageElement;
-	capeCanvas: HTMLCanvasElement;
-	capeTexture: THREE.Texture;
+	public capeImg: HTMLImageElement;
+	public capeCanvas: HTMLCanvasElement;
+	public capeTexture: THREE.Texture;
 
-	layer1Material: THREE.MeshBasicMaterial;
-	layer2Material: THREE.MeshBasicMaterial;
+	public layer1Material: THREE.MeshBasicMaterial;
+	public layer2Material: THREE.MeshBasicMaterial;
 
-	scene: THREE.Scene;
-	camera: THREE.PerspectiveCamera;
+	public scene: THREE.Scene;
+	public camera: THREE.PerspectiveCamera;
 
-	capeMaterial: THREE.MeshBasicMaterial;
-	renderer: THREE.WebGLRenderer;
+	public capeMaterial: THREE.MeshBasicMaterial;
+	public renderer: THREE.WebGLRenderer;
 
-	playerObject: PlayerObject;
+	public playerObject: PlayerObject;
 
 	constructor(options) {
 		this.domElement = options.domElement;
@@ -80,7 +80,6 @@ class SkinViewer {
 
 			if (this.detectModel) {
 				this.playerObject.skin.slim = isSlimSkin(this.skinCanvas);
-				console.log("Loading Slim: " + this.playerObject.skin.slim);
 			}
 
 			this.skinTexture.needsUpdate = true;
@@ -106,7 +105,7 @@ class SkinViewer {
 		if (options.width) this.width = options.width;
 		if (options.height) this.height = options.height;
 
-		let draw = () => {
+		const draw = () => {
 			if (this.disposed) return;
 			window.requestAnimationFrame(draw);
 			if (!this.animationPaused) {
@@ -120,13 +119,13 @@ class SkinViewer {
 		draw();
 	}
 
-	setSize(width, height) {
+	private setSize(width, height) {
 		this.camera.aspect = width / height;
 		this.camera.updateProjectionMatrix();
 		this.renderer.setSize(width, height);
 	}
 
-	dispose() {
+	private dispose() {
 		this.disposed = true;
 		this.domElement.removeChild(this.renderer.domElement);
 		this.renderer.dispose();

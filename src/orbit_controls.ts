@@ -10,26 +10,53 @@ const STATE = {
 	TOUCH_PAN: 5
 };
 
-const CHANGE_EVENT = { type: 'change' };
-const START_EVENT = { type: 'start' };
-const END_EVENT = { type: 'end' };
+const CHANGE_EVENT = { type: "change" };
+const START_EVENT = { type: "start" };
+const END_EVENT = { type: "end" };
 const EPS = 0.000001;
 
-/**
-* @author qiao / https://github.com/qiao
-* @author mrdoob / http://mrdoob.com
-* @author alteredq / http://alteredqualia.com/
-* @author WestLangley / http://github.com/WestLangley
-* @author erich666 / http://erichaines.com
-* @author nicolaspanel / http://github.com/nicolaspanel
-*
-* This set of controls performs orbiting, dollying (zooming), and panning.
-* Unlike TrackballControls, it maintains the "up" direction object.up (+Y by default).
-*    Orbit - left mouse / touch: one finger move
-*    Zoom - middle mouse, or mousewheel / touch: two finger spread or squish
-*    Pan - right mouse, or arrow keys / touch: three finger swipe
-*/
 export class OrbitControls extends THREE.EventDispatcher {
+	/**
+	 * @preserve
+	 * The code was originally from https://github.com/mrdoob/three.js/blob/d45a042cf962e9b1aa9441810ba118647b48aacb/examples/js/controls/OrbitControls.js
+	 */
+	/**
+	 * @license
+	 * Copyright (C) 2010-2017 three.js authors
+	 *
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:
+	 *
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 *
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 *
+	 *
+	 * @author qiao / https://github.com/qiao
+	 * @author mrdoob / http://mrdoob.com
+	 * @author alteredq / http://alteredqualia.com/
+	 * @author WestLangley / http://github.com/WestLangley
+	 * @author erich666 / http://erichaines.com
+	 */
+
+	// This set of controls performs orbiting, dollying (zooming), and panning.
+	// Unlike TrackballControls, it maintains the "up" direction object.up (+Y by default).
+	//
+	//    Orbit - left mouse / touch: one finger move
+	//    Zoom - middle mouse, or mousewheel / touch: two finger spread or squish
+	//    Pan - right mouse, or arrow keys / touch: three finger swipe
+
 	object: THREE.Camera;
 	domElement: HTMLElement | HTMLDocument;
 	window: Window;
@@ -72,7 +99,7 @@ export class OrbitControls extends THREE.EventDispatcher {
 
 	private rotateStart: THREE.Vector2;
 	private rotateEnd: THREE.Vector2;
-	private rotateDelta: THREE.Vector2
+	private rotateDelta: THREE.Vector2;
 
 	private panStart: THREE.Vector2;
 	private panEnd: THREE.Vector2;
@@ -224,8 +251,8 @@ export class OrbitControls extends THREE.EventDispatcher {
 			}
 
 			if (this.state !== STATE.NONE) {
-				document.addEventListener('mousemove', this.onMouseMove, false);
-				document.addEventListener('mouseup', this.onMouseUp, false);
+				document.addEventListener("mousemove", this.onMouseMove, false);
+				document.addEventListener("mouseup", this.onMouseUp, false);
 				this.dispatchEvent(START_EVENT);
 			}
 		};
@@ -274,12 +301,12 @@ export class OrbitControls extends THREE.EventDispatcher {
 				this.panStart.copy(this.panEnd);
 				this.update();
 			}
-		}
+		};
 
 		this.onMouseUp = (event: ThreeEvent) => {
 			if (this.enabled === false) return;
-			document.removeEventListener('mousemove', this.onMouseMove, false);
-			document.removeEventListener('mouseup', this.onMouseUp, false);
+			document.removeEventListener("mousemove", this.onMouseMove, false);
+			document.removeEventListener("mouseup", this.onMouseUp, false);
 
 			this.dispatchEvent(END_EVENT);
 			this.state = STATE.NONE;
@@ -312,19 +339,23 @@ export class OrbitControls extends THREE.EventDispatcher {
 				case this.keys.UP: {
 					this.pan(0, this.keyPanSpeed);
 					this.update();
-				} break;
+					break;
+				}
 				case this.keys.BOTTOM: {
 					this.pan(0, - this.keyPanSpeed);
 					this.update();
-				} break;
+					break;
+				}
 				case this.keys.LEFT: {
 					this.pan(this.keyPanSpeed, 0);
 					this.update();
-				} break;
+					break;
+				}
 				case this.keys.RIGHT: {
 					this.pan(- this.keyPanSpeed, 0);
 					this.update();
-				} break;
+					break;
+				}
 			}
 		};
 
@@ -339,25 +370,28 @@ export class OrbitControls extends THREE.EventDispatcher {
 
 					this.rotateStart.set(event.touches[0].pageX, event.touches[0].pageY);
 					this.state = STATE.TOUCH_ROTATE;
-				} break;
+					break;
+				}
 				// two-fingered touch: dolly
 				case 2: {
 					if (this.enableZoom === false) return;
 
-					var dx = event.touches[0].pageX - event.touches[1].pageX;
-					var dy = event.touches[0].pageY - event.touches[1].pageY;
+					const dx = event.touches[0].pageX - event.touches[1].pageX;
+					const dy = event.touches[0].pageY - event.touches[1].pageY;
 
-					var distance = Math.sqrt(dx * dx + dy * dy);
+					const distance = Math.sqrt(dx * dx + dy * dy);
 					this.dollyStart.set(0, distance);
 					this.state = STATE.TOUCH_DOLLY;
-				} break;
+					break;
+				}
 				// three-fingered touch: pan
 				case 3: {
 					if (this.enablePan === false) return;
 
 					this.panStart.set(event.touches[0].pageX, event.touches[0].pageY);
 					this.state = STATE.TOUCH_PAN;
-				} break;
+					break;
+				}
 				default: {
 					this.state = STATE.NONE;
 				}
@@ -383,7 +417,7 @@ export class OrbitControls extends THREE.EventDispatcher {
 					this.rotateEnd.set(event.touches[0].pageX, event.touches[0].pageY);
 					this.rotateDelta.subVectors(this.rotateEnd, this.rotateStart);
 
-					var element = this.domElement === document ? this.domElement.body : this.domElement;
+					const element = this.domElement === document ? this.domElement.body : this.domElement;
 
 					// rotating across whole screen goes 360 degrees around
 					this.rotateLeft(2 * Math.PI * this.rotateDelta.x / (element as any).clientWidth * this.rotateSpeed);
@@ -394,17 +428,18 @@ export class OrbitControls extends THREE.EventDispatcher {
 					this.rotateStart.copy(this.rotateEnd);
 
 					this.update();
-				} break;
+					break;
+				}
 				// two-fingered touch: dolly
 				case 2: {
 					if (this.enableZoom === false) return;
 					if (this.state !== STATE.TOUCH_DOLLY) return; // is this needed?...
 
-					//console.log( 'handleTouchMoveDolly' );
-					var dx = event.touches[0].pageX - event.touches[1].pageX;
-					var dy = event.touches[0].pageY - event.touches[1].pageY;
+					// console.log( "handleTouchMoveDolly" );
+					const dx = event.touches[0].pageX - event.touches[1].pageX;
+					const dy = event.touches[0].pageY - event.touches[1].pageY;
 
-					var distance = Math.sqrt(dx * dx + dy * dy);
+					const distance = Math.sqrt(dx * dx + dy * dy);
 
 					this.dollyEnd.set(0, distance);
 
@@ -418,7 +453,8 @@ export class OrbitControls extends THREE.EventDispatcher {
 
 					this.dollyStart.copy(this.dollyEnd);
 					this.update();
-				} break;
+					break;
+				}
 				// three-fingered touch: pan
 				case 3: {
 					if (this.enablePan === false) return;
@@ -428,7 +464,8 @@ export class OrbitControls extends THREE.EventDispatcher {
 					this.pan(this.panDelta.x, this.panDelta.y);
 					this.panStart.copy(this.panEnd);
 					this.update();
-				} break;
+					break;
+				}
 				default: {
 					this.state = STATE.NONE;
 				}
@@ -440,22 +477,22 @@ export class OrbitControls extends THREE.EventDispatcher {
 			if (this.enabled === false) return;
 			this.dispatchEvent(END_EVENT);
 			this.state = STATE.NONE;
-		}
+		};
 
-		this.onContextMenu = (event) => {
+		this.onContextMenu = event => {
 			event.preventDefault();
 		};
 
-		this.domElement.addEventListener('contextmenu', this.onContextMenu, false);
+		this.domElement.addEventListener("contextmenu", this.onContextMenu, false);
 
-		this.domElement.addEventListener('mousedown', this.onMouseDown, false);
-		this.domElement.addEventListener('wheel', this.onMouseWheel, false);
+		this.domElement.addEventListener("mousedown", this.onMouseDown, false);
+		this.domElement.addEventListener("wheel", this.onMouseWheel, false);
 
-		this.domElement.addEventListener('touchstart', this.onTouchStart, false);
-		this.domElement.addEventListener('touchend', this.onTouchEnd, false);
-		this.domElement.addEventListener('touchmove', this.onTouchMove, false);
+		this.domElement.addEventListener("touchstart", this.onTouchStart, false);
+		this.domElement.addEventListener("touchend", this.onTouchEnd, false);
+		this.domElement.addEventListener("touchmove", this.onTouchMove, false);
 
-		this.window.addEventListener('keydown', this.onKeyDown, false);
+		this.window.addEventListener("keydown", this.onKeyDown, false);
 
 		// force an update at start
 		this.update();
@@ -554,12 +591,12 @@ export class OrbitControls extends THREE.EventDispatcher {
 			// perspective
 			const position = this.object.position;
 			this.panInternalOffset.copy(position).sub(this.target);
-			var targetDistance = this.panInternalOffset.length();
+			let targetDistance = this.panInternalOffset.length();
 
 			// half of the fov is center to top of screen
 			targetDistance *= Math.tan((this.object.fov / 2) * Math.PI / 180.0);
 
-			// we actually don't use screenWidth, since perspective camera is fixed to screen height
+			// we actually don"t use screenWidth, since perspective camera is fixed to screen height
 			this.panLeft(2 * deltaX * targetDistance / (element as any).clientHeight, this.object.matrix);
 			this.panUp(2 * deltaY * targetDistance / (element as any).clientHeight, this.object.matrix);
 		} else if (this.object instanceof THREE.OrthographicCamera) {
@@ -568,7 +605,7 @@ export class OrbitControls extends THREE.EventDispatcher {
 			this.panUp(deltaY * (this.object.top - this.object.bottom) / this.object.zoom / (element as any).clientHeight, this.object.matrix);
 		} else {
 			// camera neither orthographic nor perspective
-			console.warn('WARNING: OrbitControls.js encountered an unknown camera type - pan disabled.');
+			console.warn("WARNING: OrbitControls.js encountered an unknown camera type - pan disabled.");
 			this.enablePan = false;
 		}
 	}
@@ -581,7 +618,7 @@ export class OrbitControls extends THREE.EventDispatcher {
 			this.object.updateProjectionMatrix();
 			this.zoomChanged = true;
 		} else {
-			console.warn('WARNING: OrbitControls.js encountered an unknown camera type - dolly/zoom disabled.');
+			console.warn("WARNING: OrbitControls.js encountered an unknown camera type - dolly/zoom disabled.");
 			this.enableZoom = false;
 		}
 	}
@@ -594,7 +631,7 @@ export class OrbitControls extends THREE.EventDispatcher {
 			this.object.updateProjectionMatrix();
 			this.zoomChanged = true;
 		} else {
-			console.warn('WARNING: OrbitControls.js encountered an unknown camera type - dolly/zoom disabled.');
+			console.warn("WARNING: OrbitControls.js encountered an unknown camera type - dolly/zoom disabled.");
 			this.enableZoom = false;
 		}
 	}
@@ -624,19 +661,19 @@ export class OrbitControls extends THREE.EventDispatcher {
 	}
 
 	dispose(): void {
-		this.domElement.removeEventListener('contextmenu', this.onContextMenu, false);
-		this.domElement.removeEventListener('mousedown', this.onMouseDown, false);
-		this.domElement.removeEventListener('wheel', this.onMouseWheel, false);
+		this.domElement.removeEventListener("contextmenu", this.onContextMenu, false);
+		this.domElement.removeEventListener("mousedown", this.onMouseDown, false);
+		this.domElement.removeEventListener("wheel", this.onMouseWheel, false);
 
-		this.domElement.removeEventListener('touchstart', this.onTouchStart, false);
-		this.domElement.removeEventListener('touchend', this.onTouchEnd, false);
-		this.domElement.removeEventListener('touchmove', this.onTouchMove, false);
+		this.domElement.removeEventListener("touchstart", this.onTouchStart, false);
+		this.domElement.removeEventListener("touchend", this.onTouchEnd, false);
+		this.domElement.removeEventListener("touchmove", this.onTouchMove, false);
 
-		document.removeEventListener('mousemove', this.onMouseMove, false);
-		document.removeEventListener('mouseup', this.onMouseUp, false);
+		document.removeEventListener("mousemove", this.onMouseMove, false);
+		document.removeEventListener("mouseup", this.onMouseUp, false);
 
-		this.window.removeEventListener('keydown', this.onKeyDown, false);
-		//this.dispatchEvent( { type: 'dispose' } ); // should this be added here?
+		this.window.removeEventListener("keydown", this.onKeyDown, false);
+		// this.dispatchEvent( { type: "dispose" } ); // should this be added here?
 	}
 
 	reset(): void {
@@ -654,16 +691,16 @@ export class OrbitControls extends THREE.EventDispatcher {
 
 	// backward compatibility
 	// get center(): THREE.Vector3 {
-	// 	console.warn('THREE.OrbitControls: .center has been renamed to .target');
+	// 	console.warn("THREE.OrbitControls: .center has been renamed to .target");
 	// 	return this.target;
 	// }
 	// get noZoom(): boolean {
-	// 	console.warn('THREE.OrbitControls: .noZoom has been deprecated. Use .enableZoom instead.');
+	// 	console.warn("THREE.OrbitControls: .noZoom has been deprecated. Use .enableZoom instead.");
 	// 	return !this.enableZoom;
 	// }
 
 	// set noZoom(value: boolean) {
-	// 	console.warn('THREE.OrbitControls: .noZoom has been deprecated. Use .enableZoom instead.');
+	// 	console.warn("THREE.OrbitControls: .noZoom has been deprecated. Use .enableZoom instead.");
 	// 	this.enableZoom = !value;
 	// }
 }
@@ -678,7 +715,7 @@ interface ThreeEvent extends Event {
 }
 
 export function createOrbitControls(skinViewer) {
-	let control = new OrbitControls(skinViewer.camera, skinViewer.renderer.domElement);
+	const control = new OrbitControls(skinViewer.camera, skinViewer.renderer.domElement);
 
 	// default configuration
 	control.enablePan = false;

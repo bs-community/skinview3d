@@ -1,19 +1,19 @@
 function copyImage(context, sX, sY, w, h, dX, dY, flipHorizontal) {
-	let imgData = context.getImageData(sX, sY, w, h);
+	const imgData = context.getImageData(sX, sY, w, h);
 	if (flipHorizontal) {
 		for (let y = 0; y < h; y++) {
 			for (let x = 0; x < (w / 2); x++) {
-				let index = (x + y * w) * 4;
-				let index2 = ((w - x - 1) + y * w) * 4;
-				let pA1 = imgData.data[index];
-				let pA2 = imgData.data[index + 1];
-				let pA3 = imgData.data[index + 2];
-				let pA4 = imgData.data[index + 3];
+				const index = (x + y * w) * 4;
+				const index2 = ((w - x - 1) + y * w) * 4;
+				const pA1 = imgData.data[index];
+				const pA2 = imgData.data[index + 1];
+				const pA3 = imgData.data[index + 2];
+				const pA4 = imgData.data[index + 3];
 
-				let pB1 = imgData.data[index2];
-				let pB2 = imgData.data[index2 + 1];
-				let pB3 = imgData.data[index2 + 2];
-				let pB4 = imgData.data[index2 + 3];
+				const pB1 = imgData.data[index2];
+				const pB2 = imgData.data[index2 + 1];
+				const pB3 = imgData.data[index2 + 2];
+				const pB4 = imgData.data[index2 + 3];
 
 				imgData.data[index] = pB1;
 				imgData.data[index + 1] = pB2;
@@ -31,10 +31,10 @@ function copyImage(context, sX, sY, w, h, dX, dY, flipHorizontal) {
 }
 
 function hasTransparency(context, x0, y0, w, h) {
-	let imgData = context.getImageData(x0, y0, w, h);
+	const imgData = context.getImageData(x0, y0, w, h);
 	for (let x = 0; x < w; x++) {
 		for (let y = 0; y < h; y++) {
-			let offset = (x + y * w) * 4;
+			const offset = (x + y * w) * 4;
 			if (imgData.data[offset + 3] !== 0xff) {
 				return true;
 			}
@@ -51,8 +51,8 @@ function fixOpaqueSkin(context, width) {
 	// Some ancient skins don't have transparent pixels (nor have helm).
 	// We have to make the helm area transparent, otherwise it will be rendered as black.
 	if (!hasTransparency(context, 0, 0, width, width / 2)) {
-		let scale = computeSkinScale(width);
-		let clearArea = (x, y, w, h) => context.clearRect(x * scale, y * scale, w * scale, h * scale);
+		const scale = computeSkinScale(width);
+		const clearArea = (x, y, w, h) => context.clearRect(x * scale, y * scale, w * scale, h * scale);
 		clearArea(40, 0, 8, 8); // Helm Top
 		clearArea(48, 0, 8, 8); // Helm Bottom
 		clearArea(32, 8, 8, 8); // Helm Right
@@ -63,8 +63,8 @@ function fixOpaqueSkin(context, width) {
 }
 
 function convertSkinTo1_8(context, width) {
-	let scale = computeSkinScale(width);
-	let copySkin = (sX, sY, w, h, dX, dY, flipHorizontal) => copyImage(context, sX * scale, sY * scale, w * scale, h * scale, dX * scale, dY * scale, flipHorizontal);
+	const scale = computeSkinScale(width);
+	const copySkin = (sX, sY, w, h, dX, dY, flipHorizontal) => copyImage(context, sX * scale, sY * scale, w * scale, h * scale, dX * scale, dY * scale, flipHorizontal);
 
 	fixOpaqueSkin(context, width);
 
@@ -88,13 +88,13 @@ function loadSkinToCanvas(canvas, image) {
 		if (image.width === 2 * image.height) {
 			isOldFormat = true;
 		} else {
-			throw `Bad skin size: ${image.width}x${image.height}`;
+			throw new Error(`Bad skin size: ${image.width}x${image.height}`);
 		}
 	}
 
-	let context = canvas.getContext("2d");
+	const context = canvas.getContext("2d");
 	if (isOldFormat) {
-		let sideLength = image.width;
+		const sideLength = image.width;
 		canvas.width = sideLength;
 		canvas.height = sideLength;
 		context.clearRect(0, 0, sideLength, sideLength);
@@ -111,17 +111,17 @@ function loadSkinToCanvas(canvas, image) {
 function loadCapeToCanvas(canvas, image) {
 	let isOldFormat = false;
 	if (image.width !== 2 * image.height) {
-		if (image.width * 17 == image.height * 22) {
+		if (image.width * 17 === image.height * 22) {
 			// width/height = 22/17
 			isOldFormat = true;
 		} else {
-			throw `Bad cape size: ${image.width}x${image.height}`;
+			throw new Error(`Bad cape size: ${image.width}x${image.height}`);
 		}
 	}
 
-	let context = canvas.getContext("2d");
+	const context = canvas.getContext("2d");
 	if (isOldFormat) {
-		let width = image.width * 64 / 22;
+		const width = image.width * 64 / 22;
 		canvas.width = width;
 		canvas.height = width / 2;
 	} else {
@@ -175,21 +175,21 @@ function isSlimSkin(canvasOrImage) {
 	// as transparent pixels are not allowed in the first layer.
 
 	if (canvasOrImage instanceof HTMLCanvasElement) {
-		let canvas = canvasOrImage;
-		let scale = computeSkinScale(canvas.width);
-		let context = canvas.getContext("2d");
-		let checkArea = (x, y, w, h) => hasTransparency(context, x * scale, y * scale, w * scale, h * scale);
+		const canvas = canvasOrImage;
+		const scale = computeSkinScale(canvas.width);
+		const context = canvas.getContext("2d");
+		const checkArea = (x, y, w, h) => hasTransparency(context, x * scale, y * scale, w * scale, h * scale);
 		return checkArea(50, 16, 2, 4) ||
 			checkArea(54, 20, 2, 12) ||
 			checkArea(42, 48, 2, 4) ||
 			checkArea(46, 52, 2, 12);
 	} else if (canvasOrImage instanceof HTMLImageElement) {
-		let image = canvasOrImage;
-		let canvas = document.createElement("canvas");
+		const image = canvasOrImage;
+		const canvas = document.createElement("canvas");
 		loadSkinToCanvas(canvas, image);
 		return isSlimSkin(canvas);
 	} else {
-		throw `Illegal argument: ${canvasOrImage}`;
+		throw new Error(`Illegal argument: ${canvasOrImage}`);
 	}
 }
 

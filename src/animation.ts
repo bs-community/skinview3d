@@ -1,4 +1,4 @@
-import { PlayerObject } from "./model"
+import { PlayerObject } from "./model";
 
 function invokeAnimation(animation: Animation, player: PlayerObject, time: number) {
 	if (animation instanceof CompositeAnimation) {
@@ -6,7 +6,7 @@ function invokeAnimation(animation: Animation, player: PlayerObject, time: numbe
 	} else if (animation instanceof Function) {
 		animation(player, time);
 	} else {
-		throw `Not an animation: ${animation}`;
+		throw new Error(`Not an animation: ${animation}`);
 	}
 }
 
@@ -18,10 +18,10 @@ type AnimationFn = (player: PlayerObject, time: number) => void;
 type Animation = AnimationFn | IAnimation;
 
 class AnimationHandle implements IAnimation {
-	animation: Animation;
-	paused = false;
-	speed: number = 1.0;
+	public paused = false;
+	public speed: number = 1.0;
 
+	private animation: Animation;
 	private _paused = false;
 	private _lastChange: number = null;
 	private _speed: number = 1.0;
@@ -36,7 +36,7 @@ class AnimationHandle implements IAnimation {
 			this._lastChange = time;
 			this._lastChangeX = 0;
 		} else if (this.paused !== this._paused || this.speed !== this._speed) {
-			let dt = time - this._lastChange;
+			const dt = time - this._lastChange;
 			if (this._paused === false) {
 				this._lastChangeX += dt * this._speed;
 			}
@@ -45,8 +45,8 @@ class AnimationHandle implements IAnimation {
 			this._lastChange = time;
 		}
 		if (this.paused === false) {
-			let dt = time - this._lastChange;
-			let x = this._lastChangeX + this.speed * dt;
+			const dt = time - this._lastChange;
+			const x = this._lastChangeX + this.speed * dt;
 			invokeAnimation(this.animation, player, x);
 		}
 	}
@@ -78,8 +78,8 @@ class CompositeAnimation {
 	}
 }
 
-let WalkingAnimation: Animation = (player: PlayerObject, time: number) => {
-	let skin = player.skin;
+const WalkingAnimation: Animation = (player: PlayerObject, time: number) => {
+	const skin = player.skin;
 
 	// Multiply by animation's natural speed
 	time *= 8;
@@ -91,7 +91,7 @@ let WalkingAnimation: Animation = (player: PlayerObject, time: number) => {
 	// Arm swing
 	skin.leftArm.rotation.x = Math.sin(time + Math.PI) * 0.5;
 	skin.rightArm.rotation.x = Math.sin(time) * 0.5;
-	let basicArmRotationZ = Math.PI * 0.02;
+	const basicArmRotationZ = Math.PI * 0.02;
 	skin.leftArm.rotation.z = Math.cos(time) * 0.03 + basicArmRotationZ;
 	skin.rightArm.rotation.z = Math.cos(time + Math.PI) * 0.03 - basicArmRotationZ;
 
@@ -100,12 +100,12 @@ let WalkingAnimation: Animation = (player: PlayerObject, time: number) => {
 	skin.head.rotation.x = Math.sin(time / 5) * 0.1;
 
 	// Always add an angle for cape around the x axis
-	let basicCapeRotationX = Math.PI * 0.06;
+	const basicCapeRotationX = Math.PI * 0.06;
 	player.cape.rotation.x = Math.sin(time / 1.5) * 0.06 + basicCapeRotationX;
 };
 
-let RunningAnimation: Animation = (player: PlayerObject, time: number) => {
-	let skin = player.skin;
+const RunningAnimation: Animation = (player: PlayerObject, time: number) => {
+	const skin = player.skin;
 
 	time *= 15;
 
@@ -116,7 +116,7 @@ let RunningAnimation: Animation = (player: PlayerObject, time: number) => {
 	// Arm swing
 	skin.leftArm.rotation.x = Math.cos(time) * 1.5;
 	skin.rightArm.rotation.x = Math.cos(time + Math.PI) * 1.5;
-	let basicArmRotationZ = Math.PI * 0.1;
+	const basicArmRotationZ = Math.PI * 0.1;
 	skin.leftArm.rotation.z = Math.cos(time) * 0.1 + basicArmRotationZ;
 	skin.rightArm.rotation.z = Math.cos(time + Math.PI) * 0.1 - basicArmRotationZ;
 
@@ -130,14 +130,14 @@ let RunningAnimation: Animation = (player: PlayerObject, time: number) => {
 	// Apply higher swing frequency, lower amplitude,
 	// and greater basic rotation around x axis,
 	// to cape when running.
-	let basicCapeRotationX = Math.PI * 0.3;
+	const basicCapeRotationX = Math.PI * 0.3;
 	player.cape.rotation.x = Math.sin(time * 2) * 0.1 + basicCapeRotationX;
 
 	// What about head shaking?
 	// You shouldn't glance right and left when running dude :P
 };
 
-let RotatingAnimation: Animation = (player: PlayerObject, time: number) => {
+const RotatingAnimation: Animation = (player: PlayerObject, time: number) => {
 	player.rotation.y = time;
 };
 
