@@ -6,13 +6,12 @@
 	"main": "build/skinview3d.js",
 	"typings": "types/skinview3d.d.ts",
 	"scripts": {
-		"build": "rollup -c tools/rollup.module.js && rollup -c tools/rollup.browser.js && rollup -c tools/rollup.browser.min.js",
+		"build": "tsc --p tsconfig.json && rollup -c tools/rollup.module.js && rollup -c tools/rollup.browser.js && rollup -c tools/rollup.browser.min.js",
 		"prepare": "npm test && rimraf build && npm run build",
 		"lint": "eslint src/** tools/** && tslint -c tslint.json types/**.ts",
 		"dev": "npm-run-all --parallel watch serve",
 		"watch": "rollup -w -c tools/rollup.browser.js",
 		"test": "karma start && npm run lint",
-		"buildtest": "tsc --p tsconfig.json && rollup -c tools/rollup.browser.js",
 		"serve": "ws"
 	},
 	"repository": {
@@ -62,6 +61,7 @@
 		"tslint": "^5.10.0",
 		"typescript": "^2.8.3",
 		"uglify-es": "^3.3.10",
-		"url-loader": "^1.0.1"
+		"url-loader": "^1.0.1",
+		"webpack": "^4.15.1"
 	}
 }
