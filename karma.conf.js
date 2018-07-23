@@ -7,11 +7,11 @@ module.exports = function (config) {
 		basePath: "",
 		frameworks: ["mocha"],
 		files: [
-			"test/test.js"
+			"test/test.ts"
 		],
 		exclude: [],
 		preprocessors: {
-			"test/test.js": ["webpack"]
+			"test/test.ts": ["webpack"]
 		},
 		webpack: {
 			mode: "development",
@@ -20,8 +20,18 @@ module.exports = function (config) {
 					{
 						test: /\.png$/i,
 						loader: "url-loader"
+					},
+					{
+						test: /\.ts$/,
+						loader: "ts-loader",
+						options: {
+							transpileOnly: true
+						}
 					}
 				]
+			},
+			resolve: {
+				extensions: [".ts", ".js", ".json"]
 			}
 		},
 		webpackMiddleware: {
