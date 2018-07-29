@@ -5,7 +5,14 @@
 	<meta charset="utf-8">
 	<title>skinview3d</title>
 	<link href="https://fonts.googleapis.com/css?family=Archivo+Black" rel="stylesheet">
-
+	<style>
+		html,
+		body {
+			margin: 0;
+			padding: 0;
+			background-color: #1e1e1e;
+		}
+	</style>
 </head>
 
 <body>
@@ -14,13 +21,13 @@
 
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/three.js/92/three.min.js"></script>
 
-	<script type="text/javascript" src="../build/skinview3d.js"></script>
+	<script type="text/javascript" src="../build/skinview3d.browser.js"></script>
 
 	<script>
 		let skinViewer = new skinview3d.SkinViewer({
 			domElement: document.getElementById("skin_container"),
-			width: 400,
-			height: 400,
+			width: 900,
+			height: 900,
 			skinUrl: "./1_8_texturemap_redux.png"
 		});
 
@@ -32,7 +39,7 @@
 		skinViewer.animation = new skinview3d.CompositeAnimation();
 
 		let walk = skinViewer.animation.add(skinview3d.WalkingAnimation);
-		//walk.speed = 1.5;
+		walk.speed = 1.5;
 
 	</script>
 
