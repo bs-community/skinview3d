@@ -45,7 +45,7 @@ module.exports = function (config) {
 		colors: true,
 		logLevel: config.LOG_WARN,
 		autoWatch: false,
-		browsers: [process.env.TRAVIS ? "ChromeHeadlessNoSandbox" : "ChromeHeadless"],
+		browsers: ["ChromeHeadlessNoSandbox"],
 		customLaunchers: {
 			ChromeHeadlessNoSandbox: {
 				base: "ChromeHeadless",
