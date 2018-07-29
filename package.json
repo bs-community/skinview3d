@@ -6,9 +6,10 @@
 	"main": "build/skinview3d.js",
 	"typings": "types/skinview3d.d.ts",
 	"scripts": {
-		"build": "tsc --p tsconfig.json && rollup -c tools/rollup.module.js && rollup -c tools/rollup.browser.js && rollup -c tools/rollup.browser.min.js",
+		"build": "npm run compile && rollup -c tools/rollup.module.js && rollup -c tools/rollup.browser.js && rollup -c tools/rollup.browser.min.js",
 		"lint": "tslint -c tslint.json src/**.ts",
-		"dev": "npm-run-all --parallel watch serve",
+		"compile": "tsc --p tsconfig.json",
+		"dev": "npm run compile && npm-run-all --parallel watch serve",
 		"watch": "rollup -w -c tools/rollup.browser.js",
 		"test": "karma start && npm run lint",
 		"serve": "ws"
