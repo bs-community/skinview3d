@@ -61,3 +61,4 @@ build/
 _ignore/
 dist/
 .DS_Store
+.rpt2_cache

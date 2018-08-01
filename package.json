@@ -5,11 +5,10 @@
 	"module": "build/skinview3d.module.js",
 	"main": "build/skinview3d.js",
 	"scripts": {
-		"build": "npm run compile && rollup -c tools/rollup.module.js && rollup -c tools/rollup.browser.js && rollup -c tools/rollup.browser.min.js",
+		"build": "rollup -c",
 		"lint": "tslint -c tslint.json src/**.ts",
-		"compile": "tsc --p tsconfig.json",
-		"dev": "npm run compile && npm-run-all --parallel watch serve",
-		"watch": "rollup -w -c tools/rollup.browser.js",
+		"dev": "npm-run-all --parallel watch serve",
+		"watch": "rollup -w -c",
 		"test": "karma start && npm run lint",
 		"serve": "ws"
 	},
@@ -54,6 +53,7 @@
 		"rollup": "^0.62.0",
 		"rollup-plugin-license": "^0.7.0",
 		"rollup-plugin-node-resolve": "^3.3.0",
+		"rollup-plugin-typescript2": "^0.16.1",
 		"rollup-plugin-uglify": "^4.0.0",
 		"ts-loader": "^4.4.2",
 		"tslint": "^5.10.0",
