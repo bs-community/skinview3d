@@ -2,8 +2,8 @@
 	"name": "skinview3d",
 	"version": "1.1.0-alpha.4",
 	"description": "Three.js powered Minecraft skin viewer",
-	"module": "build/skinview3d.module.js",
-	"main": "build/skinview3d.js",
+	"module": "dist/skinview3d.module.js",
+	"main": "dist/skinview3d.js",
 	"scripts": {
 		"build": "rollup -c",
 		"lint": "tslint -c tslint.json src/**.ts",
@@ -29,8 +29,7 @@
 	},
 	"homepage": "https://github.com/bs-community/skinview3d",
 	"files": [
-		"types",
-		"build"
+		"dist"
 	],
 	"dependencies": {
 		"three": "^0.94.0"
