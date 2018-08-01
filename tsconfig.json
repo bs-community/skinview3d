@@ -1,15 +1,10 @@
 {
-	"compileOnSave": false,
 	"compilerOptions": {
-		"outDir": "./build/",
-		"sourceMap": true,
 		"module": "es2015",
 		"target": "es5",
-		"typeRoots": [
-			"node_modules/@types"
-		],
+		"declaration": true,
 		"lib": [
-			"es2017",
+			"es2015",
 			"dom"
 		]
 	},
