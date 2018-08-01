@@ -10,16 +10,16 @@ function invokeAnimation(animation: Animation, player: PlayerObject, time: numbe
 	}
 }
 
-interface IAnimation {
+export interface IAnimation {
 	play(player: PlayerObject, time: number): void;
 }
 
-interface AnimationFn {
+export interface AnimationFn {
 	(player: PlayerObject, time: number): void
 }
-type Animation = AnimationFn | IAnimation;
+export type Animation = AnimationFn | IAnimation;
 
-class AnimationHandle implements IAnimation {
+export class AnimationHandle implements IAnimation {
 	public paused = false;
 	public speed: number = 1.0;
 
