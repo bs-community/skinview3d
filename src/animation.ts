@@ -14,7 +14,9 @@ interface IAnimation {
 	play(player: PlayerObject, time: number): void;
 }
 
-type AnimationFn = (player: PlayerObject, time: number) => void;
+interface AnimationFn {
+	(player: PlayerObject, time: number): void
+}
 type Animation = AnimationFn | IAnimation;
 
 class AnimationHandle implements IAnimation {
