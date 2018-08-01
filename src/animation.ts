@@ -25,9 +25,9 @@ class AnimationHandle implements IAnimation {
 
 	private animation: Animation;
 	private _paused = false;
-	private _lastChange: number = null;
+	private _lastChange: number | null = null;
 	private _speed: number = 1.0;
-	private _lastChangeX: number = null;
+	private _lastChangeX: number | null = null;
 
 	constructor(animation: Animation) {
 		this.animation = animation;
@@ -40,7 +40,7 @@ class AnimationHandle implements IAnimation {
 		} else if (this.paused !== this._paused || this.speed !== this._speed) {
 			const dt = time - this._lastChange;
 			if (this._paused === false) {
-				this._lastChangeX += dt * this._speed;
+				this._lastChangeX! += dt * this._speed;
 			}
 			this._paused = this.paused;
 			this._speed = this.speed;
@@ -48,7 +48,7 @@ class AnimationHandle implements IAnimation {
 		}
 		if (this.paused === false) {
 			const dt = time - this._lastChange;
-			const x = this._lastChangeX + this.speed * dt;
+			const x = this._lastChangeX! + this.speed * dt;
 			invokeAnimation(this.animation, player, x);
 		}
 	}
