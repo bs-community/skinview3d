@@ -4,7 +4,6 @@
 	"description": "Three.js powered Minecraft skin viewer",
 	"module": "build/skinview3d.module.js",
 	"main": "build/skinview3d.js",
-	"typings": "types/skinview3d.d.ts",
 	"scripts": {
 		"build": "npm run compile && rollup -c tools/rollup.module.js && rollup -c tools/rollup.browser.js && rollup -c tools/rollup.browser.min.js",
 		"lint": "tslint -c tslint.json src/**.ts",
