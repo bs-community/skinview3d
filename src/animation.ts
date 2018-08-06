@@ -14,9 +14,7 @@ export interface IAnimation {
 	play(player: PlayerObject, time: number): void;
 }
 
-export interface AnimationFn {
-	(player: PlayerObject, time: number): void
-}
+export type AnimationFn = (player: PlayerObject, time: number) => void;
 export type Animation = AnimationFn | IAnimation;
 
 export class AnimationHandle implements IAnimation {

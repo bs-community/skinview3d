@@ -6,7 +6,7 @@
 	"main": "dist/skinview3d.js",
 	"scripts": {
 		"build": "rollup -c",
-		"lint": "tslint -c tslint.json src/**.ts",
+		"lint": "tslint --formatters-dir ./node_modules/tslint-formatter-beauty -t beauty -p .",
 		"dev": "npm-run-all --parallel watch serve",
 		"watch": "rollup -w -c",
 		"test": "karma start && npm run lint",
@@ -56,6 +56,7 @@
 		"rollup-plugin-uglify": "^4.0.0",
 		"ts-loader": "^4.4.2",
 		"tslint": "^5.10.0",
+		"tslint-formatter-beauty": "^3.0.0-beta.2",
 		"typescript": "^2.8.3",
 		"uglify-es": "^3.3.10",
 		"url-loader": "^1.0.1",
