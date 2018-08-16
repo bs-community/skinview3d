@@ -1,4 +1,4 @@
-function copyImage(context, sX, sY, w, h, dX, dY, flipHorizontal) {
+function copyImage(context: CanvasRenderingContext2D, sX: number, sY: number, w: number, h: number, dX: number, dY: number, flipHorizontal: boolean) {
 	const imgData = context.getImageData(sX, sY, w, h);
 	if (flipHorizontal) {
 		for (let y = 0; y < h; y++) {
@@ -30,7 +30,7 @@ function copyImage(context, sX, sY, w, h, dX, dY, flipHorizontal) {
 	context.putImageData(imgData, dX, dY);
 }
 
-function hasTransparency(context, x0, y0, w, h) {
+function hasTransparency(context: CanvasRenderingContext2D, x0: number, y0: number, w: number, h: number) {
 	const imgData = context.getImageData(x0, y0, w, h);
 	for (let x = 0; x < w; x++) {
 		for (let y = 0; y < h; y++) {
@@ -43,11 +43,11 @@ function hasTransparency(context, x0, y0, w, h) {
 	return false;
 }
 
-function computeSkinScale(width) {
+function computeSkinScale(width: number) {
 	return width / 64.0;
 }
 
-function fixOpaqueSkin(context, width) {
+function fixOpaqueSkin(context: CanvasRenderingContext2D, width: number) {
 	// Some ancient skins don't have transparent pixels (nor have helm).
 	// We have to make the helm area transparent, otherwise it will be rendered as black.
 	if (!hasTransparency(context, 0, 0, width, width / 2)) {
@@ -62,7 +62,7 @@ function fixOpaqueSkin(context, width) {
 	}
 }
 
-function convertSkinTo1_8(context, width) {
+function convertSkinTo1_8(context: CanvasRenderingContext2D, width: number) {
 	const scale = computeSkinScale(width);
 	const copySkin = (sX, sY, w, h, dX, dY, flipHorizontal) => copyImage(context, sX * scale, sY * scale, w * scale, h * scale, dX * scale, dY * scale, flipHorizontal);
 
@@ -82,7 +82,7 @@ function convertSkinTo1_8(context, width) {
 	copySkin(52, 20, 4, 12, 44, 52, true); // Back Arm
 }
 
-export function loadSkinToCanvas(canvas, image) {
+export function loadSkinToCanvas(canvas: HTMLCanvasElement, image: HTMLImageElement) {
 	let isOldFormat = false;
 	if (image.width !== image.height) {
 		if (image.width === 2 * image.height) {
@@ -92,7 +92,7 @@ export function loadSkinToCanvas(canvas, image) {
 		}
 	}
 
-	const context = canvas.getContext("2d");
+	const context = canvas.getContext("2d")!;
 	if (isOldFormat) {
 		const sideLength = image.width;
 		canvas.width = sideLength;
@@ -108,7 +108,7 @@ export function loadSkinToCanvas(canvas, image) {
 	}
 }
 
-export function loadCapeToCanvas(canvas, image) {
+export function loadCapeToCanvas(canvas: HTMLCanvasElement, image: HTMLImageElement) {
 	let isOldFormat = false;
 	if (image.width !== 2 * image.height) {
 		if (image.width * 17 === image.height * 22) {
@@ -119,7 +119,7 @@ export function loadCapeToCanvas(canvas, image) {
 		}
 	}
 
-	const context = canvas.getContext("2d");
+	const context = canvas.getContext("2d")!;
 	if (isOldFormat) {
 		const width = image.width * 64 / 22;
 		canvas.width = width;
@@ -132,7 +132,7 @@ export function loadCapeToCanvas(canvas, image) {
 	context.drawImage(image, 0, 0, image.width, image.height);
 }
 
-export function isSlimSkin(canvasOrImage) {
+export function isSlimSkin(canvasOrImage: HTMLCanvasElement | HTMLImageElement) {
 	// Detects whether the skin is default or slim.
 	//
 	// The right arm area of *default* skins:
@@ -177,7 +177,7 @@ export function isSlimSkin(canvasOrImage) {
 	if (canvasOrImage instanceof HTMLCanvasElement) {
 		const canvas = canvasOrImage;
 		const scale = computeSkinScale(canvas.width);
-		const context = canvas.getContext("2d");
+		const context = canvas.getContext("2d")!;
 		const checkArea = (x, y, w, h) => hasTransparency(context, x * scale, y * scale, w * scale, h * scale);
 		return checkArea(50, 16, 2, 4) ||
 			checkArea(54, 20, 2, 12) ||
@@ -188,7 +188,5 @@ export function isSlimSkin(canvasOrImage) {
 		const canvas = document.createElement("canvas");
 		loadSkinToCanvas(canvas, image);
 		return isSlimSkin(canvas);
-	} else {
-		throw new Error(`Illegal argument: ${canvasOrImage}`);
 	}
 }
