@@ -51,13 +51,11 @@ export class SkinObject extends THREE.Group {
 	rightLeg: THREE.Group;
 	leftLeg: THREE.Group;
 
-	private modelListeners: Array<() => void>;
+	private modelListeners: Array<() => void> = []; // called when model(slim property) is changed
 	private _slim = false;
 
 	constructor(layer1Material: THREE.MeshBasicMaterial, layer2Material: THREE.MeshBasicMaterial) {
 		super();
-
-		this.modelListeners = []; // called when model(slim property) is changed
 
 		// Head
 		this.head = new THREE.Group();
