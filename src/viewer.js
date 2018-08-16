@@ -7,7 +7,7 @@ class SkinViewer {
 	constructor(options) {
 		this.domElement = options.domElement;
 		this.animation = options.animation || null;
-		this.detectModel = options.animation !== false; // true by default
+		this.detectModel = options.detectModel !== false; // true by default
 		this.animationPaused = false;
 		this.animationTime = 0;
 		this.disposed = false;
