@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { SkinViewer } from "./viewer";
 
 const STATE = {
 	NONE: - 1,
@@ -714,7 +715,7 @@ interface ThreeEvent extends Event {
 	keyCode: number;
 }
 
-export function createOrbitControls(skinViewer) {
+export function createOrbitControls(skinViewer : SkinViewer) {
 	const control = new OrbitControls(skinViewer.camera, skinViewer.renderer.domElement);
 
 	// default configuration
