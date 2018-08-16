@@ -715,7 +715,7 @@ interface ThreeEvent extends Event {
 	keyCode: number;
 }
 
-export function createOrbitControls(skinViewer : SkinViewer) {
+export function createOrbitControls(skinViewer: SkinViewer) {
 	const control = new OrbitControls(skinViewer.camera, skinViewer.renderer.domElement);
 
 	// default configuration
