@@ -41,7 +41,7 @@ function setVertices(box: THREE.BoxGeometry, top: Array<THREE.Vector2>, bottom: 
 // why is this a global constant?
 const esp = 0.002;
 
-class SkinObject extends THREE.Group {
+export class SkinObject extends THREE.Group {
 
 	// body parts
 	head: THREE.Group;
@@ -348,7 +348,7 @@ class SkinObject extends THREE.Group {
 	}
 }
 
-class CapeObject extends THREE.Group {
+export class CapeObject extends THREE.Group {
 
 	cape: THREE.Mesh;
 
@@ -373,7 +373,7 @@ class CapeObject extends THREE.Group {
 	}
 }
 
-class PlayerObject extends THREE.Group {
+export class PlayerObject extends THREE.Group {
 
 	skin: SkinObject;
 	cape: CapeObject;
@@ -393,5 +393,3 @@ class PlayerObject extends THREE.Group {
 		this.add(this.cape);
 	}
 }
-
-export { SkinObject, CapeObject, PlayerObject };

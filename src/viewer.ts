@@ -3,7 +3,7 @@ import { PlayerObject } from "./model";
 import { invokeAnimation } from "./animation";
 import { loadSkinToCanvas, loadCapeToCanvas, isSlimSkin } from "./utils";
 
-class SkinViewer {
+export class SkinViewer {
 
 	public domElement: HTMLElement;
 	public animation: Animation;
@@ -165,5 +165,3 @@ class SkinViewer {
 		this.setSize(this.width, newHeight);
 	}
 }
-
-export { SkinViewer };

@@ -82,7 +82,7 @@ function convertSkinTo1_8(context, width) {
 	copySkin(52, 20, 4, 12, 44, 52, true); // Back Arm
 }
 
-function loadSkinToCanvas(canvas, image) {
+export function loadSkinToCanvas(canvas, image) {
 	let isOldFormat = false;
 	if (image.width !== image.height) {
 		if (image.width === 2 * image.height) {
@@ -108,7 +108,7 @@ function loadSkinToCanvas(canvas, image) {
 	}
 }
 
-function loadCapeToCanvas(canvas, image) {
+export function loadCapeToCanvas(canvas, image) {
 	let isOldFormat = false;
 	if (image.width !== 2 * image.height) {
 		if (image.width * 17 === image.height * 22) {
@@ -132,7 +132,7 @@ function loadCapeToCanvas(canvas, image) {
 	context.drawImage(image, 0, 0, image.width, image.height);
 }
 
-function isSlimSkin(canvasOrImage) {
+export function isSlimSkin(canvasOrImage) {
 	// Detects whether the skin is default or slim.
 	//
 	// The right arm area of *default* skins:
@@ -192,5 +192,3 @@ function isSlimSkin(canvasOrImage) {
 		throw new Error(`Illegal argument: ${canvasOrImage}`);
 	}
 }
-
-export { isSlimSkin, loadSkinToCanvas, loadCapeToCanvas };

@@ -1,6 +1,6 @@
 import { PlayerObject } from "./model";
 
-function invokeAnimation(animation: Animation, player: PlayerObject, time: number) {
+export function invokeAnimation(animation: Animation, player: PlayerObject, time: number) {
 	if (animation instanceof CompositeAnimation) {
 		animation.play(player, time);
 	} else if (animation instanceof Function) {
@@ -60,7 +60,7 @@ export class AnimationHandle implements IAnimation {
 	}
 }
 
-class CompositeAnimation {
+export class CompositeAnimation {
 
 	handles: Set<AnimationHandle>;
 
@@ -78,7 +78,7 @@ class CompositeAnimation {
 	}
 }
 
-const WalkingAnimation: Animation = (player: PlayerObject, time: number) => {
+export const WalkingAnimation: Animation = (player: PlayerObject, time: number) => {
 	const skin = player.skin;
 
 	// Multiply by animation's natural speed
@@ -104,7 +104,7 @@ const WalkingAnimation: Animation = (player: PlayerObject, time: number) => {
 	player.cape.rotation.x = Math.sin(time / 1.5) * 0.06 + basicCapeRotationX;
 };
 
-const RunningAnimation: Animation = (player: PlayerObject, time: number) => {
+export const RunningAnimation: Animation = (player: PlayerObject, time: number) => {
 	const skin = player.skin;
 
 	time *= 15;
@@ -137,14 +137,6 @@ const RunningAnimation: Animation = (player: PlayerObject, time: number) => {
 	// You shouldn't glance right and left when running dude :P
 };
 
-const RotatingAnimation: Animation = (player: PlayerObject, time: number) => {
+export const RotatingAnimation: Animation = (player: PlayerObject, time: number) => {
 	player.rotation.y = time;
-};
-
-export {
-	CompositeAnimation,
-	invokeAnimation,
-	WalkingAnimation,
-	RunningAnimation,
-	RotatingAnimation
 };
