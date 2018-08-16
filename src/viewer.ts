@@ -7,7 +7,7 @@ export class SkinViewer {
 
 	public domElement: HTMLElement;
 	public animation: Animation;
-	public detectModel: boolean = false;
+	public detectModel: boolean = true;
 	public animationPaused: boolean = false;
 	public animationTime: number = 0;
 	public disposed: boolean = false;
@@ -34,10 +34,9 @@ export class SkinViewer {
 	constructor(options) {
 		this.domElement = options.domElement;
 		this.animation = options.animation || null;
-		this.detectModel = options.animation !== false; // true by default
-		this.animationPaused = false;
-		this.animationTime = 0;
-		this.disposed = false;
+		if (options.detectModel === false) {
+			this.detectModel = false;
+		}
 
 		// texture
 		this.skinImg = new Image();
