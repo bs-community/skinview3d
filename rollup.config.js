@@ -9,7 +9,7 @@ const base = {
 		{
 			format: "umd",
 			name: "skinview3d",
-			file: "dist/skinview3d.browser.js",
+			file: "dist/skinview3d.js",
 			indent: "\t",
 			globals: {
 				"three": "THREE"
@@ -40,7 +40,7 @@ const base = {
 export default [
 	base,
 	Object.assign({}, base, {
-		output: Object.assign({}, base.output[0], { file: "dist/skinview3d.browser.min.js" }),
+		output: Object.assign({}, base.output[0], { file: "dist/skinview3d.min.js" }),
 		plugins: (() => {
 			const plugin = base.plugins.slice();
 			plugin.splice(1, 0, uglify());
