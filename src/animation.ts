@@ -1,12 +1,11 @@
 import { PlayerObject } from "./model";
 
 export function invokeAnimation(animation: Animation, player: PlayerObject, time: number) {
-	if (animation instanceof CompositeAnimation) {
-		animation.play(player, time);
-	} else if (animation instanceof Function) {
+	if (animation instanceof Function) {
 		animation(player, time);
 	} else {
-		throw new Error(`Not an animation: ${animation}`);
+		// must be IAnimation here
+		animation.play(player, time);
 	}
 }
 
@@ -78,7 +77,7 @@ export class CompositeAnimation {
 	}
 }
 
-export const WalkingAnimation: Animation = (player: PlayerObject, time: number) => {
+export const WalkingAnimation: Animation = (player, time) => {
 	const skin = player.skin;
 
 	// Multiply by animation's natural speed
@@ -104,7 +103,7 @@ export const WalkingAnimation: Animation = (player: PlayerObject, time: number) 
 	player.cape.rotation.x = Math.sin(time / 1.5) * 0.06 + basicCapeRotationX;
 };
 
-export const RunningAnimation: Animation = (player: PlayerObject, time: number) => {
+export const RunningAnimation: Animation = (player, time) => {
 	const skin = player.skin;
 
 	time *= 15;
@@ -137,6 +136,6 @@ export const RunningAnimation: Animation = (player: PlayerObject, time: number) 
 	// You shouldn't glance right and left when running dude :P
 };
 
-export const RotatingAnimation: Animation = (player: PlayerObject, time: number) => {
+export const RotatingAnimation: Animation = (player, time) => {
 	player.rotation.y = time;
 };
