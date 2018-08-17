@@ -1,5 +1,13 @@
 import { PlayerObject } from "./model";
 
+export interface IAnimation {
+	play(player: PlayerObject, time: number): void;
+}
+
+export type AnimationFn = (player: PlayerObject, time: number) => void;
+
+export type Animation = AnimationFn | IAnimation;
+
 export function invokeAnimation(animation: Animation, player: PlayerObject, time: number) {
 	if (animation instanceof Function) {
 		animation(player, time);
@@ -9,18 +17,21 @@ export function invokeAnimation(animation: Animation, player: PlayerObject, time
 	}
 }
 
-export interface IAnimation {
-	play(player: PlayerObject, time: number): void;
+// This interface is used to control animations
+export interface AnimationHandle {
+	paused: boolean;
+	speed: number;
+	readonly animation: Animation;
+
+	reset(): void;
+	remove(): void;
 }
 
-export type AnimationFn = (player: PlayerObject, time: number) => void;
-export type Animation = AnimationFn | IAnimation;
-
-export class AnimationHandle implements IAnimation {
+class AnimationWrapper implements AnimationHandle, IAnimation {
 	public paused = false;
 	public speed: number = 1.0;
+	public readonly animation: Animation;
 
-	private animation: Animation;
 	private _paused = false;
 	private _lastChange: number | null = null;
 	private _speed: number = 1.0;
@@ -54,24 +65,22 @@ export class AnimationHandle implements IAnimation {
 		this._lastChange = null;
 	}
 
-	remove(animHandle: AnimationHandle) {
+	remove() {
 		// stub get's overriden
 	}
 }
 
-export class CompositeAnimation {
+export class CompositeAnimation implements IAnimation {
 
-	handles: Set<AnimationHandle>;
+	readonly handles: Set<AnimationHandle & IAnimation> = new Set();
 
-	constructor() {
-		this.handles = new Set();
-	}
-	add(animation: Animation) {
-		const handle = new AnimationHandle(animation);
+	add(animation: Animation): AnimationHandle {
+		const handle = new AnimationWrapper(animation);
 		handle.remove = () => this.handles.delete(handle);
 		this.handles.add(handle);
 		return handle;
 	}
+
 	play(player: PlayerObject, time: number) {
 		this.handles.forEach(handle => handle.play(player, time));
 	}

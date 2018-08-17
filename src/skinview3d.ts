@@ -15,8 +15,13 @@ export {
 } from "./orbit_controls";
 
 export {
+	IAnimation,
+	AnimationFn,
+	Animation,
 	invokeAnimation,
+	AnimationHandle,
 	CompositeAnimation,
+
 	WalkingAnimation,
 	RunningAnimation,
 	RotatingAnimation
