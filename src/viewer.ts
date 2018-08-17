@@ -3,35 +3,44 @@ import { PlayerObject } from "./model";
 import { invokeAnimation } from "./animation";
 import { loadSkinToCanvas, loadCapeToCanvas, isSlimSkin } from "./utils";
 
+export interface SkinViewerOptions {
+	domElement: Node;
+	animation?: Animation;
+	skinUrl?: string;
+	capeUrl?: string;
+	width?: number;
+	height?: number;
+	detectModel?: boolean;
+}
+
 export class SkinViewer {
 
-	public domElement: HTMLElement;
-	public animation: Animation;
+	public readonly domElement: Node;
+	public animation: Animation | null;
 	public detectModel: boolean = true;
 	public animationPaused: boolean = false;
 	public animationTime: number = 0;
 	public disposed: boolean = false;
 
-	public skinImg: HTMLImageElement;
-	public skinCanvas: HTMLCanvasElement;
-	public skinTexture: THREE.Texture;
+	public readonly skinImg: HTMLImageElement;
+	public readonly skinCanvas: HTMLCanvasElement;
+	public readonly skinTexture: THREE.Texture;
 
-	public capeImg: HTMLImageElement;
-	public capeCanvas: HTMLCanvasElement;
-	public capeTexture: THREE.Texture;
+	public readonly capeImg: HTMLImageElement;
+	public readonly capeCanvas: HTMLCanvasElement;
+	public readonly capeTexture: THREE.Texture;
 
-	public layer1Material: THREE.MeshBasicMaterial;
-	public layer2Material: THREE.MeshBasicMaterial;
+	public readonly layer1Material: THREE.MeshBasicMaterial;
+	public readonly layer2Material: THREE.MeshBasicMaterial;
+	public readonly capeMaterial: THREE.MeshBasicMaterial;
 
-	public scene: THREE.Scene;
-	public camera: THREE.PerspectiveCamera;
+	public readonly scene: THREE.Scene;
+	public readonly camera: THREE.PerspectiveCamera;
+	public readonly renderer: THREE.WebGLRenderer;
 
-	public capeMaterial: THREE.MeshBasicMaterial;
-	public renderer: THREE.WebGLRenderer;
+	public readonly playerObject: PlayerObject;
 
-	public playerObject: PlayerObject;
-
-	constructor(options) {
+	constructor(options: SkinViewerOptions) {
 		this.domElement = options.domElement;
 		this.animation = options.animation || null;
 		if (options.detectModel === false) {
@@ -118,13 +127,13 @@ export class SkinViewer {
 		draw();
 	}
 
-	private setSize(width, height) {
+	setSize(width, height) {
 		this.camera.aspect = width / height;
 		this.camera.updateProjectionMatrix();
 		this.renderer.setSize(width, height);
 	}
 
-	private dispose() {
+	dispose() {
 		this.disposed = true;
 		this.domElement.removeChild(this.renderer.domElement);
 		this.renderer.dispose();

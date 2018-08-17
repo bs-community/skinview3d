@@ -5,7 +5,8 @@ export {
 } from "./model";
 
 export {
-	SkinViewer
+	SkinViewer,
+	SkinViewerOptions
 } from "./viewer";
 
 export {
