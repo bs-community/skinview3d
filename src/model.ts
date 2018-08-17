@@ -1,6 +1,5 @@
 import * as THREE from "three";
 
-// TODO move to a util class
 function toFaceVertices(x1: number, y1: number, x2: number, y2: number, w: number, h: number) {
 	return [
 		new THREE.Vector2(x1 / w, 1.0 - y2 / h),
@@ -10,17 +9,14 @@ function toFaceVertices(x1: number, y1: number, x2: number, y2: number, w: numbe
 	];
 }
 
-// TODO move to a util class
 function toSkinVertices(x1: number, y1: number, x2: number, y2: number) {
 	return toFaceVertices(x1, y1, x2, y2, 64.0, 64.0);
 }
 
-// TODO move to a util class
 function toCapeVertices(x1: number, y1: number, x2: number, y2: number) {
 	return toFaceVertices(x1, y1, x2, y2, 64.0, 32.0);
 }
 
-// TODO move to a util class
 function setVertices(box: THREE.BoxGeometry, top: Array<THREE.Vector2>, bottom: Array<THREE.Vector2>, left: Array<THREE.Vector2>, front: Array<THREE.Vector2>, right: Array<THREE.Vector2>, back: Array<THREE.Vector2>) {
 
 	box.faceVertexUvs[0] = [];
@@ -38,7 +34,6 @@ function setVertices(box: THREE.BoxGeometry, top: Array<THREE.Vector2>, bottom: 
 	box.faceVertexUvs[0][11] = [back[0], back[1], back[2]];
 }
 
-// why is this a global constant?
 const esp = 0.002;
 
 export class SkinObject extends THREE.Group {
