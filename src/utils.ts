@@ -132,7 +132,7 @@ export function loadCapeToCanvas(canvas: HTMLCanvasElement, image: HTMLImageElem
 	context.drawImage(image, 0, 0, image.width, image.height);
 }
 
-export function isSlimSkin(canvasOrImage: HTMLCanvasElement | HTMLImageElement) {
+export function isSlimSkin(canvasOrImage: HTMLCanvasElement | HTMLImageElement): boolean {
 	// Detects whether the skin is default or slim.
 	//
 	// The right arm area of *default* skins:
@@ -183,7 +183,7 @@ export function isSlimSkin(canvasOrImage: HTMLCanvasElement | HTMLImageElement) 
 			checkArea(54, 20, 2, 12) ||
 			checkArea(42, 48, 2, 4) ||
 			checkArea(46, 52, 2, 12);
-	} else if (canvasOrImage instanceof HTMLImageElement) {
+	} else {
 		const image = canvasOrImage;
 		const canvas = document.createElement("canvas");
 		loadSkinToCanvas(canvas, image);

@@ -39,12 +39,12 @@ const esp = 0.002;
 export class SkinObject extends THREE.Group {
 
 	// body parts
-	head: THREE.Group;
-	body: THREE.Group;
-	rightArm: THREE.Group;
-	leftArm: THREE.Group;
-	rightLeg: THREE.Group;
-	leftLeg: THREE.Group;
+	readonly head: THREE.Group;
+	readonly body: THREE.Group;
+	readonly rightArm: THREE.Group;
+	readonly leftArm: THREE.Group;
+	readonly rightLeg: THREE.Group;
+	readonly leftLeg: THREE.Group;
 
 	private modelListeners: Array<() => void> = []; // called when model(slim property) is changed
 	private _slim = false;
@@ -343,7 +343,7 @@ export class SkinObject extends THREE.Group {
 
 export class CapeObject extends THREE.Group {
 
-	cape: THREE.Mesh;
+	readonly cape: THREE.Mesh;
 
 	constructor(capeMaterial: THREE.MeshBasicMaterial) {
 		super();
@@ -368,8 +368,8 @@ export class CapeObject extends THREE.Group {
 
 export class PlayerObject extends THREE.Group {
 
-	skin: SkinObject;
-	cape: CapeObject;
+	readonly skin: SkinObject;
+	readonly cape: CapeObject;
 
 	constructor(layer1Material: THREE.MeshBasicMaterial, layer2Material: THREE.MeshBasicMaterial, capeMaterial: THREE.MeshBasicMaterial) {
 		super();
