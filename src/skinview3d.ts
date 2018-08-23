@@ -5,7 +5,8 @@ export {
 } from "./model";
 
 export {
-	SkinViewer
+	SkinViewer,
+	SkinViewerOptions
 } from "./viewer";
 
 export {
@@ -14,8 +15,13 @@ export {
 } from "./orbit_controls";
 
 export {
+	IAnimation,
+	AnimationFn,
+	Animation,
 	invokeAnimation,
+	AnimationHandle,
 	CompositeAnimation,
+
 	WalkingAnimation,
 	RunningAnimation,
 	RotatingAnimation

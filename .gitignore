@@ -57,5 +57,8 @@ typings/
 # dotenv environment variables file
 .env
 
-build/
+dist/
 _ignore/
+dist/
+.DS_Store
+.rpt2_cache

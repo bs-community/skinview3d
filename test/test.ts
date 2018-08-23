@@ -1,9 +1,12 @@
+/// <reference path="shims.d.ts"/>
+
 import { expect } from "chai";
 import * as skinview3d from "../src/skinview3d";
 
 import skin1_8Default from "./textures/skin-1.8-default-no_hd.png";
 import skin1_8Slim from "./textures/skin-1.8-slim-no_hd.png";
 import skinOldDefault from "./textures/skin-old-default-no_hd.png";
+import skinLegacyHatDefault from "./textures/skin-legacyhat-default-no_hd.png";
 
 describe("detect model of texture", () => {
 	it("1.8 default", async () => {
@@ -26,4 +29,13 @@ describe("detect model of texture", () => {
 		await Promise.resolve();
 		expect(skinview3d.isSlimSkin(image)).to.equal(false);
 	});
+
+	/* TODO: implement transparent hat check for 64x32 skins
+	it("legacy hat test", async () => {
+		const image = document.createElement("img");
+		image.src = skinLegacyHatDefault;
+		await Promise.resolve();
+
+	});
+	*/
 });
