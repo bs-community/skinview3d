@@ -287,10 +287,67 @@ export class CapeObject extends Group {
 	}
 }
 
+export class ElytraObject extends Group {
+
+	readonly leftWing: Group;
+	readonly rightWing: Group;
+
+	constructor(texture: Texture) {
+		super();
+
+		const elytraMaterial = new MeshBasicMaterial({
+			map: texture,
+			side: DoubleSide,
+			transparent: true,
+			alphaTest: 1e-5
+		});
+
+		const leftWingBox = new BoxGeometry(12, 22, 4);
+		setCapeUVs(leftWingBox, 22, 0, 10, 20, 2);
+		const leftWingMesh = new Mesh(leftWingBox, elytraMaterial);
+		leftWingMesh.position.x = -5;
+		leftWingMesh.position.y = -10;
+		leftWingMesh.position.z = -1;
+		this.leftWing = new Group();
+		this.leftWing.add(leftWingMesh);
+		this.add(this.leftWing);
+
+		const rightWingBox = new BoxGeometry(12, 22, 4);
+		setCapeUVs(rightWingBox, 22, 0, 10, 20, 2);
+		const rightWingMesh = new Mesh(rightWingBox, elytraMaterial);
+		rightWingMesh.scale.x = -1;
+		rightWingMesh.position.x = 5;
+		rightWingMesh.position.y = -10;
+		rightWingMesh.position.z = -1;
+		this.rightWing = new Group();
+		this.rightWing.add(rightWingMesh);
+		this.add(this.rightWing);
+
+		this.leftWing.position.x = 5;
+		this.leftWing.rotation.x = .2617994;
+		this.leftWing.rotation.y = .01; // to avoid z-fighting
+		this.leftWing.rotation.z = .2617994;
+		this.updateRightWing();
+	}
+
+	/**
+	 * Mirrors the position & rotation of left wing,
+	 * and apply them to the right wing.
+	 */
+	updateRightWing(): void {
+		this.rightWing.position.x = -this.leftWing.position.x;
+		this.rightWing.position.y = this.leftWing.position.y;
+		this.rightWing.rotation.x = this.leftWing.rotation.x;
+		this.rightWing.rotation.y = -this.leftWing.rotation.y;
+		this.rightWing.rotation.z = -this.leftWing.rotation.z;
+	}
+}
+
 export class PlayerObject extends Group {
 
 	readonly skin: SkinObject;
 	readonly cape: CapeObject;
+	readonly elytra: ElytraObject;
 
 	constructor(skinTexture: Texture, capeTexture: Texture) {
 		super();
@@ -305,5 +362,11 @@ export class PlayerObject extends Group {
 		this.cape.rotation.x = 10.8 * Math.PI / 180;
 		this.cape.rotation.y = Math.PI;
 		this.add(this.cape);
+
+		this.elytra = new ElytraObject(capeTexture);
+		this.elytra.name = "elytra";
+		this.elytra.position.z = -2;
+		this.elytra.visible = false;
+		this.add(this.elytra);
 	}
 }
