@@ -349,11 +349,11 @@ export class SkinObject extends THREE.Group {
 		return this.children.filter(it => it instanceof BodyPart) as Array<BodyPart>;
 	}
 
-	set innerLayerVisible(value: boolean) {
+	setInnerLayerVisible(value: boolean) {
 		this.getBodyParts().forEach(part => part.innerLayer.visible = value);
 	}
 
-	set outerLayerVisible(value: boolean) {
+	setOuterLayerVisible(value: boolean) {
 		this.getBodyParts().forEach(part => part.outerLayer.visible = value);
 	}
 }
