@@ -1,5 +1,6 @@
 export {
 	SkinObject,
+	BodyPart,
 	CapeObject,
 	PlayerObject
 } from "./model";
