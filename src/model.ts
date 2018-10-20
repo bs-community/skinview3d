@@ -346,7 +346,7 @@ export class SkinObject extends THREE.Group {
 	}
 
 	private getBodyParts() {
-		return this.children.filter(it => it instanceof BodyPart) as BodyPart[];
+		return this.children.filter(it => it instanceof BodyPart) as Array<BodyPart>;
 	}
 
 	set innerLayerVisible(value: boolean) {
