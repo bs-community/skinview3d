@@ -40,12 +40,11 @@ const esp = 0.002;
  * Notice that innerLayer and outerLayer may NOT be the direct children of the Group.
  */
 export class BodyPart extends THREE.Group {
-	readonly innerLayer: THREE.Object3D;
-	readonly outerLayer: THREE.Object3D;
-	constructor(innerLayer: THREE.Object3D, outerLayer: THREE.Object3D) {
+	constructor(
+		readonly innerLayer: THREE.Object3D,
+		readonly outerLayer: THREE.Object3D
+	) {
 		super();
-		this.innerLayer = innerLayer;
-		this.outerLayer = outerLayer;
 	}
 }
 
