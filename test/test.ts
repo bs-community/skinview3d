@@ -1,7 +1,7 @@
 /// <reference path="shims.d.ts"/>
 
 import { expect } from "chai";
-import { isSlimSkin } from "../src/utils";
+import { isSlimSkin, loadSkinToCanvas } from "../src/utils";
 
 import skin1_8Default from "./textures/skin-1.8-default-no_hd.png";
 import skin1_8Slim from "./textures/skin-1.8-slim-no_hd.png";
@@ -29,13 +29,24 @@ describe("detect model of texture", () => {
 		await Promise.resolve();
 		expect(isSlimSkin(image)).to.equal(false);
 	});
+});
 
-	/* TODO: implement transparent hat check for 64x32 skins
-	it("legacy hat test", async () => {
+describe("process skin texture", () => {
+	it("clear the hat area of legacy skin", async () => {
 		const image = document.createElement("img");
 		image.src = skinLegacyHatDefault;
 		await Promise.resolve();
-
+		const canvas = document.createElement("canvas");
+		loadSkinToCanvas(canvas, image);
+		const data = canvas.getContext("2d").getImageData(0, 0, 64, 32).data;
+		const checkArea = (x0, y0, w, h) => {
+			for (let x = x0; x < x0 + w; x++) {
+				for (let y = y0; y < y0 + h; y++) {
+					expect(data[(y * 64 + x) * 4 + 3]).to.equal(0);
+				}
+			}
+		};
+		checkArea(40, 0, 8 * 2, 8); // top + bottom
+		checkArea(32, 8, 8 * 4, 8) // right + front + left + back
 	});
-	*/
 });
