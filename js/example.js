@@ -53,18 +53,18 @@ function initSkinViewer() {
 
 function hotReloadTextures() {
 	var capeObject = skinViewer.playerObject.cape;
-	var cape = el('cape_url').value;
-	var skin = el('skin_url').value;
+	var capeUrl = el('cape_url').value;
+	var skinUrl = el('skin_url').value;
 
 	// I've noted there is not a good way to set the cape to null
-	// so we hide it as work around
-	if (cape === "") {
+	// so we hide it as work around but need to raise an issue
+	if (capeUrl === "") {
 		capeObject.visible = false;
-		return;
+	} else {
+		skinViewer.capeUrl = capeUrl;
 	}
 
-	skinViewer.skinUrl = skin;
-	skinViewer.capeUrl = cape;
+	skinViewer.skinUrl = skinUrl;
 }
 
 function resizeSkinViewer() {
