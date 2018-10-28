@@ -62,4 +62,5 @@ _ignore/
 
 package.json.lock
 
-!js/build/
+!js/dist/
+.rpt2_cache
