@@ -1,66 +1,139 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 	<meta charset="utf-8">
 	<title>skinview3d examples</title>
 	<style>
-		body, html { background: #444444; color: #fff; }
-		canvas { border: 1px solid white; }
+		body, html { 
+			background: #ffffff; 
+			color: #000000;
+			padding: 0;
+			margin: 0;
+		}
+		canvas { 
+			background: #5a76f3;	
+
+		}
+
+		.controls {
+			padding: 0 12px 0 12px;
+		}
+		.controls div {
+			margin: 6px 0 6px;
+		}
+
+		h4{
+			padding: 0;
+			margin: 0 0 4px 0;
+		}
 	</style>
 </head>
+
 <body>
-	<br>
+
 	<div id="skin_container"></div>
 
-	<p> Animate:
-		<button type="button" onclick="walk()">Walk</button>
-		<button type="button" onclick="run()">Run!</button>
-		<button type="button" onclick="rotate()">Rotate</button>
-		<button type="button" onclick="pause()">Pause / Resume</button>
-		<button type="button" onclick="initSkinViewer()">Reset</button>
-		<br>
-		Global Animation Speed: x<input type="text" id="speed" value="1" title="1 for default" size="5"></input>
+	<div class="controls">
+
+		<div>
+			<h4>Animate</h4>
+			<button type="button" onclick="walk()">Walk</button>
+			<button type="button" onclick="run()">Run!</button>
+			<button type="button" onclick="rotate()">Rotate</button>
+			<button type="button" onclick="pause()">Pause / Resume</button>
+			<button type="button" onclick="initSkinViewer()">Reset</button>
+			<br>
+		</div>
+
+		Global Animation Speed: x<input type="text" id="speed" value="1" title="1 for default" size="5" />
 		<button type="button" onclick="setGlobalAnimationSpeed()">Set</button>
-	</p>
 
-	<p> Animation Mouse Control:
-		<input type="checkbox" id="rotate" checked="checked" onclick="control.enableRotate = this.checked"><label for="rotate">Enable Rotate</label>
-		<input type="checkbox" id="zoom" checked="checked" onclick="control.enableZoom = this.checked"><label for="zoom">Enable Zoom</label>
-		<input type="checkbox" id="pan" onclick="control.enablePan = this.checked"><label for="pan">Enable Pan</label>
-	</p>
+		<div>
+			<h4> Animation Mouse Control</h4>
+			<input type="checkbox" id="rotate" checked="checked" onclick="control.enableRotate = this.checked"><label for="rotate">Enable
+				Rotate</label>
+			<input type="checkbox" id="zoom" checked="checked" onclick="control.enableZoom = this.checked"><label for="zoom">Enable
+				Zoom</label>
+			<input type="checkbox" id="pan" onclick="control.enablePan = this.checked"><label for="pan">Enable Pan</label>
+		</div>
 
-	<p> Width:  <input type="text" id="width"  value="600" size="5"></input>
-		Height: <input type="text" id="height" value="600" size="5"></input>
-		<button type="button" onclick="resizeSkinViewer()">Change Size</button>
-	</p>
+		<div>
+			<h4>Canvas Size</h4>
+			Width: <input type="text" id="width" value="600" size="5" />
+			Height: <input type="text" id="height" value="600" size="5" />
+			<button type="button" onclick="resizeSkinViewer()">Change Size</button>
+		</div>
 
-	<p> Skin Url:
-		<input type="text" id="skin_url" value="img/hatsune_miku.png"></input>
-		<br>
-		Cape Url:
-		<input type="text" id="cape_url" value="img/mojang_cape.png"></input>
-		<button type="button" onclick="hotReloadTextures()">Load Textures</button>
-	</p>
+		<div>
+			<h4>Layers</h4>
 
-	<p> All textures available to load:
-		<ul>
-			<li>img/1_8_texturemap_redux.png</li>
-			<li>img/cape.png</li>
-			<li>img/Hacksore.png</li>
-			<li>img/haka.png</li>
-			<li>img/hatsune_miku.png</li>
-			<li>img/ironman_hd.png</li>
-			<li>img/mojang_cape.png</li>
-			<li>img/sethbling.png</li>
-		</ul>
-	</p>
+			<input id="head" type="checkbox" onclick="togglePart('head')" checked="checked" />
+			<label for="head">Head</label>
 
+			<input id="body" type="checkbox" onclick="togglePart('body')" checked="checked" />
+			<label for="body">Body</label>
+
+			<input id="leftArm" type="checkbox" onclick="togglePart('leftArm')" checked="checked" />
+			<label for="leftArm">LeftArm</label>
+
+			<input id="rightArm" type="checkbox" onclick="togglePart('rightArm')" checked="checked" />
+			<label for="rightArm">RightArm</label>
+
+			<input id="leftLeg" type="checkbox" onclick="togglePart('leftLeg')" checked="checked" />
+			<label for="leftLeg">LeftLeg</label>
+
+			<input id="rightLeg" type="checkbox" onclick="togglePart('rightLeg')" checked="checked" />
+			<label for="rightLeg">RightLeg</label>
+
+			<br />
+			<input id="head2" type="checkbox" onclick="togglePart('head2')" checked="checked" />
+			<label for="head2">Head2</label>
+
+			<input id="body2" type="checkbox" onclick="togglePart('body2')" checked="checked" />
+			<label for="body2">Body2</label>
+
+			<input id="leftArm2" type="checkbox" onclick="togglePart('leftArm2')" checked="checked" />
+			<label for="leftArm2">LeftArm2</label>
+
+			<input id="rightArm2" type="checkbox" onclick="togglePart('rightArm2')" checked="checked" />
+			<label for="rightArm2">RightArm2</label>
+
+			<input id="leftLeg2" type="checkbox" onclick="togglePart('leftLeg2')" checked="checked" />
+			<label for="leftLeg2">LeftLeg2</label>
+
+			<input id="rightLeg2" type="checkbox" onclick="togglePart('rightLeg2')" checked="checked" />
+			<label for="rightLeg2">RightLeg2</label>
+		</div>
+
+		<div>
+			<h4>Skin</h4>
+			<select id="skin_url" onchange="hotReloadTextures()">
+				<option value="img/1_8_texturemap_redux.png">Texture Map (64x64)</option>
+				<option value="img/Hacksore.png">Hacksore (64x32)</option>
+				<option value="img/haka.png">Haka (64x64)</option>
+				<option value="img/hatsune_miku.png">Hatsune Miku (64x64)</option>
+				<option value="img/ironman_hd.png">Ironman (256x265)</option>
+				<option value="img/sethbling.png">Sethbling (64x32)</option>
+			</select>
+		</div>
+		<div>
+			<h4>Cape</h4>
+			<select id="cape_url" onchange="hotReloadTextures()">
+				<option value="">None</option>
+				<option value="img/cape.png">Mojang Legacy</option>
+				<option value="img/mojang_cape.png">Mojang</option>
+				<option value="img/hd_cape.png">HD Cape</option>
+			</select>
+		</div>
+	</div>
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/three.js/95/three.min.js"></script>
-	<script type="text/javascript" src="js/build/skinview3d.min.js"></script>
+	<script type="text/javascript" src="js/dist/skinview3d.min.js"></script>
 	<script type="text/javascript" src="js/example.js"></script>
 	<script>
 		initSkinViewer();
 		walk();
 	</script>
 </body>
+
 </html>

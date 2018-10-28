@@ -6,7 +6,7 @@ if [ ! -d ".git" ];then
 fi
 
 checkout_dir="_ignore/master"
-output_dir="js/build"
+output_dir="js/dist"
 revision_file="$output_dir/revision"
 
 if [ -f "$revision_file" ];then
@@ -27,10 +27,11 @@ cd -- $checkout_dir
 
 echo "> Building"
 npm install
+npm run build
 
 echo "> Copying build outputs"
 cd -- $original_dir
 rm -rf -- $output_dir
-cp -r -- "$checkout_dir/build" $output_dir
+cp -r -- "$checkout_dir/dist" $output_dir
 echo "$master_revision" > $revision_file
 echo "> New revison of build outputs: $master_revision"
