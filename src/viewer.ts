@@ -18,7 +18,7 @@ export class SkinViewer {
 	public readonly domElement: Node;
 	public animation: Animation | null;
 	public detectModel: boolean = true;
-	public animationPaused: boolean = false;
+	public animationSpeed: number = 1;
 	public animationTime: number = 0;
 	public disposed: boolean = false;
 
@@ -39,6 +39,8 @@ export class SkinViewer {
 	public readonly renderer: THREE.WebGLRenderer;
 
 	public readonly playerObject: PlayerObject;
+
+	private readonly clock: THREE.Clock;
 
 	constructor(options: SkinViewerOptions) {
 		this.domElement = options.domElement;
@@ -114,14 +116,13 @@ export class SkinViewer {
 		if (options.width) this.width = options.width;
 		if (options.height) this.height = options.height;
 
+		this.clock = new THREE.Clock(true);
 		const draw = () => {
 			if (this.disposed) return;
 			window.requestAnimationFrame(draw);
-			if (!this.animationPaused) {
-				this.animationTime++;
-				if (this.animation) {
-					invokeAnimation(this.animation, this.playerObject, this.animationTime / 100.0);
-				}
+			this.animationTime += this.clock.getDelta() * this.animationSpeed;
+			if (this.animation) {
+				invokeAnimation(this.animation, this.playerObject, this.animationTime);
 			}
 			this.renderer.render(this.scene, this.camera);
 		};

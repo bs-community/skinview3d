@@ -58,7 +58,7 @@ Three.js powered Minecraft skin viewer.
 	// Pause single animation
 	run.paused = true;
 	// Pause all animations!
-	skinViewer.animationPaused = true;
+	skinViewer.animationSpeed = 0;
 </script>
 ```
 
