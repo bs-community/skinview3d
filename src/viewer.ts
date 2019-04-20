@@ -78,6 +78,7 @@ export class SkinViewer {
 		this.domElement.appendChild(this.renderer.domElement);
 
 		this.playerObject = new PlayerObject(this.layer1Material, this.layer2Material, this.capeMaterial);
+		this.playerObject.name = "player";
 		this.scene.add(this.playerObject);
 
 		// texture loading

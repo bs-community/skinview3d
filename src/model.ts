@@ -45,6 +45,8 @@ export class BodyPart extends THREE.Group {
 		readonly outerLayer: THREE.Object3D
 	) {
 		super();
+		innerLayer.name = "inner";
+		outerLayer.name = "outer";
 	}
 }
 
@@ -89,6 +91,7 @@ export class SkinObject extends THREE.Group {
 		head2Mesh.renderOrder = -1;
 
 		this.head = new BodyPart(headMesh, head2Mesh);
+		this.head.name = "head";
 		this.head.add(headMesh, head2Mesh);
 		this.add(this.head);
 
@@ -116,6 +119,7 @@ export class SkinObject extends THREE.Group {
 		const body2Mesh = new THREE.Mesh(body2Box, layer2Material);
 
 		this.body = new BodyPart(bodyMesh, body2Mesh);
+		this.body.name = "body";
 		this.body.add(bodyMesh, body2Mesh);
 		this.body.position.y = -10;
 		this.add(this.body);
@@ -185,6 +189,7 @@ export class SkinObject extends THREE.Group {
 		rightArmPivot.position.y = -6;
 
 		this.rightArm = new BodyPart(rightArmMesh, rightArm2Mesh);
+		this.rightArm.name = "rightArm";
 		this.rightArm.add(rightArmPivot);
 		this.rightArm.position.y = -4;
 		this.modelListeners.push(() => {
@@ -257,6 +262,7 @@ export class SkinObject extends THREE.Group {
 		leftArmPivot.position.y = -6;
 
 		this.leftArm = new BodyPart(leftArmMesh, leftArm2Mesh);
+		this.leftArm.name = "leftArm";
 		this.leftArm.add(leftArmPivot);
 		this.leftArm.position.y = -4;
 		this.modelListeners.push(() => {
@@ -293,6 +299,7 @@ export class SkinObject extends THREE.Group {
 		rightLegPivot.position.y = -6;
 
 		this.rightLeg = new BodyPart(rightLegMesh, rightLeg2Mesh);
+		this.rightLeg.name ="rightLeg";
 		this.rightLeg.add(rightLegPivot);
 		this.rightLeg.position.y = -16;
 		this.rightLeg.position.x = -2;
@@ -327,6 +334,7 @@ export class SkinObject extends THREE.Group {
 		leftLegPivot.position.y = -6;
 
 		this.leftLeg = new BodyPart(leftLegMesh, leftLeg2Mesh);
+		this.leftLeg.name = "leftLeg";
 		this.leftLeg.add(leftLegPivot);
 		this.leftLeg.position.y = -16;
 		this.leftLeg.position.x = 2;
@@ -391,10 +399,12 @@ export class PlayerObject extends THREE.Group {
 		super();
 
 		this.skin = new SkinObject(layer1Material, layer2Material);
+		this.skin.name = "skin";
 		this.skin.visible = false;
 		this.add(this.skin);
 
 		this.cape = new CapeObject(capeMaterial);
+		this.cape.name = "cape";
 		this.cape.position.z = -2;
 		this.cape.position.y = -4;
 		this.cape.rotation.x = 25 * Math.PI / 180;
