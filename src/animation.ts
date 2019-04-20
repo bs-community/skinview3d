@@ -19,7 +19,6 @@ export function invokeAnimation(animation: Animation, player: PlayerObject, time
 
 // This interface is used to control animations
 export interface AnimationHandle {
-	paused: boolean;
 	speed: number;
 	readonly animation: Animation;
 
@@ -28,41 +27,24 @@ export interface AnimationHandle {
 }
 
 class AnimationWrapper implements AnimationHandle, IAnimation {
-	public paused = false;
 	public speed: number = 1.0;
 	public readonly animation: Animation;
 
-	private _paused = false;
-	private _lastChange: number | null = null;
-	private _speed: number = 1.0;
-	private _lastChangeX: number | null = null;
+	private lastTime = 0;
+	private progress = 0;
 
 	constructor(animation: Animation) {
 		this.animation = animation;
 	}
 
 	play(player: PlayerObject, time: number) {
-		if (this._lastChange === null) {
-			this._lastChange = time;
-			this._lastChangeX = 0;
-		} else if (this.paused !== this._paused || this.speed !== this._speed) {
-			const dt = time - this._lastChange;
-			if (this._paused === false) {
-				this._lastChangeX! += dt * this._speed;
-			}
-			this._paused = this.paused;
-			this._speed = this.speed;
-			this._lastChange = time;
-		}
-		if (this.paused === false) {
-			const dt = time - this._lastChange;
-			const x = this._lastChangeX! + this.speed * dt;
-			invokeAnimation(this.animation, player, x);
-		}
+		this.progress += (time - this.lastTime) * this.speed;
+		this.lastTime = time;
+		invokeAnimation(this.animation, player, this.progress);
 	}
 
 	reset() {
-		this._lastChange = null;
+		this.progress = 0;
 	}
 
 	remove() {
