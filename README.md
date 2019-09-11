@@ -1,7 +1,7 @@
 skinview3d
 ========
 
-[![Travis](https://img.shields.io/travis/bs-community/skinview3d.svg?style=flat-square)](https://travis-ci.org/bs-community/skinview3d)
+![](https://github.com/bs-community/skinview3d/workflows/CI/badge.svg)
 [![npm](https://img.shields.io/npm/v/skinview3d.svg?style=flat-square)](https://www.npmjs.com/package/skinview3d)
 [![license](https://img.shields.io/badge/license-MIT-yellowgreen.svg?style=flat-square)](https://github.com/bs-community/skinview3d/blob/master/LICENSE)
 [![Gitter chat](https://img.shields.io/gitter/room/TechnologyAdvice/Stardust.svg?style=flat-square)](https://gitter.im/skinview3d/Lobby)
