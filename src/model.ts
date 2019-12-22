@@ -299,7 +299,7 @@ export class SkinObject extends THREE.Group {
 		rightLegPivot.position.y = -6;
 
 		this.rightLeg = new BodyPart(rightLegMesh, rightLeg2Mesh);
-		this.rightLeg.name ="rightLeg";
+		this.rightLeg.name = "rightLeg";
 		this.rightLeg.add(rightLegPivot);
 		this.rightLeg.position.y = -16;
 		this.rightLeg.position.x = -2;
