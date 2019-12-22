@@ -42,23 +42,23 @@ Three.js powered Minecraft skin viewer.
 	control.enableZoom = false;
 	control.enablePan = false;
 
-	skinViewer.animation = new skinview3d.CompositeAnimation();
-
 	// Add an animation
-	let walk = skinViewer.animation.add(skinview3d.WalkingAnimation);
+	let walk = skinViewer.animations.add(skinview3d.WalkingAnimation);
 	// Add another animation
-	let rotate = skinViewer.animation.add(skinview3d.RotatingAnimation);
+	let rotate = skinViewer.animations.add(skinview3d.RotatingAnimation);
 	// Remove an animation, stop walking dude
 	walk.remove();
+	// Remove the rotating animation, and make the player face forward
+	rotate.resetAndRemove();
 	// And run for now!
-	let run = skinViewer.animation.add(skinview3d.RunningAnimation);
+	let run = skinViewer.animations.add(skinview3d.RunningAnimation);
 
 	// Set the speed of an animation
 	run.speed = 3;
 	// Pause single animation
-	run.speed = 0;
+	run.paused = true;
 	// Pause all animations!
-	skinViewer.animationSpeed = 0;
+	skinViewer.animations.paused = true;
 </script>
 ```
 

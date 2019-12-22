@@ -1,4 +1,5 @@
 import { PlayerObject } from "./model";
+import * as THREE from "three";
 
 export interface IAnimation {
 	play(player: PlayerObject, time: number): void;
@@ -20,26 +21,50 @@ export function invokeAnimation(animation: Animation, player: PlayerObject, time
 // This interface is used to control animations
 export interface AnimationHandle {
 	speed: number;
+	paused: boolean;
+	progress: number;
 	readonly animation: Animation;
 
 	reset(): void;
-	remove(): void;
 }
 
-class AnimationWrapper implements AnimationHandle, IAnimation {
-	public speed: number = 1.0;
-	public readonly animation: Animation;
+export interface SubAnimationHandle extends AnimationHandle {
+	remove(): void;
+	resetAndRemove(): void;
+}
 
-	private lastTime = 0;
-	private progress = 0;
+class AnimationWrapper implements SubAnimationHandle, IAnimation {
+	speed: number = 1.0;
+	paused: boolean = false;
+	progress: number = 0;
+	readonly animation: Animation;
+
+	private lastTime: number = 0;
+	private started: boolean = false;
+	private toResetAndRemove: boolean = false;
 
 	constructor(animation: Animation) {
 		this.animation = animation;
 	}
 
 	play(player: PlayerObject, time: number) {
-		this.progress += (time - this.lastTime) * this.speed;
+		if (this.toResetAndRemove) {
+			invokeAnimation(this.animation, player, 0);
+			this.remove();
+			return;
+		}
+
+		let delta: number;
+		if (this.started) {
+			delta = time - this.lastTime;
+		} else {
+			delta = 0;
+			this.started = true;
+		}
 		this.lastTime = time;
+		if (!this.paused) {
+			this.progress += delta * this.speed;
+		}
 		invokeAnimation(this.animation, player, this.progress);
 	}
 
@@ -50,6 +75,10 @@ class AnimationWrapper implements AnimationHandle, IAnimation {
 	remove() {
 		// stub get's overriden
 	}
+
+	resetAndRemove() {
+		this.toResetAndRemove = true;
+	}
 }
 
 export class CompositeAnimation implements IAnimation {
@@ -58,13 +87,49 @@ export class CompositeAnimation implements IAnimation {
 
 	add(animation: Animation): AnimationHandle {
 		const handle = new AnimationWrapper(animation);
-		handle.remove = () => this.handles.delete(handle);
+		handle.remove = () => {
+			this.handles.delete(handle);
+		};
 		this.handles.add(handle);
 		return handle;
 	}
 
 	play(player: PlayerObject, time: number) {
 		this.handles.forEach(handle => handle.play(player, time));
+	}
+}
+
+export class RootAnimation extends CompositeAnimation implements AnimationHandle {
+	speed: number = 1.0;
+	progress: number = 0.0;
+	readonly clock: THREE.Clock = new THREE.Clock(true);
+
+	get animation() {
+		return this;
+	}
+
+	get paused() {
+		return !this.clock.running;
+	}
+
+	set paused(value) {
+		if (value) {
+			this.clock.stop();
+		} else {
+			this.clock.start();
+		}
+	}
+
+	runAnimationLoop(player: PlayerObject): void {
+		if (this.handles.size == 0) {
+			return;
+		}
+		this.progress += this.clock.getDelta() * this.speed;
+		this.play(player, this.progress);
+	}
+
+	reset() {
+		this.progress = 0;
 	}
 }
 

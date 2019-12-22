@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { PlayerObject } from "./model";
-import { invokeAnimation } from "./animation";
+import { RootAnimation } from "./animation";
 import { loadSkinToCanvas, loadCapeToCanvas, isSlimSkin } from "./utils";
 
 export interface SkinViewerOptions {
@@ -16,10 +16,8 @@ export interface SkinViewerOptions {
 export class SkinViewer {
 
 	public readonly domElement: Node;
-	public animation: Animation | null;
+	public readonly animations: RootAnimation;
 	public detectModel: boolean = true;
-	public animationSpeed: number = 1;
-	public animationTime: number = 0;
 	public disposed: boolean = false;
 
 	public readonly skinImg: HTMLImageElement;
@@ -40,11 +38,8 @@ export class SkinViewer {
 
 	public readonly playerObject: PlayerObject;
 
-	private readonly clock: THREE.Clock;
-
 	constructor(options: SkinViewerOptions) {
 		this.domElement = options.domElement;
-		this.animation = options.animation || null;
 		if (options.detectModel === false) {
 			this.detectModel = false;
 		}
@@ -116,14 +111,11 @@ export class SkinViewer {
 		if (options.width) this.width = options.width;
 		if (options.height) this.height = options.height;
 
-		this.clock = new THREE.Clock(true);
+		this.animations = new RootAnimation();
 		const draw = () => {
 			if (this.disposed) return;
 			window.requestAnimationFrame(draw);
-			this.animationTime += this.clock.getDelta() * this.animationSpeed;
-			if (this.animation) {
-				invokeAnimation(this.animation, this.playerObject, this.animationTime);
-			}
+			this.animations.runAnimationLoop(this.playerObject);
 			this.renderer.render(this.scene, this.camera);
 		};
 		draw();
