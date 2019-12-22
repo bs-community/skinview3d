@@ -16,7 +16,7 @@ export interface SkinViewerOptions {
 export class SkinViewer {
 
 	public readonly domElement: Node;
-	public readonly animations: RootAnimation;
+	public readonly animations: RootAnimation = new RootAnimation();
 	public detectModel: boolean = true;
 	public disposed: boolean = false;
 
@@ -111,7 +111,6 @@ export class SkinViewer {
 		if (options.width) this.width = options.width;
 		if (options.height) this.height = options.height;
 
-		this.animations = new RootAnimation();
 		const draw = () => {
 			if (this.disposed) return;
 			window.requestAnimationFrame(draw);
