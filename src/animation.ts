@@ -121,7 +121,7 @@ export class RootAnimation extends CompositeAnimation implements AnimationHandle
 	}
 
 	runAnimationLoop(player: PlayerObject): void {
-		if (this.handles.size == 0) {
+		if (this.handles.size === 0) {
 			return;
 		}
 		this.progress += this.clock.getDelta() * this.speed;
