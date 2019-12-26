@@ -38,7 +38,7 @@ describe("process skin texture", () => {
 		await Promise.resolve();
 		const canvas = document.createElement("canvas");
 		loadSkinToCanvas(canvas, image);
-		const data = canvas.getContext("2d").getImageData(0, 0, 64, 32).data;
+		const data = canvas.getContext("2d")!.getImageData(0, 0, 64, 32).data;
 		const checkArea = (x0, y0, w, h) => {
 			for (let x = x0; x < x0 + w; x++) {
 				for (let y = y0; y < y0 + h; y++) {

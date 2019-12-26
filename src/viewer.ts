@@ -159,7 +159,8 @@ export class SkinViewer {
 	}
 
 	get width() {
-		return this.renderer.getSize().width;
+		const target = new THREE.Vector2();
+		return this.renderer.getSize(target).width;
 	}
 
 	set width(newWidth) {
@@ -167,7 +168,8 @@ export class SkinViewer {
 	}
 
 	get height() {
-		return this.renderer.getSize().height;
+		const target = new THREE.Vector2();
+		return this.renderer.getSize(target).height;
 	}
 
 	set height(newHeight) {

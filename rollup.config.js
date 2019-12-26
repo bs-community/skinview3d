@@ -1,6 +1,6 @@
-import { uglify } from "rollup-plugin-uglify";
+import { terser } from "rollup-plugin-terser";
 import typescript from "rollup-plugin-typescript2";
-import resolve from "rollup-plugin-node-resolve";
+import resolve from "@rollup/plugin-node-resolve";
 import license from "rollup-plugin-license";
 
 const base = {
@@ -43,7 +43,7 @@ export default [
 		output: Object.assign({}, base.output[0], { file: "dist/skinview3d.min.js" }),
 		plugins: (() => {
 			const plugin = base.plugins.slice();
-			plugin.splice(1, 0, uglify());
+			plugin.splice(1, 0, terser());
 			return plugin;
 		})()
 	})
