@@ -133,7 +133,7 @@ export class SkinViewer {
 		window.requestAnimationFrame(() => this.draw());
 	}
 
-	setSize(width, height) {
+	setSize(width: number, height: number) {
 		this.camera.aspect = width / height;
 		this.camera.updateProjectionMatrix();
 		this.renderer.setSize(width, height);
