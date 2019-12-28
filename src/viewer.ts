@@ -40,6 +40,8 @@ export class SkinViewer {
 
 	public readonly playerObject: PlayerObject;
 
+	private _renderPaused: boolean = false;
+
 	constructor(options: SkinViewerOptions) {
 		this.domElement = options.domElement;
 		this.animation = options.animation || null;
@@ -114,18 +116,21 @@ export class SkinViewer {
 		if (options.width) this.width = options.width;
 		if (options.height) this.height = options.height;
 
-		const draw = () => {
-			if (this.disposed) return;
-			window.requestAnimationFrame(draw);
-			if (!this.animationPaused) {
-				this.animationTime++;
-				if (this.animation) {
-					invokeAnimation(this.animation, this.playerObject, this.animationTime / 100.0);
-				}
+		window.requestAnimationFrame(() => this.draw());
+	}
+
+	private draw() {
+		if (this.disposed || this._renderPaused) {
+			return;
+		}
+		if (!this.animationPaused) {
+			this.animationTime++;
+			if (this.animation) {
+				invokeAnimation(this.animation, this.playerObject, this.animationTime / 100.0);
 			}
-			this.renderer.render(this.scene, this.camera);
-		};
-		draw();
+		}
+		this.renderer.render(this.scene, this.camera);
+		window.requestAnimationFrame(() => this.draw());
 	}
 
 	setSize(width, height) {
@@ -140,6 +145,18 @@ export class SkinViewer {
 		this.renderer.dispose();
 		this.skinTexture.dispose();
 		this.capeTexture.dispose();
+	}
+
+	get renderPaused() {
+		return this._renderPaused;
+	}
+
+	set renderPaused(value: boolean) {
+		const toResume = !this.disposed && !value && this._renderPaused;
+		this._renderPaused = value;
+		if (toResume) {
+			window.requestAnimationFrame(() => this.draw());
+		}
 	}
 
 	get skinUrl() {
