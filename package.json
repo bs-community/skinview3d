@@ -7,7 +7,7 @@
 	"scripts": {
 		"build": "rollup -c",
 		"test": "karma start && npm run lint",
-		"prepublishOnly": "npm test && rimraf dist && npm run build",
+		"prepublishOnly": "rimraf dist && npm run build",
 		"lint": "tslint --formatters-dir ./node_modules/tslint-formatter-beauty -t beauty -p .",
 		"dev": "npm-run-all --parallel watch serve",
 		"watch": "rollup -w -c",
