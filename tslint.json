@@ -26,7 +26,8 @@
 		],
 		"max-classes-per-file": false,
 		"interface-name": false,
-		"member-ordering": false
+		"member-ordering": false,
+		"no-submodule-imports": false
 	},
 	"rulesDirectory": []
 }

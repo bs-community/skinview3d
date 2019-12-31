@@ -17,6 +17,11 @@ const es = {
 	indent: "\t"
 };
 
+const resolverPlugin = {
+	name: "resolver",
+	resolveId: id => id.startsWith("three/src/") ? "three" : undefined
+};
+
 const licensePlugin = license({
 	banner: `
 				skinview3d (https://github.com/bs-community/skinview3d)
@@ -40,6 +45,7 @@ export default [
 			{ ...es, file: "dist/skinview3d.module.js" }
 		],
 		plugins: [
+			resolverPlugin,
 			resolve(),
 			typescript(),
 			licensePlugin
@@ -49,6 +55,7 @@ export default [
 		...base,
 		output: { ...umd, file: "dist/skinview3d.min.js" },
 		plugins: [
+			resolverPlugin,
 			resolve(),
 			typescript(),
 			terser(),
