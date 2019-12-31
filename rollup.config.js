@@ -61,5 +61,15 @@ export default [
 			terser(),
 			licensePlugin
 		]
+	},
+	{
+		...base,
+		output: { ...umd, file: "dist/skinview3d.all.js" },
+		plugins: [
+			resolve(),
+			typescript(),
+			terser(),
+			licensePlugin
+		]
 	}
 ];
