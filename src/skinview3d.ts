@@ -20,8 +20,11 @@ export {
 	AnimationFn,
 	Animation,
 	invokeAnimation,
+
+	SubAnimationHandle,
 	AnimationHandle,
 	CompositeAnimation,
+	RootAnimation,
 
 	WalkingAnimation,
 	RunningAnimation,
