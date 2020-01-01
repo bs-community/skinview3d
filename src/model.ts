@@ -1,16 +1,11 @@
-import { Object3D } from "three/src/core/Object3D";
-import { BoxGeometry } from "three/src/geometries/BoxGeometry";
-import { MeshBasicMaterial } from "three/src/materials/MeshBasicMaterial";
-import { Vector2 } from "three/src/math/Vector2";
-import { Group } from "three/src/objects/Group";
-import { Mesh } from "three/src/objects/Mesh";
+import * as THREE from "three";
 
 function toFaceVertices(x1: number, y1: number, x2: number, y2: number, w: number, h: number) {
 	return [
-		new Vector2(x1 / w, 1.0 - y2 / h),
-		new Vector2(x2 / w, 1.0 - y2 / h),
-		new Vector2(x2 / w, 1.0 - y1 / h),
-		new Vector2(x1 / w, 1.0 - y1 / h)
+		new THREE.Vector2(x1 / w, 1.0 - y2 / h),
+		new THREE.Vector2(x2 / w, 1.0 - y2 / h),
+		new THREE.Vector2(x2 / w, 1.0 - y1 / h),
+		new THREE.Vector2(x1 / w, 1.0 - y1 / h)
 	];
 }
 
@@ -22,7 +17,7 @@ function toCapeVertices(x1: number, y1: number, x2: number, y2: number) {
 	return toFaceVertices(x1, y1, x2, y2, 64.0, 32.0);
 }
 
-function setVertices(box: BoxGeometry, top: Array<Vector2>, bottom: Array<Vector2>, left: Array<Vector2>, front: Array<Vector2>, right: Array<Vector2>, back: Array<Vector2>) {
+function setVertices(box: THREE.BoxGeometry, top: Array<THREE.Vector2>, bottom: Array<THREE.Vector2>, left: Array<THREE.Vector2>, front: Array<THREE.Vector2>, right: Array<THREE.Vector2>, back: Array<THREE.Vector2>) {
 
 	box.faceVertexUvs[0] = [];
 	box.faceVertexUvs[0][0] = [right[3], right[0], right[2]];
@@ -44,10 +39,10 @@ const esp = 0.002;
 /**
  * Notice that innerLayer and outerLayer may NOT be the direct children of the Group.
  */
-export class BodyPart extends Group {
+export class BodyPart extends THREE.Group {
 	constructor(
-		readonly innerLayer: Object3D,
-		readonly outerLayer: Object3D
+		readonly innerLayer: THREE.Object3D,
+		readonly outerLayer: THREE.Object3D
 	) {
 		super();
 		innerLayer.name = "inner";
@@ -55,7 +50,7 @@ export class BodyPart extends Group {
 	}
 }
 
-export class SkinObject extends Group {
+export class SkinObject extends THREE.Group {
 
 	// body parts
 	readonly head: BodyPart;
@@ -68,11 +63,11 @@ export class SkinObject extends Group {
 	private modelListeners: Array<() => void> = []; // called when model(slim property) is changed
 	private _slim = false;
 
-	constructor(layer1Material: MeshBasicMaterial, layer2Material: MeshBasicMaterial) {
+	constructor(layer1Material: THREE.MeshBasicMaterial, layer2Material: THREE.MeshBasicMaterial) {
 		super();
 
 		// Head
-		const headBox = new BoxGeometry(8, 8, 8, 0, 0, 0);
+		const headBox = new THREE.BoxGeometry(8, 8, 8, 0, 0, 0);
 		setVertices(headBox,
 			toSkinVertices(8, 0, 16, 8),
 			toSkinVertices(16, 0, 24, 8),
@@ -81,9 +76,9 @@ export class SkinObject extends Group {
 			toSkinVertices(16, 8, 24, 16),
 			toSkinVertices(24, 8, 32, 16)
 		);
-		const headMesh = new Mesh(headBox, layer1Material);
+		const headMesh = new THREE.Mesh(headBox, layer1Material);
 
-		const head2Box = new BoxGeometry(9, 9, 9, 0, 0, 0);
+		const head2Box = new THREE.BoxGeometry(9, 9, 9, 0, 0, 0);
 		setVertices(head2Box,
 			toSkinVertices(40, 0, 48, 8),
 			toSkinVertices(48, 0, 56, 8),
@@ -92,7 +87,7 @@ export class SkinObject extends Group {
 			toSkinVertices(48, 8, 56, 16),
 			toSkinVertices(56, 8, 64, 16)
 		);
-		const head2Mesh = new Mesh(head2Box, layer2Material);
+		const head2Mesh = new THREE.Mesh(head2Box, layer2Material);
 		head2Mesh.renderOrder = -1;
 
 		this.head = new BodyPart(headMesh, head2Mesh);
@@ -101,7 +96,7 @@ export class SkinObject extends Group {
 		this.add(this.head);
 
 		// Body
-		const bodyBox = new BoxGeometry(8, 12, 4, 0, 0, 0);
+		const bodyBox = new THREE.BoxGeometry(8, 12, 4, 0, 0, 0);
 		setVertices(bodyBox,
 			toSkinVertices(20, 16, 28, 20),
 			toSkinVertices(28, 16, 36, 20),
@@ -110,9 +105,9 @@ export class SkinObject extends Group {
 			toSkinVertices(28, 20, 32, 32),
 			toSkinVertices(32, 20, 40, 32)
 		);
-		const bodyMesh = new Mesh(bodyBox, layer1Material);
+		const bodyMesh = new THREE.Mesh(bodyBox, layer1Material);
 
-		const body2Box = new BoxGeometry(9, 13.5, 4.5, 0, 0, 0);
+		const body2Box = new THREE.BoxGeometry(9, 13.5, 4.5, 0, 0, 0);
 		setVertices(body2Box,
 			toSkinVertices(20, 32, 28, 36),
 			toSkinVertices(28, 32, 36, 36),
@@ -121,7 +116,7 @@ export class SkinObject extends Group {
 			toSkinVertices(28, 36, 32, 48),
 			toSkinVertices(32, 36, 40, 48)
 		);
-		const body2Mesh = new Mesh(body2Box, layer2Material);
+		const body2Mesh = new THREE.Mesh(body2Box, layer2Material);
 
 		this.body = new BodyPart(bodyMesh, body2Mesh);
 		this.body.name = "body";
@@ -130,8 +125,8 @@ export class SkinObject extends Group {
 		this.add(this.body);
 
 		// Right Arm
-		const rightArmBox = new BoxGeometry(1, 1, 1, 0, 0, 0); // w/d/h is model-related
-		const rightArmMesh = new Mesh(rightArmBox, layer1Material);
+		const rightArmBox = new THREE.BoxGeometry(1, 1, 1, 0, 0, 0); // w/d/h is model-related
+		const rightArmMesh = new THREE.Mesh(rightArmBox, layer1Material);
 		this.modelListeners.push(() => {
 			rightArmMesh.scale.x = (this.slim ? 3 : 4) - esp;
 			rightArmMesh.scale.y = 12 - esp;
@@ -159,8 +154,8 @@ export class SkinObject extends Group {
 			rightArmBox.elementsNeedUpdate = true;
 		});
 
-		const rightArm2Box = new BoxGeometry(1, 1, 1, 0, 0, 0); // w/d/h is model-related
-		const rightArm2Mesh = new Mesh(rightArm2Box, layer2Material);
+		const rightArm2Box = new THREE.BoxGeometry(1, 1, 1, 0, 0, 0); // w/d/h is model-related
+		const rightArm2Mesh = new THREE.Mesh(rightArm2Box, layer2Material);
 		rightArm2Mesh.renderOrder = 1;
 		this.modelListeners.push(() => {
 			rightArm2Mesh.scale.x = (this.slim ? 3.375 : 4.5) - esp;
@@ -189,7 +184,7 @@ export class SkinObject extends Group {
 			rightArm2Box.elementsNeedUpdate = true;
 		});
 
-		const rightArmPivot = new Group();
+		const rightArmPivot = new THREE.Group();
 		rightArmPivot.add(rightArmMesh, rightArm2Mesh);
 		rightArmPivot.position.y = -6;
 
@@ -203,8 +198,8 @@ export class SkinObject extends Group {
 		this.add(this.rightArm);
 
 		// Left Arm
-		const leftArmBox = new BoxGeometry(1, 1, 1, 0, 0, 0); // w/d/h is model-related
-		const leftArmMesh = new Mesh(leftArmBox, layer1Material);
+		const leftArmBox = new THREE.BoxGeometry(1, 1, 1, 0, 0, 0); // w/d/h is model-related
+		const leftArmMesh = new THREE.Mesh(leftArmBox, layer1Material);
 		this.modelListeners.push(() => {
 			leftArmMesh.scale.x = (this.slim ? 3 : 4) - esp;
 			leftArmMesh.scale.y = 12 - esp;
@@ -232,8 +227,8 @@ export class SkinObject extends Group {
 			leftArmBox.elementsNeedUpdate = true;
 		});
 
-		const leftArm2Box = new BoxGeometry(1, 1, 1, 0, 0, 0); // w/d/h is model-related
-		const leftArm2Mesh = new Mesh(leftArm2Box, layer2Material);
+		const leftArm2Box = new THREE.BoxGeometry(1, 1, 1, 0, 0, 0); // w/d/h is model-related
+		const leftArm2Mesh = new THREE.Mesh(leftArm2Box, layer2Material);
 		leftArm2Mesh.renderOrder = 1;
 		this.modelListeners.push(() => {
 			leftArm2Mesh.scale.x = (this.slim ? 3.375 : 4.5) - esp;
@@ -262,7 +257,7 @@ export class SkinObject extends Group {
 			leftArm2Box.elementsNeedUpdate = true;
 		});
 
-		const leftArmPivot = new Group();
+		const leftArmPivot = new THREE.Group();
 		leftArmPivot.add(leftArmMesh, leftArm2Mesh);
 		leftArmPivot.position.y = -6;
 
@@ -276,7 +271,7 @@ export class SkinObject extends Group {
 		this.add(this.leftArm);
 
 		// Right Leg
-		const rightLegBox = new BoxGeometry(4 - esp, 12 - esp, 4 - esp, 0, 0, 0);
+		const rightLegBox = new THREE.BoxGeometry(4 - esp, 12 - esp, 4 - esp, 0, 0, 0);
 		setVertices(rightLegBox,
 			toSkinVertices(4, 16, 8, 20),
 			toSkinVertices(8, 16, 12, 20),
@@ -285,9 +280,9 @@ export class SkinObject extends Group {
 			toSkinVertices(8, 20, 12, 32),
 			toSkinVertices(12, 20, 16, 32)
 		);
-		const rightLegMesh = new Mesh(rightLegBox, layer1Material);
+		const rightLegMesh = new THREE.Mesh(rightLegBox, layer1Material);
 
-		const rightLeg2Box = new BoxGeometry(4.5 - esp, 13.5 - esp, 4.5 - esp, 0, 0, 0);
+		const rightLeg2Box = new THREE.BoxGeometry(4.5 - esp, 13.5 - esp, 4.5 - esp, 0, 0, 0);
 		setVertices(rightLeg2Box,
 			toSkinVertices(4, 32, 8, 36),
 			toSkinVertices(8, 32, 12, 36),
@@ -296,10 +291,10 @@ export class SkinObject extends Group {
 			toSkinVertices(8, 36, 12, 48),
 			toSkinVertices(12, 36, 16, 48)
 		);
-		const rightLeg2Mesh = new Mesh(rightLeg2Box, layer2Material);
+		const rightLeg2Mesh = new THREE.Mesh(rightLeg2Box, layer2Material);
 		rightLeg2Mesh.renderOrder = 1;
 
-		const rightLegPivot = new Group();
+		const rightLegPivot = new THREE.Group();
 		rightLegPivot.add(rightLegMesh, rightLeg2Mesh);
 		rightLegPivot.position.y = -6;
 
@@ -311,7 +306,7 @@ export class SkinObject extends Group {
 		this.add(this.rightLeg);
 
 		// Left Leg
-		const leftLegBox = new BoxGeometry(4 - esp, 12 - esp, 4 - esp, 0, 0, 0);
+		const leftLegBox = new THREE.BoxGeometry(4 - esp, 12 - esp, 4 - esp, 0, 0, 0);
 		setVertices(leftLegBox,
 			toSkinVertices(20, 48, 24, 52),
 			toSkinVertices(24, 48, 28, 52),
@@ -320,9 +315,9 @@ export class SkinObject extends Group {
 			toSkinVertices(24, 52, 28, 64),
 			toSkinVertices(28, 52, 32, 64)
 		);
-		const leftLegMesh = new Mesh(leftLegBox, layer1Material);
+		const leftLegMesh = new THREE.Mesh(leftLegBox, layer1Material);
 
-		const leftLeg2Box = new BoxGeometry(4.5 - esp, 13.5 - esp, 4.5 - esp, 0, 0, 0);
+		const leftLeg2Box = new THREE.BoxGeometry(4.5 - esp, 13.5 - esp, 4.5 - esp, 0, 0, 0);
 		setVertices(leftLeg2Box,
 			toSkinVertices(4, 48, 8, 52),
 			toSkinVertices(8, 48, 12, 52),
@@ -331,10 +326,10 @@ export class SkinObject extends Group {
 			toSkinVertices(8, 52, 12, 64),
 			toSkinVertices(12, 52, 16, 64)
 		);
-		const leftLeg2Mesh = new Mesh(leftLeg2Box, layer2Material);
+		const leftLeg2Mesh = new THREE.Mesh(leftLeg2Box, layer2Material);
 		leftLeg2Mesh.renderOrder = 1;
 
-		const leftLegPivot = new Group();
+		const leftLegPivot = new THREE.Group();
 		leftLegPivot.add(leftLegMesh, leftLeg2Mesh);
 		leftLegPivot.position.y = -6;
 
@@ -370,16 +365,16 @@ export class SkinObject extends Group {
 	}
 }
 
-export class CapeObject extends Group {
+export class CapeObject extends THREE.Group {
 
-	readonly cape: Mesh;
+	readonly cape: THREE.Mesh;
 
-	constructor(capeMaterial: MeshBasicMaterial) {
+	constructor(capeMaterial: THREE.MeshBasicMaterial) {
 		super();
 
 		// back = outside
 		// front = inside
-		const capeBox = new BoxGeometry(10, 16, 1, 0, 0, 0);
+		const capeBox = new THREE.BoxGeometry(10, 16, 1, 0, 0, 0);
 		setVertices(capeBox,
 			toCapeVertices(1, 0, 11, 1),
 			toCapeVertices(11, 0, 21, 1),
@@ -388,19 +383,19 @@ export class CapeObject extends Group {
 			toCapeVertices(0, 1, 1, 17),
 			toCapeVertices(1, 1, 11, 17)
 		);
-		this.cape = new Mesh(capeBox, capeMaterial);
+		this.cape = new THREE.Mesh(capeBox, capeMaterial);
 		this.cape.position.y = -8;
 		this.cape.position.z = -0.5;
 		this.add(this.cape);
 	}
 }
 
-export class PlayerObject extends Group {
+export class PlayerObject extends THREE.Group {
 
 	readonly skin: SkinObject;
 	readonly cape: CapeObject;
 
-	constructor(layer1Material: MeshBasicMaterial, layer2Material: MeshBasicMaterial, capeMaterial: MeshBasicMaterial) {
+	constructor(layer1Material: THREE.MeshBasicMaterial, layer2Material: THREE.MeshBasicMaterial, capeMaterial: THREE.MeshBasicMaterial) {
 		super();
 
 		this.skin = new SkinObject(layer1Material, layer2Material);
