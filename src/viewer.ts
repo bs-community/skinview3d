@@ -79,7 +79,6 @@ export class SkinViewer {
 
 		this.renderer = new WebGLRenderer({ alpha: true, antialias: false });
 		this.renderer.setSize(300, 300); // default size
-		this.renderer.context.getShaderInfoLog = () => ""; // shut firefox up
 		this.domElement.appendChild(this.renderer.domElement);
 
 		this.playerObject = new PlayerObject(this.layer1Material, this.layer2Material, this.capeMaterial);
