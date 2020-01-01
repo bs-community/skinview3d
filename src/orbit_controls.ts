@@ -1,4 +1,12 @@
-import * as THREE from "three";
+import { Camera } from "three/src/cameras/Camera";
+import { OrthographicCamera } from "three/src/cameras/OrthographicCamera";
+import { PerspectiveCamera } from "three/src/cameras/PerspectiveCamera";
+import { MOUSE } from "three/src/constants";
+import { EventDispatcher } from "three/src/core/EventDispatcher";
+import { Quaternion } from "three/src/math/Quaternion";
+import { Spherical } from "three/src/math/Spherical";
+import { Vector2 } from "three/src/math/Vector2";
+import { Vector3 } from "three/src/math/Vector3";
 import { SkinViewer } from "./viewer";
 
 const STATE = {
@@ -16,7 +24,7 @@ const START_EVENT = { type: "start" };
 const END_EVENT = { type: "end" };
 const EPS = 0.000001;
 
-export class OrbitControls extends THREE.EventDispatcher {
+export class OrbitControls extends EventDispatcher {
 	/**
 	 * @preserve
 	 * The code was originally from https://github.com/mrdoob/three.js/blob/d45a042cf962e9b1aa9441810ba118647b48aacb/examples/js/controls/OrbitControls.js
@@ -58,13 +66,13 @@ export class OrbitControls extends THREE.EventDispatcher {
 	//    Zoom - middle mouse, or mousewheel / touch: two finger spread or squish
 	//    Pan - right mouse, or arrow keys / touch: three finger swipe
 
-	object: THREE.Camera;
+	object: Camera;
 	domElement: HTMLElement | HTMLDocument;
 	window: Window;
 
 	// API
 	enabled: boolean;
-	target: THREE.Vector3;
+	target: Vector3;
 
 	enableZoom: boolean;
 	zoomSpeed: number;
@@ -84,41 +92,41 @@ export class OrbitControls extends THREE.EventDispatcher {
 	maxAzimuthAngle: number;
 	enableKeys: boolean;
 	keys: { LEFT: number; UP: number; RIGHT: number; BOTTOM: number; };
-	mouseButtons: { ORBIT: THREE.MOUSE; ZOOM: THREE.MOUSE; PAN: THREE.MOUSE; };
+	mouseButtons: { ORBIT: MOUSE; ZOOM: MOUSE; PAN: MOUSE; };
 	enableDamping: boolean;
 	dampingFactor: number;
 
-	private spherical: THREE.Spherical;
-	private sphericalDelta: THREE.Spherical;
+	private spherical: Spherical;
+	private sphericalDelta: Spherical;
 	private scale: number;
-	private target0: THREE.Vector3;
-	private position0: THREE.Vector3;
+	private target0: Vector3;
+	private position0: Vector3;
 	private zoom0: any;
 	private state: number;
-	private panOffset: THREE.Vector3;
+	private panOffset: Vector3;
 	private zoomChanged: boolean;
 
-	private rotateStart: THREE.Vector2;
-	private rotateEnd: THREE.Vector2;
-	private rotateDelta: THREE.Vector2;
+	private rotateStart: Vector2;
+	private rotateEnd: Vector2;
+	private rotateDelta: Vector2;
 
-	private panStart: THREE.Vector2;
-	private panEnd: THREE.Vector2;
-	private panDelta: THREE.Vector2;
+	private panStart: Vector2;
+	private panEnd: Vector2;
+	private panDelta: Vector2;
 
-	private dollyStart: THREE.Vector2;
-	private dollyEnd: THREE.Vector2;
-	private dollyDelta: THREE.Vector2;
+	private dollyStart: Vector2;
+	private dollyEnd: Vector2;
+	private dollyDelta: Vector2;
 
-	private updateLastPosition: THREE.Vector3;
-	private updateOffset: THREE.Vector3;
-	private updateQuat: THREE.Quaternion;
-	private updateLastQuaternion: THREE.Quaternion;
-	private updateQuatInverse: THREE.Quaternion;
+	private updateLastPosition: Vector3;
+	private updateOffset: Vector3;
+	private updateQuat: Quaternion;
+	private updateLastQuaternion: Quaternion;
+	private updateQuatInverse: Quaternion;
 
-	private panLeftV: THREE.Vector3;
-	private panUpV: THREE.Vector3;
-	private panInternalOffset: THREE.Vector3;
+	private panLeftV: Vector3;
+	private panUpV: Vector3;
+	private panInternalOffset: Vector3;
 
 	private onContextMenu: EventListener;
 	private onMouseUp: EventListener;
@@ -130,7 +138,7 @@ export class OrbitControls extends THREE.EventDispatcher {
 	private onTouchMove: EventListener;
 	private onKeyDown: EventListener;
 
-	constructor(object: THREE.Camera, domElement?: HTMLElement, domWindow?: Window) {
+	constructor(object: Camera, domElement?: HTMLElement, domWindow?: Window) {
 		super();
 		this.object = object;
 
@@ -141,7 +149,7 @@ export class OrbitControls extends THREE.EventDispatcher {
 		this.enabled = true;
 
 		// "target" sets the location of focus, where the object orbits around
-		this.target = new THREE.Vector3();
+		this.target = new Vector3();
 
 		// How far you can dolly in and out ( PerspectiveCamera only )
 		this.minDistance = 0;
@@ -191,7 +199,7 @@ export class OrbitControls extends THREE.EventDispatcher {
 		this.keys = { LEFT: 37, UP: 38, RIGHT: 39, BOTTOM: 40 };
 
 		// Mouse buttons
-		this.mouseButtons = { ORBIT: THREE.MOUSE.LEFT, ZOOM: THREE.MOUSE.MIDDLE, PAN: THREE.MOUSE.RIGHT };
+		this.mouseButtons = { ORBIT: MOUSE.LEFT, ZOOM: MOUSE.MIDDLE, PAN: MOUSE.RIGHT };
 
 		// for reset
 		this.target0 = this.target.clone();
@@ -199,38 +207,38 @@ export class OrbitControls extends THREE.EventDispatcher {
 		this.zoom0 = (this.object as any).zoom;
 
 		// for update speedup
-		this.updateOffset = new THREE.Vector3();
+		this.updateOffset = new Vector3();
 		// so camera.up is the orbit axis
-		this.updateQuat = new THREE.Quaternion().setFromUnitVectors(object.up, new THREE.Vector3(0, 1, 0));
+		this.updateQuat = new Quaternion().setFromUnitVectors(object.up, new Vector3(0, 1, 0));
 		this.updateQuatInverse = this.updateQuat.clone().inverse();
-		this.updateLastPosition = new THREE.Vector3();
-		this.updateLastQuaternion = new THREE.Quaternion();
+		this.updateLastPosition = new Vector3();
+		this.updateLastQuaternion = new Quaternion();
 
 		this.state = STATE.NONE;
 		this.scale = 1;
 
 		// current position in spherical coordinates
-		this.spherical = new THREE.Spherical();
-		this.sphericalDelta = new THREE.Spherical();
+		this.spherical = new Spherical();
+		this.sphericalDelta = new Spherical();
 
-		this.panOffset = new THREE.Vector3();
+		this.panOffset = new Vector3();
 		this.zoomChanged = false;
 
-		this.rotateStart = new THREE.Vector2();
-		this.rotateEnd = new THREE.Vector2();
-		this.rotateDelta = new THREE.Vector2();
+		this.rotateStart = new Vector2();
+		this.rotateEnd = new Vector2();
+		this.rotateDelta = new Vector2();
 
-		this.panStart = new THREE.Vector2();
-		this.panEnd = new THREE.Vector2();
-		this.panDelta = new THREE.Vector2();
+		this.panStart = new Vector2();
+		this.panEnd = new Vector2();
+		this.panDelta = new Vector2();
 
-		this.dollyStart = new THREE.Vector2();
-		this.dollyEnd = new THREE.Vector2();
-		this.dollyDelta = new THREE.Vector2();
+		this.dollyStart = new Vector2();
+		this.dollyEnd = new Vector2();
+		this.dollyDelta = new Vector2();
 
-		this.panLeftV = new THREE.Vector3();
-		this.panUpV = new THREE.Vector3();
-		this.panInternalOffset = new THREE.Vector3();
+		this.panLeftV = new Vector3();
+		this.panUpV = new Vector3();
+		this.panInternalOffset = new Vector3();
 
 		// event handlers - FSM: listen for events and reset state
 
@@ -588,7 +596,7 @@ export class OrbitControls extends THREE.EventDispatcher {
 	pan(deltaX: number, deltaY: number) {
 		const element = this.domElement === document ? this.domElement.body : this.domElement;
 
-		if (this.object instanceof THREE.PerspectiveCamera) {
+		if (this.object instanceof PerspectiveCamera) {
 			// perspective
 			const position = this.object.position;
 			this.panInternalOffset.copy(position).sub(this.target);
@@ -600,7 +608,7 @@ export class OrbitControls extends THREE.EventDispatcher {
 			// we actually don"t use screenWidth, since perspective camera is fixed to screen height
 			this.panLeft(2 * deltaX * targetDistance / (element as any).clientHeight, this.object.matrix);
 			this.panUp(2 * deltaY * targetDistance / (element as any).clientHeight, this.object.matrix);
-		} else if (this.object instanceof THREE.OrthographicCamera) {
+		} else if (this.object instanceof OrthographicCamera) {
 			// orthographic
 			this.panLeft(deltaX * (this.object.right - this.object.left) / this.object.zoom / (element as any).clientWidth, this.object.matrix);
 			this.panUp(deltaY * (this.object.top - this.object.bottom) / this.object.zoom / (element as any).clientHeight, this.object.matrix);
@@ -612,9 +620,9 @@ export class OrbitControls extends THREE.EventDispatcher {
 	}
 
 	dollyIn(dollyScale) {
-		if (this.object instanceof THREE.PerspectiveCamera) {
+		if (this.object instanceof PerspectiveCamera) {
 			this.scale /= dollyScale;
-		} else if (this.object instanceof THREE.OrthographicCamera) {
+		} else if (this.object instanceof OrthographicCamera) {
 			this.object.zoom = Math.max(this.minZoom, Math.min(this.maxZoom, this.object.zoom * dollyScale));
 			this.object.updateProjectionMatrix();
 			this.zoomChanged = true;
@@ -625,9 +633,9 @@ export class OrbitControls extends THREE.EventDispatcher {
 	}
 
 	dollyOut(dollyScale) {
-		if (this.object instanceof THREE.PerspectiveCamera) {
+		if (this.object instanceof PerspectiveCamera) {
 			this.scale *= dollyScale;
-		} else if (this.object instanceof THREE.OrthographicCamera) {
+		} else if (this.object instanceof OrthographicCamera) {
 			this.object.zoom = Math.max(this.minZoom, Math.min(this.maxZoom, this.object.zoom / dollyScale));
 			this.object.updateProjectionMatrix();
 			this.zoomChanged = true;
@@ -691,7 +699,7 @@ export class OrbitControls extends THREE.EventDispatcher {
 	}
 
 	// backward compatibility
-	// get center(): THREE.Vector3 {
+	// get center(): Vector3 {
 	// 	console.warn("THREE.OrbitControls: .center has been renamed to .target");
 	// 	return this.target;
 	// }
@@ -710,7 +718,7 @@ interface ThreeEvent extends Event {
 	clientX: number;
 	clientY: number;
 	deltaY: number;
-	button: THREE.MOUSE;
+	button: MOUSE;
 	touches: Array<any>;
 	keyCode: number;
 }
@@ -720,7 +728,7 @@ export function createOrbitControls(skinViewer: SkinViewer) {
 
 	// default configuration
 	control.enablePan = false;
-	control.target = new THREE.Vector3(0, -12, 0);
+	control.target = new Vector3(0, -12, 0);
 	control.minDistance = 10;
 	control.maxDistance = 256;
 	control.update();

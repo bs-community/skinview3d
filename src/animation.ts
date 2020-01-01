@@ -1,5 +1,5 @@
+import { Clock } from "three/src/core/Clock";
 import { PlayerObject } from "./model";
-import * as THREE from "three";
 
 export interface IAnimation {
 	play(player: PlayerObject, time: number): void;
@@ -102,7 +102,7 @@ export class CompositeAnimation implements IAnimation {
 export class RootAnimation extends CompositeAnimation implements AnimationHandle {
 	speed: number = 1.0;
 	progress: number = 0.0;
-	readonly clock: THREE.Clock = new THREE.Clock(true);
+	readonly clock: Clock = new Clock(true);
 
 	get animation() {
 		return this;
