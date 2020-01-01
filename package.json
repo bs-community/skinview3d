@@ -1,6 +1,6 @@
 {
 	"name": "skinview3d",
-	"version": "1.2.0",
+	"version": "1.2.1",
 	"description": "Three.js powered Minecraft skin viewer",
 	"module": "dist/skinview3d.module.js",
 	"main": "dist/skinview3d.js",
