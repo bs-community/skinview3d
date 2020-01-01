@@ -1,7 +1,7 @@
-import * as THREE from "three";
-import { PlayerObject } from "./model";
+import { DoubleSide, FrontSide, MeshBasicMaterial, NearestFilter, PerspectiveCamera, Scene, Texture, Vector2, WebGLRenderer } from "three";
 import { RootAnimation } from "./animation";
-import { loadSkinToCanvas, loadCapeToCanvas, isSlimSkin } from "./utils";
+import { PlayerObject } from "./model";
+import { isSlimSkin, loadCapeToCanvas, loadSkinToCanvas } from "./utils";
 
 export interface SkinViewerOptions {
 	domElement: Node;
@@ -22,19 +22,19 @@ export class SkinViewer {
 
 	public readonly skinImg: HTMLImageElement;
 	public readonly skinCanvas: HTMLCanvasElement;
-	public readonly skinTexture: THREE.Texture;
+	public readonly skinTexture: Texture;
 
 	public readonly capeImg: HTMLImageElement;
 	public readonly capeCanvas: HTMLCanvasElement;
-	public readonly capeTexture: THREE.Texture;
+	public readonly capeTexture: Texture;
 
-	public readonly layer1Material: THREE.MeshBasicMaterial;
-	public readonly layer2Material: THREE.MeshBasicMaterial;
-	public readonly capeMaterial: THREE.MeshBasicMaterial;
+	public readonly layer1Material: MeshBasicMaterial;
+	public readonly layer2Material: MeshBasicMaterial;
+	public readonly capeMaterial: MeshBasicMaterial;
 
-	public readonly scene: THREE.Scene;
-	public readonly camera: THREE.PerspectiveCamera;
-	public readonly renderer: THREE.WebGLRenderer;
+	public readonly scene: Scene;
+	public readonly camera: PerspectiveCamera;
+	public readonly renderer: WebGLRenderer;
 
 	public readonly playerObject: PlayerObject;
 
@@ -49,29 +49,29 @@ export class SkinViewer {
 		// texture
 		this.skinImg = new Image();
 		this.skinCanvas = document.createElement("canvas");
-		this.skinTexture = new THREE.Texture(this.skinCanvas);
-		this.skinTexture.magFilter = THREE.NearestFilter;
-		this.skinTexture.minFilter = THREE.NearestFilter;
+		this.skinTexture = new Texture(this.skinCanvas);
+		this.skinTexture.magFilter = NearestFilter;
+		this.skinTexture.minFilter = NearestFilter;
 
 		this.capeImg = new Image();
 		this.capeCanvas = document.createElement("canvas");
-		this.capeTexture = new THREE.Texture(this.capeCanvas);
-		this.capeTexture.magFilter = THREE.NearestFilter;
-		this.capeTexture.minFilter = THREE.NearestFilter;
+		this.capeTexture = new Texture(this.capeCanvas);
+		this.capeTexture.magFilter = NearestFilter;
+		this.capeTexture.minFilter = NearestFilter;
 
-		this.layer1Material = new THREE.MeshBasicMaterial({ map: this.skinTexture, side: THREE.FrontSide });
-		this.layer2Material = new THREE.MeshBasicMaterial({ map: this.skinTexture, transparent: true, opacity: 1, side: THREE.DoubleSide, alphaTest: 0.5 });
-		this.capeMaterial = new THREE.MeshBasicMaterial({ map: this.capeTexture, transparent: true, opacity: 1, side: THREE.DoubleSide, alphaTest: 0.5 });
+		this.layer1Material = new MeshBasicMaterial({ map: this.skinTexture, side: FrontSide });
+		this.layer2Material = new MeshBasicMaterial({ map: this.skinTexture, transparent: true, opacity: 1, side: DoubleSide, alphaTest: 0.5 });
+		this.capeMaterial = new MeshBasicMaterial({ map: this.capeTexture, transparent: true, opacity: 1, side: DoubleSide, alphaTest: 0.5 });
 
 		// scene
-		this.scene = new THREE.Scene();
+		this.scene = new Scene();
 
 		// Use smaller fov to avoid distortion
-		this.camera = new THREE.PerspectiveCamera(40);
+		this.camera = new PerspectiveCamera(40);
 		this.camera.position.y = -12;
 		this.camera.position.z = 60;
 
-		this.renderer = new THREE.WebGLRenderer({ alpha: true, antialias: false });
+		this.renderer = new WebGLRenderer({ alpha: true, antialias: false });
 		this.renderer.setSize(300, 300); // default size
 		this.domElement.appendChild(this.renderer.domElement);
 
@@ -167,7 +167,7 @@ export class SkinViewer {
 	}
 
 	get width() {
-		const target = new THREE.Vector2();
+		const target = new Vector2();
 		return this.renderer.getSize(target).width;
 	}
 
@@ -176,7 +176,7 @@ export class SkinViewer {
 	}
 
 	get height() {
-		const target = new THREE.Vector2();
+		const target = new Vector2();
 		return this.renderer.getSize(target).height;
 	}
 
