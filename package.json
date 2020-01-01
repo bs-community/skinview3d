@@ -33,13 +33,12 @@
 		"dist"
 	],
 	"dependencies": {
-		"three": "^0.112.0"
+		"three": "^0.112.1"
 	},
 	"devDependencies": {
 		"@rollup/plugin-node-resolve": "^6.0.0",
 		"@types/chai": "^4.1.4",
 		"@types/mocha": "^5.2.5",
-		"@types/three": "^0.93.4",
 		"chai": "^4.2.0",
 		"karma": "^3.0.0",
 		"karma-chrome-launcher": "^2.2.0",
