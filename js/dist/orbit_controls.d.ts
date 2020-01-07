@@ -1,6 +1,6 @@
-import * as THREE from "three";
+import { Camera, EventDispatcher, MOUSE, Vector3 } from "three";
 import { SkinViewer } from "./viewer";
-export declare class OrbitControls extends THREE.EventDispatcher {
+export declare class OrbitControls extends EventDispatcher {
     /**
      * @preserve
      * The code was originally from https://github.com/mrdoob/three.js/blob/d45a042cf962e9b1aa9441810ba118647b48aacb/examples/js/controls/OrbitControls.js
@@ -34,11 +34,11 @@ export declare class OrbitControls extends THREE.EventDispatcher {
      * @author WestLangley / http://github.com/WestLangley
      * @author erich666 / http://erichaines.com
      */
-    object: THREE.Camera;
+    object: Camera;
     domElement: HTMLElement | HTMLDocument;
     window: Window;
     enabled: boolean;
-    target: THREE.Vector3;
+    target: Vector3;
     enableZoom: boolean;
     zoomSpeed: number;
     minDistance: number;
@@ -63,9 +63,9 @@ export declare class OrbitControls extends THREE.EventDispatcher {
         BOTTOM: number;
     };
     mouseButtons: {
-        ORBIT: THREE.MOUSE;
-        ZOOM: THREE.MOUSE;
-        PAN: THREE.MOUSE;
+        ORBIT: MOUSE;
+        ZOOM: MOUSE;
+        PAN: MOUSE;
     };
     enableDamping: boolean;
     dampingFactor: number;
@@ -104,7 +104,7 @@ export declare class OrbitControls extends THREE.EventDispatcher {
     private onTouchEnd;
     private onTouchMove;
     private onKeyDown;
-    constructor(object: THREE.Camera, domElement?: HTMLElement, domWindow?: Window);
+    constructor(object: Camera, domElement?: HTMLElement, domWindow?: Window);
     update(): boolean;
     panLeft(distance: number, objectMatrix: any): void;
     panUp(distance: number, objectMatrix: any): void;

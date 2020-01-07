@@ -1,4 +1,5 @@
-import * as THREE from "three";
+import { MeshBasicMaterial, PerspectiveCamera, Scene, Texture, WebGLRenderer } from "three";
+import { RootAnimation } from "./animation";
 import { PlayerObject } from "./model";
 export interface SkinViewerOptions {
     domElement: Node;
@@ -11,29 +12,35 @@ export interface SkinViewerOptions {
 }
 export declare class SkinViewer {
     readonly domElement: Node;
-    animation: Animation | null;
+    readonly animations: RootAnimation;
     detectModel: boolean;
-    animationPaused: boolean;
-    animationTime: number;
     disposed: boolean;
     readonly skinImg: HTMLImageElement;
     readonly skinCanvas: HTMLCanvasElement;
-    readonly skinTexture: THREE.Texture;
+    readonly skinTexture: Texture;
     readonly capeImg: HTMLImageElement;
     readonly capeCanvas: HTMLCanvasElement;
-    readonly capeTexture: THREE.Texture;
-    readonly layer1Material: THREE.MeshBasicMaterial;
-    readonly layer2Material: THREE.MeshBasicMaterial;
-    readonly capeMaterial: THREE.MeshBasicMaterial;
-    readonly scene: THREE.Scene;
-    readonly camera: THREE.PerspectiveCamera;
-    readonly renderer: THREE.WebGLRenderer;
+    readonly capeTexture: Texture;
+    readonly layer1Material: MeshBasicMaterial;
+    readonly layer2Material: MeshBasicMaterial;
+    readonly capeMaterial: MeshBasicMaterial;
+    readonly scene: Scene;
+    readonly camera: PerspectiveCamera;
+    readonly renderer: WebGLRenderer;
     readonly playerObject: PlayerObject;
+    private _renderPaused;
     constructor(options: SkinViewerOptions);
-    setSize(width: any, height: any): void;
+    private draw;
+    setSize(width: number, height: number): void;
     dispose(): void;
-    skinUrl: string;
-    capeUrl: string;
-    width: number;
-    height: number;
+    get renderPaused(): boolean;
+    set renderPaused(value: boolean);
+    get skinUrl(): string;
+    set skinUrl(url: string);
+    get capeUrl(): string;
+    set capeUrl(url: string);
+    get width(): number;
+    set width(newWidth: number);
+    get height(): number;
+    set height(newHeight: number);
 }

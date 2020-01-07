@@ -4,7 +4,7 @@
  * MIT License
  */
 
-import { Vector2, Group, BoxGeometry, Mesh, Texture, NearestFilter, MeshBasicMaterial, FrontSide, DoubleSide, Scene, PerspectiveCamera, WebGLRenderer, Vector3, MOUSE, Quaternion, Spherical, OrthographicCamera, EventDispatcher } from 'three';
+import { Group, BoxGeometry, Vector2, Mesh, Clock, Texture, NearestFilter, MeshBasicMaterial, FrontSide, DoubleSide, Scene, PerspectiveCamera, WebGLRenderer, OrthographicCamera, Vector3, MOUSE, Quaternion, Spherical, EventDispatcher } from 'three';
 
 /*! *****************************************************************************
 Copyright (c) Microsoft Corporation. All rights reserved.
@@ -74,6 +74,8 @@ var BodyPart = /** @class */ (function (_super) {
         var _this = _super.call(this) || this;
         _this.innerLayer = innerLayer;
         _this.outerLayer = outerLayer;
+        innerLayer.name = "inner";
+        outerLayer.name = "outer";
         return _this;
     }
     return BodyPart;
@@ -93,6 +95,7 @@ var SkinObject = /** @class */ (function (_super) {
         var head2Mesh = new Mesh(head2Box, layer2Material);
         head2Mesh.renderOrder = -1;
         _this.head = new BodyPart(headMesh, head2Mesh);
+        _this.head.name = "head";
         _this.head.add(headMesh, head2Mesh);
         _this.add(_this.head);
         // Body
@@ -103,6 +106,7 @@ var SkinObject = /** @class */ (function (_super) {
         setVertices(body2Box, toSkinVertices(20, 32, 28, 36), toSkinVertices(28, 32, 36, 36), toSkinVertices(16, 36, 20, 48), toSkinVertices(20, 36, 28, 48), toSkinVertices(28, 36, 32, 48), toSkinVertices(32, 36, 40, 48));
         var body2Mesh = new Mesh(body2Box, layer2Material);
         _this.body = new BodyPart(bodyMesh, body2Mesh);
+        _this.body.name = "body";
         _this.body.add(bodyMesh, body2Mesh);
         _this.body.position.y = -10;
         _this.add(_this.body);
@@ -142,6 +146,7 @@ var SkinObject = /** @class */ (function (_super) {
         rightArmPivot.add(rightArmMesh, rightArm2Mesh);
         rightArmPivot.position.y = -6;
         _this.rightArm = new BodyPart(rightArmMesh, rightArm2Mesh);
+        _this.rightArm.name = "rightArm";
         _this.rightArm.add(rightArmPivot);
         _this.rightArm.position.y = -4;
         _this.modelListeners.push(function () {
@@ -184,6 +189,7 @@ var SkinObject = /** @class */ (function (_super) {
         leftArmPivot.add(leftArmMesh, leftArm2Mesh);
         leftArmPivot.position.y = -6;
         _this.leftArm = new BodyPart(leftArmMesh, leftArm2Mesh);
+        _this.leftArm.name = "leftArm";
         _this.leftArm.add(leftArmPivot);
         _this.leftArm.position.y = -4;
         _this.modelListeners.push(function () {
@@ -202,6 +208,7 @@ var SkinObject = /** @class */ (function (_super) {
         rightLegPivot.add(rightLegMesh, rightLeg2Mesh);
         rightLegPivot.position.y = -6;
         _this.rightLeg = new BodyPart(rightLegMesh, rightLeg2Mesh);
+        _this.rightLeg.name = "rightLeg";
         _this.rightLeg.add(rightLegPivot);
         _this.rightLeg.position.y = -16;
         _this.rightLeg.position.x = -2;
@@ -218,6 +225,7 @@ var SkinObject = /** @class */ (function (_super) {
         leftLegPivot.add(leftLegMesh, leftLeg2Mesh);
         leftLegPivot.position.y = -6;
         _this.leftLeg = new BodyPart(leftLegMesh, leftLeg2Mesh);
+        _this.leftLeg.name = "leftLeg";
         _this.leftLeg.add(leftLegPivot);
         _this.leftLeg.position.y = -16;
         _this.leftLeg.position.x = 2;
@@ -268,9 +276,11 @@ var PlayerObject = /** @class */ (function (_super) {
     function PlayerObject(layer1Material, layer2Material, capeMaterial) {
         var _this = _super.call(this) || this;
         _this.skin = new SkinObject(layer1Material, layer2Material);
+        _this.skin.name = "skin";
         _this.skin.visible = false;
         _this.add(_this.skin);
         _this.cape = new CapeObject(capeMaterial);
+        _this.cape.name = "cape";
         _this.cape.position.z = -2;
         _this.cape.position.y = -4;
         _this.cape.rotation.x = 25 * Math.PI / 180;
@@ -292,39 +302,42 @@ function invokeAnimation(animation, player, time) {
 }
 var AnimationWrapper = /** @class */ (function () {
     function AnimationWrapper(animation) {
-        this.paused = false;
         this.speed = 1.0;
-        this._paused = false;
-        this._lastChange = null;
-        this._speed = 1.0;
-        this._lastChangeX = null;
+        this.paused = false;
+        this.progress = 0;
+        this.lastTime = 0;
+        this.started = false;
+        this.toResetAndRemove = false;
         this.animation = animation;
     }
     AnimationWrapper.prototype.play = function (player, time) {
-        if (this._lastChange === null) {
-            this._lastChange = time;
-            this._lastChangeX = 0;
+        if (this.toResetAndRemove) {
+            invokeAnimation(this.animation, player, 0);
+            this.remove();
+            return;
         }
-        else if (this.paused !== this._paused || this.speed !== this._speed) {
-            var dt = time - this._lastChange;
-            if (this._paused === false) {
-                this._lastChangeX += dt * this._speed;
-            }
-            this._paused = this.paused;
-            this._speed = this.speed;
-            this._lastChange = time;
+        var delta;
+        if (this.started) {
+            delta = time - this.lastTime;
         }
-        if (this.paused === false) {
-            var dt = time - this._lastChange;
-            var x = this._lastChangeX + this.speed * dt;
-            invokeAnimation(this.animation, player, x);
+        else {
+            delta = 0;
+            this.started = true;
         }
+        this.lastTime = time;
+        if (!this.paused) {
+            this.progress += delta * this.speed;
+        }
+        invokeAnimation(this.animation, player, this.progress);
     };
     AnimationWrapper.prototype.reset = function () {
-        this._lastChange = null;
+        this.progress = 0;
     };
     AnimationWrapper.prototype.remove = function () {
         // stub get's overriden
+    };
+    AnimationWrapper.prototype.resetAndRemove = function () {
+        this.toResetAndRemove = true;
     };
     return AnimationWrapper;
 }());
@@ -335,7 +348,9 @@ var CompositeAnimation = /** @class */ (function () {
     CompositeAnimation.prototype.add = function (animation) {
         var _this = this;
         var handle = new AnimationWrapper(animation);
-        handle.remove = function () { return _this.handles.delete(handle); };
+        handle.remove = function () {
+            _this.handles.delete(handle);
+        };
         this.handles.add(handle);
         return handle;
     };
@@ -344,6 +359,49 @@ var CompositeAnimation = /** @class */ (function () {
     };
     return CompositeAnimation;
 }());
+var RootAnimation = /** @class */ (function (_super) {
+    __extends(RootAnimation, _super);
+    function RootAnimation() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.speed = 1.0;
+        _this.progress = 0.0;
+        _this.clock = new Clock(true);
+        return _this;
+    }
+    Object.defineProperty(RootAnimation.prototype, "animation", {
+        get: function () {
+            return this;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(RootAnimation.prototype, "paused", {
+        get: function () {
+            return !this.clock.running;
+        },
+        set: function (value) {
+            if (value) {
+                this.clock.stop();
+            }
+            else {
+                this.clock.start();
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    RootAnimation.prototype.runAnimationLoop = function (player) {
+        if (this.handles.size === 0) {
+            return;
+        }
+        this.progress += this.clock.getDelta() * this.speed;
+        this.play(player, this.progress);
+    };
+    RootAnimation.prototype.reset = function () {
+        this.progress = 0;
+    };
+    return RootAnimation;
+}(CompositeAnimation));
 var WalkingAnimation = function (player, time) {
     var skin = player.skin;
     // Multiply by animation's natural speed
@@ -580,12 +638,11 @@ function isSlimSkin(canvasOrImage) {
 var SkinViewer = /** @class */ (function () {
     function SkinViewer(options) {
         var _this = this;
+        this.animations = new RootAnimation();
         this.detectModel = true;
-        this.animationPaused = false;
-        this.animationTime = 0;
         this.disposed = false;
+        this._renderPaused = false;
         this.domElement = options.domElement;
-        this.animation = options.animation || null;
         if (options.detectModel === false) {
             this.detectModel = false;
         }
@@ -611,9 +668,9 @@ var SkinViewer = /** @class */ (function () {
         this.camera.position.z = 60;
         this.renderer = new WebGLRenderer({ alpha: true, antialias: false });
         this.renderer.setSize(300, 300); // default size
-        this.renderer.context.getShaderInfoLog = function () { return ""; }; // shut firefox up
         this.domElement.appendChild(this.renderer.domElement);
         this.playerObject = new PlayerObject(this.layer1Material, this.layer2Material, this.capeMaterial);
+        this.playerObject.name = "player";
         this.scene.add(this.playerObject);
         // texture loading
         this.skinImg.crossOrigin = "anonymous";
@@ -644,20 +701,17 @@ var SkinViewer = /** @class */ (function () {
             this.width = options.width;
         if (options.height)
             this.height = options.height;
-        var draw = function () {
-            if (_this.disposed)
-                return;
-            window.requestAnimationFrame(draw);
-            if (!_this.animationPaused) {
-                _this.animationTime++;
-                if (_this.animation) {
-                    invokeAnimation(_this.animation, _this.playerObject, _this.animationTime / 100.0);
-                }
-            }
-            _this.renderer.render(_this.scene, _this.camera);
-        };
-        draw();
+        window.requestAnimationFrame(function () { return _this.draw(); });
     }
+    SkinViewer.prototype.draw = function () {
+        var _this = this;
+        if (this.disposed || this._renderPaused) {
+            return;
+        }
+        this.animations.runAnimationLoop(this.playerObject);
+        this.renderer.render(this.scene, this.camera);
+        window.requestAnimationFrame(function () { return _this.draw(); });
+    };
     SkinViewer.prototype.setSize = function (width, height) {
         this.camera.aspect = width / height;
         this.camera.updateProjectionMatrix();
@@ -670,6 +724,21 @@ var SkinViewer = /** @class */ (function () {
         this.skinTexture.dispose();
         this.capeTexture.dispose();
     };
+    Object.defineProperty(SkinViewer.prototype, "renderPaused", {
+        get: function () {
+            return this._renderPaused;
+        },
+        set: function (value) {
+            var _this = this;
+            var toResume = !this.disposed && !value && this._renderPaused;
+            this._renderPaused = value;
+            if (toResume) {
+                window.requestAnimationFrame(function () { return _this.draw(); });
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(SkinViewer.prototype, "skinUrl", {
         get: function () {
             return this.skinImg.src;
@@ -692,7 +761,8 @@ var SkinViewer = /** @class */ (function () {
     });
     Object.defineProperty(SkinViewer.prototype, "width", {
         get: function () {
-            return this.renderer.getSize().width;
+            var target = new Vector2();
+            return this.renderer.getSize(target).width;
         },
         set: function (newWidth) {
             this.setSize(newWidth, this.height);
@@ -702,7 +772,8 @@ var SkinViewer = /** @class */ (function () {
     });
     Object.defineProperty(SkinViewer.prototype, "height", {
         get: function () {
-            return this.renderer.getSize().height;
+            var target = new Vector2();
+            return this.renderer.getSize(target).height;
         },
         set: function (newHeight) {
             this.setSize(this.width, newHeight);
@@ -1211,4 +1282,4 @@ function createOrbitControls(skinViewer) {
     return control;
 }
 
-export { SkinObject, BodyPart, CapeObject, PlayerObject, SkinViewer, OrbitControls, createOrbitControls, invokeAnimation, CompositeAnimation, WalkingAnimation, RunningAnimation, RotatingAnimation, isSlimSkin };
+export { BodyPart, CapeObject, CompositeAnimation, OrbitControls, PlayerObject, RootAnimation, RotatingAnimation, RunningAnimation, SkinObject, SkinViewer, WalkingAnimation, createOrbitControls, invokeAnimation, isSlimSkin };
