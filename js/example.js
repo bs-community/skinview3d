@@ -27,7 +27,6 @@ function initSkinViewer() {
 	});
 
 	skinViewer.camera.position.z = 70;
-	skinViewer.animation = new skinview3d.CompositeAnimation();
 
 	control = skinview3d.createOrbitControls(skinViewer);
 
@@ -73,7 +72,7 @@ function resizeSkinViewer() {
 }
 
 function pause() {
-	skinViewer.animationPaused = !skinViewer.animationPaused;
+	skinViewer.animations.paused = !skinViewer.animations.paused;
 }
 
 function walk() {
@@ -82,8 +81,7 @@ function walk() {
 		delete handles.run;
 	}
 
-	handles.walk = handles.walk || skinViewer.animation.add(skinview3d.WalkingAnimation);
-	handles.walk.speed = globalAnimationSpeed;
+	handles.walk = handles.walk || skinViewer.animations.add(skinview3d.WalkingAnimation);
 }
 
 function run() {
@@ -92,16 +90,14 @@ function run() {
 		delete handles.walk;
 	}
 
-	handles.run = handles.run || skinViewer.animation.add(skinview3d.RunningAnimation);
-	handles.run.speed = globalAnimationSpeed;
+	handles.run = handles.run || skinViewer.animations.add(skinview3d.RunningAnimation);
 }
 
 function rotate() {
 	if (handles.rotate) {
 		handles.rotate.paused = !handles.rotate.paused;
 	} else {
-		handles.rotate = skinViewer.animation.add(skinview3d.RotatingAnimation);
-		handles.rotate.speed = globalAnimationSpeed;
+		handles.rotate = skinViewer.animations.add(skinview3d.RotatingAnimation);
 	}
 }
 
@@ -113,10 +109,6 @@ function setGlobalAnimationSpeed() {
 	var currentSpeed = el('speed').value;
 
 	if (!isNaN(currentSpeed)) {
-		globalAnimationSpeed = currentSpeed;
-
-		for (var key in handles) {
-			handles[key].speed = currentSpeed;
-		}
+        skinViewer.animations.speed = currentSpeed;
 	}
 }
