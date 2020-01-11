@@ -33,4 +33,4 @@ export {
 
 export {
 	isSlimSkin
-} from "./utils";
+} from "@yushijinhun/skinview-utils";

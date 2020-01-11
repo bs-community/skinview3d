@@ -39,6 +39,7 @@
 		"@rollup/plugin-node-resolve": "^6.0.0",
 		"@types/chai": "^4.1.4",
 		"@types/mocha": "^5.2.5",
+		"@yushijinhun/skinview-utils": "^0.1.0",
 		"chai": "^4.2.0",
 		"karma": "^3.0.0",
 		"karma-chrome-launcher": "^2.2.0",

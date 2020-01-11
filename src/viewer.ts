@@ -1,7 +1,7 @@
 import { DoubleSide, FrontSide, MeshBasicMaterial, NearestFilter, PerspectiveCamera, Scene, Texture, Vector2, WebGLRenderer } from "three";
 import { RootAnimation } from "./animation";
 import { PlayerObject } from "./model";
-import { isSlimSkin, loadCapeToCanvas, loadSkinToCanvas } from "./utils";
+import { isSlimSkin, loadCapeToCanvas, loadSkinToCanvas } from "@yushijinhun/skinview-utils";
 
 export interface SkinViewerOptions {
 	domElement: Node;
