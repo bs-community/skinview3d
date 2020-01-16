@@ -30,7 +30,3 @@ export {
 	RunningAnimation,
 	RotatingAnimation
 } from "./animation";
-
-export {
-	isSlimSkin
-} from "@yushijinhun/skinview-utils";

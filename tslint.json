@@ -1,9 +1,5 @@
 {
-	"defaultSeverity": "error",
-	"extends": [
-		"tslint:latest"
-	],
-	"jsRules": {},
+	"extends": "tslint:latest",
 	"rules": {
 		"curly": false,
 		"ordered-imports": false,
@@ -27,6 +23,5 @@
 		"max-classes-per-file": false,
 		"interface-name": false,
 		"member-ordering": false
-	},
-	"rulesDirectory": []
+	}
 }
