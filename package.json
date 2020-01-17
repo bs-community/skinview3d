@@ -34,7 +34,7 @@
 	],
 	"dependencies": {
 		"three": "^0.112.1",
-		"@yushijinhun/skinview-utils": "^0.1.0"
+		"skinview-utils": "^0.2.0"
 	},
 	"devDependencies": {
 		"@rollup/plugin-node-resolve": "^6.0.0",
