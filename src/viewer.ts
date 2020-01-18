@@ -1,4 +1,4 @@
-import { DoubleSide, FrontSide, MeshBasicMaterial, NearestFilter, PerspectiveCamera, Scene, Texture, Vector2, WebGLRenderer } from "three";
+import { NearestFilter, PerspectiveCamera, Scene, Texture, Vector2, WebGLRenderer } from "three";
 import { RootAnimation } from "./animation";
 import { PlayerObject } from "./model";
 import { isSlimSkin, loadCapeToCanvas, loadSkinToCanvas } from "skinview-utils";
@@ -28,10 +28,6 @@ export class SkinViewer {
 	public readonly capeCanvas: HTMLCanvasElement;
 	public readonly capeTexture: Texture;
 
-	public readonly layer1Material: MeshBasicMaterial;
-	public readonly layer2Material: MeshBasicMaterial;
-	public readonly capeMaterial: MeshBasicMaterial;
-
 	public readonly scene: Scene;
 	public readonly camera: PerspectiveCamera;
 	public readonly renderer: WebGLRenderer;
@@ -59,10 +55,6 @@ export class SkinViewer {
 		this.capeTexture.magFilter = NearestFilter;
 		this.capeTexture.minFilter = NearestFilter;
 
-		this.layer1Material = new MeshBasicMaterial({ map: this.skinTexture, side: FrontSide });
-		this.layer2Material = new MeshBasicMaterial({ map: this.skinTexture, transparent: true, opacity: 1, side: DoubleSide, alphaTest: 0.5 });
-		this.capeMaterial = new MeshBasicMaterial({ map: this.capeTexture, transparent: true, opacity: 1, side: DoubleSide, alphaTest: 0.5 });
-
 		// scene
 		this.scene = new Scene();
 
@@ -75,7 +67,7 @@ export class SkinViewer {
 		this.renderer.setSize(300, 300); // default size
 		this.domElement.appendChild(this.renderer.domElement);
 
-		this.playerObject = new PlayerObject(this.layer1Material, this.layer2Material, this.capeMaterial);
+		this.playerObject = new PlayerObject(this.skinTexture, this.capeTexture);
 		this.playerObject.name = "player";
 		this.scene.add(this.playerObject);
 
@@ -90,9 +82,6 @@ export class SkinViewer {
 			}
 
 			this.skinTexture.needsUpdate = true;
-			this.layer1Material.needsUpdate = true;
-			this.layer2Material.needsUpdate = true;
-
 			this.playerObject.skin.visible = true;
 		};
 
@@ -102,8 +91,6 @@ export class SkinViewer {
 			loadCapeToCanvas(this.capeCanvas, this.capeImg);
 
 			this.capeTexture.needsUpdate = true;
-			this.capeMaterial.needsUpdate = true;
-
 			this.playerObject.cape.visible = true;
 		};
 

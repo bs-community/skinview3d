@@ -1,4 +1,4 @@
-import { BoxGeometry, Group, Mesh, MeshBasicMaterial, Object3D, Vector2 } from "three";
+import { BoxGeometry, DoubleSide, FrontSide, Group, Mesh, MeshBasicMaterial, Object3D, Texture, Vector2 } from "three";
 
 function toFaceVertices(x1: number, y1: number, x2: number, y2: number, w: number, h: number) {
 	return [
@@ -63,8 +63,11 @@ export class SkinObject extends Group {
 	private modelListeners: Array<() => void> = []; // called when model(slim property) is changed
 	private _slim = false;
 
-	constructor(layer1Material: MeshBasicMaterial, layer2Material: MeshBasicMaterial) {
+	constructor(texture: Texture) {
 		super();
+
+		const layer1Material = new MeshBasicMaterial({ map: texture, side: FrontSide });
+		const layer2Material = new MeshBasicMaterial({ map: texture, transparent: true, opacity: 1, side: DoubleSide, alphaTest: 0.5 });
 
 		// Head
 		const headBox = new BoxGeometry(8, 8, 8, 0, 0, 0);
@@ -369,8 +372,10 @@ export class CapeObject extends Group {
 
 	readonly cape: Mesh;
 
-	constructor(capeMaterial: MeshBasicMaterial) {
+	constructor(texture: Texture) {
 		super();
+
+		const capeMaterial = new MeshBasicMaterial({ map: texture, transparent: true, opacity: 1, side: DoubleSide, alphaTest: 0.5 });
 
 		// back = outside
 		// front = inside
@@ -395,15 +400,15 @@ export class PlayerObject extends Group {
 	readonly skin: SkinObject;
 	readonly cape: CapeObject;
 
-	constructor(layer1Material: MeshBasicMaterial, layer2Material: MeshBasicMaterial, capeMaterial: MeshBasicMaterial) {
+	constructor(skinTexture: Texture, capeTexture: Texture) {
 		super();
 
-		this.skin = new SkinObject(layer1Material, layer2Material);
+		this.skin = new SkinObject(skinTexture);
 		this.skin.name = "skin";
 		this.skin.visible = false;
 		this.add(this.skin);
 
-		this.cape = new CapeObject(capeMaterial);
+		this.cape = new CapeObject(capeTexture);
 		this.cape.name = "cape";
 		this.cape.position.z = -2;
 		this.cape.position.y = -4;
