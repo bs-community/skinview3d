@@ -405,7 +405,6 @@ export class PlayerObject extends Group {
 
 		this.skin = new SkinObject(skinTexture);
 		this.skin.name = "skin";
-		this.skin.visible = false;
 		this.add(this.skin);
 
 		this.cape = new CapeObject(capeTexture);
@@ -413,7 +412,6 @@ export class PlayerObject extends Group {
 		this.cape.position.z = -2;
 		this.cape.position.y = -4;
 		this.cape.rotation.x = 25 * Math.PI / 180;
-		this.cape.visible = false;
 		this.add(this.cape);
 	}
 }

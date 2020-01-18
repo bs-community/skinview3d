@@ -69,6 +69,8 @@ export class SkinViewer {
 
 		this.playerObject = new PlayerObject(this.skinTexture, this.capeTexture);
 		this.playerObject.name = "player";
+		this.playerObject.skin.visible = false;
+		this.playerObject.cape.visible = false;
 		this.scene.add(this.playerObject);
 
 		// texture loading
