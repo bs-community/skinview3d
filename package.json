@@ -6,7 +6,7 @@
 	"main": "dist/skinview3d.js",
 	"scripts": {
 		"build": "rollup -c",
-		"test": "karma start && npm run lint",
+		"test": "npm run lint",
 		"prepublishOnly": "rimraf dist && npm run build",
 		"lint": "tslint --formatters-dir ./node_modules/tslint-formatter-beauty -t beauty -p .",
 		"dev": "npm-run-all --parallel watch serve",
@@ -33,31 +33,20 @@
 		"dist"
 	],
 	"dependencies": {
-		"three": "^0.112.1"
+		"three": "^0.112.1",
+		"skinview-utils": "^0.2.0"
 	},
 	"devDependencies": {
 		"@rollup/plugin-node-resolve": "^6.0.0",
-		"@types/chai": "^4.1.4",
-		"@types/mocha": "^5.2.5",
-		"chai": "^4.2.0",
-		"karma": "^3.0.0",
-		"karma-chrome-launcher": "^2.2.0",
-		"karma-mocha": "^1.3.0",
-		"karma-webpack": "^3.0.0",
 		"local-web-server": "^2.6.0",
-		"mocha": "^5.2.0",
 		"npm-run-all": "^4.1.3",
-		"puppeteer": "^1.7.0",
 		"rimraf": "^2.6.2",
 		"rollup": "^1.27.14",
 		"rollup-plugin-license": "^0.13.0",
 		"rollup-plugin-terser": "^5.1.3",
 		"rollup-plugin-typescript2": "^0.25.3",
-		"ts-loader": "^5.2.2",
 		"tslint": "^5.11.0",
 		"tslint-formatter-beauty": "^3.0.0-beta.2",
-		"typescript": "^3.7.4",
-		"url-loader": "^1.1.1",
-		"webpack": "^4.41.4"
+		"typescript": "^3.7.4"
 	}
 }
