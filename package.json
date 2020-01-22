@@ -8,7 +8,7 @@
 		"build": "rollup -c",
 		"test": "npm run lint",
 		"prepublishOnly": "rimraf dist && npm run build",
-		"lint": "tslint --formatters-dir ./node_modules/tslint-formatter-beauty -t beauty -p .",
+		"lint": "eslint --ext .ts src/",
 		"dev": "npm-run-all --parallel watch serve",
 		"watch": "rollup -w -c",
 		"serve": "ws"
@@ -38,6 +38,9 @@
 	},
 	"devDependencies": {
 		"@rollup/plugin-node-resolve": "^7.0.0",
+		"@typescript-eslint/eslint-plugin": "^2.17.0",
+		"@typescript-eslint/parser": "^2.17.0",
+		"eslint": "^6.8.0",
 		"local-web-server": "^3.0.7",
 		"npm-run-all": "^4.1.5",
 		"rimraf": "^3.0.0",
@@ -45,8 +48,6 @@
 		"rollup-plugin-license": "^0.13.0",
 		"rollup-plugin-terser": "^5.2.0",
 		"rollup-plugin-typescript2": "^0.25.3",
-		"tslint": "^6.0.0",
-		"tslint-formatter-beauty": "^3.0.0-beta.2",
 		"typescript": "^3.7.5"
 	}
 }

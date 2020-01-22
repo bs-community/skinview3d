@@ -83,8 +83,8 @@ export class OrbitControls extends EventDispatcher {
 	minAzimuthAngle: number;
 	maxAzimuthAngle: number;
 	enableKeys: boolean;
-	keys: { LEFT: number; UP: number; RIGHT: number; BOTTOM: number; };
-	mouseButtons: { ORBIT: MOUSE; ZOOM: MOUSE; PAN: MOUSE; };
+	keys: { LEFT: number; UP: number; RIGHT: number; BOTTOM: number };
+	mouseButtons: { ORBIT: MOUSE; ZOOM: MOUSE; PAN: MOUSE };
 	enableDamping: boolean;
 	dampingFactor: number;
 
