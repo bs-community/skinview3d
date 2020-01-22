@@ -1,4 +1,4 @@
-import { Camera, EventDispatcher, MOUSE, OrthographicCamera, PerspectiveCamera, Quaternion, Spherical, Vector2, Vector3 } from "three";
+import { EventDispatcher, MOUSE, OrthographicCamera, PerspectiveCamera, Quaternion, Spherical, Vector2, Vector3 } from "three";
 import { SkinViewer } from "./viewer";
 
 const STATE = {
@@ -58,8 +58,8 @@ export class OrbitControls extends EventDispatcher {
 	//    Zoom - middle mouse, or mousewheel / touch: two finger spread or squish
 	//    Pan - right mouse, or arrow keys / touch: three finger swipe
 
-	object: Camera;
-	domElement: HTMLElement | HTMLDocument;
+	object: PerspectiveCamera | OrthographicCamera;
+	domElement: HTMLElement;
 	window: Window;
 
 	// API
@@ -93,7 +93,7 @@ export class OrbitControls extends EventDispatcher {
 	private scale: number;
 	private target0: Vector3;
 	private position0: Vector3;
-	private zoom0: any;
+	private zoom0: number;
 	private state: number;
 	private panOffset: Vector3;
 	private zoomChanged: boolean;
@@ -120,21 +120,21 @@ export class OrbitControls extends EventDispatcher {
 	private panUpV: Vector3;
 	private panInternalOffset: Vector3;
 
-	private onContextMenu: EventListener;
-	private onMouseUp: EventListener;
-	private onMouseDown: EventListener;
-	private onMouseMove: EventListener;
-	private onMouseWheel: EventListener;
-	private onTouchStart: EventListener;
-	private onTouchEnd: EventListener;
-	private onTouchMove: EventListener;
-	private onKeyDown: EventListener;
+	private onContextMenu: (event: MouseEvent) => void;
+	private onMouseUp: (event: MouseEvent) => void;
+	private onMouseDown: (event: MouseEvent) => void;
+	private onMouseMove: (event: MouseEvent) => void;
+	private onMouseWheel: (event: MouseWheelEvent) => void;
+	private onTouchStart: (event: TouchEvent) => void;
+	private onTouchEnd: (event: TouchEvent) => void;
+	private onTouchMove: (event: TouchEvent) => void;
+	private onKeyDown: (event: KeyboardEvent) => void;
 
-	constructor(object: Camera, domElement?: HTMLElement, domWindow?: Window) {
+	constructor(object: PerspectiveCamera | OrthographicCamera, domElement: HTMLElement, domWindow?: Window) {
 		super();
 		this.object = object;
 
-		this.domElement = (domElement !== undefined) ? domElement : document;
+		this.domElement = domElement;
 		this.window = (domWindow !== undefined) ? domWindow : window;
 
 		// Set to false to disable this control
@@ -196,7 +196,7 @@ export class OrbitControls extends EventDispatcher {
 		// for reset
 		this.target0 = this.target.clone();
 		this.position0 = this.object.position.clone();
-		this.zoom0 = (this.object as any).zoom;
+		this.zoom0 = this.object.zoom;
 
 		// for update speedup
 		this.updateOffset = new Vector3();
@@ -234,10 +234,10 @@ export class OrbitControls extends EventDispatcher {
 
 		// event handlers - FSM: listen for events and reset state
 
-		this.onMouseDown = (event: ThreeEvent) => {
+		this.onMouseDown = event => {
 			if (this.enabled === false) return;
 			event.preventDefault();
-			if ((event as any).button === this.mouseButtons.ORBIT) {
+			if (event.button === this.mouseButtons.ORBIT) {
 				if (this.enableRotate === false) return;
 				this.rotateStart.set(event.clientX, event.clientY);
 				this.state = STATE.ROTATE;
@@ -258,8 +258,7 @@ export class OrbitControls extends EventDispatcher {
 			}
 		};
 
-		this.onMouseMove = (event: ThreeEvent) => {
-
+		this.onMouseMove = event => {
 			if (this.enabled === false) return;
 
 			event.preventDefault();
@@ -268,12 +267,11 @@ export class OrbitControls extends EventDispatcher {
 				if (this.enableRotate === false) return;
 				this.rotateEnd.set(event.clientX, event.clientY);
 				this.rotateDelta.subVectors(this.rotateEnd, this.rotateStart);
-				const element = this.domElement === document ? this.domElement.body : this.domElement;
 
 				// rotating across whole screen goes 360 degrees around
-				this.rotateLeft(2 * Math.PI * this.rotateDelta.x / (element as any).clientWidth * this.rotateSpeed);
+				this.rotateLeft(2 * Math.PI * this.rotateDelta.x / this.domElement.clientWidth * this.rotateSpeed);
 				// rotating up and down along whole screen attempts to go 360, but limited to 180
-				this.rotateUp(2 * Math.PI * this.rotateDelta.y / (element as any).clientHeight * this.rotateSpeed);
+				this.rotateUp(2 * Math.PI * this.rotateDelta.y / this.domElement.clientHeight * this.rotateSpeed);
 				this.rotateStart.copy(this.rotateEnd);
 
 				this.update();
@@ -304,7 +302,7 @@ export class OrbitControls extends EventDispatcher {
 			}
 		};
 
-		this.onMouseUp = (event: ThreeEvent) => {
+		this.onMouseUp = () => {
 			if (this.enabled === false) return;
 			document.removeEventListener("mousemove", this.onMouseMove, false);
 			document.removeEventListener("mouseup", this.onMouseUp, false);
@@ -313,7 +311,7 @@ export class OrbitControls extends EventDispatcher {
 			this.state = STATE.NONE;
 		};
 
-		this.onMouseWheel = (event: ThreeEvent) => {
+		this.onMouseWheel = event => {
 
 			if (this.enabled === false || this.enableZoom === false || (this.state !== STATE.NONE && this.state !== STATE.ROTATE)) return;
 
@@ -332,7 +330,7 @@ export class OrbitControls extends EventDispatcher {
 			this.dispatchEvent(END_EVENT);
 		};
 
-		this.onKeyDown = (event: ThreeEvent) => {
+		this.onKeyDown = event => {
 
 			if (this.enabled === false || this.enableKeys === false || this.enablePan === false) return;
 
@@ -360,8 +358,7 @@ export class OrbitControls extends EventDispatcher {
 			}
 		};
 
-		this.onTouchStart = (event: ThreeEvent) => {
-
+		this.onTouchStart = event => {
 			if (this.enabled === false) return;
 
 			switch (event.touches.length) {
@@ -403,8 +400,7 @@ export class OrbitControls extends EventDispatcher {
 			}
 		};
 
-		this.onTouchMove = (event: ThreeEvent) => {
-
+		this.onTouchMove = event => {
 			if (this.enabled === false) return;
 			event.preventDefault();
 			event.stopPropagation();
@@ -418,13 +414,11 @@ export class OrbitControls extends EventDispatcher {
 					this.rotateEnd.set(event.touches[0].pageX, event.touches[0].pageY);
 					this.rotateDelta.subVectors(this.rotateEnd, this.rotateStart);
 
-					const element = this.domElement === document ? this.domElement.body : this.domElement;
-
 					// rotating across whole screen goes 360 degrees around
-					this.rotateLeft(2 * Math.PI * this.rotateDelta.x / (element as any).clientWidth * this.rotateSpeed);
+					this.rotateLeft(2 * Math.PI * this.rotateDelta.x / this.domElement.clientWidth * this.rotateSpeed);
 
 					// rotating up and down along whole screen attempts to go 360, but limited to 180
-					this.rotateUp(2 * Math.PI * this.rotateDelta.y / (element as any).clientHeight * this.rotateSpeed);
+					this.rotateUp(2 * Math.PI * this.rotateDelta.y / this.domElement.clientHeight * this.rotateSpeed);
 
 					this.rotateStart.copy(this.rotateEnd);
 
@@ -473,8 +467,7 @@ export class OrbitControls extends EventDispatcher {
 			}
 		};
 
-		this.onTouchEnd = (event: Event) => {
-
+		this.onTouchEnd = () => {
 			if (this.enabled === false) return;
 			this.dispatchEvent(END_EVENT);
 			this.state = STATE.NONE;
@@ -513,21 +506,21 @@ export class OrbitControls extends EventDispatcher {
 			this.rotateLeft(this.getAutoRotationAngle());
 		}
 
-		(this.spherical as any).theta += (this.sphericalDelta as any).theta;
-		(this.spherical as any).phi += (this.sphericalDelta as any).phi;
+		this.spherical.theta += this.sphericalDelta.theta;
+		this.spherical.phi += this.sphericalDelta.phi;
 
 		// restrict theta to be between desired limits
-		(this.spherical as (any) as any).theta = Math.max(this.minAzimuthAngle, Math.min(this.maxAzimuthAngle, (this.spherical as any).theta));
+		this.spherical.theta = Math.max(this.minAzimuthAngle, Math.min(this.maxAzimuthAngle, this.spherical.theta));
 
 		// restrict phi to be between desired limits
-		(this.spherical as any).phi = Math.max(this.minPolarAngle, Math.min(this.maxPolarAngle, (this.spherical as any).phi));
+		this.spherical.phi = Math.max(this.minPolarAngle, Math.min(this.maxPolarAngle, this.spherical.phi));
 
 		this.spherical.makeSafe();
 
-		(this.spherical as any).radius *= this.scale;
+		this.spherical.radius *= this.scale;
 
 		// restrict radius to be between desired limits
-		(this.spherical as any).radius = Math.max(this.minDistance, Math.min(this.maxDistance, (this.spherical as any).radius));
+		this.spherical.radius = Math.max(this.minDistance, Math.min(this.maxDistance, this.spherical.radius));
 
 		// move target to panned location
 		this.target.add(this.panOffset);
@@ -543,8 +536,8 @@ export class OrbitControls extends EventDispatcher {
 
 		if (this.enableDamping === true) {
 
-			(this.sphericalDelta as any).theta *= (1 - this.dampingFactor);
-			(this.sphericalDelta as any).phi *= (1 - this.dampingFactor);
+			this.sphericalDelta.theta *= (1 - this.dampingFactor);
+			this.sphericalDelta.phi *= (1 - this.dampingFactor);
 
 		} else {
 
@@ -586,8 +579,6 @@ export class OrbitControls extends EventDispatcher {
 
 	// deltaX and deltaY are in pixels; right and down are positive
 	pan(deltaX: number, deltaY: number) {
-		const element = this.domElement === document ? this.domElement.body : this.domElement;
-
 		if (this.object instanceof PerspectiveCamera) {
 			// perspective
 			const position = this.object.position;
@@ -598,12 +589,12 @@ export class OrbitControls extends EventDispatcher {
 			targetDistance *= Math.tan((this.object.fov / 2) * Math.PI / 180.0);
 
 			// we actually don"t use screenWidth, since perspective camera is fixed to screen height
-			this.panLeft(2 * deltaX * targetDistance / (element as any).clientHeight, this.object.matrix);
-			this.panUp(2 * deltaY * targetDistance / (element as any).clientHeight, this.object.matrix);
+			this.panLeft(2 * deltaX * targetDistance / this.domElement.clientHeight, this.object.matrix);
+			this.panUp(2 * deltaY * targetDistance / this.domElement.clientHeight, this.object.matrix);
 		} else if (this.object instanceof OrthographicCamera) {
 			// orthographic
-			this.panLeft(deltaX * (this.object.right - this.object.left) / this.object.zoom / (element as any).clientWidth, this.object.matrix);
-			this.panUp(deltaY * (this.object.top - this.object.bottom) / this.object.zoom / (element as any).clientHeight, this.object.matrix);
+			this.panLeft(deltaX * (this.object.right - this.object.left) / this.object.zoom / this.domElement.clientWidth, this.object.matrix);
+			this.panUp(deltaY * (this.object.top - this.object.bottom) / this.object.zoom / this.domElement.clientHeight, this.object.matrix);
 		} else {
 			// camera neither orthographic nor perspective
 			console.warn("WARNING: OrbitControls.js encountered an unknown camera type - pan disabled.");
@@ -646,19 +637,19 @@ export class OrbitControls extends EventDispatcher {
 	}
 
 	rotateLeft(angle: number) {
-		(this.sphericalDelta as any).theta -= angle;
+		this.sphericalDelta.theta -= angle;
 	}
 
 	rotateUp(angle: number) {
-		(this.sphericalDelta as any).phi -= angle;
+		this.sphericalDelta.phi -= angle;
 	}
 
 	getPolarAngle(): number {
-		return (this.spherical as any).phi;
+		return this.spherical.phi;
 	}
 
 	getAzimuthalAngle(): number {
-		return (this.spherical as any).theta;
+		return this.spherical.theta;
 	}
 
 	dispose(): void {
@@ -680,24 +671,15 @@ export class OrbitControls extends EventDispatcher {
 	reset(): void {
 		this.target.copy(this.target0);
 		this.object.position.copy(this.position0);
-		(this.object as any).zoom = this.zoom0;
+		this.object.zoom = this.zoom0;
 
-		(this.object as any).updateProjectionMatrix();
+		this.object.updateProjectionMatrix();
 		this.dispatchEvent(CHANGE_EVENT);
 
 		this.update();
 
 		this.state = STATE.NONE;
 	}
-}
-
-interface ThreeEvent extends Event {
-	clientX: number;
-	clientY: number;
-	deltaY: number;
-	button: MOUSE;
-	touches: Array<any>;
-	keyCode: number;
 }
 
 export function createOrbitControls(skinViewer: SkinViewer) {
