@@ -689,21 +689,6 @@ export class OrbitControls extends EventDispatcher {
 
 		this.state = STATE.NONE;
 	}
-
-	// backward compatibility
-	// get center(): Vector3 {
-	// 	console.warn("THREE.OrbitControls: .center has been renamed to .target");
-	// 	return this.target;
-	// }
-	// get noZoom(): boolean {
-	// 	console.warn("THREE.OrbitControls: .noZoom has been deprecated. Use .enableZoom instead.");
-	// 	return !this.enableZoom;
-	// }
-
-	// set noZoom(value: boolean) {
-	// 	console.warn("THREE.OrbitControls: .noZoom has been deprecated. Use .enableZoom instead.");
-	// 	this.enableZoom = !value;
-	// }
 }
 
 interface ThreeEvent extends Event {
