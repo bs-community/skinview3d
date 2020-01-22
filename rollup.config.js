@@ -12,11 +12,6 @@ const umd = {
 	}
 };
 
-const es = {
-	format: "es",
-	indent: "\t"
-};
-
 const licensePlugin = license({
 	banner: `
 				skinview3d (https://github.com/bs-community/skinview3d)
@@ -35,10 +30,7 @@ const base = {
 export default [
 	{
 		...base,
-		output: [
-			{ ...umd, file: "dist/skinview3d.js" },
-			{ ...es, file: "dist/skinview3d.module.js" }
-		],
+		output: { ...umd, file: "dist/skinview3d.js" },
 		plugins: [
 			resolve(),
 			typescript(),

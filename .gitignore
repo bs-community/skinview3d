@@ -58,6 +58,7 @@ typings/
 .env
 
 dist/
+jsm/
 _ignore/
 dist/
 .DS_Store

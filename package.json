@@ -2,12 +2,12 @@
 	"name": "skinview3d",
 	"version": "1.2.1",
 	"description": "Three.js powered Minecraft skin viewer",
-	"module": "dist/skinview3d.module.js",
-	"main": "dist/skinview3d.js",
+	"module": "jsm/skinview3d.js",
+	"main": "dist/skinview3d.min.js",
 	"scripts": {
-		"build": "rollup -c",
+		"build": "rollup -c && tsc -p . --outDir jsm --declaration",
 		"test": "npm run lint",
-		"prepublishOnly": "rimraf dist && npm run build",
+		"prepublishOnly": "rimraf dist jsm && npm run build",
 		"lint": "eslint --ext .ts src/",
 		"dev": "npm-run-all --parallel watch serve",
 		"watch": "rollup -w -c",
@@ -30,7 +30,8 @@
 	},
 	"homepage": "https://github.com/bs-community/skinview3d",
 	"files": [
-		"dist"
+		"dist",
+		"jsm"
 	],
 	"dependencies": {
 		"three": "^0.112.1",
