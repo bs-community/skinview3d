@@ -1,3 +1,4 @@
+import { ModelType } from "skinview-utils";
 import { BoxGeometry, DoubleSide, FrontSide, Group, Mesh, MeshBasicMaterial, Object3D, Texture, Vector2 } from "three";
 
 function toFaceVertices(x1: number, y1: number, x2: number, y2: number, w: number, h: number): Array<Vector2> {
@@ -59,7 +60,7 @@ export class SkinObject extends Group {
 	readonly leftLeg: BodyPart;
 
 	private modelListeners: Array<() => void> = []; // called when model(slim property) is changed
-	private _slim = false;
+	private slim = false;
 
 	constructor(texture: Texture) {
 		super();
@@ -364,15 +365,15 @@ export class SkinObject extends Group {
 		this.leftLeg.position.x = 2;
 		this.add(this.leftLeg);
 
-		this.slim = false;
+		this.modelType = "default";
 	}
 
-	get slim(): boolean {
-		return this._slim;
+	get modelType(): ModelType {
+		return this.slim ? "slim" : "default";
 	}
 
-	set slim(value) {
-		this._slim = value;
+	set modelType(value: ModelType) {
+		this.slim = value === "slim";
 		this.modelListeners.forEach(listener => listener());
 	}
 

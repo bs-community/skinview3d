@@ -1,56 +1,44 @@
+import { applyMixins, CapeContainer, ModelType, SkinContainer } from "skinview-utils";
 import { NearestFilter, PerspectiveCamera, Scene, Texture, Vector2, WebGLRenderer } from "three";
 import { RootAnimation } from "./animation.js";
 import { PlayerObject } from "./model.js";
-import { isSlimSkin, loadCapeToCanvas, loadSkinToCanvas } from "skinview-utils";
 
-export interface SkinViewerOptions {
-	domElement: Node;
-	skinUrl?: string;
-	capeUrl?: string;
-	width?: number;
-	height?: number;
-	detectModel?: boolean;
+export type LoadOptions = {
+	makeVisible?: boolean;
+};
+
+function toMakeVisible(options?: LoadOptions): boolean {
+	if (options && options.makeVisible === false) {
+		return false;
+	}
+	return true;
 }
 
-export class SkinViewer {
+class SkinViewer {
 
-	public readonly domElement: Node;
-	public readonly animations: RootAnimation = new RootAnimation();
-	public detectModel: boolean = true;
+	readonly scene: Scene;
+	readonly camera: PerspectiveCamera;
+	readonly renderer: WebGLRenderer;
+	readonly playerObject: PlayerObject;
+	readonly animations: RootAnimation = new RootAnimation();
 
-	public readonly skinImg: HTMLImageElement;
-	public readonly skinCanvas: HTMLCanvasElement;
-	public readonly skinTexture: Texture;
-
-	public readonly capeImg: HTMLImageElement;
-	public readonly capeCanvas: HTMLCanvasElement;
-	public readonly capeTexture: Texture;
-
-	public readonly scene: Scene;
-	public readonly camera: PerspectiveCamera;
-	public readonly renderer: WebGLRenderer;
-
-	public readonly playerObject: PlayerObject;
+	protected readonly skinCanvas: HTMLCanvasElement;
+	protected readonly capeCanvas: HTMLCanvasElement;
+	private readonly skinTexture: Texture;
+	private readonly capeTexture: Texture;
 
 	private _disposed: boolean = false;
 	private _renderPaused: boolean = false;
 	private _skinSet: boolean = false;
 	private _capeSet: boolean = false;
 
-	constructor(options: SkinViewerOptions) {
-		this.domElement = options.domElement;
-		if (options.detectModel === false) {
-			this.detectModel = false;
-		}
-
+	constructor(readonly domElement: Node) {
 		// texture
-		this.skinImg = new Image();
 		this.skinCanvas = document.createElement("canvas");
 		this.skinTexture = new Texture(this.skinCanvas);
 		this.skinTexture.magFilter = NearestFilter;
 		this.skinTexture.minFilter = NearestFilter;
 
-		this.capeImg = new Image();
 		this.capeCanvas = document.createElement("canvas");
 		this.capeTexture = new Texture(this.capeCanvas);
 		this.capeTexture.magFilter = NearestFilter;
@@ -73,39 +61,22 @@ export class SkinViewer {
 		this.playerObject.cape.visible = false;
 		this.scene.add(this.playerObject);
 
-		// texture loading
-		this.skinImg.crossOrigin = "anonymous";
-		this.skinImg.onerror = (): void => console.error("Failed loading " + this.skinImg.src);
-		this.skinImg.onload = (): void => {
-			loadSkinToCanvas(this.skinCanvas, this.skinImg);
-
-			if (this.detectModel) {
-				this.playerObject.skin.slim = isSlimSkin(this.skinCanvas);
-			}
-
-			this.skinTexture.needsUpdate = true;
-			this.playerObject.skin.visible = true;
-		};
-
-		this.capeImg.crossOrigin = "anonymous";
-		this.capeImg.onerror = (): void => console.error("Failed loading " + this.capeImg.src);
-		this.capeImg.onload = (): void => {
-			loadCapeToCanvas(this.capeCanvas, this.capeImg);
-
-			this.capeTexture.needsUpdate = true;
-			this.playerObject.cape.visible = true;
-		};
-
-		if (options.skinUrl !== undefined) {
-			this.skinUrl = options.skinUrl;
-		}
-		if (options.capeUrl !== undefined) {
-			this.capeUrl = options.capeUrl;
-		}
-		this.width = options.width === undefined ? 300 : options.width;
-		this.height = options.height === undefined ? 300 : options.height;
-
 		window.requestAnimationFrame(() => this.draw());
+	}
+
+	protected skinLoaded(model: ModelType, options?: LoadOptions): void {
+		this.skinTexture.needsUpdate = true;
+		this.playerObject.skin.modelType = model;
+		if (toMakeVisible(options)) {
+			this.playerObject.skin.visible = true;
+		}
+	}
+
+	protected capeLoaded(options?: LoadOptions): void {
+		this.capeTexture.needsUpdate = true;
+		if (toMakeVisible(options)) {
+			this.playerObject.cape.visible = true;
+		}
 	}
 
 	private draw(): void {
@@ -151,34 +122,6 @@ export class SkinViewer {
 		}
 	}
 
-	get skinUrl(): string | null {
-		return this._skinSet ? this.skinImg.src : null;
-	}
-
-	set skinUrl(url: string | null) {
-		if (url === null) {
-			this._skinSet = false;
-			this.playerObject.skin.visible = false;
-		} else {
-			this._skinSet = true;
-			this.skinImg.src = url;
-		}
-	}
-
-	get capeUrl(): string | null {
-		return this._capeSet ? this.capeImg.src : null;
-	}
-
-	set capeUrl(url: string | null) {
-		if (url === null) {
-			this._capeSet = false;
-			this.playerObject.cape.visible = false;
-		} else {
-			this._capeSet = true;
-			this.capeImg.src = url;
-		}
-	}
-
 	get width(): number {
 		return this.renderer.getSize(new Vector2()).width;
 	}
@@ -195,3 +138,6 @@ export class SkinViewer {
 		this.setSize(this.width, newHeight);
 	}
 }
+interface SkinViewer extends SkinContainer<LoadOptions>, CapeContainer<LoadOptions> { }
+applyMixins(SkinViewer, [SkinContainer, CapeContainer]);
+export { SkinViewer };
