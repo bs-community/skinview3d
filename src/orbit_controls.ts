@@ -1,5 +1,5 @@
 import { EventDispatcher, MOUSE, OrthographicCamera, PerspectiveCamera, Quaternion, Spherical, Vector2, Vector3 } from "three";
-import { SkinViewer } from "./viewer";
+import { SkinViewer } from "./viewer.js";
 
 const STATE = {
 	NONE: - 1,

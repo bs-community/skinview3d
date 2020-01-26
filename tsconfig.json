@@ -2,11 +2,18 @@
 	"compilerOptions": {
 		"module": "es2015",
 		"moduleResolution": "node",
-		"target": "es5",
-		"declaration": true,
+		"lib": [
+			"dom",
+			"es2015"
+		],
+		"target": "es2015",
 		"strict": true,
 		"noImplicitAny": false,
-		"strictFunctionTypes": false
+		"strictFunctionTypes": false,
+		"declaration": true,
+		"sourceMap": true,
+		"outDir": "jsm",
+		"types": []
 	},
 	"include": [
 		"src"
