@@ -15,7 +15,7 @@ if [ -f "$revision_file" ];then
 fi
 
 original_dir=$(pwd)
-master_revision=$(git show-ref --hash -- refs/heads/master)
+master_revision=$(git show-ref --hash -- refs/remotes/origin/master)
 
 echo "> Checking out $master_revision"
 echo "> Commit summary:"
