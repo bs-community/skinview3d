@@ -64,7 +64,6 @@ export class SkinViewer {
 		this.camera.position.z = 60;
 
 		this.renderer = new WebGLRenderer({ alpha: true });
-		this.renderer.setSize(300, 300); // default size
 		this.domElement.appendChild(this.renderer.domElement);
 
 		this.playerObject = new PlayerObject(this.skinTexture, this.capeTexture);
@@ -96,10 +95,14 @@ export class SkinViewer {
 			this.playerObject.cape.visible = true;
 		};
 
-		if (options.skinUrl) this.skinUrl = options.skinUrl;
-		if (options.capeUrl) this.capeUrl = options.capeUrl;
-		if (options.width) this.width = options.width;
-		if (options.height) this.height = options.height;
+		if (options.skinUrl !== undefined) {
+			this.skinUrl = options.skinUrl;
+		}
+		if (options.capeUrl !== undefined) {
+			this.capeUrl = options.capeUrl;
+		}
+		this.width = options.width === undefined ? 300 : options.width;
+		this.height = options.height === undefined ? 300 : options.height;
 
 		window.requestAnimationFrame(() => this.draw());
 	}
