@@ -5,7 +5,6 @@ import { isSlimSkin, loadCapeToCanvas, loadSkinToCanvas } from "skinview-utils";
 
 export interface SkinViewerOptions {
 	domElement: Node;
-	animation?: Animation;
 	skinUrl?: string;
 	capeUrl?: string;
 	width?: number;
