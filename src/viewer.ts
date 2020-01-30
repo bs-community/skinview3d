@@ -111,8 +111,12 @@ export class SkinViewer {
 			return;
 		}
 		this.animations.runAnimationLoop(this.playerObject);
-		this.renderer.render(this.scene, this.camera);
+		this.doRender();
 		window.requestAnimationFrame(() => this.draw());
+	}
+
+	protected doRender() {
+		this.renderer.render(this.scene, this.camera);
 	}
 
 	setSize(width: number, height: number) {
