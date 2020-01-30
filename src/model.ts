@@ -34,8 +34,6 @@ function setVertices(box: BoxGeometry, top: Array<Vector2>, bottom: Array<Vector
 	box.faceVertexUvs[0][11] = [back[0], back[1], back[2]];
 }
 
-const esp = 0.002;
-
 /**
  * Notice that innerLayer and outerLayer may NOT be the direct children of the Group.
  */
@@ -66,8 +64,20 @@ export class SkinObject extends Group {
 	constructor(texture: Texture) {
 		super();
 
-		const layer1Material = new MeshBasicMaterial({ map: texture, side: FrontSide });
-		const layer2Material = new MeshBasicMaterial({ map: texture, transparent: true, opacity: 1, side: DoubleSide, alphaTest: 0.5 });
+		const layer1 = {
+			map: texture,
+			side: FrontSide
+		};
+		const layer2 = {
+			map: texture,
+			side: DoubleSide,
+			transparent: true,
+			opacity: 1,
+			alphaTest: 0.5
+		}
+
+		const layer1Material = new MeshBasicMaterial(layer1);
+		const layer2Material = new MeshBasicMaterial(layer2);
 
 		// Head
 		const headBox = new BoxGeometry(8, 8, 8, 0, 0, 0);
@@ -108,7 +118,13 @@ export class SkinObject extends Group {
 			toSkinVertices(28, 20, 32, 32),
 			toSkinVertices(32, 20, 40, 32)
 		);
-		const bodyMesh = new Mesh(bodyBox, layer1Material);
+		const bodyMesh = new Mesh(bodyBox, new MeshBasicMaterial({
+			...layer1,
+			// this pulls bodyMesh towards the camera
+			// so body is given priority over others in z-fighting
+			polygonOffset: true,
+			polygonOffsetUnits: -1
+		}));
 
 		const body2Box = new BoxGeometry(9, 13.5, 4.5, 0, 0, 0);
 		setVertices(body2Box,
@@ -119,7 +135,12 @@ export class SkinObject extends Group {
 			toSkinVertices(28, 36, 32, 48),
 			toSkinVertices(32, 36, 40, 48)
 		);
-		const body2Mesh = new Mesh(body2Box, layer2Material);
+		const body2Mesh = new Mesh(body2Box, new MeshBasicMaterial({
+			...layer2,
+			// same as above
+			polygonOffset: true,
+			polygonOffsetUnits: -1
+		}));
 
 		this.body = new BodyPart(bodyMesh, body2Mesh);
 		this.body.name = "body";
@@ -131,9 +152,9 @@ export class SkinObject extends Group {
 		const rightArmBox = new BoxGeometry(1, 1, 1, 0, 0, 0); // w/d/h is model-related
 		const rightArmMesh = new Mesh(rightArmBox, layer1Material);
 		this.modelListeners.push(() => {
-			rightArmMesh.scale.x = (this.slim ? 3 : 4) - esp;
-			rightArmMesh.scale.y = 12 - esp;
-			rightArmMesh.scale.z = 4 - esp;
+			rightArmMesh.scale.x = this.slim ? 3 : 4;
+			rightArmMesh.scale.y = 12;
+			rightArmMesh.scale.z = 4;
 			if (this.slim) {
 				setVertices(rightArmBox,
 					toSkinVertices(44, 16, 47, 20),
@@ -161,9 +182,9 @@ export class SkinObject extends Group {
 		const rightArm2Mesh = new Mesh(rightArm2Box, layer2Material);
 		rightArm2Mesh.renderOrder = 1;
 		this.modelListeners.push(() => {
-			rightArm2Mesh.scale.x = (this.slim ? 3.375 : 4.5) - esp;
-			rightArm2Mesh.scale.y = 13.5 - esp;
-			rightArm2Mesh.scale.z = 4.5 - esp;
+			rightArm2Mesh.scale.x = this.slim ? 3.375 : 4.5;
+			rightArm2Mesh.scale.y = 13.5;
+			rightArm2Mesh.scale.z = 4.5;
 			if (this.slim) {
 				setVertices(rightArm2Box,
 					toSkinVertices(44, 32, 47, 36),
@@ -204,9 +225,9 @@ export class SkinObject extends Group {
 		const leftArmBox = new BoxGeometry(1, 1, 1, 0, 0, 0); // w/d/h is model-related
 		const leftArmMesh = new Mesh(leftArmBox, layer1Material);
 		this.modelListeners.push(() => {
-			leftArmMesh.scale.x = (this.slim ? 3 : 4) - esp;
-			leftArmMesh.scale.y = 12 - esp;
-			leftArmMesh.scale.z = 4 - esp;
+			leftArmMesh.scale.x = this.slim ? 3 : 4;
+			leftArmMesh.scale.y = 12;
+			leftArmMesh.scale.z = 4;
 			if (this.slim) {
 				setVertices(leftArmBox,
 					toSkinVertices(36, 48, 39, 52),
@@ -234,9 +255,9 @@ export class SkinObject extends Group {
 		const leftArm2Mesh = new Mesh(leftArm2Box, layer2Material);
 		leftArm2Mesh.renderOrder = 1;
 		this.modelListeners.push(() => {
-			leftArm2Mesh.scale.x = (this.slim ? 3.375 : 4.5) - esp;
-			leftArm2Mesh.scale.y = 13.5 - esp;
-			leftArm2Mesh.scale.z = 4.5 - esp;
+			leftArm2Mesh.scale.x = this.slim ? 3.375 : 4.5;
+			leftArm2Mesh.scale.y = 13.5;
+			leftArm2Mesh.scale.z = 4.5;
 			if (this.slim) {
 				setVertices(leftArm2Box,
 					toSkinVertices(52, 48, 55, 52),
@@ -274,7 +295,7 @@ export class SkinObject extends Group {
 		this.add(this.leftArm);
 
 		// Right Leg
-		const rightLegBox = new BoxGeometry(4 - esp, 12 - esp, 4 - esp, 0, 0, 0);
+		const rightLegBox = new BoxGeometry(4, 12, 4, 0, 0, 0);
 		setVertices(rightLegBox,
 			toSkinVertices(4, 16, 8, 20),
 			toSkinVertices(8, 16, 12, 20),
@@ -285,7 +306,7 @@ export class SkinObject extends Group {
 		);
 		const rightLegMesh = new Mesh(rightLegBox, layer1Material);
 
-		const rightLeg2Box = new BoxGeometry(4.5 - esp, 13.5 - esp, 4.5 - esp, 0, 0, 0);
+		const rightLeg2Box = new BoxGeometry(4.5, 13.5, 4.5, 0, 0, 0);
 		setVertices(rightLeg2Box,
 			toSkinVertices(4, 32, 8, 36),
 			toSkinVertices(8, 32, 12, 36),
@@ -309,7 +330,7 @@ export class SkinObject extends Group {
 		this.add(this.rightLeg);
 
 		// Left Leg
-		const leftLegBox = new BoxGeometry(4 - esp, 12 - esp, 4 - esp, 0, 0, 0);
+		const leftLegBox = new BoxGeometry(4, 12, 4, 0, 0, 0);
 		setVertices(leftLegBox,
 			toSkinVertices(20, 48, 24, 52),
 			toSkinVertices(24, 48, 28, 52),
@@ -320,7 +341,7 @@ export class SkinObject extends Group {
 		);
 		const leftLegMesh = new Mesh(leftLegBox, layer1Material);
 
-		const leftLeg2Box = new BoxGeometry(4.5 - esp, 13.5 - esp, 4.5 - esp, 0, 0, 0);
+		const leftLeg2Box = new BoxGeometry(4.5, 13.5, 4.5, 0, 0, 0);
 		setVertices(leftLeg2Box,
 			toSkinVertices(4, 48, 8, 52),
 			toSkinVertices(8, 48, 12, 52),
