@@ -63,7 +63,7 @@ export class SkinViewer {
 		this.camera.position.y = -12;
 		this.camera.position.z = 60;
 
-		this.renderer = new WebGLRenderer({ alpha: true, antialias: false });
+		this.renderer = new WebGLRenderer({ alpha: true });
 		this.renderer.setSize(300, 300); // default size
 		this.domElement.appendChild(this.renderer.domElement);
 
