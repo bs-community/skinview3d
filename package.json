@@ -2,19 +2,19 @@
 	"name": "skinview3d",
 	"version": "2.0.0-alpha.1",
 	"description": "Three.js powered Minecraft skin viewer",
-	"main": "jsm/skinview3d.js",
+	"main": "libs/skinview3d.js",
 	"type": "module",
 	"scripts": {
-		"clean": "rimraf jsm dist",
-		"build:jsm": "tsc -p .",
+		"clean": "rimraf libs dist",
+		"build:modules": "tsc -p .",
 		"build:umd": "rollup -c",
-		"build": "npm run build:jsm && npm run build:umd",
+		"build": "npm run build:modules && npm run build:umd",
 		"test:lint": "eslint --ext .ts src",
 		"test": "npm run test:lint",
-		"dev:watch:jsm": "tsc -w -p .",
+		"dev:watch:modules": "tsc -w -p .",
 		"dev:watch:umd": "rollup -w -c",
 		"dev:serve": "ws",
-		"dev": "npm-run-all --parallel dev:watch:jsm dev:watch:umd dev:serve",
+		"dev": "npm-run-all --parallel dev:watch:modules dev:watch:umd dev:serve",
 		"prepublishOnly": "npm run clean && npm run build"
 	},
 	"repository": {
@@ -34,7 +34,7 @@
 	},
 	"homepage": "https://github.com/bs-community/skinview3d",
 	"files": [
-		"jsm",
+		"libs",
 		"dist"
 	],
 	"dependencies": {
