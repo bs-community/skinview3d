@@ -5,16 +5,16 @@
 	"main": "libs/skinview3d.js",
 	"type": "module",
 	"scripts": {
-		"clean": "rimraf libs dist",
+		"clean": "rimraf libs bundles",
 		"build:modules": "tsc -p .",
-		"build:umd": "rollup -c",
-		"build": "npm run build:modules && npm run build:umd",
+		"build:bundles": "rollup -c",
+		"build": "npm run build:modules && npm run build:bundles",
 		"test:lint": "eslint --ext .ts src",
 		"test": "npm run test:lint",
 		"dev:watch:modules": "tsc -w -p .",
-		"dev:watch:umd": "rollup -w -c",
+		"dev:watch:bundles": "rollup -w -c",
 		"dev:serve": "ws",
-		"dev": "npm-run-all --parallel dev:watch:modules dev:watch:umd dev:serve",
+		"dev": "npm-run-all --parallel dev:watch:modules dev:watch:bundles dev:serve",
 		"prepublishOnly": "npm run clean && npm run build"
 	},
 	"repository": {
@@ -35,7 +35,7 @@
 	"homepage": "https://github.com/bs-community/skinview3d",
 	"files": [
 		"libs",
-		"dist"
+		"bundles"
 	],
 	"dependencies": {
 		"three": "^0.112.1",
