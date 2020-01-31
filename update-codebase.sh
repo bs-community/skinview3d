@@ -32,6 +32,6 @@ npm run build
 echo "> Copying build outputs"
 cd -- $original_dir
 rm -rf -- $output_dir
-cp -r -- "$checkout_dir/dist" $output_dir
+cp -r -- "$checkout_dir/bundles" "$output_dir"
 echo "$master_revision" > $revision_file
 echo "> New revison of build outputs: $master_revision"
