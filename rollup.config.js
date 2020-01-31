@@ -1,6 +1,7 @@
 import resolve from "@rollup/plugin-node-resolve";
 import typescript from '@rollup/plugin-typescript';
 import { terser } from "rollup-plugin-terser";
+import { threeMinifier } from "@yushijinhun/three-minifier-rollup";
 
 export default {
     input: "src/skinview3d.ts",
@@ -13,6 +14,7 @@ export default {
         compact: true
     },
     plugins: [
+        threeMinifier(),
         typescript(),
         resolve(),
         terser()
