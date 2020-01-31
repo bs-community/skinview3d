@@ -57,9 +57,8 @@ typings/
 # dotenv environment variables file
 .env
 
-dist/
-jsm/
+bundles/
+libs/
 _ignore/
-dist/
 .DS_Store
 .rpt2_cache

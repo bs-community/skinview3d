@@ -12,7 +12,7 @@
 		"strictFunctionTypes": false,
 		"declaration": true,
 		"sourceMap": true,
-		"outDir": "jsm",
+		"outDir": "libs",
 		"types": []
 	},
 	"include": [
