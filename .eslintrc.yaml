@@ -8,5 +8,4 @@ extends:
   - 'plugin:@typescript-eslint/recommended'
 rules:
   '@typescript-eslint/no-inferrable-types': off
-  '@typescript-eslint/explicit-function-return-type': off
   '@typescript-eslint/interface-name-prefix': off

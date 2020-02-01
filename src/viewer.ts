@@ -73,8 +73,8 @@ export class SkinViewer {
 
 		// texture loading
 		this.skinImg.crossOrigin = "anonymous";
-		this.skinImg.onerror = () => console.error("Failed loading " + this.skinImg.src);
-		this.skinImg.onload = () => {
+		this.skinImg.onerror = (): void => console.error("Failed loading " + this.skinImg.src);
+		this.skinImg.onload = (): void => {
 			loadSkinToCanvas(this.skinCanvas, this.skinImg);
 
 			if (this.detectModel) {
@@ -86,8 +86,8 @@ export class SkinViewer {
 		};
 
 		this.capeImg.crossOrigin = "anonymous";
-		this.capeImg.onerror = () => console.error("Failed loading " + this.capeImg.src);
-		this.capeImg.onload = () => {
+		this.capeImg.onerror = (): void => console.error("Failed loading " + this.capeImg.src);
+		this.capeImg.onload = (): void => {
 			loadCapeToCanvas(this.capeCanvas, this.capeImg);
 
 			this.capeTexture.needsUpdate = true;
@@ -106,7 +106,7 @@ export class SkinViewer {
 		window.requestAnimationFrame(() => this.draw());
 	}
 
-	private draw() {
+	private draw(): void {
 		if (this.disposed || this._renderPaused) {
 			return;
 		}
@@ -115,17 +115,17 @@ export class SkinViewer {
 		window.requestAnimationFrame(() => this.draw());
 	}
 
-	protected doRender() {
+	protected doRender(): void {
 		this.renderer.render(this.scene, this.camera);
 	}
 
-	setSize(width: number, height: number) {
+	setSize(width: number, height: number): void {
 		this.camera.aspect = width / height;
 		this.camera.updateProjectionMatrix();
 		this.renderer.setSize(width, height);
 	}
 
-	dispose() {
+	dispose(): void {
 		this.disposed = true;
 		this.domElement.removeChild(this.renderer.domElement);
 		this.renderer.dispose();
@@ -133,7 +133,7 @@ export class SkinViewer {
 		this.capeTexture.dispose();
 	}
 
-	get renderPaused() {
+	get renderPaused(): boolean {
 		return this._renderPaused;
 	}
 
@@ -145,37 +145,37 @@ export class SkinViewer {
 		}
 	}
 
-	get skinUrl() {
+	get skinUrl(): string {
 		return this.skinImg.src;
 	}
 
-	set skinUrl(url) {
+	set skinUrl(url: string) {
 		this.skinImg.src = url;
 	}
 
-	get capeUrl() {
+	get capeUrl(): string {
 		return this.capeImg.src;
 	}
 
-	set capeUrl(url) {
+	set capeUrl(url: string) {
 		this.capeImg.src = url;
 	}
 
-	get width() {
+	get width(): number {
 		const target = new Vector2();
 		return this.renderer.getSize(target).width;
 	}
 
-	set width(newWidth) {
+	set width(newWidth: number) {
 		this.setSize(newWidth, this.height);
 	}
 
-	get height() {
+	get height(): number {
 		const target = new Vector2();
 		return this.renderer.getSize(target).height;
 	}
 
-	set height(newHeight) {
+	set height(newHeight: number) {
 		this.setSize(this.width, newHeight);
 	}
 }

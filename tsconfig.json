@@ -8,8 +8,6 @@
 		],
 		"target": "es2015",
 		"strict": true,
-		"noImplicitAny": false,
-		"strictFunctionTypes": false,
 		"declaration": true,
 		"sourceMap": true,
 		"outDir": "libs",

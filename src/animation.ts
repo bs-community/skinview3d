@@ -9,7 +9,7 @@ export type AnimationFn = (player: PlayerObject, time: number) => void;
 
 export type Animation = AnimationFn | IAnimation;
 
-export function invokeAnimation(animation: Animation, player: PlayerObject, time: number) {
+export function invokeAnimation(animation: Animation, player: PlayerObject, time: number): void {
 	if (animation instanceof Function) {
 		animation(player, time);
 	} else {
@@ -47,7 +47,7 @@ class AnimationWrapper implements SubAnimationHandle, IAnimation {
 		this.animation = animation;
 	}
 
-	play(player: PlayerObject, time: number) {
+	play(player: PlayerObject, time: number): void {
 		if (this.toResetAndRemove) {
 			invokeAnimation(this.animation, player, 0);
 			this.remove();
@@ -68,15 +68,15 @@ class AnimationWrapper implements SubAnimationHandle, IAnimation {
 		invokeAnimation(this.animation, player, this.progress);
 	}
 
-	reset() {
+	reset(): void {
 		this.progress = 0;
 	}
 
-	remove() {
+	remove(): void {
 		// stub get's overriden
 	}
 
-	resetAndRemove() {
+	resetAndRemove(): void {
 		this.toResetAndRemove = true;
 	}
 }
@@ -87,14 +87,14 @@ export class CompositeAnimation implements IAnimation {
 
 	add(animation: Animation): AnimationHandle {
 		const handle = new AnimationWrapper(animation);
-		handle.remove = () => {
+		handle.remove = (): void => {
 			this.handles.delete(handle);
 		};
 		this.handles.add(handle);
 		return handle;
 	}
 
-	play(player: PlayerObject, time: number) {
+	play(player: PlayerObject, time: number): void {
 		this.handles.forEach(handle => handle.play(player, time));
 	}
 }
@@ -104,15 +104,15 @@ export class RootAnimation extends CompositeAnimation implements AnimationHandle
 	progress: number = 0.0;
 	readonly clock: Clock = new Clock(true);
 
-	get animation() {
+	get animation(): RootAnimation {
 		return this;
 	}
 
-	get paused() {
+	get paused(): boolean {
 		return !this.clock.running;
 	}
 
-	set paused(value) {
+	set paused(value: boolean) {
 		if (value) {
 			this.clock.stop();
 		} else {
@@ -128,7 +128,7 @@ export class RootAnimation extends CompositeAnimation implements AnimationHandle
 		this.play(player, this.progress);
 	}
 
-	reset() {
+	reset(): void {
 		this.progress = 0;
 	}
 }

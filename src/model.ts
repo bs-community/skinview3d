@@ -1,6 +1,6 @@
 import { BoxGeometry, DoubleSide, FrontSide, Group, Mesh, MeshBasicMaterial, Object3D, Texture, Vector2 } from "three";
 
-function toFaceVertices(x1: number, y1: number, x2: number, y2: number, w: number, h: number) {
+function toFaceVertices(x1: number, y1: number, x2: number, y2: number, w: number, h: number): Array<Vector2> {
 	return [
 		new Vector2(x1 / w, 1.0 - y2 / h),
 		new Vector2(x2 / w, 1.0 - y2 / h),
@@ -9,15 +9,15 @@ function toFaceVertices(x1: number, y1: number, x2: number, y2: number, w: numbe
 	];
 }
 
-function toSkinVertices(x1: number, y1: number, x2: number, y2: number) {
+function toSkinVertices(x1: number, y1: number, x2: number, y2: number): Array<Vector2> {
 	return toFaceVertices(x1, y1, x2, y2, 64.0, 64.0);
 }
 
-function toCapeVertices(x1: number, y1: number, x2: number, y2: number) {
+function toCapeVertices(x1: number, y1: number, x2: number, y2: number): Array<Vector2> {
 	return toFaceVertices(x1, y1, x2, y2, 64.0, 32.0);
 }
 
-function setVertices(box: BoxGeometry, top: Array<Vector2>, bottom: Array<Vector2>, left: Array<Vector2>, front: Array<Vector2>, right: Array<Vector2>, back: Array<Vector2>) {
+function setVertices(box: BoxGeometry, top: Array<Vector2>, bottom: Array<Vector2>, left: Array<Vector2>, front: Array<Vector2>, right: Array<Vector2>, back: Array<Vector2>): void {
 
 	box.faceVertexUvs[0] = [];
 	box.faceVertexUvs[0][0] = [right[3], right[0], right[2]];
@@ -367,7 +367,7 @@ export class SkinObject extends Group {
 		this.slim = false;
 	}
 
-	get slim() {
+	get slim(): boolean {
 		return this._slim;
 	}
 
@@ -376,15 +376,15 @@ export class SkinObject extends Group {
 		this.modelListeners.forEach(listener => listener());
 	}
 
-	private getBodyParts() {
+	private getBodyParts(): Array<BodyPart> {
 		return this.children.filter(it => it instanceof BodyPart) as Array<BodyPart>;
 	}
 
-	setInnerLayerVisible(value: boolean) {
+	setInnerLayerVisible(value: boolean): void {
 		this.getBodyParts().forEach(part => part.innerLayer.visible = value);
 	}
 
-	setOuterLayerVisible(value: boolean) {
+	setOuterLayerVisible(value: boolean): void {
 		this.getBodyParts().forEach(part => part.outerLayer.visible = value);
 	}
 }
