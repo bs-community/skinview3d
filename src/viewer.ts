@@ -17,7 +17,6 @@ export class SkinViewer {
 	public readonly domElement: Node;
 	public readonly animations: RootAnimation = new RootAnimation();
 	public detectModel: boolean = true;
-	public disposed: boolean = false;
 
 	public readonly skinImg: HTMLImageElement;
 	public readonly skinCanvas: HTMLCanvasElement;
@@ -33,6 +32,7 @@ export class SkinViewer {
 
 	public readonly playerObject: PlayerObject;
 
+	private _disposed: boolean = false;
 	private _renderPaused: boolean = false;
 
 	constructor(options: SkinViewerOptions) {
@@ -126,11 +126,15 @@ export class SkinViewer {
 	}
 
 	dispose(): void {
-		this.disposed = true;
+		this._disposed = true;
 		this.domElement.removeChild(this.renderer.domElement);
 		this.renderer.dispose();
 		this.skinTexture.dispose();
 		this.capeTexture.dispose();
+	}
+
+	get disposed(): boolean {
+		return this._disposed;
 	}
 
 	get renderPaused(): boolean {
