@@ -162,8 +162,7 @@ export class SkinViewer {
 	}
 
 	get width(): number {
-		const target = new Vector2();
-		return this.renderer.getSize(target).width;
+		return this.renderer.getSize(new Vector2()).width;
 	}
 
 	set width(newWidth: number) {
@@ -171,8 +170,7 @@ export class SkinViewer {
 	}
 
 	get height(): number {
-		const target = new Vector2();
-		return this.renderer.getSize(target).height;
+		return this.renderer.getSize(new Vector2()).height;
 	}
 
 	set height(newHeight: number) {
