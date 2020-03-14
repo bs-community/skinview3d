@@ -1,11 +1,13 @@
 /* eslint-disable */
 import * as skinview3d from '../libs/skinview3d';
-import { withKnobs, radios, number  } from "@storybook/addon-knobs";
+import { withKnobs, radios, number  } from '@storybook/addon-knobs';
 
 export default {
 	title: 'Skinview3d',
 	decorators: [withKnobs]
 };
+
+let currentAnimation;
 
 const createViewer = () => {
 	const element = document.createElement('div');
@@ -16,7 +18,7 @@ const createViewer = () => {
 		domElement: element,
 		width: 600,
 		height: 600,
-		skinUrl: "texture/1_8_texturemap_redux.png",
+		skinUrl: 'texture/1_8_texturemap_redux.png',
 	});
 
 	let control = skinview3d.createOrbitControls(viewer);
@@ -27,19 +29,34 @@ const createViewer = () => {
 	return { viewer, element };
 }
 
-const { viewer, element } = createViewer();
+let { viewer, element } = createViewer();
 
 export const NoAnimation = () => {
+	if (currentAnimation) {
+		currentAnimation.remove();
+	}
 
 	return element;
 };
 
 export const WithAnimation = () => {
 
+	if (currentAnimation) {
+		currentAnimation.remove();
+	}
 
-	let walk = viewer.animations.add(skinview3d.WalkingAnimation);
+	const animationMap = {
+		'Walk': skinview3d.WalkingAnimation,
+		'Run': skinview3d.RunningAnimation,
+		'Rotate': skinview3d.RotatingAnimation,
+	};
+
+	const animationKey = radios('Animations', Object.keys(animationMap), 'Run');
+	currentAnimation = viewer.animations.add(animationMap[animationKey]);
+
 
 	const label = 'Speed';
+
 	const defaultValue = 1;
 	const options = {
 		 range: true,
@@ -47,28 +64,33 @@ export const WithAnimation = () => {
 		 max: 3,
 		 step: 0.01,
 	};
-	const groupId = 'GROUP-ANIMATION';
-	const value = number(label, defaultValue, options, groupId);
+	const value = number(label, defaultValue, options);
 
-	walk.speed = value;
+	currentAnimation.speed = value;
 
 	return element;
 };
 
-export const TestSkins = () => {
+export const TestTextures = () => {
 
-	const label = 'Skin Textures';
-	const options = {
+	const skinOptions = {
 		'1.8 Skin': '1_8_texturemap_redux',
 		'Classic Skin': 'Hacksore',
 		'HD Skin': 'ironman_hd',
 	};
-	const defaultValue = '1_8_texturemap_redux';
-	const groupId = 'SKIN-GROUP';
+	const skinUrl = radios('Skin Textures', skinOptions, '1_8_texturemap_redux');
 
-	const skinUrl = radios(label, options, defaultValue, groupId);
+	const capeOptions = {
+		'None': 'none',
+		'Classic Cape': 'cape',
+		'HD Cape': 'hd_cape',
+	};
 
+	const capeUrl = radios('Cape Textures', capeOptions, 'none');
 	viewer.skinUrl = `texture/${skinUrl}.png`;
+
+	// Will fix with #48
+	viewer.capeUrl = capeUrl !== 'none' ? `texture/${capeUrl}.png` : null;
 
 	return element;
 };
