@@ -34,6 +34,8 @@ export class SkinViewer {
 
 	private _disposed: boolean = false;
 	private _renderPaused: boolean = false;
+	private _skinSet: boolean = false;
+	private _capeSet: boolean = false;
 
 	constructor(options: SkinViewerOptions) {
 		this.domElement = options.domElement;
@@ -149,20 +151,32 @@ export class SkinViewer {
 		}
 	}
 
-	get skinUrl(): string {
-		return this.skinImg.src;
+	get skinUrl(): string | null {
+		return this._skinSet ? this.skinImg.src : null;
 	}
 
-	set skinUrl(url: string) {
-		this.skinImg.src = url;
+	set skinUrl(url: string | null) {
+		if (url === null) {
+			this._skinSet = false;
+			this.playerObject.skin.visible = false;
+		} else {
+			this._skinSet = true;
+			this.skinImg.src = url;
+		}
 	}
 
-	get capeUrl(): string {
-		return this.capeImg.src;
+	get capeUrl(): string | null {
+		return this._capeSet ? this.capeImg.src : null;
 	}
 
-	set capeUrl(url: string) {
-		this.capeImg.src = url;
+	set capeUrl(url: string | null) {
+		if (url === null) {
+			this._capeSet = false;
+			this.playerObject.cape.visible = false;
+		} else {
+			this._capeSet = true;
+			this.capeImg.src = url;
+		}
 	}
 
 	get width(): number {
