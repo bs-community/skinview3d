@@ -74,7 +74,7 @@ export class SkinViewer {
 		// Use smaller fov to avoid distortion
 		this.camera = new PerspectiveCamera(40);
 		this.camera.position.y = 0;
-		this.camera.position.z = 65;
+		this.camera.position.z = 60;
 
 		this.renderer = new WebGLRenderer({ alpha: true });
 		this.domElement.appendChild(this.renderer.domElement);
