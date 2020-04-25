@@ -24,19 +24,14 @@
 	<script>
 		let skinViewer = new skinview3d.SkinViewer({
 			domElement: document.getElementById("skin_container"),
-			width: 900,
-			height: 900,
-			skinUrl: "./1_8_texturemap_redux.png"
+			width: 200,
+			height: 400,
+			skinUrl: "./skin.png",
+			capeUrl: "./cape.png",
+			earUrl: "./ears.png"
 		});
 
-		// By default, the skin model is automatically detected. You can turn it off in this way:
-		// skinViewer.detectModel = false;
-		// skinViewer.playerObject.skin.slim = true;
-
 		let control = new skinview3d.createOrbitControls(skinViewer);
-		skinViewer.animations.add(skinview3d.WalkingAnimation);
-		skinViewer.animations.speed = 1.5;
-
 	</script>
 
 

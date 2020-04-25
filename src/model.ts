@@ -17,6 +17,10 @@ function toCapeVertices(x1: number, y1: number, x2: number, y2: number): Array<V
 	return toFaceVertices(x1, y1, x2, y2, 64.0, 32.0);
 }
 
+function toEarVertices(x1: number, y1: number, x2: number, y2: number): Array<Vector2> {
+	return toFaceVertices(x1, y1, x2, y2, 14.0, 7.0);
+}
+
 function setVertices(box: BoxGeometry, top: Array<Vector2>, bottom: Array<Vector2>, left: Array<Vector2>, front: Array<Vector2>, right: Array<Vector2>, back: Array<Vector2>): void {
 
 	box.faceVertexUvs[0] = [];
@@ -416,12 +420,47 @@ export class CapeObject extends Group {
 	}
 }
 
+export class EarsObject extends Group {
+
+	readonly leftEar: Mesh;
+	readonly rightEar: Mesh;
+
+	constructor(texture: Texture) {
+		super();
+
+		const earMaterial = new MeshBasicMaterial({ map: texture, transparent: true, opacity: 1, side: DoubleSide, alphaTest: 0.5 });
+
+		// back = outside
+		// front = inside
+		const earBox = new BoxGeometry(6, 6, 1, 0, 0, 0);
+		//x1: number, y1: number, x2: number, y2: number
+		setVertices(earBox,
+			//from look at back
+			toEarVertices(1, 0, 7, 1), //top
+			toEarVertices(7, 0, 13, 1), //bottom
+			toEarVertices(0, 1, 1, 7), //right
+			toEarVertices(1, 1, 7, 7), //front
+			toEarVertices(0, 1, 1, 7), //left
+			toEarVertices(8, 1, 14, 7) //back
+		);
+
+		this.leftEar = new Mesh(earBox, earMaterial);
+		this.leftEar.position.x = -5.5;
+		this.add(this.leftEar);
+
+		this.rightEar = new Mesh(earBox, earMaterial);
+		this.rightEar.position.x = 5.5;
+		this.add(this.rightEar);
+	}
+}
+
 export class PlayerObject extends Group {
 
 	readonly skin: SkinObject;
 	readonly cape: CapeObject;
+	readonly ears: EarsObject
 
-	constructor(skinTexture: Texture, capeTexture: Texture) {
+	constructor(skinTexture: Texture, capeTexture: Texture, earTexture: Texture) {
 		super();
 
 		this.skin = new SkinObject(skinTexture);
@@ -432,7 +471,12 @@ export class PlayerObject extends Group {
 		this.cape.name = "cape";
 		this.cape.position.z = -2;
 		this.cape.position.y = -4;
-		this.cape.rotation.x = 25 * Math.PI / 180;
+		this.cape.rotation.x = 10 * Math.PI / 180;
 		this.add(this.cape);
+
+		this.ears = new EarsObject(earTexture);
+		this.ears.name = "ears";
+		this.ears.position.y = 5.5;
+		this.add(this.ears);
 	}
 }

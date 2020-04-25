@@ -1,12 +1,13 @@
 import { NearestFilter, PerspectiveCamera, Scene, Texture, Vector2, WebGLRenderer } from "three";
 import { RootAnimation } from "./animation.js";
 import { PlayerObject } from "./model.js";
-import { isSlimSkin, loadCapeToCanvas, loadSkinToCanvas } from "skinview-utils";
+import { TextureCanvas, TextureSource, isSlimSkin, loadCapeToCanvas, loadSkinToCanvas } from "skinview-utils";
 
 export interface SkinViewerOptions {
 	domElement: Node;
 	skinUrl?: string;
 	capeUrl?: string;
+	earUrl?: string;
 	width?: number;
 	height?: number;
 	detectModel?: boolean;
@@ -26,6 +27,10 @@ export class SkinViewer {
 	public readonly capeCanvas: HTMLCanvasElement;
 	public readonly capeTexture: Texture;
 
+	public readonly earImg: HTMLImageElement;
+	public readonly earCanvas: HTMLCanvasElement;
+	public readonly earTexture: Texture;
+
 	public readonly scene: Scene;
 	public readonly camera: PerspectiveCamera;
 	public readonly renderer: WebGLRenderer;
@@ -36,6 +41,7 @@ export class SkinViewer {
 	private _renderPaused: boolean = false;
 	private _skinSet: boolean = false;
 	private _capeSet: boolean = false;
+	private _earSet: boolean = false;
 
 	constructor(options: SkinViewerOptions) {
 		this.domElement = options.domElement;
@@ -56,21 +62,28 @@ export class SkinViewer {
 		this.capeTexture.magFilter = NearestFilter;
 		this.capeTexture.minFilter = NearestFilter;
 
+		this.earImg = new Image();
+		this.earCanvas = document.createElement("canvas");
+		this.earTexture = new Texture(this.earCanvas);
+		this.earTexture.magFilter = NearestFilter;
+		this.earTexture.minFilter = NearestFilter;
+
 		// scene
 		this.scene = new Scene();
 
 		// Use smaller fov to avoid distortion
 		this.camera = new PerspectiveCamera(40);
-		this.camera.position.y = -12;
-		this.camera.position.z = 60;
+		this.camera.position.y = 0;
+		this.camera.position.z = 65;
 
 		this.renderer = new WebGLRenderer({ alpha: true });
 		this.domElement.appendChild(this.renderer.domElement);
 
-		this.playerObject = new PlayerObject(this.skinTexture, this.capeTexture);
+		this.playerObject = new PlayerObject(this.skinTexture, this.capeTexture, this.earTexture);
 		this.playerObject.name = "player";
 		this.playerObject.skin.visible = false;
 		this.playerObject.cape.visible = false;
+		this.playerObject.ears.visible = false;
 		this.scene.add(this.playerObject);
 
 		// texture loading
@@ -96,11 +109,23 @@ export class SkinViewer {
 			this.playerObject.cape.visible = true;
 		};
 
+		this.earImg.crossOrigin = "anonymous";
+		this.earImg.onerror = (): void => console.error("Failed loading " + this.earImg.src);
+		this.earImg.onload = (): void => {
+			loadEarsToCanvas(this.earCanvas, this.earImg);
+
+			this.earTexture.needsUpdate = true;
+			this.playerObject.ears.visible = true;
+		};
+
 		if (options.skinUrl !== undefined) {
 			this.skinUrl = options.skinUrl;
 		}
 		if (options.capeUrl !== undefined) {
 			this.capeUrl = options.capeUrl;
+		}
+		if (options.earUrl !== undefined) {
+			this.earUrl = options.earUrl;
 		}
 		this.width = options.width === undefined ? 300 : options.width;
 		this.height = options.height === undefined ? 300 : options.height;
@@ -179,6 +204,20 @@ export class SkinViewer {
 		}
 	}
 
+	get earUrl(): string | null {
+		return this._earSet ? this.earImg.src : null;
+	}
+
+	set earUrl(url: string | null) {
+		if (url === null) {
+			this._earSet = false;
+			this.playerObject.ears.visible = false;
+		} else {
+			this._earSet = true;
+			this.earImg.src = url;
+		}
+	}
+
 	get width(): number {
 		return this.renderer.getSize(new Vector2()).width;
 	}
@@ -194,4 +233,13 @@ export class SkinViewer {
 	set height(newHeight: number) {
 		this.setSize(this.width, newHeight);
 	}
+}
+
+function loadEarsToCanvas(canvas: TextureCanvas, image: TextureSource): void {
+	canvas.width = 14;
+	canvas.height = 7;
+
+	const context = canvas.getContext("2d")!;
+	context.clearRect(0, 0, canvas.width, canvas.height);
+	context.drawImage(image, 0, 0, image.width, image.height);
 }
