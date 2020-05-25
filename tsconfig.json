@@ -7,11 +7,7 @@
 			"es2015"
 		],
 		"target": "es2015",
-		"strict": true,
-		"declaration": true,
-		"sourceMap": true,
-		"outDir": "libs",
-		"types": []
+		"strict": true
 	},
 	"include": [
 		"src"
