@@ -4,8 +4,11 @@ import { RootAnimation } from "./animation.js";
 import { PlayerObject } from "./model.js";
 
 export type LoadOptions = {
+	/**
+	 * Whether to make the object visible after the texture is loaded. (default: true)
+	 */
 	makeVisible?: boolean;
-};
+}
 
 function toMakeVisible(options?: LoadOptions): boolean {
 	if (options && options.makeVisible === false) {
@@ -15,7 +18,6 @@ function toMakeVisible(options?: LoadOptions): boolean {
 }
 
 class SkinViewer {
-
 	readonly scene: Scene;
 	readonly camera: PerspectiveCamera;
 	readonly renderer: WebGLRenderer;
@@ -29,8 +31,6 @@ class SkinViewer {
 
 	private _disposed: boolean = false;
 	private _renderPaused: boolean = false;
-	private _skinSet: boolean = false;
-	private _capeSet: boolean = false;
 
 	constructor(readonly domElement: Node) {
 		// texture
@@ -44,7 +44,6 @@ class SkinViewer {
 		this.capeTexture.magFilter = NearestFilter;
 		this.capeTexture.minFilter = NearestFilter;
 
-		// scene
 		this.scene = new Scene();
 
 		// Use smaller fov to avoid distortion

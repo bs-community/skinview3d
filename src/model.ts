@@ -19,7 +19,6 @@ function toCapeVertices(x1: number, y1: number, x2: number, y2: number): Array<V
 }
 
 function setVertices(box: BoxGeometry, top: Array<Vector2>, bottom: Array<Vector2>, left: Array<Vector2>, front: Array<Vector2>, right: Array<Vector2>, back: Array<Vector2>): void {
-
 	box.faceVertexUvs[0] = [];
 	box.faceVertexUvs[0][0] = [right[3], right[0], right[2]];
 	box.faceVertexUvs[0][1] = [right[0], right[1], right[2]];
