@@ -22,12 +22,11 @@
 	<script type="text/javascript" src="../bundles/skinview3d.bundle.js"></script>
 
 	<script>
-		let skinViewer = new skinview3d.SkinViewer({
-			domElement: document.getElementById("skin_container"),
-			width: 900,
-			height: 900,
-			skinUrl: "./1_8_texturemap_redux.png"
-		});
+		let skinViewer = new skinview3d.SkinViewer(document.getElementById("skin_container"));
+		skinViewer.width = 400;
+		skinViewer.height = 300;
+
+		skinViewer.loadSkinFrom("./1_8_texturemap_redux.png");
 
 		// By default, the skin model is automatically detected. You can turn it off in this way:
 		// skinViewer.detectModel = false;
