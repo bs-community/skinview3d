@@ -72,11 +72,11 @@ export class SkinViewer {
 		this.scene = new Scene();
 
 		// Use smaller fov to avoid distortion
-		this.camera = new PerspectiveCamera(40);
+		this.camera = new PerspectiveCamera(20);
 		this.camera.position.y = 0;
-		this.camera.position.z = 60;
+		this.camera.position.z = 140;
 
-		this.renderer = new WebGLRenderer({ alpha: true });
+		this.renderer = new WebGLRenderer({ alpha: true, logarithmicDepthBuffer: true });
 		this.domElement.appendChild(this.renderer.domElement);
 
 		this.playerObject = new PlayerObject(this.skinTexture, this.capeTexture, this.earTexture);

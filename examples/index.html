@@ -12,18 +12,29 @@
 			padding: 0;
 			background-color: #1e1e1e;
 		}
+
+		#skin-container {
+    		text-align: center;
+    		cursor: move;
+		}
+
+		#skin-container > canvas {
+			background: white;
+    		filter: drop-shadow(-5px 5px 7px rgba(0, 0, 0, 0.4));
+    		outline: none;
+		}
 	</style>
 </head>
 
 <body>
 
-	<div id="skin_container"></div>
+	<div id="skin-container"></div>
 
 	<script type="text/javascript" src="../bundles/skinview3d.bundle.js"></script>
 
 	<script>
 		let skinViewer = new skinview3d.SkinViewer({
-			domElement: document.getElementById("skin_container"),
+			domElement: document.getElementById("skin-container"),
 			width: 200,
 			height: 400,
 			skinUrl: "./skin.png",
@@ -31,7 +42,12 @@
 			earUrl: "./ears.png"
 		});
 
-		let control = new skinview3d.createOrbitControls(skinViewer);
+		let control = skinview3d.createOrbitControls(skinViewer);
+		control.enableRotate = true;
+		control.enableZoom = false;
+		control.enablePan = false;
+
+		skinViewer.playerObject.rotation.y = 180 * Math.PI / 180;
 	</script>
 
 

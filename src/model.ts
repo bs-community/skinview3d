@@ -1,4 +1,4 @@
-import { BoxGeometry, DoubleSide, FrontSide, Group, Mesh, MeshBasicMaterial, Object3D, Texture, Vector2 } from "three";
+import { BoxGeometry, DoubleSide, FrontSide, Group, Mesh, MeshBasicMaterial, Object3D, Texture, Vector2, Vector3 } from "three";
 
 function toFaceVertices(x1: number, y1: number, x2: number, y2: number, w: number, h: number): Array<Vector2> {
 	return [
@@ -15,6 +15,10 @@ function toSkinVertices(x1: number, y1: number, x2: number, y2: number): Array<V
 
 function toCapeVertices(x1: number, y1: number, x2: number, y2: number): Array<Vector2> {
 	return toFaceVertices(x1, y1, x2, y2, 64.0, 32.0);
+}
+
+function toElytraVertices(x1: number, y1: number, x2: number, y2: number) {
+	return toFaceVertices(x1 + 22, y1, x2 + 22, y2, 64.0, 32.0);
 }
 
 function toEarVertices(x1: number, y1: number, x2: number, y2: number): Array<Vector2> {
@@ -420,6 +424,79 @@ export class CapeObject extends Group {
 	}
 }
 
+export class ElytraObject extends Group {
+
+	readonly leftWing: Group;
+	readonly rightWing: Group;
+
+	constructor(texture: Texture) {
+		super();
+
+		const elytraMaterial = new MeshBasicMaterial({ map: texture, transparent: true, opacity: 1, side: DoubleSide, alphaTest: 0.5,
+			polygonOffset: true,
+			polygonOffsetFactor: -1.0,
+			polygonOffsetUnits: -4.0
+		});
+
+		const leftWingBox = new BoxGeometry(10, 20, 2);
+		setVertices(leftWingBox,
+			toElytraVertices(2, 0, 12, 2),
+			toElytraVertices(12, 0, 22, 2),
+			toElytraVertices(0, 2, 2, 22),
+			toElytraVertices(2, 2, 12, 22),
+			toElytraVertices(12, 2, 14, 22),
+			toElytraVertices(14, 2, 24, 22)
+		);
+		const leftWingMesh = new Mesh(leftWingBox, elytraMaterial);
+		leftWingMesh.position.x = -5;
+		leftWingMesh.position.y = -10;
+		leftWingMesh.position.z = -1;
+
+		leftWingMesh.scale.x = -1.15
+		leftWingMesh.scale.y = 1.15;
+		leftWingMesh.scale.z = 1.15;
+
+		this.leftWing = new Group();
+		this.leftWing.add(leftWingMesh);
+		this.leftWing.position.x = 3; // Left - right
+		this.leftWing.position.y = -1.5; //Up - down
+
+		this.leftWing.rotation.x = 0.2617994;
+		this.leftWing.rotation.y = 0;
+		this.leftWing.rotation.z = -0.19;
+		this.add(this.leftWing);
+
+		const rightWingBox = new BoxGeometry(10, 20, 2);
+		setVertices(rightWingBox,
+			toElytraVertices(2, 0, 12, 2),
+			toElytraVertices(12, 0, 22, 2),
+			toElytraVertices(0, 2, 2, 22),
+			toElytraVertices(2, 2, 12, 22),
+			toElytraVertices(12, 2, 14, 22),
+			toElytraVertices(14, 2, 24, 22)
+		);
+		const rightWingMesh = new Mesh(rightWingBox, elytraMaterial);
+
+		rightWingMesh.position.x = 5;
+		rightWingMesh.position.y = -10;
+		rightWingMesh.position.z = -1;
+
+		rightWingMesh.scale.x = 1.15
+		rightWingMesh.scale.y = 1.15;
+		rightWingMesh.scale.z = 1.15;		
+
+		this.rightWing = new Group();
+		this.rightWing.add(rightWingMesh);
+		this.rightWing.position.x = -3; // Left - right
+		this.rightWing.position.y = -1.5; //Up - down
+
+		this.rightWing.rotation.x = 0.2617994; //0.2617994
+		this.rightWing.rotation.y = 0;
+		this.rightWing.rotation.z = 0.19;
+		this.add(this.rightWing);
+	}
+}
+
 export class EarsObject extends Group {
 
 	readonly leftEar: Mesh;
@@ -446,10 +523,16 @@ export class EarsObject extends Group {
 
 		this.leftEar = new Mesh(earBox, earMaterial);
 		this.leftEar.position.x = -5.5;
+		this.leftEar.scale.x = 1.3;
+		this.leftEar.scale.y = 1.3;
+		this.leftEar.scale.z = 1.3;
 		this.add(this.leftEar);
 
 		this.rightEar = new Mesh(earBox, earMaterial);
 		this.rightEar.position.x = 5.5;
+		this.rightEar.scale.x = 1.3;
+		this.rightEar.scale.y = 1.3;
+		this.rightEar.scale.z = 1.3;
 		this.add(this.rightEar);
 	}
 }
@@ -458,6 +541,7 @@ export class PlayerObject extends Group {
 
 	readonly skin: SkinObject;
 	readonly cape: CapeObject;
+	readonly elytra: ElytraObject;
 	readonly ears: EarsObject
 
 	constructor(skinTexture: Texture, capeTexture: Texture, earTexture: Texture) {
@@ -473,7 +557,14 @@ export class PlayerObject extends Group {
 		this.cape.position.z = -2;
 		this.cape.position.y = -6;
 		this.cape.rotation.x = 10 * Math.PI / 180;
+		//this.cape.visible = false;
 		this.add(this.cape);
+
+		this.elytra = new ElytraObject(capeTexture);
+		this.elytra.position.y = -7;
+		this.elytra.position.z = -2;
+		this.elytra.visible = false;
+		this.add(this.elytra);
 
 		this.ears = new EarsObject(earTexture);
 		this.ears.name = "ears";
