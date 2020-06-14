@@ -1,4 +1,4 @@
-import { applyMixins, CapeContainer, ModelType, SkinContainer } from "skinview-utils";
+import { applyMixins, CapeContainer, ModelType, SkinContainer, RemoteImage, TextureSource, isTextureSource } from "skinview-utils";
 import { NearestFilter, PerspectiveCamera, Scene, Texture, Vector2, WebGLRenderer } from "three";
 import { RootAnimation } from "./animation.js";
 import { PlayerObject } from "./model.js";
@@ -10,6 +10,14 @@ export type LoadOptions = {
 	makeVisible?: boolean;
 }
 
+export type SkinViewerOptions = {
+	domElement: Node;
+	width?: number;
+	height?: number;
+	skin?: RemoteImage | TextureSource;
+	cape?: RemoteImage | TextureSource;
+}
+
 function toMakeVisible(options?: LoadOptions): boolean {
 	if (options && options.makeVisible === false) {
 		return false;
@@ -18,6 +26,7 @@ function toMakeVisible(options?: LoadOptions): boolean {
 }
 
 class SkinViewer {
+	readonly domElement: Node;
 	readonly scene: Scene;
 	readonly camera: PerspectiveCamera;
 	readonly renderer: WebGLRenderer;
@@ -32,7 +41,16 @@ class SkinViewer {
 	private _disposed: boolean = false;
 	private _renderPaused: boolean = false;
 
-	constructor(readonly domElement: Node) {
+	constructor(domElement: Node);
+	constructor(options: SkinViewerOptions);
+
+	constructor(param: Node | SkinViewerOptions) {
+		if (param instanceof Node) {
+			this.domElement = param;
+		} else {
+			this.domElement = param.domElement;
+		}
+
 		// texture
 		this.skinCanvas = document.createElement("canvas");
 		this.skinTexture = new Texture(this.skinCanvas);
@@ -61,6 +79,29 @@ class SkinViewer {
 		this.scene.add(this.playerObject);
 
 		window.requestAnimationFrame(() => this.draw());
+
+		if (!(param instanceof Node)) {
+			if (param.skin !== undefined) {
+				if (isTextureSource(param.skin)) {
+					this.loadSkin(param.skin);
+				} else {
+					this.loadSkin(param.skin);
+				}
+			}
+			if (param.cape !== undefined) {
+				if (isTextureSource(param.cape)) {
+					this.loadCape(param.cape);
+				} else {
+					this.loadCape(param.cape);
+				}
+			}
+			if (param.width !== undefined) {
+				this.width = param.width;
+			}
+			if (param.height !== undefined) {
+				this.height = param.height;
+			}
+		}
 	}
 
 	protected skinLoaded(model: ModelType, options?: LoadOptions): void {
@@ -76,6 +117,14 @@ class SkinViewer {
 		if (toMakeVisible(options)) {
 			this.playerObject.cape.visible = true;
 		}
+	}
+
+	protected resetSkin(): void {
+		this.playerObject.skin.visible = false;
+	}
+
+	protected resetCape(): void {
+		this.playerObject.cape.visible = false;
 	}
 
 	private draw(): void {
