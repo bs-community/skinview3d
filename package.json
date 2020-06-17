@@ -11,7 +11,7 @@
 		"build": "npm run build:modules && npm run build:bundles",
 		"test:lint": "eslint --ext .ts src",
 		"test": "npm run test:lint",
-		"dev:watch:modules": "tsc -w -p .",
+		"dev:watch:modules": "tsc -w --declaration --sourceMap --outDir libs -p .",
 		"dev:watch:bundles": "rollup -w -c",
 		"dev:serve": "ws",
 		"dev": "npm-run-all --parallel dev:watch:modules dev:watch:bundles dev:serve",
@@ -38,7 +38,7 @@
 		"bundles"
 	],
 	"dependencies": {
-		"skinview-utils": "^0.2.0",
+		"skinview-utils": "^0.5.3",
 		"three": "^0.117.1"
 	},
 	"devDependencies": {

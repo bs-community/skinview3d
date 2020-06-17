@@ -102,7 +102,7 @@ export class CompositeAnimation implements IAnimation {
 export class RootAnimation extends CompositeAnimation implements AnimationHandle {
 	speed: number = 1.0;
 	progress: number = 0.0;
-	readonly clock: Clock = new Clock(true);
+	private readonly clock: Clock = new Clock(true);
 
 	get animation(): RootAnimation {
 		return this;
