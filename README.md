@@ -20,8 +20,7 @@ Three.js powered Minecraft skin viewer.
 ```html
 <div id="skin_container"></div>
 <script>
-	let skinViewer = new skinview3d.SkinViewer({
-		domElement: document.getElementById("skin_container"),
+	let skinViewer = new skinview3d.SkinViewer(document.getElementById("skin_container"), {
 		width: 300,
 		height: 400,
 		skin: "img/skin.png"
