@@ -1,4 +1,4 @@
-import { applyMixins, CapeContainer, ModelType, SkinContainer, RemoteImage, TextureSource, isTextureSource } from "skinview-utils";
+import { applyMixins, CapeContainer, ModelType, SkinContainer, RemoteImage, TextureSource } from "skinview-utils";
 import { NearestFilter, PerspectiveCamera, Scene, Texture, Vector2, WebGLRenderer } from "three";
 import { RootAnimation } from "./animation.js";
 import { PlayerObject } from "./model.js";
@@ -73,18 +73,10 @@ class SkinViewer {
 		window.requestAnimationFrame(() => this.draw());
 
 		if (options.skin !== undefined) {
-			if (isTextureSource(options.skin)) {
-				this.loadSkin(options.skin);
-			} else {
-				this.loadSkin(options.skin);
-			}
+			this.loadSkin(options.skin);
 		}
 		if (options.cape !== undefined) {
-			if (isTextureSource(options.cape)) {
-				this.loadCape(options.cape);
-			} else {
-				this.loadCape(options.cape);
-			}
+			this.loadCape(options.cape);
 		}
 		if (options.width !== undefined) {
 			this.width = options.width;

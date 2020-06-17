@@ -38,7 +38,7 @@
 		"bundles"
 	],
 	"dependencies": {
-		"skinview-utils": "^0.5.1",
+		"skinview-utils": "^0.5.3",
 		"three": "^0.117.1"
 	},
 	"devDependencies": {
