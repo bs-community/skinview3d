@@ -11,7 +11,6 @@ export type LoadOptions = {
 }
 
 export type SkinViewerOptions = {
-	domElement: Node;
 	width?: number;
 	height?: number;
 	skin?: RemoteImage | TextureSource;
@@ -41,15 +40,8 @@ class SkinViewer {
 	private _disposed: boolean = false;
 	private _renderPaused: boolean = false;
 
-	constructor(domElement: Node);
-	constructor(options: SkinViewerOptions);
-
-	constructor(param: Node | SkinViewerOptions) {
-		if (param instanceof Node) {
-			this.domElement = param;
-		} else {
-			this.domElement = param.domElement;
-		}
+	constructor(domElement: Node, options: SkinViewerOptions = {}) {
+		this.domElement = domElement;
 
 		// texture
 		this.skinCanvas = document.createElement("canvas");
@@ -80,27 +72,25 @@ class SkinViewer {
 
 		window.requestAnimationFrame(() => this.draw());
 
-		if (!(param instanceof Node)) {
-			if (param.skin !== undefined) {
-				if (isTextureSource(param.skin)) {
-					this.loadSkin(param.skin);
-				} else {
-					this.loadSkin(param.skin);
-				}
+		if (options.skin !== undefined) {
+			if (isTextureSource(options.skin)) {
+				this.loadSkin(options.skin);
+			} else {
+				this.loadSkin(options.skin);
 			}
-			if (param.cape !== undefined) {
-				if (isTextureSource(param.cape)) {
-					this.loadCape(param.cape);
-				} else {
-					this.loadCape(param.cape);
-				}
+		}
+		if (options.cape !== undefined) {
+			if (isTextureSource(options.cape)) {
+				this.loadCape(options.cape);
+			} else {
+				this.loadCape(options.cape);
 			}
-			if (param.width !== undefined) {
-				this.width = param.width;
-			}
-			if (param.height !== undefined) {
-				this.height = param.height;
-			}
+		}
+		if (options.width !== undefined) {
+			this.width = options.width;
+		}
+		if (options.height !== undefined) {
+			this.height = options.height;
 		}
 	}
 
