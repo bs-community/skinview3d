@@ -18,13 +18,11 @@ function initSkinViewer() {
 	// Reset animation speed
 	el('speed').value = globalAnimationSpeed = 1;
 
-	skinViewer = new skinview3d.SkinViewer({
-		domElement: el("skin_container"),
+	skinViewer = new skinview3d.SkinViewer(el("skin_container"), {
 		width: el('width').value,
-		height: el('height').value,
-		skinUrl: el('skin_url').value,
-		capeUrl: el('cape_url').value || null
+		height: el('height').value
 	});
+	reloadTextures();
 
 	skinViewer.camera.position.z = 70;
 
@@ -50,20 +48,11 @@ function initSkinViewer() {
 
 }
 
-function hotReloadTextures() {
-	var capeObject = skinViewer.playerObject.cape;
-	var capeUrl = el('cape_url').value;
+function reloadTextures() {
 	var skinUrl = el('skin_url').value;
-
-	// I've noted there is not a good way to set the cape to null
-	// so we hide it as work around but need to raise an issue
-	if (capeUrl === "") {
-		capeObject.visible = false;
-	} else {
-		skinViewer.capeUrl = capeUrl;
-	}
-
-	skinViewer.skinUrl = skinUrl;
+	var capeUrl = el('cape_url').value;
+	skinViewer.loadSkin(skinUrl === "" ? null : skinUrl);
+	skinViewer.loadCape(capeUrl === "" ? null : capeUrl);
 }
 
 function resizeSkinViewer() {
