@@ -2,16 +2,11 @@
 	"compilerOptions": {
 		"module": "es2015",
 		"moduleResolution": "node",
+		"target": "es2017",
 		"lib": [
-			"dom",
-			"es2015"
+			"dom"
 		],
-		"target": "es2015",
-		"strict": true,
-		"declaration": true,
-		"sourceMap": true,
-		"outDir": "libs",
-		"types": []
+		"strict": true
 	},
 	"include": [
 		"src"
