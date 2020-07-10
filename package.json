@@ -39,11 +39,11 @@
 		"bundles"
 	],
 	"dependencies": {
-		"@storybook/addon-knobs": "^5.3.19",
 		"skinview-utils": "^0.5.5",
 		"three": "^0.117.1"
 	},
 	"devDependencies": {
+		"@storybook/addon-knobs": "^5.3.19",
 		"@babel/core": "^7.10.4",
 		"@rollup/plugin-node-resolve": "^8.1.0",
 		"@rollup/plugin-typescript": "^5.0.0",
