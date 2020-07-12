@@ -1,17 +1,17 @@
 {
 	"name": "skinview3d",
-	"version": "2.0.0-alpha.1",
+	"version": "2.0.0-alpha.5",
 	"description": "Three.js powered Minecraft skin viewer",
 	"main": "libs/skinview3d.js",
 	"type": "module",
 	"scripts": {
 		"clean": "rimraf libs bundles",
-		"build:modules": "tsc -p .",
+		"build:modules": "tsc --declaration --sourceMap --outDir libs -p .",
 		"build:bundles": "rollup -c",
 		"build": "npm run build:modules && npm run build:bundles",
 		"test:lint": "eslint --ext .ts src",
 		"test": "npm run test:lint",
-		"dev:watch:modules": "tsc -w -p .",
+		"dev:watch:modules": "tsc -w --declaration --sourceMap --outDir libs -p .",
 		"dev:watch:bundles": "rollup -w -c",
 		"dev:serve": "ws",
 		"dev": "npm-run-all --parallel dev:watch:modules dev:watch:bundles dev:serve",
@@ -38,21 +38,21 @@
 		"bundles"
 	],
 	"dependencies": {
-		"three": "^0.112.1",
-		"skinview-utils": "^0.2.0"
+		"skinview-utils": "^0.5.5",
+		"three": "^0.117.1"
 	},
 	"devDependencies": {
-		"@rollup/plugin-node-resolve": "^7.0.0",
-		"@rollup/plugin-typescript": "^2.1.0",
-		"@typescript-eslint/eslint-plugin": "^2.17.0",
-		"@typescript-eslint/parser": "^2.17.0",
-		"@yushijinhun/three-minifier-rollup": "^0.1.4",
-		"eslint": "^6.8.0",
-		"local-web-server": "^3.0.7",
+		"@rollup/plugin-node-resolve": "^8.1.0",
+		"@rollup/plugin-typescript": "^5.0.0",
+		"@typescript-eslint/eslint-plugin": "^3.4.0",
+		"@typescript-eslint/parser": "^3.4.0",
+		"@yushijinhun/three-minifier-rollup": "^0.1.7",
+		"eslint": "^7.3.1",
+		"local-web-server": "^4.2.1",
 		"npm-run-all": "^4.1.5",
-		"rimraf": "^3.0.0",
-		"rollup": "^1.29.1",
-		"rollup-plugin-terser": "^5.2.0",
-		"typescript": "^3.7.5"
+		"rimraf": "^3.0.2",
+		"rollup": "^2.18.0",
+		"rollup-plugin-terser": "^6.1.0",
+		"typescript": "^3.9.5"
 	}
 }

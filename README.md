@@ -20,21 +20,24 @@ Three.js powered Minecraft skin viewer.
 ```html
 <div id="skin_container"></div>
 <script>
-	let skinViewer = new skinview3d.SkinViewer({
-		domElement: document.getElementById("skin_container"),
-		width: 600,
-		height: 600,
-		skinUrl: "img/skin.png",
-		capeUrl: "img/cape.png"
+	let skinViewer = new skinview3d.SkinViewer(document.getElementById("skin_container"), {
+		width: 300,
+		height: 400,
+		skin: "img/skin.png"
 	});
 
-	// Change the textures
-	skinViewer.skinUrl = "img/skin2.png";
-	skinViewer.capeUrl = "img/cape2.png";
+	// Change viewer size
+	skinViewer.width = 600;
+	skinViewer.height = 800;
 
-	// Resize the skin viewer
-	skinViewer.width = 300;
-	skinViewer.height = 400;
+	// Load another skin
+	skinViewer.loadSkin("img/skin2.png");
+
+	// Load a cape
+	skinViewer.loadCape("img/cape.png");
+
+	// Unload(hide) the cape
+	skinViewer.loadCape(null);
 
 	// Control objects with your mouse!
 	let control = skinview3d.createOrbitControls(skinViewer);
