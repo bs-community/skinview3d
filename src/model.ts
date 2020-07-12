@@ -557,10 +557,10 @@ export class PlayerObject extends Group {
 		this.cape.position.z = -2;
 		this.cape.position.y = -6;
 		this.cape.rotation.x = 10 * Math.PI / 180;
-		//this.cape.visible = false;
 		this.add(this.cape);
 
 		this.elytra = new ElytraObject(capeTexture);
+		this.elytra.name = "elytra";
 		this.elytra.position.y = -7;
 		this.elytra.position.z = -2;
 		this.elytra.visible = false;
