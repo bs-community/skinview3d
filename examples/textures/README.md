@@ -1,11 +1,3 @@
-# Copyright Infomration
-
-| Texture                  | Owner                                                                                                                        |
-| ------------------------ | ---------------------------------------------------------------------------------------------------------------------------- |
-| Hacksore.png             | @Hacksore                                                                                                                    |
-| 1_8_texturemap_redux.png | Mojang Studios                                                                                                               |
-| cape.png                 | Mojang Studios                                                                                                               |
-| mojang_cape.png          | Mojang Studios                                                                                                               |
-| hatsune_miku.png         | [xilefian](http://www.minecraftforum.net/forums/mapping-and-modding/skins/2646900-hatsune-miku-skin-1-9-transparency-layers) |
-| hd_cape.png              | TBD                                                                                                                          |
-| ironman_hd.png           | TBD                                                                                                                          |
+# Example textures
+Assets in this directory are copyrighted by their original author(s), and are **OUTSIDE** the scope of skinview3d's license.
+These files are intended for demo use. If you are the copyright owner and disagree with our use, please submit an issue and we will remove the related files.
