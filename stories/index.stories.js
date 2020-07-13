@@ -92,9 +92,9 @@ export const Textures = () => {
 
 	if (capeUrl === "none") {
 		viewer.loadCape(null);
+	} else {
+		viewer.loadCape(`texture/${capeUrl}.png`);
 	}
-
-	viewer.loadCape(`texture/${capeUrl}.png`);
 
 	return element;
 };
