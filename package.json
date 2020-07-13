@@ -13,11 +13,9 @@
 		"test": "npm run test:lint",
 		"dev:watch:modules": "tsc -w --declaration --sourceMap --outDir libs -p .",
 		"dev:watch:bundles": "rollup -w -c",
-		"dev:serve": "ws",
-		"storybook": "start-storybook -s ./public -p 6006",
-		"dev": "npm-run-all --parallel dev:watch:modules dev:watch:bundles dev:serve",
-		"prepublishOnly": "npm run clean && npm run build",
-		"build-storybook": "build-storybook"
+		"storybook": "start-storybook -s ./examples -p 6006",
+		"dev": "npm run storybook",
+		"prepublishOnly": "npm run clean && npm run build"
 	},
 	"repository": {
 		"type": "git",
@@ -54,7 +52,6 @@
 		"@yushijinhun/three-minifier-rollup": "^0.1.7",
 		"babel-loader": "^8.1.0",
 		"eslint": "^7.3.1",
-		"local-web-server": "^4.2.1",
 		"npm-run-all": "^4.1.5",
 		"rimraf": "^3.0.2",
 		"rollup": "^2.18.0",

@@ -1,5 +1,5 @@
 /* eslint-disable */
-import * as skinview3d from "../libs/skinview3d";
+import * as skinview3d from "../../libs/skinview3d";
 import { withKnobs, radios, number } from "@storybook/addon-knobs";
 
 export default {
@@ -14,7 +14,7 @@ const createViewer = () => {
 	const viewer = new skinview3d.SkinViewer(element, {
 		width: 300,
 		height: 400,
-		skin: "texture/1_8_texturemap_redux.png",
+		skin: "textures/1_8_texturemap_redux.png",
 	});
 
 	console.log(viewer);
@@ -88,12 +88,12 @@ export const Textures = () => {
 	};
 
 	const capeUrl = radios("Cape Textures", capeOptions, "none");
-	viewer.loadSkin(`texture/${skinUrl}.png`);
+	viewer.loadSkin(`textures/${skinUrl}.png`);
 
 	if (capeUrl === "none") {
 		viewer.loadCape(null);
 	} else {
-		viewer.loadCape(`texture/${capeUrl}.png`);
+		viewer.loadCape(`textures/${capeUrl}.png`);
 	}
 
 	return element;
