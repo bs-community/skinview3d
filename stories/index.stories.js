@@ -1,5 +1,5 @@
 /* eslint-disable */
-import * as skinview3d from "../libs/skinview3d";
+import * as skinview3d from "..";
 import { withKnobs, radios, number } from "@storybook/addon-knobs";
 
 export default {
