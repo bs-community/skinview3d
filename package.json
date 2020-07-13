@@ -13,7 +13,7 @@
 		"test": "npm run test:lint",
 		"dev:watch:modules": "tsc -w --preserveWatchOutput --declaration --sourceMap --outDir libs -p .",
 		"dev:watch:bundles": "rollup -w --no-watch.clearScreen -c",
-		"dev:storybook": "start-storybook -s ./public -p 6006",
+		"dev:storybook": "start-storybook -s ./examples -p 6006",
 		"dev": "npm-run-all --parallel dev:watch:modules dev:storybook",
 		"prepublishOnly": "npm run clean && npm run build"
 	},
