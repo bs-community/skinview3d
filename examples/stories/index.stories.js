@@ -8,7 +8,6 @@ export default {
 	decorators: [withKnobs],
 };
 
-console.log("s", skinview3d);
 let currentAnimation;
 
 const createViewer = () => {
