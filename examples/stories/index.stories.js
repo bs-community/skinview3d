@@ -1,5 +1,6 @@
 /* eslint-disable */
-import * as skinview3d from "../../libs/skinview3d";
+
+import * as skinview3d from "../../src/skinview3d";
 import { withKnobs, radios, number } from "@storybook/addon-knobs";
 
 export default {
@@ -7,6 +8,7 @@ export default {
 	decorators: [withKnobs],
 };
 
+console.log("s", skinview3d);
 let currentAnimation;
 
 const createViewer = () => {

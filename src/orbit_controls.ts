@@ -1,4 +1,4 @@
-import { SkinViewer } from "./viewer.js";
+import { SkinViewer } from "./viewer";
 import { Vector3 } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 

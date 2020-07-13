@@ -1,5 +1,5 @@
 import { Clock } from "three";
-import { PlayerObject } from "./model.js";
+import { PlayerObject } from "./model";
 
 export interface IAnimation {
 	play(player: PlayerObject, time: number): void;

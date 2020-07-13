@@ -1,7 +1,7 @@
 import { applyMixins, CapeContainer, ModelType, SkinContainer, RemoteImage, TextureSource } from "skinview-utils";
 import { NearestFilter, PerspectiveCamera, Scene, Texture, Vector2, WebGLRenderer } from "three";
-import { RootAnimation } from "./animation.js";
-import { PlayerObject } from "./model.js";
+import { RootAnimation } from "./animation";
+import { PlayerObject } from "./model";
 
 export type LoadOptions = {
 	/**
