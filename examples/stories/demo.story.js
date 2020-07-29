@@ -1,7 +1,10 @@
 /* eslint-disable */
+import * as skinview3d from "../../libs/skinview3d";
 import { createViewer } from "./util";
-import { radios, withKnobs, optionsKnob } from "@storybook/addon-knobs";
+import { radios, withKnobs, optionsKnob, number } from "@storybook/addon-knobs";
 let { viewer, element } = createViewer();
+
+let currentAnimation;
 
 const bodyParts = viewer.playerObject.skin;
 const skinParts = {};
@@ -24,11 +27,17 @@ skinParts.rightLeg2 = bodyParts.rightLeg.outerLayer;
 
 export default {
 	title: "Skinview3d",
-	name: "Textures",
 	decorators: [withKnobs],
 };
 
-export const Textures = () => {
+const handleSizeControl = () => {
+	const width = number("Canvas Width", 300);
+	const height = number("Canvas Height", 400);
+
+	viewer.setSize(width, height);
+};
+
+const handleTextureControl = () => {
 	const skinOptions = {
 		"1.8 Skin": "1_8_texturemap_redux",
 		"Classic Skin": "Hacksore",
@@ -98,6 +107,51 @@ export const Textures = () => {
 
 		skinParts[partName].visible = visible;
 	}
+};
+
+const handleAnimationControl = () => {
+	if (currentAnimation) {
+		currentAnimation.remove();
+	}
+
+	const animationMap = {
+		None: null,
+		Walk: skinview3d.WalkingAnimation,
+		Run: skinview3d.RunningAnimation,
+		Rotate: skinview3d.RotatingAnimation,
+	};
+
+	const animationKey = radios("Animations", Object.keys(animationMap), "Run");
+
+	console.log("animationKey", animationKey);
+	if (currentAnimation || animationKey === "None") {
+		currentAnimation.resetAndRemove();
+	}
+
+	currentAnimation = viewer.animations.add(animationMap[animationKey]);
+
+	const label = "Speed";
+
+	const defaultValue = 0.5;
+	const options = {
+		range: true,
+		min: 0.1,
+		max: 2,
+		step: 0.01,
+	};
+	const value = number(label, defaultValue, options);
+
+	currentAnimation.speed = value;
+};
+
+export const Component = () => {
+	handleSizeControl();
+	handleTextureControl();
+	handleAnimationControl();
 
 	return element;
+};
+
+Component.story = {
+	name: "Demo",
 };

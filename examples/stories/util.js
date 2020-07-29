@@ -17,5 +17,5 @@ export const createViewer = (config) => {
 	control.enableZoom = true;
 	control.enablePan = true;
 
-	return { viewer, element };
+	return { viewer, element: viewer.domElement };
 };
