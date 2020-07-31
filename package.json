@@ -9,7 +9,7 @@
 		"build:modules": "tsc --declaration --sourceMap --outDir libs -p .",
 		"build:bundles": "rollup -c",
 		"build": "npm run build:modules && npm run build:bundles",
-		"test:lint": "eslint --ext .ts src",
+		"test:lint": "eslint --ext .ts src && eslint examples",
 		"test": "npm run test:lint",
 		"dev:watch:modules": "tsc -w --preserveWatchOutput --declaration --sourceMap --outDir libs -p .",
 		"dev:watch:bundles": "rollup -w --no-watch.clearScreen -c",

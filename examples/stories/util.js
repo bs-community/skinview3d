@@ -1,4 +1,3 @@
-/* eslint-disable */
 import * as skinview3d from "../..";
 
 export const createViewer = (config) => {

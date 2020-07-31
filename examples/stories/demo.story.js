@@ -1,4 +1,3 @@
-/* eslint-disable */
 import * as skinview3d from "../../libs/skinview3d";
 import { createViewer } from "./util";
 import { radios, withKnobs, optionsKnob, number } from "@storybook/addon-knobs";
