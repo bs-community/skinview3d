@@ -107,24 +107,26 @@
 		</div>
 
 		<div>
-			<h4>Skin</h4>
-			<select id="skin_url" onchange="reloadTextures()">
-				<option value="img/1_8_texturemap_redux.png">Texture Map (64x64)</option>
-				<option value="img/Hacksore.png">Hacksore (64x32)</option>
-				<option value="img/haka.png">Haka (64x64)</option>
-				<option value="img/hatsune_miku.png">Hatsune Miku (64x64)</option>
-				<option value="img/ironman_hd.png">Ironman (256x265)</option>
-				<option value="img/sethbling.png">Sethbling (64x32)</option>
-			</select>
+			<label for="skin_url">Skin URL:</label>
+			<input id="skin_url" type="text" value="img/1_8_texturemap_redux.png" list="default_skins" onchange="reloadTextures()" />
+			<datalist id="default_skins">
+				<option value="img/1_8_texturemap_redux.png">
+				<option value="img/Hacksore.png">
+				<option value="img/haka.png">
+				<option value="img/hatsune_miku.png">
+				<option value="img/ironman_hd.png">
+				<option value="img/sethbling.png">
+			</datalist>
 		</div>
 		<div>
-			<h4>Cape</h4>
-			<select id="cape_url" onchange="reloadTextures()">
-				<option value="">None</option>
-				<option value="img/cape.png">Mojang Legacy</option>
-				<option value="img/mojang_cape.png">Mojang</option>
-				<option value="img/hd_cape.png">HD Cape</option>
-			</select>
+			<label for="cape_url">Cape URL:</label>
+			<input id="cape_url" type="text" value="" list="default_capes" onchange="reloadTextures()" />
+			<datalist id="default_capes">
+				<option value="">
+				<option value="img/cape.png">
+				<option value="img/mojang_cape.png">
+				<option value="img/hd_cape.png">
+			</datalist>
 		</div>
 	</div>
 	<script type="text/javascript" src="js/dist/skinview3d.bundle.js"></script>
