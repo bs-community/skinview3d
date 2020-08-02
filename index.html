@@ -51,64 +51,73 @@
 
 		<div>
 			<h4> Animation Mouse Control</h4>
-			<input type="checkbox" id="rotate" checked="checked" onclick="control.enableRotate = this.checked"><label for="rotate">Enable
-				Rotate</label>
-			<input type="checkbox" id="zoom" checked="checked" onclick="control.enableZoom = this.checked"><label for="zoom">Enable
-				Zoom</label>
-			<input type="checkbox" id="pan" onclick="control.enablePan = this.checked"><label for="pan">Enable Pan</label>
+
+			<input type="checkbox" id="rotate" onclick="control.enableRotate = this.checked" checked>
+			<label for="rotate">Enable Rotate</label>
+
+			<input type="checkbox" id="zoom" onclick="control.enableZoom = this.checked" checked>
+			<label for="zoom">Enable Zoom</label>
+
+			<input type="checkbox" id="pan" onclick="control.enablePan = this.checked">
+			<label for="pan">Enable Pan</label>
 		</div>
 
 		<div>
 			<h4>Canvas Size</h4>
-			Width: <input type="text" id="width" value="600" size="5" />
-			Height: <input type="text" id="height" value="600" size="5" />
-			<button type="button" onclick="resizeSkinViewer()">Change Size</button>
+
+			<label for="width">Width:</label>
+			<input type="text" id="width" value="600" size="5">
+
+			<label for="height">Height:</label>
+			<input type="text" id="height" value="600" size="5">
+
+			<button type="button" onclick="resizeSkinViewer()">Apply</button>
 		</div>
 
 		<div>
 			<h4>Layers</h4>
 
-			<input id="head" type="checkbox" onclick="togglePart('head')" checked="checked" />
+			<input id="head" type="checkbox" onclick="togglePart('head')" checked>
 			<label for="head">Head</label>
 
-			<input id="body" type="checkbox" onclick="togglePart('body')" checked="checked" />
+			<input id="body" type="checkbox" onclick="togglePart('body')" checked>
 			<label for="body">Body</label>
 
-			<input id="leftArm" type="checkbox" onclick="togglePart('leftArm')" checked="checked" />
+			<input id="leftArm" type="checkbox" onclick="togglePart('leftArm')" checked>
 			<label for="leftArm">LeftArm</label>
 
-			<input id="rightArm" type="checkbox" onclick="togglePart('rightArm')" checked="checked" />
+			<input id="rightArm" type="checkbox" onclick="togglePart('rightArm')" checked>
 			<label for="rightArm">RightArm</label>
 
-			<input id="leftLeg" type="checkbox" onclick="togglePart('leftLeg')" checked="checked" />
+			<input id="leftLeg" type="checkbox" onclick="togglePart('leftLeg')" checked>
 			<label for="leftLeg">LeftLeg</label>
 
-			<input id="rightLeg" type="checkbox" onclick="togglePart('rightLeg')" checked="checked" />
+			<input id="rightLeg" type="checkbox" onclick="togglePart('rightLeg')" checked>
 			<label for="rightLeg">RightLeg</label>
 
 			<br />
-			<input id="head2" type="checkbox" onclick="togglePart('head2')" checked="checked" />
+			<input id="head2" type="checkbox" onclick="togglePart('head2')" checked>
 			<label for="head2">Head2</label>
 
-			<input id="body2" type="checkbox" onclick="togglePart('body2')" checked="checked" />
+			<input id="body2" type="checkbox" onclick="togglePart('body2')" checked>
 			<label for="body2">Body2</label>
 
-			<input id="leftArm2" type="checkbox" onclick="togglePart('leftArm2')" checked="checked" />
+			<input id="leftArm2" type="checkbox" onclick="togglePart('leftArm2')" checked>
 			<label for="leftArm2">LeftArm2</label>
 
-			<input id="rightArm2" type="checkbox" onclick="togglePart('rightArm2')" checked="checked" />
+			<input id="rightArm2" type="checkbox" onclick="togglePart('rightArm2')" checked>
 			<label for="rightArm2">RightArm2</label>
 
-			<input id="leftLeg2" type="checkbox" onclick="togglePart('leftLeg2')" checked="checked" />
+			<input id="leftLeg2" type="checkbox" onclick="togglePart('leftLeg2')" checked>
 			<label for="leftLeg2">LeftLeg2</label>
 
-			<input id="rightLeg2" type="checkbox" onclick="togglePart('rightLeg2')" checked="checked" />
+			<input id="rightLeg2" type="checkbox" onclick="togglePart('rightLeg2')" checked>
 			<label for="rightLeg2">RightLeg2</label>
 		</div>
 
 		<div>
 			<label for="skin_url">Skin URL:</label>
-			<input id="skin_url" type="text" value="img/1_8_texturemap_redux.png" list="default_skins" onchange="reloadTextures()" />
+			<input id="skin_url" type="text" value="img/1_8_texturemap_redux.png" list="default_skins" onchange="reloadTextures()">
 			<datalist id="default_skins">
 				<option value="img/1_8_texturemap_redux.png">
 				<option value="img/Hacksore.png">
@@ -120,7 +129,7 @@
 		</div>
 		<div>
 			<label for="cape_url">Cape URL:</label>
-			<input id="cape_url" type="text" value="" list="default_capes" onchange="reloadTextures()" />
+			<input id="cape_url" type="text" value="" list="default_capes" onchange="reloadTextures()">
 			<datalist id="default_capes">
 				<option value="">
 				<option value="img/cape.png">
