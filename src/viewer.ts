@@ -61,7 +61,7 @@ class SkinViewer {
 		this.camera.position.y = -12;
 		this.camera.position.z = 60;
 
-		this.renderer = new WebGLRenderer({ alpha: true });
+		this.renderer = new WebGLRenderer({ alpha: true, preserveDrawingBuffer: true });
 		this.domElement.appendChild(this.renderer.domElement);
 
 		this.playerObject = new PlayerObject(this.skinTexture, this.capeTexture);
