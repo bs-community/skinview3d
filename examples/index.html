@@ -7,6 +7,7 @@
 	<style>
 		body {
 			font-family: "Helvetica Neue", "Helvetica", "Arial", "sans-serif";
+			width: max-content;
 		}
 
 		h1 {
@@ -75,6 +76,12 @@
 			margin: 0;
 			width: 100%;
 		}
+
+		footer {
+			margin-top: 10px;
+			padding-top: 10px;
+			border-top: 1px grey solid;
+		}
 	</style>
 </head>
 
@@ -82,7 +89,7 @@
 
 	<div id="skin_container"></div>
 
-	<div>
+	<div class="controls">
 
 		<button id="reset_all" type="button" class="control">Reset All</button>
 
@@ -198,6 +205,19 @@
 		</div>
 
 	</div>
+
+	<footer>
+		<div>
+			GitHub: <a href="https://github.com/bs-community/skinview3d">bs-community/skinview3d</a>
+		</div>
+		<!--%%deploy_only%%
+			<div>
+				Built from
+				commit <a href="https://github.com/bs-community/skinview3d/commit/{{build_commit}}">{{build_commit}}</a>
+				at <time datetime="{{build_time}}">{{build_time}}</time>
+			</div>
+		-->
+	</footer>
 
 	<script src="../bundles/skinview3d.bundle.js"></script>
 	<script>
