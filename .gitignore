@@ -62,3 +62,4 @@ libs/
 _ignore/
 .DS_Store
 .rpt2_cache
+public/

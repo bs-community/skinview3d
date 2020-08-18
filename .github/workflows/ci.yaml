@@ -1,6 +1,6 @@
 name: CI
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
   test:
@@ -9,8 +9,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: npm build & test
-      run: |
-        npm install
-        npm run build
-        npm test
+    - run: npm install
+    - run: npm run build
+    - run: npm test
