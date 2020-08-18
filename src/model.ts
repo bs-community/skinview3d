@@ -72,8 +72,7 @@ export class SkinObject extends Group {
 			map: texture,
 			side: DoubleSide,
 			transparent: true,
-			opacity: 1,
-			alphaTest: 0.5
+			alphaTest: 1e-5
 		}
 
 		const layer1Material = new MeshBasicMaterial(layer1);
@@ -396,7 +395,12 @@ export class CapeObject extends Group {
 	constructor(texture: Texture) {
 		super();
 
-		const capeMaterial = new MeshBasicMaterial({ map: texture, transparent: true, opacity: 1, side: DoubleSide, alphaTest: 0.5 });
+		const capeMaterial = new MeshBasicMaterial({
+			map: texture,
+			side: DoubleSide,
+			transparent: true,
+			alphaTest: 1e-5
+		});
 
 		// back = outside
 		// front = inside
