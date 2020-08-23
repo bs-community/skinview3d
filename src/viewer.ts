@@ -62,6 +62,7 @@ class SkinViewer {
 		this.camera.position.z = 60;
 
 		this.renderer = new WebGLRenderer({ alpha: true, preserveDrawingBuffer: true });
+		this.renderer.setPixelRatio(window.devicePixelRatio);
 		this.domElement.appendChild(this.renderer.domElement);
 
 		this.playerObject = new PlayerObject(this.skinTexture, this.capeTexture);
