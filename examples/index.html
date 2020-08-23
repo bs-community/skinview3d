@@ -375,7 +375,10 @@
 		}
 
 		function initializeViewer() {
-			skinViewer = new skinview3d.SkinViewer(document.getElementById("skin_container"));
+			skinViewer = new skinview3d.SkinViewer(document.getElementById("skin_container"), {
+				alpha: false
+			});
+			skinViewer.renderer.setClearColor(0x5a76f3);
 			oribitControl = skinview3d.createOrbitControls(skinViewer);
 			rotateAnimation = null;
 			primaryAnimation = null;
