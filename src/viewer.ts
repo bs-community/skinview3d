@@ -15,6 +15,7 @@ export type SkinViewerOptions = {
 	height?: number;
 	skin?: RemoteImage | TextureSource;
 	cape?: RemoteImage | TextureSource;
+	alpha?: boolean;
 }
 
 function toMakeVisible(options?: LoadOptions): boolean {
@@ -61,7 +62,10 @@ class SkinViewer {
 		this.camera.position.y = -12;
 		this.camera.position.z = 60;
 
-		this.renderer = new WebGLRenderer({ alpha: true, preserveDrawingBuffer: true });
+		this.renderer = new WebGLRenderer({
+			alpha: options.alpha !== false, // alpha is on by default
+			preserveDrawingBuffer: true
+		});
 		this.renderer.setPixelRatio(window.devicePixelRatio);
 		this.domElement.appendChild(this.renderer.domElement);
 
