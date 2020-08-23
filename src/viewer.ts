@@ -33,8 +33,8 @@ class SkinViewer {
 	readonly playerObject: PlayerObject;
 	readonly animations: RootAnimation = new RootAnimation();
 
-	protected readonly skinCanvas: HTMLCanvasElement;
-	protected readonly capeCanvas: HTMLCanvasElement;
+	readonly skinCanvas: HTMLCanvasElement;
+	readonly capeCanvas: HTMLCanvasElement;
 	private readonly skinTexture: Texture;
 	private readonly capeTexture: Texture;
 
