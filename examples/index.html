@@ -3,11 +3,13 @@
 
 <head>
 	<meta charset="utf-8">
+	<meta http-equiv="x-ua-compatible" content="ie=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>skinview3d</title>
 	<style>
 		body {
 			font-family: "Helvetica Neue", "Helvetica", "Arial", "sans-serif";
-			width: max-content;
+			margin: 5px;
 		}
 
 		h1 {
@@ -24,12 +26,21 @@
 		}
 
 		input[type="number"] {
-			width: 60px;
+			max-width: 60px;
+		}
+
+		input[type="text"] {
+			box-sizing: border-box;
+			max-width: 250px;
+			width: calc(100% - 100px);
 		}
 
 		.control {
-			display: inline-block;
-			margin-right: 10px;
+			display: inline;
+		}
+
+		.control + .control {
+			margin-left: 10px;
 		}
 
 		.control-section {
@@ -49,7 +60,6 @@
 		table th {
 			border: 1px black dashed;
 			text-align: left;
-			width: 50px;
 		}
 
 		thead th {
@@ -82,6 +92,10 @@
 			padding-top: 10px;
 			border-top: 1px grey solid;
 		}
+
+		label {
+			white-space: nowrap;
+		}
 	</style>
 </head>
 
@@ -95,66 +109,42 @@
 
 		<div class="control-section">
 			<h1>Canvas Size</h1>
-			<div class="control">
-				<label for="canvas_width">Width:</label>
-				<input id="canvas_width" type="number" value="300">
-			</div>
-			<div class="control">
-				<label for="canvas_height">Height:</label>
-				<input id="canvas_height" type="number" value="300">
-			</div>
+			<label class="control">Width: <input id="canvas_width" type="number" value="300"></label>
+			<label class="control">Height: <input id="canvas_height" type="number" value="300"></label>
 		</div>
 
 		<div class="control-section">
 			<h1>Animation</h1>
-			<div class="control">
-				<label for="global_animation_speed">Global Speed:</label>
-				<input id="global_animation_speed" type="number" value="1" step="0.1">
-			</div>
+			<label class="control">Global Speed: <input id="global_animation_speed" type="number" value="1" step="0.1"></label>
 			<button id="animation_pause_resume" type="button" class="control">Pause / Resume</button>
 			<div>
 				<h2>Rotate</h2>
-				<div class="control">
-					<input id="rotate_animation" type="checkbox">
-					<label for="rotate_animation">Enable</label>
-				</div>
-				<div class="control">
-					<label for="rotate_animation_speed">Speed:</label>
-					<input id="rotate_animation_speed" type="number" value="1" step="0.1">
-				</div>
+				<label class="control"><input id="rotate_animation" type="checkbox"> Enable</label>
+				<label class="control">Speed: <input id="rotate_animation_speed" type="number" value="1" step="0.1"></label>
 			</div>
 			<div>
 				<h2>Walk / Run</h2>
 				<div class="control">
-					<input type="radio" id="primary_animation_none" name="primary_animation" value="" checked>
-					<label for="primary_animation_none">None</label>
-					<input type="radio" id="primary_animation_walk" name="primary_animation" value="walk">
-					<label for="primary_animation_walk">Walk</label>
-					<input type="radio" id="primary_animation_run" name="primary_animation" value="run">
-					<label for="primary_animation_run">Run</label>
+					<label><input type="radio" id="primary_animation_none" name="primary_animation" value="" checked> None</label>
+					<label><input type="radio" id="primary_animation_walk" name="primary_animation" value="walk"> Walk</label>
+					<label><input type="radio" id="primary_animation_run" name="primary_animation" value="run"> Run</label>
 				</div>
-				<div class="control">
-					<label for="primary_animation_speed">Speed:</label>
-					<input id="primary_animation_speed" type="number" value="1" step="0.1">
-				</div>
+				<label class="control">Speed: <input id="primary_animation_speed" type="number" value="1" step="0.1"></label>
 			</div>
 		</div>
 
 		<div class="control-section">
 			<h1>Mouse Control</h1>
 			<div class="control">
-				<input type="checkbox" id="control_rotate" checked>
-				<label for="control_rotate">Enable Rotate</label>
-				<input type="checkbox" id="control_zoom" checked>
-				<label for="control_zoom">Enable Zoom</label>
-				<input type="checkbox" id="control_pan">
-				<label for="control_pan">Enable Pan</label>
+				<label><input type="checkbox" id="control_rotate" checked> Enable Rotate</label>
+				<label><input type="checkbox" id="control_zoom" checked> Enable Zoom</label>
+				<label><input type="checkbox" id="control_pan"> Enable Pan</label>
 			</div>
 		</div>
 
 		<div class="control-section">
 			<h1>Skin Layers</h1>
-			<table id="layers_table" class="control">
+			<table id="layers_table">
 				<!-- table contents are generated using javascript -->
 			</table>
 		</div>
@@ -163,9 +153,7 @@
 			<h1>Textures</h1>
 			<div>
 				<div class="control">
-					<label for="skin_url">Skin URL:</label>
-					<input id="skin_url" type="text" value="img/1_8_texturemap_redux.png" placeholder="none"
-						list="default_skins">
+					<label>Skin URL: <input id="skin_url" type="text" value="img/1_8_texturemap_redux.png" placeholder="none" list="default_skins"></label>
 					<datalist id="default_skins">
 						<option value="img/1_8_texturemap_redux.png">
 						<option value="img/Hacksore.png">
@@ -178,19 +166,17 @@
 					<button type="button" class="control"
 						onclick="document.getElementById('skin_url_upload').click();">Browse...</button>
 				</div>
-				<div class="control">
-					<label for="skin_model">Model:</label>
+				<label class="control">Model:
 					<select id="skin_model" value="auto-detect">
 						<option value="auto-detect">Auto detect</option>
 						<option value="default">Default</option>
 						<option value="slim">Slim</option>
 					</select>
-				</div>
+				</label>
 			</div>
 			<div>
 				<div class="control">
-					<label for="cape_url">Cape URL:</label>
-					<input id="cape_url" type="text" value="" placeholder="none" list="default_capes">
+					<label>Cape URL: <input id="cape_url" type="text" value="" placeholder="none" list="default_capes"></label>
 					<datalist id="default_capes">
 						<option value="">
 						<option value="img/cape.png">
@@ -221,8 +207,18 @@
 
 	<script src="../bundles/skinview3d.bundle.js"></script>
 	<script>
-		const skinParts = ["head", "body", "rightArm", "leftArm", "rightLeg", "leftLeg"];
-		const skinLayers = ["innerLayer", "outerLayer"];
+		const skinParts = {
+			head: "head",
+			body: "body",
+			rightArm: "right arm",
+			leftArm: "left arm",
+			rightLeg: "right leg",
+			leftLeg: "left leg"
+		};
+		const skinLayers = {
+			innerLayer: "inner",
+			outerLayer: "outer"
+		};
 		const availableAnimations = {
 			walk: skinview3d.WalkingAnimation,
 			run: skinview3d.RunningAnimation
@@ -272,20 +268,20 @@
 			const rowHead = document.createElement("tr");
 			rowHead.appendChild(document.createElement("th"));
 			thead.appendChild(rowHead);
-			for (const part of skinParts) {
+			for (const [part, partName] of Object.entries(skinParts)) {
 				const cellHead = document.createElement("th");
-				cellHead.innerText = part;
+				cellHead.innerText = partName;
 				rowHead.appendChild(cellHead);
 			}
 			const tbody = document.createElement("tbody");
 			table.appendChild(tbody);
-			for (const layer of skinLayers) {
+			for (const [layer, layerName] of Object.entries(skinLayers)) {
 				const row = document.createElement("tr");
 				tbody.appendChild(row);
 				const cellLayer = document.createElement("th");
-				cellLayer.innerText = layer;
+				cellLayer.innerText = layerName;
 				row.appendChild(cellLayer);
-				for (const part of skinParts) {
+				for (const part of Object.keys(skinParts)) {
 					const cell = document.createElement("td");
 					row.appendChild(cell);
 					const checkbox = document.createElement("input");
@@ -337,8 +333,8 @@
 			document.getElementById("control_rotate").addEventListener("change", e => oribitControl.enableRotate = e.target.checked);
 			document.getElementById("control_zoom").addEventListener("change", e => oribitControl.enableZoom = e.target.checked);
 			document.getElementById("control_pan").addEventListener("change", e => oribitControl.enablePan = e.target.checked);
-			for (const part of skinParts) {
-				for (const layer of skinLayers) {
+			for (const part of Object.keys(skinParts)) {
+				for (const layer of Object.keys(skinLayers)) {
 					document.querySelector(`#layers_table input[type="checkbox"][data-part="${part}"][data-layer="${layer}"]`)
 						.addEventListener("change", e => skinViewer.playerObject.skin[part][layer].visible = e.target.checked);
 				}
@@ -398,8 +394,8 @@
 			oribitControl.enableRotate = document.getElementById("control_rotate").checked;
 			oribitControl.enableZoom = document.getElementById("control_zoom").checked;
 			oribitControl.enablePan = document.getElementById("control_pan").checked;
-			for (const part of skinParts) {
-				for (const layer of skinLayers) {
+			for (const part of Object.keys(skinParts)) {
+				for (const layer of Object.keys(skinLayers)) {
 					skinViewer.playerObject.skin[part][layer].visible =
 						document.querySelector(`#layers_table input[type="checkbox"][data-part="${part}"][data-layer="${layer}"]`).checked;
 				}
