@@ -122,7 +122,8 @@ export class SkinObject extends Group {
 			// this pulls bodyMesh towards the camera
 			// so body is given priority over others in z-fighting
 			polygonOffset: true,
-			polygonOffsetUnits: -1
+			polygonOffsetUnits: -1,
+			polygonOffsetFactor: -1
 		}));
 
 		const body2Box = new BoxGeometry(9, 13.5, 4.5, 1, 1, 1);
@@ -138,7 +139,8 @@ export class SkinObject extends Group {
 			...layer2,
 			// same as above
 			polygonOffset: true,
-			polygonOffsetUnits: -1
+			polygonOffsetUnits: -1,
+			polygonOffsetFactor: -1
 		}));
 
 		this.body = new BodyPart(bodyMesh, body2Mesh);
