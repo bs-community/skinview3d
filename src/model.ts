@@ -75,6 +75,11 @@ export class SkinObject extends Group {
 			alphaTest: 1e-5
 		});
 
+		const layer1MaterialBiased = layer1Material.clone();
+		layer1MaterialBiased.polygonOffset = true;
+		layer1MaterialBiased.polygonOffsetFactor = 1.0;
+		layer1MaterialBiased.polygonOffsetUnits = 1.0;
+
 		const layer2MaterialBiased = layer2Material.clone();
 		layer2MaterialBiased.polygonOffset = true;
 		layer2MaterialBiased.polygonOffsetFactor = 1.0;
@@ -294,7 +299,7 @@ export class SkinObject extends Group {
 			toSkinVertices(8, 20, 12, 32),
 			toSkinVertices(12, 20, 16, 32)
 		);
-		const rightLegMesh = new Mesh(rightLegBox, layer1Material);
+		const rightLegMesh = new Mesh(rightLegBox, layer1MaterialBiased);
 
 		const rightLeg2Box = new BoxGeometry(4.5, 13.5, 4.5);
 		setVertices(rightLeg2Box,
@@ -329,7 +334,7 @@ export class SkinObject extends Group {
 			toSkinVertices(24, 52, 28, 64),
 			toSkinVertices(28, 52, 32, 64)
 		);
-		const leftLegMesh = new Mesh(leftLegBox, layer1Material);
+		const leftLegMesh = new Mesh(leftLegBox, layer1MaterialBiased);
 
 		const leftLeg2Box = new BoxGeometry(4.5, 13.5, 4.5);
 		setVertices(leftLeg2Box,
