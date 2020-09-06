@@ -162,7 +162,7 @@ export const WalkingAnimation: Animation = (player, time) => {
 export const RunningAnimation: Animation = (player, time) => {
 	const skin = player.skin;
 
-	time *= 15;
+	time = time * 15 + Math.PI * 0.5;
 
 	// Leg swing with larger amplitude
 	skin.leftLeg.rotation.x = Math.cos(time + Math.PI) * 1.3;
