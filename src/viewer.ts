@@ -16,6 +16,7 @@ export type SkinViewerOptions = {
 	skin?: RemoteImage | TextureSource;
 	cape?: RemoteImage | TextureSource;
 	alpha?: boolean;
+	canvas?: HTMLCanvasElement;
 }
 
 function toMakeVisible(options?: LoadOptions): boolean {
@@ -26,7 +27,7 @@ function toMakeVisible(options?: LoadOptions): boolean {
 }
 
 class SkinViewer {
-	readonly domElement: Node;
+	readonly canvas: HTMLCanvasElement;
 	readonly scene: Scene;
 	readonly camera: PerspectiveCamera;
 	readonly renderer: WebGLRenderer;
@@ -41,8 +42,8 @@ class SkinViewer {
 	private _disposed: boolean = false;
 	private _renderPaused: boolean = false;
 
-	constructor(domElement: Node, options: SkinViewerOptions = {}) {
-		this.domElement = domElement;
+	constructor(options: SkinViewerOptions = {}) {
+		this.canvas = options.canvas === undefined ? document.createElement("canvas") : options.canvas;
 
 		// texture
 		this.skinCanvas = document.createElement("canvas");
@@ -63,11 +64,11 @@ class SkinViewer {
 		this.camera.position.z = 60;
 
 		this.renderer = new WebGLRenderer({
+			canvas: this.canvas,
 			alpha: options.alpha !== false, // alpha is on by default
 			preserveDrawingBuffer: true
 		});
 		this.renderer.setPixelRatio(window.devicePixelRatio);
-		this.domElement.appendChild(this.renderer.domElement);
 
 		this.playerObject = new PlayerObject(this.skinTexture, this.capeTexture);
 		this.playerObject.name = "player";
@@ -135,7 +136,6 @@ class SkinViewer {
 
 	dispose(): void {
 		this._disposed = true;
-		this.domElement.removeChild(this.renderer.domElement);
 		this.renderer.dispose();
 		this.skinTexture.dispose();
 		this.capeTexture.dispose();

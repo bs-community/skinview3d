@@ -10,8 +10,8 @@ export class FXAASkinViewer extends SkinViewer {
     readonly renderPass: RenderPass;
     readonly fxaaPass: ShaderPass;
 
-    constructor(domElement: Node, options: SkinViewerOptions = {}) {
-        super(domElement, options);
+    constructor(options: SkinViewerOptions = {}) {
+        super(options);
         this.composer = new EffectComposer(this.renderer);
         this.renderPass = new RenderPass(this.scene, this.camera);
         this.fxaaPass = new ShaderPass(FXAAShader);
