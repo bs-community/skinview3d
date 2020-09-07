@@ -101,7 +101,7 @@
 
 <body>
 
-	<div id="skin_container"></div>
+	<canvas id="skin_container"></canvas>
 
 	<div class="controls">
 
@@ -371,7 +371,8 @@
 		}
 
 		function initializeViewer() {
-			skinViewer = new skinview3d.FXAASkinViewer(document.getElementById("skin_container"), {
+			skinViewer = new skinview3d.FXAASkinViewer({
+				canvas: document.getElementById("skin_container"),
 				alpha: false
 			});
 			skinViewer.renderer.setClearColor(0x5a76f3);
