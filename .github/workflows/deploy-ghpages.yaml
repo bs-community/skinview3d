@@ -22,7 +22,7 @@ jobs:
             -e 's#\{\{build_commit\}\}#'$build_commit'#g' \
             -e 's#\{\{build_time\}\}#'$build_time'#g' \
             -e 's#<!--%%deploy_only%%(.*)-->#\1#g' \
-            -i public/index.html
+            -i public/*.html
     - uses: crazy-max/ghaction-github-pages@v2
       with:
         target_branch: gh-pages
