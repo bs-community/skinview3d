@@ -32,6 +32,12 @@ export type SkinViewerOptions = {
 	 * Whether to preserve the buffers until manually cleared or overwritten. Default is false.
 	 */
 	preserveDrawingBuffer?: boolean;
+
+	/**
+	 * The initial value of `SkinViewer.renderPaused`. Default is false.
+	 * If this option is true, rendering and animation loops will not start.
+	 */
+	renderPaused?: boolean;
 }
 
 function toMakeVisible(options?: LoadOptions): boolean {
@@ -92,8 +98,6 @@ class SkinViewer {
 		this.playerObject.cape.visible = false;
 		this.scene.add(this.playerObject);
 
-		window.requestAnimationFrame(() => this.draw());
-
 		if (options.skin !== undefined) {
 			this.loadSkin(options.skin);
 		}
@@ -105,6 +109,12 @@ class SkinViewer {
 		}
 		if (options.height !== undefined) {
 			this.height = options.height;
+		}
+
+		if (options.renderPaused === true) {
+			this._renderPaused = true;
+		} else {
+			window.requestAnimationFrame(() => this.draw());
 		}
 	}
 
@@ -136,11 +146,15 @@ class SkinViewer {
 			return;
 		}
 		this.animations.runAnimationLoop(this.playerObject);
-		this.doRender();
+		this.render();
 		window.requestAnimationFrame(() => this.draw());
 	}
 
-	protected doRender(): void {
+	/**
+	* Renders the scene to the canvas.
+	* This method does not change the animation progress.
+	*/
+	render(): void {
 		this.renderer.render(this.scene, this.camera);
 	}
 
@@ -161,6 +175,11 @@ class SkinViewer {
 		return this._disposed;
 	}
 
+	/**
+	 * Whether rendering and animations are paused.
+	 * Setting this property to true will stop both rendering and animation loops.
+	 * Setting it back to false will resume them.
+	 */
 	get renderPaused(): boolean {
 		return this._renderPaused;
 	}

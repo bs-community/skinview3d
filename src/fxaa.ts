@@ -39,7 +39,7 @@ export class FXAASkinViewer extends SkinViewer {
         this.fxaaPass.material.uniforms["resolution"].value.y = 1 / (this.height * pixelRatio);
     }
 
-    protected doRender(): void {
+    render(): void {
         this.composer.render();
     }
 }
