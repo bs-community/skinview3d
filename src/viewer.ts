@@ -27,6 +27,11 @@ export type SkinViewerOptions = {
 	 * A new canvas is created if this parameter is unspecified.
 	 */
 	canvas?: HTMLCanvasElement;
+
+	/**
+	 * Whether to preserve the buffers until manually cleared or overwritten. Default is false.
+	 */
+	preserveDrawingBuffer?: boolean;
 }
 
 function toMakeVisible(options?: LoadOptions): boolean {
@@ -75,8 +80,9 @@ class SkinViewer {
 
 		this.renderer = new WebGLRenderer({
 			canvas: this.canvas,
-			alpha: options.alpha !== false, // alpha is on by default
-			preserveDrawingBuffer: true
+			alpha: options.alpha !== false, // default: true
+			preserveDrawingBuffer: options.preserveDrawingBuffer === true // default: false
+
 		});
 		this.renderer.setPixelRatio(window.devicePixelRatio);
 
