@@ -5,7 +5,7 @@ import { PlayerObject } from "./model.js";
 
 export type LoadOptions = {
 	/**
-	 * Whether to make the object visible after the texture is loaded. (default: true)
+	 * Whether to make the object visible after the texture is loaded. Default is true.
 	 */
 	makeVisible?: boolean;
 }
@@ -15,7 +15,17 @@ export type SkinViewerOptions = {
 	height?: number;
 	skin?: RemoteImage | TextureSource;
 	cape?: RemoteImage | TextureSource;
+
+	/**
+	 * Whether the canvas contains an alpha buffer. Default is true.
+	 * This option can be turned off if you use an opaque background.
+	 */
 	alpha?: boolean;
+
+	/**
+	 * Render target.
+	 * A new canvas is created if this parameter is unspecified.
+	 */
 	canvas?: HTMLCanvasElement;
 }
 
