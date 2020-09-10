@@ -72,23 +72,29 @@ export class SkinObject extends Group {
 	constructor(texture: Texture) {
 		super();
 
-		const layer1 = {
+		const layer1Material = new MeshBasicMaterial({
 			map: texture,
 			side: FrontSide
-		};
-		const layer2 = {
+		});
+		const layer2Material = new MeshBasicMaterial({
 			map: texture,
 			side: DoubleSide,
 			transparent: true,
-			opacity: 1,
-			alphaTest: 0.5
-		}
+			alphaTest: 1e-5
+		});
 
-		const layer1Material = new MeshBasicMaterial(layer1);
-		const layer2Material = new MeshBasicMaterial(layer2);
+		const layer1MaterialBiased = layer1Material.clone();
+		layer1MaterialBiased.polygonOffset = true;
+		layer1MaterialBiased.polygonOffsetFactor = 1.0;
+		layer1MaterialBiased.polygonOffsetUnits = 1.0;
+
+		const layer2MaterialBiased = layer2Material.clone();
+		layer2MaterialBiased.polygonOffset = true;
+		layer2MaterialBiased.polygonOffsetFactor = 1.0;
+		layer2MaterialBiased.polygonOffsetUnits = 1.0;
 
 		// Head
-		const headBox = new BoxGeometry(8, 8, 8, 0, 0, 0);
+		const headBox = new BoxGeometry(8, 8, 8);
 		setVertices(headBox,
 			toSkinVertices(8, 0, 16, 8),
 			toSkinVertices(16, 0, 24, 8),
@@ -99,7 +105,7 @@ export class SkinObject extends Group {
 		);
 		const headMesh = new Mesh(headBox, layer1Material);
 
-		const head2Box = new BoxGeometry(9, 9, 9, 0, 0, 0);
+		const head2Box = new BoxGeometry(9, 9, 9);
 		setVertices(head2Box,
 			toSkinVertices(40, 0, 48, 8),
 			toSkinVertices(48, 0, 56, 8),
@@ -117,7 +123,7 @@ export class SkinObject extends Group {
 		this.add(this.head);
 
 		// Body
-		const bodyBox = new BoxGeometry(8, 12, 4, 0, 0, 0);
+		const bodyBox = new BoxGeometry(8, 12, 4);
 		setVertices(bodyBox,
 			toSkinVertices(20, 16, 28, 20),
 			toSkinVertices(28, 16, 36, 20),
@@ -126,15 +132,9 @@ export class SkinObject extends Group {
 			toSkinVertices(28, 20, 32, 32),
 			toSkinVertices(32, 20, 40, 32)
 		);
-		const bodyMesh = new Mesh(bodyBox, new MeshBasicMaterial({
-			...layer1,
-			// this pulls bodyMesh towards the camera
-			// so body is given priority over others in z-fighting
-			polygonOffset: true,
-			polygonOffsetUnits: -1
-		}));
+		const bodyMesh = new Mesh(bodyBox, layer1Material);
 
-		const body2Box = new BoxGeometry(9, 13.5, 4.5, 0, 0, 0);
+		const body2Box = new BoxGeometry(9, 13.5, 4.5);
 		setVertices(body2Box,
 			toSkinVertices(20, 32, 28, 36),
 			toSkinVertices(28, 32, 36, 36),
@@ -143,12 +143,7 @@ export class SkinObject extends Group {
 			toSkinVertices(28, 36, 32, 48),
 			toSkinVertices(32, 36, 40, 48)
 		);
-		const body2Mesh = new Mesh(body2Box, new MeshBasicMaterial({
-			...layer2,
-			// same as above
-			polygonOffset: true,
-			polygonOffsetUnits: -1
-		}));
+		const body2Mesh = new Mesh(body2Box, layer2Material);
 
 		this.body = new BodyPart(bodyMesh, body2Mesh);
 		this.body.name = "body";
@@ -157,7 +152,7 @@ export class SkinObject extends Group {
 		this.add(this.body);
 
 		// Right Arm
-		const rightArmBox = new BoxGeometry(1, 1, 1, 0, 0, 0); // w/d/h is model-related
+		const rightArmBox = new BoxGeometry();
 		const rightArmMesh = new Mesh(rightArmBox, layer1Material);
 		this.modelListeners.push(() => {
 			rightArmMesh.scale.x = this.slim ? 3 : 4;
@@ -186,8 +181,8 @@ export class SkinObject extends Group {
 			rightArmBox.elementsNeedUpdate = true;
 		});
 
-		const rightArm2Box = new BoxGeometry(1, 1, 1, 0, 0, 0); // w/d/h is model-related
-		const rightArm2Mesh = new Mesh(rightArm2Box, layer2Material);
+		const rightArm2Box = new BoxGeometry();
+		const rightArm2Mesh = new Mesh(rightArm2Box, layer2MaterialBiased);
 		rightArm2Mesh.renderOrder = 1;
 		this.modelListeners.push(() => {
 			rightArm2Mesh.scale.x = this.slim ? 3.375 : 4.5;
@@ -230,7 +225,7 @@ export class SkinObject extends Group {
 		this.add(this.rightArm);
 
 		// Left Arm
-		const leftArmBox = new BoxGeometry(1, 1, 1, 0, 0, 0); // w/d/h is model-related
+		const leftArmBox = new BoxGeometry();
 		const leftArmMesh = new Mesh(leftArmBox, layer1Material);
 		this.modelListeners.push(() => {
 			leftArmMesh.scale.x = this.slim ? 3 : 4;
@@ -259,8 +254,8 @@ export class SkinObject extends Group {
 			leftArmBox.elementsNeedUpdate = true;
 		});
 
-		const leftArm2Box = new BoxGeometry(1, 1, 1, 0, 0, 0); // w/d/h is model-related
-		const leftArm2Mesh = new Mesh(leftArm2Box, layer2Material);
+		const leftArm2Box = new BoxGeometry();
+		const leftArm2Mesh = new Mesh(leftArm2Box, layer2MaterialBiased);
 		leftArm2Mesh.renderOrder = 1;
 		this.modelListeners.push(() => {
 			leftArm2Mesh.scale.x = this.slim ? 3.375 : 4.5;
@@ -303,7 +298,7 @@ export class SkinObject extends Group {
 		this.add(this.leftArm);
 
 		// Right Leg
-		const rightLegBox = new BoxGeometry(4, 12, 4, 0, 0, 0);
+		const rightLegBox = new BoxGeometry(4, 12, 4);
 		setVertices(rightLegBox,
 			toSkinVertices(4, 16, 8, 20),
 			toSkinVertices(8, 16, 12, 20),
@@ -312,9 +307,9 @@ export class SkinObject extends Group {
 			toSkinVertices(8, 20, 12, 32),
 			toSkinVertices(12, 20, 16, 32)
 		);
-		const rightLegMesh = new Mesh(rightLegBox, layer1Material);
+		const rightLegMesh = new Mesh(rightLegBox, layer1MaterialBiased);
 
-		const rightLeg2Box = new BoxGeometry(4.5, 13.5, 4.5, 0, 0, 0);
+		const rightLeg2Box = new BoxGeometry(4.5, 13.5, 4.5);
 		setVertices(rightLeg2Box,
 			toSkinVertices(4, 32, 8, 36),
 			toSkinVertices(8, 32, 12, 36),
@@ -323,7 +318,7 @@ export class SkinObject extends Group {
 			toSkinVertices(8, 36, 12, 48),
 			toSkinVertices(12, 36, 16, 48)
 		);
-		const rightLeg2Mesh = new Mesh(rightLeg2Box, layer2Material);
+		const rightLeg2Mesh = new Mesh(rightLeg2Box, layer2MaterialBiased);
 		rightLeg2Mesh.renderOrder = 1;
 
 		const rightLegPivot = new Group();
@@ -338,7 +333,7 @@ export class SkinObject extends Group {
 		this.add(this.rightLeg);
 
 		// Left Leg
-		const leftLegBox = new BoxGeometry(4, 12, 4, 0, 0, 0);
+		const leftLegBox = new BoxGeometry(4, 12, 4);
 		setVertices(leftLegBox,
 			toSkinVertices(20, 48, 24, 52),
 			toSkinVertices(24, 48, 28, 52),
@@ -347,9 +342,9 @@ export class SkinObject extends Group {
 			toSkinVertices(24, 52, 28, 64),
 			toSkinVertices(28, 52, 32, 64)
 		);
-		const leftLegMesh = new Mesh(leftLegBox, layer1Material);
+		const leftLegMesh = new Mesh(leftLegBox, layer1MaterialBiased);
 
-		const leftLeg2Box = new BoxGeometry(4.5, 13.5, 4.5, 0, 0, 0);
+		const leftLeg2Box = new BoxGeometry(4.5, 13.5, 4.5);
 		setVertices(leftLeg2Box,
 			toSkinVertices(4, 48, 8, 52),
 			toSkinVertices(8, 48, 12, 52),
@@ -358,7 +353,7 @@ export class SkinObject extends Group {
 			toSkinVertices(8, 52, 12, 64),
 			toSkinVertices(12, 52, 16, 64)
 		);
-		const leftLeg2Mesh = new Mesh(leftLeg2Box, layer2Material);
+		const leftLeg2Mesh = new Mesh(leftLeg2Box, layer2MaterialBiased);
 		leftLeg2Mesh.renderOrder = 1;
 
 		const leftLegPivot = new Group();
@@ -404,11 +399,16 @@ export class CapeObject extends Group {
 	constructor(texture: Texture) {
 		super();
 
-		const capeMaterial = new MeshBasicMaterial({ map: texture, transparent: true, opacity: 1, side: DoubleSide, alphaTest: 0.5 });
+		const capeMaterial = new MeshBasicMaterial({
+			map: texture,
+			side: DoubleSide,
+			transparent: true,
+			alphaTest: 1e-5
+		});
 
 		// back = outside
 		// front = inside
-		const capeBox = new BoxGeometry(10, 16, 1, 0, 0, 0);
+		const capeBox = new BoxGeometry(10, 16, 1);
 		setVertices(capeBox,
 			toCapeVertices(1, 0, 11, 1),
 			toCapeVertices(11, 0, 21, 1),

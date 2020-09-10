@@ -5,7 +5,7 @@ import { PlayerObject } from "./model.js";
 
 export type LoadOptions = {
 	/**
-	 * Whether to make the object visible after the texture is loaded. (default: true)
+	 * Whether to make the object visible after the texture is loaded. Default is true.
 	 */
 	makeVisible?: boolean;
 }
@@ -16,6 +16,29 @@ export type SkinViewerOptions = {
 	skin?: RemoteImage | TextureSource;
 	cape?: RemoteImage | TextureSource;
 	ears?: RemoteImage | TextureSource;
+
+	/**
+	 * Whether the canvas contains an alpha buffer. Default is true.
+	 * This option can be turned off if you use an opaque background.
+	 */
+	alpha?: boolean;
+
+	/**
+	 * Render target.
+	 * A new canvas is created if this parameter is unspecified.
+	 */
+	canvas?: HTMLCanvasElement;
+
+	/**
+	 * Whether to preserve the buffers until manually cleared or overwritten. Default is false.
+	 */
+	preserveDrawingBuffer?: boolean;
+
+	/**
+	 * The initial value of `SkinViewer.renderPaused`. Default is false.
+	 * If this option is true, rendering and animation loops will not start.
+	 */
+	renderPaused?: boolean;
 }
 
 function toMakeVisible(options?: LoadOptions): boolean {
@@ -26,16 +49,16 @@ function toMakeVisible(options?: LoadOptions): boolean {
 }
 
 class SkinViewer {
-	readonly domElement: Node;
+	readonly canvas: HTMLCanvasElement;
 	readonly scene: Scene;
 	readonly camera: PerspectiveCamera;
 	readonly renderer: WebGLRenderer;
 	readonly playerObject: PlayerObject;
 	readonly animations: RootAnimation = new RootAnimation();
 
-	protected readonly skinCanvas: HTMLCanvasElement;
-	protected readonly capeCanvas: HTMLCanvasElement;
-	protected readonly earCanvas: HTMLCanvasElement;
+	readonly skinCanvas: HTMLCanvasElement;
+	readonly capeCanvas: HTMLCanvasElement;
+	readonly earCanvas: HTMLCanvasElement;
 	private readonly skinTexture: Texture;
 	private readonly capeTexture: Texture;
 	private readonly earTexture: Texture;
@@ -50,8 +73,8 @@ class SkinViewer {
 	private _disposed: boolean = false;
 	private _renderPaused: boolean = false;
 
-	constructor(domElement: Node, options: SkinViewerOptions = {}) {
-		this.domElement = domElement;
+	constructor(options: SkinViewerOptions = {}) {
+		this.canvas = options.canvas === undefined ? document.createElement("canvas") : options.canvas;
 
 		// texture
 		this.skinCanvas = document.createElement("canvas");
@@ -85,8 +108,13 @@ class SkinViewer {
 		this.camera.position.y = -12;
 		this.camera.position.z = 60;
 
-		this.renderer = new WebGLRenderer({ alpha: true, logarithmicDepthBuffer: true });
-		this.domElement.appendChild(this.renderer.domElement);
+		this.renderer = new WebGLRenderer({
+			canvas: this.canvas,
+			alpha: options.alpha !== false, // default: true
+			preserveDrawingBuffer: options.preserveDrawingBuffer === true // default: false
+
+		});
+		this.renderer.setPixelRatio(window.devicePixelRatio);
 
 		this.playerObject = new PlayerObject(this.skinTexture, this.capeTexture, this.earTexture);
 		this.playerObject.name = "player";
@@ -94,8 +122,6 @@ class SkinViewer {
 		this.playerObject.cape.visible = false;
 		this.playerObject.ears.visible = false;
 		this.scene.add(this.playerObject);
-
-		window.requestAnimationFrame(() => this.draw());
 
 		if (options.skin !== undefined) {
 			this.loadSkin(options.skin);
@@ -111,6 +137,12 @@ class SkinViewer {
 		}
 		if (options.height !== undefined) {
 			this.height = options.height;
+		}
+
+		if (options.renderPaused === true) {
+			this._renderPaused = true;
+		} else {
+			window.requestAnimationFrame(() => this.draw());
 		}
 	}
 
@@ -153,12 +185,16 @@ class SkinViewer {
 			return;
 		}
 		this.animations.runAnimationLoop(this.playerObject);
-		this.doRender();
+		this.render();
 		this.animatedCape();
 		window.requestAnimationFrame(() => this.draw());
 	}
 
-	protected doRender(): void {
+	/**
+	* Renders the scene to the canvas.
+	* This method does not change the animation progress.
+	*/
+	render(): void {
 		this.renderer.render(this.scene, this.camera);
 	}
 
@@ -170,7 +206,6 @@ class SkinViewer {
 
 	dispose(): void {
 		this._disposed = true;
-		this.domElement.removeChild(this.renderer.domElement);
 		this.renderer.dispose();
 		this.skinTexture.dispose();
 		this.capeTexture.dispose();
@@ -180,6 +215,11 @@ class SkinViewer {
 		return this._disposed;
 	}
 
+	/**
+	 * Whether rendering and animations are paused.
+	 * Setting this property to true will stop both rendering and animation loops.
+	 * Setting it back to false will resume them.
+	 */
 	get renderPaused(): boolean {
 		return this._renderPaused;
 	}
