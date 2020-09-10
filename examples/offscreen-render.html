@@ -14,29 +14,35 @@
     <script>
         const textures = [
             {
-                skin: "img/1_8_texturemap_redux.png",
-                cape: null
+                skin: "img/skin.png",
+                ears: null,
+                cape: null,
             },
             {
-                skin: "img/hacksore.png",
-                cape: "img/legacy_cape.png"
+                skin: "img/skin.png",
+                ears: null,
+                cape: "img/cape.png",
             },
             {
-                skin: "img/haka.png",
-                cape: null
+                skin: "img/skin.png",
+                ears: null,
+                cape: "img/animated.png",
             },
             {
-                skin: "img/hatsune_miku.png",
-                cape: "img/mojang_cape.png"
+                skin: "img/skin.png",
+                ears: "img/ears.png",
+                cape: null,
             },
             {
-                skin: "img/ironman_hd.png",
-                cape: "img/hd_cape.png"
+                skin: "img/skin.png",
+                ears: "img/ears.png",
+                cape: "img/cape.png",
             },
             {
-                skin: "img/sethbling.png",
-                cape: null
-            }
+                skin: "img/skin.png",
+                ears: "img/ears.png",
+                cape: "img/animated.png",
+            },
         ];
 
         (async function () {
@@ -55,7 +61,7 @@
             skinViewer.camera.position.z = 42.0;
 
             for (const { skin, cape } of textures) {
-                await Promise.all([skinViewer.loadSkin(skin), skinViewer.loadCape(cape)]);
+                await Promise.all([skinViewer.loadSkin(skin), skinViewer.loadEars(skin), skinViewer.loadCustomCape(cape)]);
                 skinViewer.render();
                 const image = skinViewer.canvas.toDataURL();
 

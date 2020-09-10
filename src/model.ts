@@ -410,8 +410,8 @@ export class CapeObject extends Group {
 		// front = inside
 		const capeBox = new BoxGeometry(10, 16, 1);
 		setVertices(capeBox,
-			toCapeVertices(1, 0, 11, 1),
-			toCapeVertices(11, 0, 21, 1),
+			toCapeVertices(11, 1, 1, 0,),
+			toCapeVertices(21, 1, 11, 0),
 			toCapeVertices(11, 1, 12, 17),
 			toCapeVertices(12, 1, 22, 17),
 			toCapeVertices(0, 1, 1, 17),
@@ -505,11 +505,16 @@ export class EarsObject extends Group {
 	constructor(texture: Texture) {
 		super();
 
-		const earMaterial = new MeshBasicMaterial({ map: texture, transparent: true, opacity: 1, side: DoubleSide, alphaTest: 0.5 });
+		const earMaterial = new MeshBasicMaterial({
+			map: texture,
+			side: DoubleSide,
+			transparent: true,
+			alphaTest: 1e-5
+		});
 
 		// back = outside
 		// front = inside
-		const earBox = new BoxGeometry(6, 6, 1, 0, 0, 0);
+		const earBox = new BoxGeometry(6, 6, 1);
 		//x1: number, y1: number, x2: number, y2: number
 		setVertices(earBox,
 			//from look at back

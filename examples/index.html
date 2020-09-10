@@ -158,14 +158,9 @@
 			<h1>Textures</h1>
 			<div>
 				<div class="control">
-					<label>Skin URL: <input id="skin_url" type="text" value="img/1_8_texturemap_redux.png" placeholder="none" list="default_skins"></label>
+					<label>Skin URL: <input id="skin_url" type="text" value="img/skin.png" placeholder="none" list="default_skins"></label>
 					<datalist id="default_skins">
-						<option value="img/1_8_texturemap_redux.png">
-						<option value="img/hacksore.png">
-						<option value="img/haka.png">
-						<option value="img/hatsune_miku.png">
-						<option value="img/ironman_hd.png">
-						<option value="img/sethbling.png">
+						<option value="img/skin.png">
 					</datalist>
 					<input id="skin_url_upload" type="file" accept="image/*" style="display: none;">
 					<button type="button" class="control"
@@ -181,12 +176,23 @@
 			</div>
 			<div>
 				<div class="control">
+					<label>Ear URL: <input id="ears_url" type="text" value="" placeholder="none" list="default_ears"></label>
+					<datalist id="default_ears">
+						<option value="">
+						<option value="img/ears.png">
+					</datalist>
+					<input id="ears_url_upload" type="file" accept="image/*" style="display: none;">
+					<button type="button" class="control"
+						onclick="document.getElementById('ears_url_upload').click();">Browse...</button>
+				</div>
+			</div>
+			<div>
+				<div class="control">
 					<label>Cape URL: <input id="cape_url" type="text" value="" placeholder="none" list="default_capes"></label>
 					<datalist id="default_capes">
 						<option value="">
-						<option value="img/mojang_cape.png">
-						<option value="img/legacy_cape.png">
-						<option value="img/hd_cape.png">
+						<option value="img/cape.png">
+						<option value="img/animated.png">
 					</datalist>
 					<input id="cape_url_upload" type="file" accept="image/*" style="display: none;">
 					<button type="button" class="control"
@@ -257,19 +263,25 @@
 			}
 		}
 
+		function reloadEars() {
+			const input = document.getElementById("ears_url");
+			const url = input.value;
+			if (url === "") {
+				skinViewer.loadEars(null);
+				input.setCustomValidity("");
+			} else {
+				skinViewer.loadEars(url);
+			}
+		}
+
 		function reloadCape() {
 			const input = document.getElementById("cape_url");
 			const url = input.value;
 			if (url === "") {
-				skinViewer.loadCape(null);
+				skinViewer.loadCustomCape(null);
 				input.setCustomValidity("");
 			} else {
-				skinViewer.loadCape(url)
-					.then(() => input.setCustomValidity(""))
-					.catch(e => {
-						input.setCustomValidity("Image can't be loaded.");
-						console.error(e);
-					});
+				skinViewer.loadCustomCape(url);
 			}
 		}
 
@@ -362,6 +374,17 @@
 					skinReader.readAsDataURL(file);
 				}
 			});
+			const earsReader = new FileReader();
+			earsReader.addEventListener("load", e => {
+				document.getElementById("ears_url").value = earsReader.result;
+				reloadEars();
+			});
+			document.getElementById("ears_url_upload").addEventListener("change", e => {
+				const file = e.target.files[0];
+				if (file !== undefined) {
+					earsReader.readAsDataURL(file);
+				}
+			});
 			const capeReader = new FileReader();
 			capeReader.addEventListener("load", e => {
 				document.getElementById("cape_url").value = capeReader.result;
@@ -375,6 +398,7 @@
 			});
 			document.getElementById("skin_url").addEventListener("change", () => reloadSkin());
 			document.getElementById("skin_model").addEventListener("change", () => reloadSkin());
+			document.getElementById("ears_url").addEventListener("change", () => reloadEars());
 			document.getElementById("cape_url").addEventListener("change", () => reloadCape());
 			document.getElementById("reset_all").addEventListener("click", () => {
 				skinViewer.dispose();
@@ -414,6 +438,7 @@
 				}
 			}
 			reloadSkin();
+			reloadEars();
 			reloadCape();
 		}
 
