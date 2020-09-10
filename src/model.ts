@@ -432,7 +432,11 @@ export class ElytraObject extends Group {
 	constructor(texture: Texture) {
 		super();
 
-		const elytraMaterial = new MeshBasicMaterial({ map: texture, transparent: true, opacity: 1, side: DoubleSide, alphaTest: 0.5,
+		const elytraMaterial = new MeshBasicMaterial({
+			map: texture,
+			side: DoubleSide,
+			transparent: true,
+			alphaTest: 1e-5,
 			polygonOffset: true,
 			polygonOffsetFactor: -1.0,
 			polygonOffsetUnits: -4.0

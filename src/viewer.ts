@@ -308,6 +308,11 @@ class SkinViewer {
 		context.clearRect(0, 0, canvas.width, canvas.height);
 		context.drawImage(image, 0, 0, image.width, image.height);
 	}
+
+	public toggleElytra() {
+		this.playerObject.cape.visible = !this.playerObject.cape.visible;
+		this.playerObject.elytra.visible = !this.playerObject.cape.visible;
+	}
 }
 
 interface SkinViewer extends SkinContainer<LoadOptions>, CapeContainer<LoadOptions> { }
