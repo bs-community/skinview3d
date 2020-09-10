@@ -211,15 +211,14 @@ class SkinViewer {
 	/**
 	 * Code for MinecraftCapes
 	 */
-	protected loadCustomCape(source: TextureSource | RemoteImage | null): void | Promise<void> {
+	public loadCustomCape(source: TextureSource | RemoteImage | null): void | Promise<void> {
 		if(source === null) {
 			this.resetCape();
 		} else if(isTextureSource(source)) {
 			this.customCapeImage = source;
 			this.loadCapeToCanvas(this.capeCanvas, source, 0);
-			this.capeLoaded();
 		} else {
-			return loadImage(source).then(image => this.loadCustomCape(image));
+			loadImage(source).then(image => this.loadCustomCape(image)).catch(error => {});
 		}
 	}
 
@@ -230,6 +229,7 @@ class SkinViewer {
 		if(frame != null) {
 			frame.clearRect(0, 0, canvas.width, canvas.height),
 			frame.drawImage(image, 0, offset, canvas.width, canvas.height, 0, 0, canvas.width, canvas.height)
+			this.capeLoaded();
 		}
     }
 
@@ -256,7 +256,7 @@ class SkinViewer {
 			this.loadEarsToCanvas(this.earCanvas, source);
 			this.earsLoaded();
 		} else {
-			return loadImage(source).then(image => this.loadEars(image));
+			loadImage(source).then(image => this.loadEars(image)).catch(error => {});
 		}
 	}
 
