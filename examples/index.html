@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
 	<meta charset="utf-8">
@@ -202,8 +202,8 @@
 						onclick="document.getElementById('skin_url_upload').click();">Browse...</button>
 				</div>
 				<label class="control">Model:
-					<select id="skin_model" value="auto-detect">
-						<option value="auto-detect">Auto detect</option>
+					<select id="skin_model">
+						<option value="auto-detect" selected>Auto detect</option>
 						<option value="default">Default</option>
 						<option value="slim">Slim</option>
 					</select>
@@ -408,20 +408,19 @@
 		initializeViewer();
 	</script>
 
+	<script type="module" src="https://unpkg.com/stats.js@0.17.0/src/Stats.js" integrity="sha384-W71K+d2HbqXqQWSj3Vj4RDsIVvIV7lR8O6RArKAiqB39ntwLci0W08qOn4Z1n8sM" crossorigin="anonymous" async></script>
+	<script type="module" async>
+		import Stats from "https://unpkg.com/stats.js@0.17.0/src/Stats.js";
+		const stats = new Stats();
+		stats.dom.style.left = "";
+		stats.dom.style.right = "0";
+		document.body.appendChild(stats.dom);
+		function loop() {
+			stats.update();
+			requestAnimationFrame(loop)
+		}
+		requestAnimationFrame(loop);
+	</script>
+
 </body>
-
-<script type="module" src="https://unpkg.com/stats.js@0.17.0/src/Stats.js" integrity="sha384-W71K+d2HbqXqQWSj3Vj4RDsIVvIV7lR8O6RArKAiqB39ntwLci0W08qOn4Z1n8sM" crossorigin="anonymous" async></script>
-<script type="module" async>
-	import Stats from "https://unpkg.com/stats.js@0.17.0/src/Stats.js";
-	const stats = new Stats();
-	stats.dom.style.left = "";
-	stats.dom.style.right = "0";
-	document.body.appendChild(stats.dom);
-	function loop() {
-		stats.update();
-		requestAnimationFrame(loop)
-	}
-	requestAnimationFrame(loop);
-</script>
-
 </html>
