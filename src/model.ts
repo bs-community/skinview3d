@@ -432,7 +432,7 @@ export class PlayerObject extends Group {
 		this.cape.name = "cape";
 		this.cape.position.z = -2;
 		this.cape.position.y = -4;
-		this.cape.rotation.x = 25 * Math.PI / 180;
+		this.cape.rotation.x = 10.8 * Math.PI / 180;
 		this.add(this.cape);
 	}
 }
