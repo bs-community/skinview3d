@@ -135,6 +135,7 @@ export class RootAnimation extends CompositeAnimation implements AnimationHandle
 
 export const WalkingAnimation: Animation = (player, time) => {
 	const skin = player.skin;
+	const ears = player.ears;
 
 	// Multiply by animation's natural speed
 	time *= 8;
@@ -154,9 +155,14 @@ export const WalkingAnimation: Animation = (player, time) => {
 	skin.head.rotation.y = Math.sin(time / 4) * 0.2;
 	skin.head.rotation.x = Math.sin(time / 5) * 0.1;
 
+	// Ears should mirror head
+	ears.rotation.y = skin.head.rotation.y
+	ears.rotation.x = skin.head.rotation.x
+
 	// Always add an angle for cape around the x axis
 	const basicCapeRotationX = Math.PI * 0.06;
 	player.cape.rotation.x = Math.sin(time / 1.5) * 0.06 + basicCapeRotationX;
+	player.elytra.rotation.x = player.cape.rotation.x
 };
 
 export const RunningAnimation: Animation = (player, time) => {
@@ -187,6 +193,7 @@ export const RunningAnimation: Animation = (player, time) => {
 	// to cape when running.
 	const basicCapeRotationX = Math.PI * 0.3;
 	player.cape.rotation.x = Math.sin(time * 2) * 0.1 + basicCapeRotationX;
+	player.elytra.rotation.x = player.cape.rotation.x
 
 	// What about head shaking?
 	// You shouldn't glance right and left when running dude :P
