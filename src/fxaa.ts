@@ -15,7 +15,7 @@ export class FXAASkinViewer extends SkinViewer {
      * Note: FXAA doesn't work well with transparent backgrounds.
      * It's recommended to use an opaque background and set `options.alpha` to false.
      */
-    constructor(options: SkinViewerOptions = {}) {
+    constructor(options?: SkinViewerOptions) {
         super(options);
         this.composer = new EffectComposer(this.renderer);
         this.renderPass = new RenderPass(this.scene, this.camera);

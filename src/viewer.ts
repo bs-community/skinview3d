@@ -3,14 +3,14 @@ import { NearestFilter, PerspectiveCamera, Scene, Texture, Vector2, WebGLRendere
 import { RootAnimation } from "./animation.js";
 import { PlayerObject } from "./model.js";
 
-export type LoadOptions = {
+export interface LoadOptions {
 	/**
 	 * Whether to make the object visible after the texture is loaded. Default is true.
 	 */
 	makeVisible?: boolean;
 }
 
-export type SkinViewerOptions = {
+export interface SkinViewerOptions {
 	width?: number;
 	height?: number;
 	skin?: RemoteImage | TextureSource;
