@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
 	<meta charset="utf-8">
@@ -150,7 +150,37 @@
 		<div class="control-section">
 			<h1>Skin Layers</h1>
 			<table id="layers_table">
-				<!-- table contents are generated using javascript -->
+				<thead>
+					<tr>
+						<th></th>
+						<th>head</th>
+						<th>body</th>
+						<th>right arm</th>
+						<th>left arm</th>
+						<th>right leg</th>
+						<th>left leg</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<th>inner</th>
+						<td><input type="checkbox" data-layer="innerLayer" data-part="head" checked></td>
+						<td><input type="checkbox" data-layer="innerLayer" data-part="body" checked></td>
+						<td><input type="checkbox" data-layer="innerLayer" data-part="rightArm" checked></td>
+						<td><input type="checkbox" data-layer="innerLayer" data-part="leftArm" checked></td>
+						<td><input type="checkbox" data-layer="innerLayer" data-part="rightLeg" checked></td>
+						<td><input type="checkbox" data-layer="innerLayer" data-part="leftLeg" checked></td>
+					</tr>
+					<tr>
+						<th>outer</th>
+						<td><input type="checkbox" data-layer="outerLayer" data-part="head" checked></td>
+						<td><input type="checkbox" data-layer="outerLayer" data-part="body" checked></td>
+						<td><input type="checkbox" data-layer="outerLayer" data-part="rightArm" checked></td>
+						<td><input type="checkbox" data-layer="outerLayer" data-part="leftArm" checked></td>
+						<td><input type="checkbox" data-layer="outerLayer" data-part="rightLeg" checked></td>
+						<td><input type="checkbox" data-layer="outerLayer" data-part="leftLeg" checked></td>
+					</tr>
+				</tbody>
 			</table>
 		</div>
 
@@ -167,8 +197,8 @@
 						onclick="document.getElementById('skin_url_upload').click();">Browse...</button>
 				</div>
 				<label class="control">Model:
-					<select id="skin_model" value="auto-detect">
-						<option value="auto-detect">Auto detect</option>
+					<select id="skin_model">
+						<option value="auto-detect" selected>Auto detect</option>
 						<option value="default">Default</option>
 						<option value="slim">Slim</option>
 					</select>
@@ -227,18 +257,8 @@
 
 	<script src="../bundles/skinview3d.bundle.js"></script>
 	<script>
-		const skinParts = {
-			head: "head",
-			body: "body",
-			rightArm: "right arm",
-			leftArm: "left arm",
-			rightLeg: "right leg",
-			leftLeg: "left leg"
-		};
-		const skinLayers = {
-			innerLayer: "inner",
-			outerLayer: "outer"
-		};
+		const skinParts = ["head", "body", "rightArm", "leftArm", "rightLeg", "leftLeg"];
+		const skinLayers = ["innerLayer", "outerLayer"];
 		const availableAnimations = {
 			walk: skinview3d.WalkingAnimation,
 			run: skinview3d.RunningAnimation
@@ -287,39 +307,6 @@
 			}
 		}
 
-		function initializeLayersTable() {
-			const table = document.getElementById("layers_table");
-			const thead = document.createElement("thead");
-			table.appendChild(thead);
-			const rowHead = document.createElement("tr");
-			rowHead.appendChild(document.createElement("th"));
-			thead.appendChild(rowHead);
-			for (const [part, partName] of Object.entries(skinParts)) {
-				const cellHead = document.createElement("th");
-				cellHead.innerText = partName;
-				rowHead.appendChild(cellHead);
-			}
-			const tbody = document.createElement("tbody");
-			table.appendChild(tbody);
-			for (const [layer, layerName] of Object.entries(skinLayers)) {
-				const row = document.createElement("tr");
-				tbody.appendChild(row);
-				const cellLayer = document.createElement("th");
-				cellLayer.innerText = layerName;
-				row.appendChild(cellLayer);
-				for (const part of Object.keys(skinParts)) {
-					const cell = document.createElement("td");
-					row.appendChild(cell);
-					const checkbox = document.createElement("input");
-					checkbox.type = "checkbox";
-					checkbox.dataset.layer = layer;
-					checkbox.dataset.part = part;
-					checkbox.checked = true;
-					cell.appendChild(checkbox);
-				}
-			}
-		}
-
 		function initializeControls() {
 			document.getElementById("canvas_width").addEventListener("change", e => skinViewer.width = e.target.value);
 			document.getElementById("canvas_height").addEventListener("change", e => skinViewer.height = e.target.value);
@@ -359,8 +346,8 @@
 			document.getElementById("control_rotate").addEventListener("change", e => oribitControl.enableRotate = e.target.checked);
 			document.getElementById("control_zoom").addEventListener("change", e => oribitControl.enableZoom = e.target.checked);
 			document.getElementById("control_pan").addEventListener("change", e => oribitControl.enablePan = e.target.checked);
-			for (const part of Object.keys(skinParts)) {
-				for (const layer of Object.keys(skinLayers)) {
+			for (const part of skinParts) {
+				for (const layer of skinLayers) {
 					document.querySelector(`#layers_table input[type="checkbox"][data-part="${part}"][data-layer="${layer}"]`)
 						.addEventListener("change", e => skinViewer.playerObject.skin[part][layer].visible = e.target.checked);
 				}
@@ -433,8 +420,8 @@
 			oribitControl.enableRotate = document.getElementById("control_rotate").checked;
 			oribitControl.enableZoom = document.getElementById("control_zoom").checked;
 			oribitControl.enablePan = document.getElementById("control_pan").checked;
-			for (const part of Object.keys(skinParts)) {
-				for (const layer of Object.keys(skinLayers)) {
+			for (const part of skinParts) {
+				for (const layer of skinLayers) {
 					skinViewer.playerObject.skin[part][layer].visible =
 						document.querySelector(`#layers_table input[type="checkbox"][data-part="${part}"][data-layer="${layer}"]`).checked;
 				}
@@ -444,25 +431,23 @@
 			reloadCape();
 		}
 
-		initializeLayersTable();
 		initializeControls();
 		initializeViewer();
 	</script>
 
+	<script type="module" src="https://unpkg.com/stats.js@0.17.0/src/Stats.js" integrity="sha384-W71K+d2HbqXqQWSj3Vj4RDsIVvIV7lR8O6RArKAiqB39ntwLci0W08qOn4Z1n8sM" crossorigin="anonymous" async></script>
+	<script type="module" async>
+		import Stats from "https://unpkg.com/stats.js@0.17.0/src/Stats.js";
+		const stats = new Stats();
+		stats.dom.style.left = "";
+		stats.dom.style.right = "0";
+		document.body.appendChild(stats.dom);
+		function loop() {
+			stats.update();
+			requestAnimationFrame(loop)
+		}
+		requestAnimationFrame(loop);
+	</script>
+
 </body>
-
-<script type="module" src="https://unpkg.com/stats.js@0.17.0/src/Stats.js" integrity="sha384-W71K+d2HbqXqQWSj3Vj4RDsIVvIV7lR8O6RArKAiqB39ntwLci0W08qOn4Z1n8sM" crossorigin="anonymous" async></script>
-<script type="module" async>
-	import Stats from "https://unpkg.com/stats.js@0.17.0/src/Stats.js";
-	const stats = new Stats();
-	stats.dom.style.left = "";
-	stats.dom.style.right = "0";
-	document.body.appendChild(stats.dom);
-	function loop() {
-		stats.update();
-		requestAnimationFrame(loop)
-	}
-	requestAnimationFrame(loop);
-</script>
-
 </html>

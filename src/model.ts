@@ -410,7 +410,7 @@ export class CapeObject extends Group {
 		// front = inside
 		const capeBox = new BoxGeometry(10, 16, 1);
 		setVertices(capeBox,
-			toCapeVertices(11, 1, 1, 0,),
+			toCapeVertices(11, 1, 1, 0),
 			toCapeVertices(21, 1, 11, 0),
 			toCapeVertices(11, 1, 12, 17),
 			toCapeVertices(12, 1, 22, 17),
@@ -564,8 +564,8 @@ export class PlayerObject extends Group {
 		this.cape = new CapeObject(capeTexture);
 		this.cape.name = "cape";
 		this.cape.position.z = -2;
-		this.cape.position.y = -6;
-		this.cape.rotation.x = 10 * Math.PI / 180;
+		this.cape.position.y = -4;
+		this.cape.rotation.x = 10.8 * Math.PI / 180;
 		this.add(this.cape);
 
 		this.elytra = new ElytraObject(capeTexture);
