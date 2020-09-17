@@ -64,6 +64,7 @@ class SkinViewer {
 	private readonly earTexture: Texture;
 
 	// Animated Capes (MinecraftCapes)
+	private isCapeAnimated: boolean
 	private customCapeImage: TextureSource
 	private lastFrame: number;
 	private maxFrames: number;
@@ -93,6 +94,7 @@ class SkinViewer {
 		this.earTexture.minFilter = NearestFilter;
 
 		// Animated Capes (MinecraftCapes)
+		this.isCapeAnimated = false;
 		this.customCapeImage = new Image()
 		this.lastFrame = 0,
 		this.maxFrames = 1,
@@ -186,6 +188,7 @@ class SkinViewer {
 		}
 		this.animations.runAnimationLoop(this.playerObject);
 		this.render();
+
 		this.animatedCape();
 		window.requestAnimationFrame(() => this.draw());
 	}
@@ -258,30 +261,51 @@ class SkinViewer {
 			this.customCapeImage = source;
 			this.loadCapeToCanvas(this.capeCanvas, source, 0);
 		} else {
-			loadImage(source).then(image => this.loadCustomCape(image)).catch(error => {});
+			loadImage(source).then(image => this.loadCustomCape(image));
 		}
 	}
 
 	protected loadCapeToCanvas(canvas: TextureCanvas, image: TextureSource, offset: number): void {
-		canvas.width = image.width,
-		canvas.height = image.width / 2;
-		var frame = canvas.getContext("2d");
+		let canvasWidth = 64;
+		let canvasHeight = 32;
+
+		if((image.height > image.width / 2) && (image.height >= image.width)) {
+			this.isCapeAnimated = true;
+			canvasWidth = image.width
+			canvasHeight = image.width / 2
+		} else {
+			while(image.width > canvasWidth) {
+				canvasWidth *= 2
+				canvasHeight *= 2
+			}
+		}
+
+		canvas.width = canvasWidth,
+		canvas.height = canvasHeight;
+
+		const frame = canvas.getContext("2d");
 		if(frame != null) {
-			frame.clearRect(0, 0, canvas.width, canvas.height),
-			frame.drawImage(image, 0, offset, canvas.width, canvas.height, 0, 0, canvas.width, canvas.height)
+			frame.clearRect(0, 0, canvas.width, canvas.height);
+			if(this.isCapeAnimated) {
+				frame.drawImage(image, 0, offset, canvas.width, canvas.height, 0, 0, canvas.width, canvas.height);
+			} else {
+				frame.drawImage(image, 0, 0);
+			}
 			this.capeLoaded();
 		}
     }
 
-	protected animatedCape() {
+	protected animatedCape(): void {
+		if(!this.isCapeAnimated) return;
+
 		if (this.customCapeImage.height !== this.customCapeImage.width / 2) {
-			let currentTime = Date.now();
+			const currentTime = Date.now();
 			if (currentTime > this.lastFrameTime + this.capeInterval) {
 				this.maxFrames = this.customCapeImage.height / (this.customCapeImage.width / 2);
-				let currentFrame = this.lastFrame + 1 > this.maxFrames - 1 ? 0 : this.lastFrame + 1;
+				const currentFrame = this.lastFrame + 1 > this.maxFrames - 1 ? 0 : this.lastFrame + 1;
 				this.lastFrame = currentFrame,
 				this.lastFrameTime = currentTime;
-				let offset = currentFrame * (this.customCapeImage.width / 2);
+				const offset = currentFrame * (this.customCapeImage.width / 2);
 				this.loadCapeToCanvas(this.capeCanvas, this.customCapeImage, offset),
 				this.capeTexture.needsUpdate = true
 				this.playerObject.cape.visible = !this.playerObject.elytra.visible;
@@ -296,7 +320,7 @@ class SkinViewer {
 			this.loadEarsToCanvas(this.earCanvas, source);
 			this.earsLoaded();
 		} else {
-			loadImage(source).then(image => this.loadEars(image)).catch(error => {});
+			loadImage(source).then(image => this.loadEars(image));
 		}
 	}
 
@@ -304,12 +328,12 @@ class SkinViewer {
 		canvas.width = 14;
 		canvas.height = 7;
 
-		const context = canvas.getContext("2d")!;
-		context.clearRect(0, 0, canvas.width, canvas.height);
-		context.drawImage(image, 0, 0, image.width, image.height);
+		const context = canvas.getContext("2d");
+		context?.clearRect(0, 0, canvas.width, canvas.height);
+		context?.drawImage(image, 0, 0, image.width, image.height);
 	}
 
-	public toggleElytra() {
+	public toggleElytra(): void {
 		this.playerObject.cape.visible = !this.playerObject.cape.visible;
 		this.playerObject.elytra.visible = !this.playerObject.cape.visible;
 	}

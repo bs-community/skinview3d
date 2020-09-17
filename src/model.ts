@@ -564,7 +564,7 @@ export class PlayerObject extends Group {
 		this.cape = new CapeObject(capeTexture);
 		this.cape.name = "cape";
 		this.cape.position.z = -2;
-		this.cape.position.y = -4;
+		this.cape.position.y = -6;
 		this.cape.rotation.x = 10.8 * Math.PI / 180;
 		this.add(this.cape);
 
