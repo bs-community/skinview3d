@@ -465,7 +465,6 @@ export class ElytraObject extends Group {
 		this.leftWing.position.x = 3; // Left - right
 		this.leftWing.position.y = -1.5; //Up - down
 
-		this.leftWing.rotation.x = 0.2617994;
 		this.leftWing.rotation.y = 0;
 		this.leftWing.rotation.z = -0.19;
 		this.add(this.leftWing);
@@ -494,7 +493,6 @@ export class ElytraObject extends Group {
 		this.rightWing.position.x = -3; // Left - right
 		this.rightWing.position.y = -1.5; //Up - down
 
-		this.rightWing.rotation.x = 0.2617994; //0.2617994
 		this.rightWing.rotation.y = 0;
 		this.rightWing.rotation.z = 0.19;
 		this.add(this.rightWing);
@@ -572,6 +570,7 @@ export class PlayerObject extends Group {
 		this.elytra.name = "elytra";
 		this.elytra.position.y = -7;
 		this.elytra.position.z = -2;
+		this.elytra.rotation.x = 10.8 * Math.PI / 180;
 		this.elytra.visible = false;
 		this.add(this.elytra);
 
