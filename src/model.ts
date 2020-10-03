@@ -126,7 +126,7 @@ export class SkinObject extends Group {
 		);
 		const bodyMesh = new Mesh(bodyBox, layer1Material);
 
-		const body2Box = new BoxGeometry(9, 13.5, 4.5);
+		const body2Box = new BoxGeometry(8.5, 12.5, 4.5);
 		setVertices(body2Box,
 			toSkinVertices(20, 32, 28, 36),
 			toSkinVertices(28, 32, 36, 36),
@@ -177,8 +177,8 @@ export class SkinObject extends Group {
 		const rightArm2Mesh = new Mesh(rightArm2Box, layer2MaterialBiased);
 		rightArm2Mesh.renderOrder = 1;
 		this.modelListeners.push(() => {
-			rightArm2Mesh.scale.x = this.slim ? 3.375 : 4.5;
-			rightArm2Mesh.scale.y = 13.5;
+			rightArm2Mesh.scale.x = this.slim ? 3.5 : 4.5;
+			rightArm2Mesh.scale.y = 12.5;
 			rightArm2Mesh.scale.z = 4.5;
 			if (this.slim) {
 				setVertices(rightArm2Box,
@@ -250,8 +250,8 @@ export class SkinObject extends Group {
 		const leftArm2Mesh = new Mesh(leftArm2Box, layer2MaterialBiased);
 		leftArm2Mesh.renderOrder = 1;
 		this.modelListeners.push(() => {
-			leftArm2Mesh.scale.x = this.slim ? 3.375 : 4.5;
-			leftArm2Mesh.scale.y = 13.5;
+			leftArm2Mesh.scale.x = this.slim ? 3.5 : 4.5;
+			leftArm2Mesh.scale.y = 12.5;
 			leftArm2Mesh.scale.z = 4.5;
 			if (this.slim) {
 				setVertices(leftArm2Box,
@@ -301,7 +301,7 @@ export class SkinObject extends Group {
 		);
 		const rightLegMesh = new Mesh(rightLegBox, layer1MaterialBiased);
 
-		const rightLeg2Box = new BoxGeometry(4.5, 13.5, 4.5);
+		const rightLeg2Box = new BoxGeometry(4.5, 12.5, 4.5);
 		setVertices(rightLeg2Box,
 			toSkinVertices(4, 32, 8, 36),
 			toSkinVertices(8, 32, 12, 36),
@@ -336,7 +336,7 @@ export class SkinObject extends Group {
 		);
 		const leftLegMesh = new Mesh(leftLegBox, layer1MaterialBiased);
 
-		const leftLeg2Box = new BoxGeometry(4.5, 13.5, 4.5);
+		const leftLeg2Box = new BoxGeometry(4.5, 12.5, 4.5);
 		setVertices(leftLeg2Box,
 			toSkinVertices(4, 48, 8, 52),
 			toSkinVertices(8, 48, 12, 52),
