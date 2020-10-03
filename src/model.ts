@@ -112,6 +112,7 @@ export class SkinObject extends Group {
 		this.head = new BodyPart(headMesh, head2Mesh);
 		this.head.name = "head";
 		this.head.add(headMesh, head2Mesh);
+		this.head.position.y = 4;
 		this.add(this.head);
 
 		// Body
@@ -140,7 +141,7 @@ export class SkinObject extends Group {
 		this.body = new BodyPart(bodyMesh, body2Mesh);
 		this.body.name = "body";
 		this.body.add(bodyMesh, body2Mesh);
-		this.body.position.y = -10;
+		this.body.position.y = -6;
 		this.add(this.body);
 
 		// Right Arm
@@ -210,7 +211,7 @@ export class SkinObject extends Group {
 		this.rightArm = new BodyPart(rightArmMesh, rightArm2Mesh);
 		this.rightArm.name = "rightArm";
 		this.rightArm.add(rightArmPivot);
-		this.rightArm.position.y = -6;
+		this.rightArm.position.y = -2;
 		this.modelListeners.push(() => {
 			this.rightArm.position.x = this.slim ? -5.5 : -6;
 		});
@@ -283,7 +284,7 @@ export class SkinObject extends Group {
 		this.leftArm = new BodyPart(leftArmMesh, leftArm2Mesh);
 		this.leftArm.name = "leftArm";
 		this.leftArm.add(leftArmPivot);
-		this.leftArm.position.y = -6;
+		this.leftArm.position.y = -2;
 		this.modelListeners.push(() => {
 			this.leftArm.position.x = this.slim ? 5.5 : 6;
 		});
@@ -320,7 +321,7 @@ export class SkinObject extends Group {
 		this.rightLeg = new BodyPart(rightLegMesh, rightLeg2Mesh);
 		this.rightLeg.name = "rightLeg";
 		this.rightLeg.add(rightLegPivot);
-		this.rightLeg.position.y = -16;
+		this.rightLeg.position.y = -12;
 		this.rightLeg.position.x = -2;
 		this.add(this.rightLeg);
 
@@ -355,7 +356,7 @@ export class SkinObject extends Group {
 		this.leftLeg = new BodyPart(leftLegMesh, leftLeg2Mesh);
 		this.leftLeg.name = "leftLeg";
 		this.leftLeg.add(leftLegPivot);
-		this.leftLeg.position.y = -16;
+		this.leftLeg.position.y = -12;
 		this.leftLeg.position.x = 2;
 		this.add(this.leftLeg);
 
@@ -431,7 +432,6 @@ export class PlayerObject extends Group {
 		this.cape = new CapeObject(capeTexture);
 		this.cape.name = "cape";
 		this.cape.position.z = -2;
-		this.cape.position.y = -4;
 		this.cape.rotation.x = 10.8 * Math.PI / 180;
 		this.add(this.cape);
 	}
