@@ -206,15 +206,16 @@ export class SkinObject extends Group {
 
 		const rightArmPivot = new Group();
 		rightArmPivot.add(rightArmMesh, rightArm2Mesh);
+		this.modelListeners.push(() => {
+			rightArmPivot.position.x = this.slim ? -.5 : -1;
+		});
 		rightArmPivot.position.y = -4;
 
 		this.rightArm = new BodyPart(rightArmMesh, rightArm2Mesh);
 		this.rightArm.name = "rightArm";
 		this.rightArm.add(rightArmPivot);
+		this.rightArm.position.x = -5;
 		this.rightArm.position.y = -2;
-		this.modelListeners.push(() => {
-			this.rightArm.position.x = this.slim ? -5.5 : -6;
-		});
 		this.add(this.rightArm);
 
 		// Left Arm
@@ -279,15 +280,16 @@ export class SkinObject extends Group {
 
 		const leftArmPivot = new Group();
 		leftArmPivot.add(leftArmMesh, leftArm2Mesh);
+		this.modelListeners.push(() => {
+			leftArmPivot.position.x = this.slim ? 0.5 : 1;
+		});
 		leftArmPivot.position.y = -4;
 
 		this.leftArm = new BodyPart(leftArmMesh, leftArm2Mesh);
 		this.leftArm.name = "leftArm";
 		this.leftArm.add(leftArmPivot);
+		this.leftArm.position.x = 5;
 		this.leftArm.position.y = -2;
-		this.modelListeners.push(() => {
-			this.leftArm.position.x = this.slim ? 5.5 : 6;
-		});
 		this.add(this.leftArm);
 
 		// Right Leg
@@ -321,8 +323,9 @@ export class SkinObject extends Group {
 		this.rightLeg = new BodyPart(rightLegMesh, rightLeg2Mesh);
 		this.rightLeg.name = "rightLeg";
 		this.rightLeg.add(rightLegPivot);
+		this.rightLeg.position.x = -1.9;
 		this.rightLeg.position.y = -12;
-		this.rightLeg.position.x = -2;
+		this.rightLeg.position.z = -.1;
 		this.add(this.rightLeg);
 
 		// Left Leg
@@ -356,8 +359,9 @@ export class SkinObject extends Group {
 		this.leftLeg = new BodyPart(leftLegMesh, leftLeg2Mesh);
 		this.leftLeg.name = "leftLeg";
 		this.leftLeg.add(leftLegPivot);
+		this.leftLeg.position.x = 1.9;
 		this.leftLeg.position.y = -12;
-		this.leftLeg.position.x = 2;
+		this.leftLeg.position.z = -.1;
 		this.add(this.leftLeg);
 
 		this.modelType = "default";
