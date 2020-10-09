@@ -1,24 +1,21 @@
 import { ModelType } from "skinview-utils";
 import { BoxGeometry, DoubleSide, FrontSide, Group, Mesh, MeshBasicMaterial, Object3D, Texture, Vector2 } from "three";
 
-function toFaceVertices(x1: number, y1: number, x2: number, y2: number, w: number, h: number): Array<Vector2> {
-	return [
-		new Vector2(x1 / w, 1.0 - y2 / h),
-		new Vector2(x2 / w, 1.0 - y2 / h),
-		new Vector2(x2 / w, 1.0 - y1 / h),
-		new Vector2(x1 / w, 1.0 - y1 / h)
+function setUVs(box: BoxGeometry, u: number, v: number, width: number, height: number, depth: number, textureWidth: number, textureHeight: number): void {
+	const toFaceVertices = (x1: number, y1: number, x2: number, y2: number) => [
+		new Vector2(x1 / textureWidth, 1.0 - y2 / textureHeight),
+		new Vector2(x2 / textureWidth, 1.0 - y2 / textureHeight),
+		new Vector2(x2 / textureWidth, 1.0 - y1 / textureHeight),
+		new Vector2(x1 / textureWidth, 1.0 - y1 / textureHeight)
 	];
-}
 
-function toSkinVertices(x1: number, y1: number, x2: number, y2: number): Array<Vector2> {
-	return toFaceVertices(x1, y1, x2, y2, 64.0, 64.0);
-}
+	const top = toFaceVertices(u + depth, v, u + width + depth, v + depth);
+	const bottom = toFaceVertices(u + width + depth, v, u + width * 2 + depth, v + depth);
+	const left = toFaceVertices(u, v + depth, u + depth, v + depth + height);
+	const front = toFaceVertices(u + depth, v + depth, u + width + depth, v + depth + height);
+	const right = toFaceVertices(u + width + depth, v + depth, u + width + depth * 2, v + height + depth);
+	const back = toFaceVertices(u + width + depth * 2, v + depth, u + width * 2 + depth * 2, v + height + depth);
 
-function toCapeVertices(x1: number, y1: number, x2: number, y2: number): Array<Vector2> {
-	return toFaceVertices(x1, y1, x2, y2, 64.0, 32.0);
-}
-
-function setVertices(box: BoxGeometry, top: Array<Vector2>, bottom: Array<Vector2>, left: Array<Vector2>, front: Array<Vector2>, right: Array<Vector2>, back: Array<Vector2>): void {
 	box.faceVertexUvs[0] = [];
 	box.faceVertexUvs[0][0] = [right[3], right[0], right[2]];
 	box.faceVertexUvs[0][1] = [right[0], right[1], right[2]];
@@ -32,6 +29,14 @@ function setVertices(box: BoxGeometry, top: Array<Vector2>, bottom: Array<Vector
 	box.faceVertexUvs[0][9] = [front[0], front[1], front[2]];
 	box.faceVertexUvs[0][10] = [back[3], back[0], back[2]];
 	box.faceVertexUvs[0][11] = [back[0], back[1], back[2]];
+}
+
+function setSkinUVs(box: BoxGeometry, u: number, v: number, width: number, height: number, depth: number): void {
+	setUVs(box, u, v, width, height, depth, 64, 64);
+}
+
+function setCapeUVs(box: BoxGeometry, u: number, v: number, width: number, height: number, depth: number): void {
+	setUVs(box, u, v, width, height, depth, 64, 32);
 }
 
 /**
@@ -87,25 +92,11 @@ export class SkinObject extends Group {
 
 		// Head
 		const headBox = new BoxGeometry(8, 8, 8);
-		setVertices(headBox,
-			toSkinVertices(8, 0, 16, 8),
-			toSkinVertices(16, 0, 24, 8),
-			toSkinVertices(0, 8, 8, 16),
-			toSkinVertices(8, 8, 16, 16),
-			toSkinVertices(16, 8, 24, 16),
-			toSkinVertices(24, 8, 32, 16)
-		);
+		setSkinUVs(headBox, 0, 0, 8, 8, 8);
 		const headMesh = new Mesh(headBox, layer1Material);
 
 		const head2Box = new BoxGeometry(9, 9, 9);
-		setVertices(head2Box,
-			toSkinVertices(40, 0, 48, 8),
-			toSkinVertices(48, 0, 56, 8),
-			toSkinVertices(32, 8, 40, 16),
-			toSkinVertices(40, 8, 48, 16),
-			toSkinVertices(48, 8, 56, 16),
-			toSkinVertices(56, 8, 64, 16)
-		);
+		setSkinUVs(head2Box, 32, 0, 8, 8, 8);
 		const head2Mesh = new Mesh(head2Box, layer2Material);
 		head2Mesh.renderOrder = -1;
 
@@ -117,25 +108,11 @@ export class SkinObject extends Group {
 
 		// Body
 		const bodyBox = new BoxGeometry(8, 12, 4);
-		setVertices(bodyBox,
-			toSkinVertices(20, 16, 28, 20),
-			toSkinVertices(28, 16, 36, 20),
-			toSkinVertices(16, 20, 20, 32),
-			toSkinVertices(20, 20, 28, 32),
-			toSkinVertices(28, 20, 32, 32),
-			toSkinVertices(32, 20, 40, 32)
-		);
+		setSkinUVs(bodyBox, 16, 16, 8, 12, 4);
 		const bodyMesh = new Mesh(bodyBox, layer1Material);
 
 		const body2Box = new BoxGeometry(8.5, 12.5, 4.5);
-		setVertices(body2Box,
-			toSkinVertices(20, 32, 28, 36),
-			toSkinVertices(28, 32, 36, 36),
-			toSkinVertices(16, 36, 20, 48),
-			toSkinVertices(20, 36, 28, 48),
-			toSkinVertices(28, 36, 32, 48),
-			toSkinVertices(32, 36, 40, 48)
-		);
+		setSkinUVs(body2Box, 16, 32, 8, 12, 4);
 		const body2Mesh = new Mesh(body2Box, layer2Material);
 
 		this.body = new BodyPart(bodyMesh, body2Mesh);
@@ -151,25 +128,7 @@ export class SkinObject extends Group {
 			rightArmMesh.scale.x = this.slim ? 3 : 4;
 			rightArmMesh.scale.y = 12;
 			rightArmMesh.scale.z = 4;
-			if (this.slim) {
-				setVertices(rightArmBox,
-					toSkinVertices(44, 16, 47, 20),
-					toSkinVertices(47, 16, 50, 20),
-					toSkinVertices(40, 20, 44, 32),
-					toSkinVertices(44, 20, 47, 32),
-					toSkinVertices(47, 20, 51, 32),
-					toSkinVertices(51, 20, 54, 32)
-				);
-			} else {
-				setVertices(rightArmBox,
-					toSkinVertices(44, 16, 48, 20),
-					toSkinVertices(48, 16, 52, 20),
-					toSkinVertices(40, 20, 44, 32),
-					toSkinVertices(44, 20, 48, 32),
-					toSkinVertices(48, 20, 52, 32),
-					toSkinVertices(52, 20, 56, 32)
-				);
-			}
+			setSkinUVs(rightArmBox, 40, 16, this.slim ? 3 : 4, 12, 4);
 			rightArmBox.uvsNeedUpdate = true;
 			rightArmBox.elementsNeedUpdate = true;
 		});
@@ -181,25 +140,7 @@ export class SkinObject extends Group {
 			rightArm2Mesh.scale.x = this.slim ? 3.5 : 4.5;
 			rightArm2Mesh.scale.y = 12.5;
 			rightArm2Mesh.scale.z = 4.5;
-			if (this.slim) {
-				setVertices(rightArm2Box,
-					toSkinVertices(44, 32, 47, 36),
-					toSkinVertices(47, 32, 50, 36),
-					toSkinVertices(40, 36, 44, 48),
-					toSkinVertices(44, 36, 47, 48),
-					toSkinVertices(47, 36, 51, 48),
-					toSkinVertices(51, 36, 54, 48)
-				);
-			} else {
-				setVertices(rightArm2Box,
-					toSkinVertices(44, 32, 48, 36),
-					toSkinVertices(48, 32, 52, 36),
-					toSkinVertices(40, 36, 44, 48),
-					toSkinVertices(44, 36, 48, 48),
-					toSkinVertices(48, 36, 52, 48),
-					toSkinVertices(52, 36, 56, 48)
-				);
-			}
+			setSkinUVs(rightArm2Box, 40, 32, this.slim ? 3 : 4, 12, 4);
 			rightArm2Box.uvsNeedUpdate = true;
 			rightArm2Box.elementsNeedUpdate = true;
 		});
@@ -225,25 +166,7 @@ export class SkinObject extends Group {
 			leftArmMesh.scale.x = this.slim ? 3 : 4;
 			leftArmMesh.scale.y = 12;
 			leftArmMesh.scale.z = 4;
-			if (this.slim) {
-				setVertices(leftArmBox,
-					toSkinVertices(36, 48, 39, 52),
-					toSkinVertices(39, 48, 42, 52),
-					toSkinVertices(32, 52, 36, 64),
-					toSkinVertices(36, 52, 39, 64),
-					toSkinVertices(39, 52, 43, 64),
-					toSkinVertices(43, 52, 46, 64)
-				);
-			} else {
-				setVertices(leftArmBox,
-					toSkinVertices(36, 48, 40, 52),
-					toSkinVertices(40, 48, 44, 52),
-					toSkinVertices(32, 52, 36, 64),
-					toSkinVertices(36, 52, 40, 64),
-					toSkinVertices(40, 52, 44, 64),
-					toSkinVertices(44, 52, 48, 64)
-				);
-			}
+			setSkinUVs(leftArmBox, 32, 48, this.slim ? 3 : 4, 12, 4);
 			leftArmBox.uvsNeedUpdate = true;
 			leftArmBox.elementsNeedUpdate = true;
 		});
@@ -255,25 +178,7 @@ export class SkinObject extends Group {
 			leftArm2Mesh.scale.x = this.slim ? 3.5 : 4.5;
 			leftArm2Mesh.scale.y = 12.5;
 			leftArm2Mesh.scale.z = 4.5;
-			if (this.slim) {
-				setVertices(leftArm2Box,
-					toSkinVertices(52, 48, 55, 52),
-					toSkinVertices(55, 48, 58, 52),
-					toSkinVertices(48, 52, 52, 64),
-					toSkinVertices(52, 52, 55, 64),
-					toSkinVertices(55, 52, 59, 64),
-					toSkinVertices(59, 52, 62, 64)
-				);
-			} else {
-				setVertices(leftArm2Box,
-					toSkinVertices(52, 48, 56, 52),
-					toSkinVertices(56, 48, 60, 52),
-					toSkinVertices(48, 52, 52, 64),
-					toSkinVertices(52, 52, 56, 64),
-					toSkinVertices(56, 52, 60, 64),
-					toSkinVertices(60, 52, 64, 64)
-				);
-			}
+			setSkinUVs(leftArm2Box, 48, 48, this.slim ? 3 : 4, 12, 4);
 			leftArm2Box.uvsNeedUpdate = true;
 			leftArm2Box.elementsNeedUpdate = true;
 		});
@@ -294,25 +199,11 @@ export class SkinObject extends Group {
 
 		// Right Leg
 		const rightLegBox = new BoxGeometry(4, 12, 4);
-		setVertices(rightLegBox,
-			toSkinVertices(4, 16, 8, 20),
-			toSkinVertices(8, 16, 12, 20),
-			toSkinVertices(0, 20, 4, 32),
-			toSkinVertices(4, 20, 8, 32),
-			toSkinVertices(8, 20, 12, 32),
-			toSkinVertices(12, 20, 16, 32)
-		);
+		setSkinUVs(rightLegBox, 0, 16, 4, 12, 4);
 		const rightLegMesh = new Mesh(rightLegBox, layer1MaterialBiased);
 
 		const rightLeg2Box = new BoxGeometry(4.5, 12.5, 4.5);
-		setVertices(rightLeg2Box,
-			toSkinVertices(4, 32, 8, 36),
-			toSkinVertices(8, 32, 12, 36),
-			toSkinVertices(0, 36, 4, 48),
-			toSkinVertices(4, 36, 8, 48),
-			toSkinVertices(8, 36, 12, 48),
-			toSkinVertices(12, 36, 16, 48)
-		);
+		setSkinUVs(rightLeg2Box, 0, 32, 4, 12, 4);
 		const rightLeg2Mesh = new Mesh(rightLeg2Box, layer2MaterialBiased);
 		rightLeg2Mesh.renderOrder = 1;
 
@@ -330,25 +221,11 @@ export class SkinObject extends Group {
 
 		// Left Leg
 		const leftLegBox = new BoxGeometry(4, 12, 4);
-		setVertices(leftLegBox,
-			toSkinVertices(20, 48, 24, 52),
-			toSkinVertices(24, 48, 28, 52),
-			toSkinVertices(16, 52, 20, 64),
-			toSkinVertices(20, 52, 24, 64),
-			toSkinVertices(24, 52, 28, 64),
-			toSkinVertices(28, 52, 32, 64)
-		);
+		setSkinUVs(leftLegBox, 16, 48, 4, 12, 4);
 		const leftLegMesh = new Mesh(leftLegBox, layer1MaterialBiased);
 
 		const leftLeg2Box = new BoxGeometry(4.5, 12.5, 4.5);
-		setVertices(leftLeg2Box,
-			toSkinVertices(4, 48, 8, 52),
-			toSkinVertices(8, 48, 12, 52),
-			toSkinVertices(0, 52, 4, 64),
-			toSkinVertices(4, 52, 8, 64),
-			toSkinVertices(8, 52, 12, 64),
-			toSkinVertices(12, 52, 16, 64)
-		);
+		setSkinUVs(leftLeg2Box, 0, 48, 4, 12, 4);
 		const leftLeg2Mesh = new Mesh(leftLeg2Box, layer2MaterialBiased);
 		leftLeg2Mesh.renderOrder = 1;
 
@@ -406,14 +283,7 @@ export class CapeObject extends Group {
 		// +z (front) - inside of cape
 		// -z (back) - outside of cape
 		const capeBox = new BoxGeometry(10, 16, 1);
-		setVertices(capeBox,
-			toCapeVertices(1, 0, 11, 1),
-			toCapeVertices(11, 0, 21, 1),
-			toCapeVertices(0, 1, 1, 17),
-			toCapeVertices(1, 1, 11, 17),
-			toCapeVertices(11, 1, 12, 17),
-			toCapeVertices(12, 1, 22, 17)
-		);
+		setCapeUVs(capeBox, 0, 0, 10, 16, 1);
 		this.cape = new Mesh(capeBox, capeMaterial);
 		this.cape.position.y = -8;
 		this.cape.position.z = .5;
