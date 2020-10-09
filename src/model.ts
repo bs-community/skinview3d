@@ -16,19 +16,20 @@ function setUVs(box: BoxGeometry, u: number, v: number, width: number, height: n
 	const right = toFaceVertices(u + width + depth, v + depth, u + width + depth * 2, v + height + depth);
 	const back = toFaceVertices(u + width + depth * 2, v + depth, u + width * 2 + depth * 2, v + height + depth);
 
-	box.faceVertexUvs[0] = [];
-	box.faceVertexUvs[0][0] = [right[3], right[0], right[2]];
-	box.faceVertexUvs[0][1] = [right[0], right[1], right[2]];
-	box.faceVertexUvs[0][2] = [left[3], left[0], left[2]];
-	box.faceVertexUvs[0][3] = [left[0], left[1], left[2]];
-	box.faceVertexUvs[0][4] = [top[3], top[0], top[2]];
-	box.faceVertexUvs[0][5] = [top[0], top[1], top[2]];
-	box.faceVertexUvs[0][6] = [bottom[0], bottom[3], bottom[1]];
-	box.faceVertexUvs[0][7] = [bottom[3], bottom[2], bottom[1]];
-	box.faceVertexUvs[0][8] = [front[3], front[0], front[2]];
-	box.faceVertexUvs[0][9] = [front[0], front[1], front[2]];
-	box.faceVertexUvs[0][10] = [back[3], back[0], back[2]];
-	box.faceVertexUvs[0][11] = [back[0], back[1], back[2]];
+	box.faceVertexUvs[0] = [
+		[right[3], right[0], right[2]],
+		[right[0], right[1], right[2]],
+		[left[3], left[0], left[2]],
+		[left[0], left[1], left[2]],
+		[top[3], top[0], top[2]],
+		[top[0], top[1], top[2]],
+		[bottom[0], bottom[3], bottom[1]],
+		[bottom[3], bottom[2], bottom[1]],
+		[front[3], front[0], front[2]],
+		[front[0], front[1], front[2]],
+		[back[3], back[0], back[2]],
+		[back[0], back[1], back[2]]
+	];
 }
 
 function setSkinUVs(box: BoxGeometry, u: number, v: number, width: number, height: number, depth: number): void {
