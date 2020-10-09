@@ -403,20 +403,20 @@ export class CapeObject extends Group {
 			alphaTest: 1e-5
 		});
 
-		// back = outside
-		// front = inside
+		// +z (front) - inside of cape
+		// -z (back) - outside of cape
 		const capeBox = new BoxGeometry(10, 16, 1);
 		setVertices(capeBox,
-			toCapeVertices(11, 1, 1, 0),
-			toCapeVertices(21, 1, 11, 0),
-			toCapeVertices(11, 1, 12, 17),
-			toCapeVertices(12, 1, 22, 17),
+			toCapeVertices(1, 0, 11, 1),
+			toCapeVertices(11, 0, 21, 1),
 			toCapeVertices(0, 1, 1, 17),
-			toCapeVertices(1, 1, 11, 17)
+			toCapeVertices(1, 1, 11, 17),
+			toCapeVertices(11, 1, 12, 17),
+			toCapeVertices(12, 1, 22, 17)
 		);
 		this.cape = new Mesh(capeBox, capeMaterial);
 		this.cape.position.y = -8;
-		this.cape.position.z = -0.5;
+		this.cape.position.z = .5;
 		this.add(this.cape);
 	}
 }
@@ -437,6 +437,7 @@ export class PlayerObject extends Group {
 		this.cape.name = "cape";
 		this.cape.position.z = -2;
 		this.cape.rotation.x = 10.8 * Math.PI / 180;
+		this.cape.rotation.y = Math.PI;
 		this.add(this.cape);
 	}
 }
