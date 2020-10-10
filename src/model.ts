@@ -343,6 +343,8 @@ export class ElytraObject extends Group {
 	}
 }
 
+export type BackEquipment = "cape" | "elytra";
+
 export class PlayerObject extends Group {
 
 	readonly skin: SkinObject;
@@ -368,5 +370,20 @@ export class PlayerObject extends Group {
 		this.elytra.position.z = -2;
 		this.elytra.visible = false;
 		this.add(this.elytra);
+	}
+
+	get backEquipment(): BackEquipment | null {
+		if (this.cape.visible) {
+			return "cape";
+		} else if (this.elytra.visible) {
+			return "elytra";
+		} else {
+			return null;
+		}
+	}
+
+	set backEquipment(value: BackEquipment | null) {
+		this.cape.visible = value === "cape";
+		this.elytra.visible = value === "elytra";
 	}
 }

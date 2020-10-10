@@ -1,13 +1,21 @@
 import { applyMixins, CapeContainer, ModelType, SkinContainer, RemoteImage, TextureSource } from "skinview-utils";
 import { NearestFilter, PerspectiveCamera, Scene, Texture, Vector2, WebGLRenderer } from "three";
 import { RootAnimation } from "./animation.js";
-import { PlayerObject } from "./model.js";
+import { BackEquipment, PlayerObject } from "./model.js";
 
 export interface LoadOptions {
 	/**
 	 * Whether to make the object visible after the texture is loaded. Default is true.
 	 */
 	makeVisible?: boolean;
+}
+
+export interface CapeLoadOptions extends LoadOptions {
+	/**
+	 * The equipment (cape or elytra) to show, defaults to "cape".
+	 * If makeVisible is set to false, this option will have no effect.
+	 */
+	backEquipment?: BackEquipment;
 }
 
 export interface SkinViewerOptions {
@@ -38,13 +46,6 @@ export interface SkinViewerOptions {
 	 * If this option is true, rendering and animation loops will not start.
 	 */
 	renderPaused?: boolean;
-}
-
-function toMakeVisible(options?: LoadOptions): boolean {
-	if (options && options.makeVisible === false) {
-		return false;
-	}
-	return true;
 }
 
 class SkinViewer {
@@ -118,18 +119,18 @@ class SkinViewer {
 		}
 	}
 
-	protected skinLoaded(model: ModelType, options?: LoadOptions): void {
+	protected skinLoaded(model: ModelType, options: LoadOptions = {}): void {
 		this.skinTexture.needsUpdate = true;
 		this.playerObject.skin.modelType = model;
-		if (toMakeVisible(options)) {
+		if (options.makeVisible !== false) {
 			this.playerObject.skin.visible = true;
 		}
 	}
 
-	protected capeLoaded(options?: LoadOptions): void {
+	protected capeLoaded(options: CapeLoadOptions = {}): void {
 		this.capeTexture.needsUpdate = true;
-		if (toMakeVisible(options)) {
-			this.playerObject.cape.visible = true;
+		if (options.makeVisible !== false) {
+			this.playerObject.backEquipment = options.backEquipment === undefined ? "cape" : options.backEquipment;
 		}
 	}
 
@@ -138,7 +139,7 @@ class SkinViewer {
 	}
 
 	protected resetCape(): void {
-		this.playerObject.cape.visible = false;
+		this.playerObject.backEquipment = null;
 	}
 
 	private draw(): void {
@@ -208,6 +209,6 @@ class SkinViewer {
 		this.setSize(this.width, newHeight);
 	}
 }
-interface SkinViewer extends SkinContainer<LoadOptions>, CapeContainer<LoadOptions> { }
+interface SkinViewer extends SkinContainer<LoadOptions>, CapeContainer<CapeLoadOptions> { }
 applyMixins(SkinViewer, [SkinContainer, CapeContainer]);
 export { SkinViewer };

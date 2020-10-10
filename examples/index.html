@@ -182,6 +182,13 @@
 					</tr>
 				</tbody>
 			</table>
+			<div>
+				<h2>Back Equipment</h2>
+				<div class="control">
+					<label><input type="radio" id="back_equipment_cape" name="back_equipment" value="cape" checked> Cape</label>
+					<label><input type="radio" id="back_equipment_elytra" name="back_equipment" value="elytra"> Elytra</label>
+				</div>
+			</div>
 		</div>
 
 		<div class="control-section">
@@ -284,7 +291,8 @@
 				skinViewer.loadCape(null);
 				input.setCustomValidity("");
 			} else {
-				skinViewer.loadCape(url)
+				const selectedBackEquipment = document.querySelector('input[type="radio"][name="back_equipment"]:checked');
+				skinViewer.loadCape(url, { backEquipment: selectedBackEquipment.value })
 					.then(() => input.setCustomValidity(""))
 					.catch(e => {
 						input.setCustomValidity("Image can't be loaded.");
@@ -363,6 +371,18 @@
 			document.getElementById("skin_url").addEventListener("change", () => reloadSkin());
 			document.getElementById("skin_model").addEventListener("change", () => reloadSkin());
 			document.getElementById("cape_url").addEventListener("change", () => reloadCape());
+
+			for (const el of document.querySelectorAll('input[type="radio"][name="back_equipment"]')) {
+				el.addEventListener("change", e => {
+					if (skinViewer.playerObject.backEquipment === null) {
+						// cape texture hasn't been loaded yet
+						// this option will be processed on texture loading
+					} else {
+						skinViewer.playerObject.backEquipment = e.target.value;
+					}
+				});
+			}
+
 			document.getElementById("reset_all").addEventListener("click", () => {
 				skinViewer.dispose();
 				orbitControl.dispose();

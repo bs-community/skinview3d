@@ -12,7 +12,7 @@
     <div id="rendered_imgs"></div>
     <script src="../bundles/skinview3d.bundle.js"></script>
     <script>
-        const textures = [
+        const configurations = [
             {
                 skin: "img/1_8_texturemap_redux.png",
                 cape: null
@@ -23,11 +23,12 @@
             },
             {
                 skin: "img/haka.png",
-                cape: null
+                cape: "img/mojang_cape.png"
             },
             {
                 skin: "img/hatsune_miku.png",
-                cape: "img/mojang_cape.png"
+                cape: "img/mojang_cape.png",
+                backEquipment: "elytra"
             },
             {
                 skin: "img/ironman_hd.png",
@@ -54,8 +55,11 @@
             skinViewer.camera.position.y = 22.0;
             skinViewer.camera.position.z = 42.0;
 
-            for (const { skin, cape } of textures) {
-                await Promise.all([skinViewer.loadSkin(skin), skinViewer.loadCape(cape)]);
+            for (const config of configurations) {
+                await Promise.all([
+                    skinViewer.loadSkin(config.skin),
+                    skinViewer.loadCape(config.cape, { backEquipment: config.backEquipment })
+                ]);
                 skinViewer.render();
                 const image = skinViewer.canvas.toDataURL();
 
