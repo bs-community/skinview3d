@@ -99,7 +99,6 @@ export class SkinObject extends Group {
 		const head2Box = new BoxGeometry(9, 9, 9);
 		setSkinUVs(head2Box, 32, 0, 8, 8, 8);
 		const head2Mesh = new Mesh(head2Box, layer2Material);
-		head2Mesh.renderOrder = -1;
 
 		this.head = new BodyPart(headMesh, head2Mesh);
 		this.head.name = "head";
@@ -136,7 +135,6 @@ export class SkinObject extends Group {
 
 		const rightArm2Box = new BoxGeometry();
 		const rightArm2Mesh = new Mesh(rightArm2Box, layer2MaterialBiased);
-		rightArm2Mesh.renderOrder = 1;
 		this.modelListeners.push(() => {
 			rightArm2Mesh.scale.x = this.slim ? 3.5 : 4.5;
 			rightArm2Mesh.scale.y = 12.5;
@@ -174,7 +172,6 @@ export class SkinObject extends Group {
 
 		const leftArm2Box = new BoxGeometry();
 		const leftArm2Mesh = new Mesh(leftArm2Box, layer2MaterialBiased);
-		leftArm2Mesh.renderOrder = 1;
 		this.modelListeners.push(() => {
 			leftArm2Mesh.scale.x = this.slim ? 3.5 : 4.5;
 			leftArm2Mesh.scale.y = 12.5;
@@ -206,7 +203,6 @@ export class SkinObject extends Group {
 		const rightLeg2Box = new BoxGeometry(4.5, 12.5, 4.5);
 		setSkinUVs(rightLeg2Box, 0, 32, 4, 12, 4);
 		const rightLeg2Mesh = new Mesh(rightLeg2Box, layer2MaterialBiased);
-		rightLeg2Mesh.renderOrder = 1;
 
 		const rightLegPivot = new Group();
 		rightLegPivot.add(rightLegMesh, rightLeg2Mesh);
@@ -228,7 +224,6 @@ export class SkinObject extends Group {
 		const leftLeg2Box = new BoxGeometry(4.5, 12.5, 4.5);
 		setSkinUVs(leftLeg2Box, 0, 48, 4, 12, 4);
 		const leftLeg2Mesh = new Mesh(leftLeg2Box, layer2MaterialBiased);
-		leftLeg2Mesh.renderOrder = 1;
 
 		const leftLegPivot = new Group();
 		leftLegPivot.add(leftLegMesh, leftLeg2Mesh);
