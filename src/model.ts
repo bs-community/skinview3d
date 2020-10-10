@@ -123,7 +123,7 @@ export class SkinObject extends Group {
 
 		// Right Arm
 		const rightArmBox = new BoxGeometry();
-		const rightArmMesh = new Mesh(rightArmBox, layer1Material);
+		const rightArmMesh = new Mesh(rightArmBox, layer1MaterialBiased);
 		this.modelListeners.push(() => {
 			rightArmMesh.scale.x = this.slim ? 3 : 4;
 			rightArmMesh.scale.y = 12;
@@ -160,7 +160,7 @@ export class SkinObject extends Group {
 
 		// Left Arm
 		const leftArmBox = new BoxGeometry();
-		const leftArmMesh = new Mesh(leftArmBox, layer1Material);
+		const leftArmMesh = new Mesh(leftArmBox, layer1MaterialBiased);
 		this.modelListeners.push(() => {
 			leftArmMesh.scale.x = this.slim ? 3 : 4;
 			leftArmMesh.scale.y = 12;
