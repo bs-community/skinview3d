@@ -12,6 +12,7 @@ Three.js powered Minecraft skin viewer.
 * 1.8 Skins
 * HD Skins
 * Capes
+* Elytras
 * Slim Arms
   * Automatic model detection (Slim / Default)
 
@@ -37,7 +38,10 @@ Three.js powered Minecraft skin viewer.
 	// Load a cape
 	skinViewer.loadCape("img/cape.png");
 
-	// Unload(hide) the cape
+	// Load a elytra (from a cape texture)
+	skinViewer.loadCape("img/cape.png", { backEquipment: "elytra" });
+
+	// Unload(hide) the cape / elytra
 	skinViewer.loadCape(null);
 
 	// Control objects with your mouse!
