@@ -1,16 +1,24 @@
 import { applyMixins, CapeContainer, ModelType, SkinContainer, RemoteImage, TextureSource, TextureCanvas, loadImage, isTextureSource } from "skinview-utils";
 import { NearestFilter, PerspectiveCamera, Scene, Texture, Vector2, WebGLRenderer } from "three";
 import { RootAnimation } from "./animation.js";
-import { PlayerObject } from "./model.js";
+import { BackEquipment, PlayerObject } from "./model.js";
 
-export type LoadOptions = {
+export interface LoadOptions {
 	/**
 	 * Whether to make the object visible after the texture is loaded. Default is true.
 	 */
 	makeVisible?: boolean;
 }
 
-export type SkinViewerOptions = {
+export interface CapeLoadOptions extends LoadOptions {
+	/**
+	 * The equipment (cape or elytra) to show, defaults to "cape".
+	 * If makeVisible is set to false, this option will have no effect.
+	 */
+	backEquipment?: BackEquipment;
+}
+
+export interface SkinViewerOptions {
 	width?: number;
 	height?: number;
 	skin?: RemoteImage | TextureSource;
@@ -39,13 +47,6 @@ export type SkinViewerOptions = {
 	 * If this option is true, rendering and animation loops will not start.
 	 */
 	renderPaused?: boolean;
-}
-
-function toMakeVisible(options?: LoadOptions): boolean {
-	if (options && options.makeVisible === false) {
-		return false;
-	}
-	return true;
 }
 
 class SkinViewer {
@@ -105,9 +106,8 @@ class SkinViewer {
 		this.scene = new Scene();
 
 		// Use smaller fov to avoid distortion
-		this.camera = new PerspectiveCamera(42);
-		this.camera.zoom
-		this.camera.position.y = -12;
+		this.camera = new PerspectiveCamera(40);
+		this.camera.position.y = -8;
 		this.camera.position.z = 60;
 
 		this.renderer = new WebGLRenderer({
@@ -148,18 +148,18 @@ class SkinViewer {
 		}
 	}
 
-	protected skinLoaded(model: ModelType, options?: LoadOptions): void {
+	protected skinLoaded(model: ModelType, options: LoadOptions = {}): void {
 		this.skinTexture.needsUpdate = true;
 		this.playerObject.skin.modelType = model;
-		if (toMakeVisible(options)) {
+		if (options.makeVisible !== false) {
 			this.playerObject.skin.visible = true;
 		}
 	}
 
-	protected capeLoaded(options?: LoadOptions): void {
+	protected capeLoaded(options: CapeLoadOptions = {}): void {
 		this.capeTexture.needsUpdate = true;
-		if (toMakeVisible(options)) {
-			this.playerObject.cape.visible = true;
+		if (options.makeVisible !== false) {
+			this.playerObject.backEquipment = options.backEquipment === undefined ? "cape" : options.backEquipment;
 		}
 	}
 
@@ -175,7 +175,7 @@ class SkinViewer {
 	}
 
 	protected resetCape(): void {
-		this.playerObject.cape.visible = false;
+		this.playerObject.backEquipment = null;
 	}
 
 	protected resetEars(): void {
@@ -338,7 +338,6 @@ class SkinViewer {
 		this.playerObject.elytra.visible = !this.playerObject.cape.visible;
 	}
 }
-
-interface SkinViewer extends SkinContainer<LoadOptions>, CapeContainer<LoadOptions> { }
+interface SkinViewer extends SkinContainer<LoadOptions>, CapeContainer<CapeLoadOptions> { }
 applyMixins(SkinViewer, [SkinContainer, CapeContainer]);
 export { SkinViewer };

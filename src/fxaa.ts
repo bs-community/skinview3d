@@ -1,4 +1,5 @@
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
+import { Pass } from "three/examples/jsm/postprocessing/Pass.js";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
 import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
 import { FXAAShader } from "three/examples/jsm/shaders/FXAAShader.js";
@@ -14,7 +15,7 @@ export class FXAASkinViewer extends SkinViewer {
      * Note: FXAA doesn't work well with transparent backgrounds.
      * It's recommended to use an opaque background and set `options.alpha` to false.
      */
-    constructor(options: SkinViewerOptions = {}) {
+    constructor(options?: SkinViewerOptions) {
         super(options);
         this.composer = new EffectComposer(this.renderer);
         this.renderPass = new RenderPass(this.scene, this.camera);
@@ -41,5 +42,10 @@ export class FXAASkinViewer extends SkinViewer {
 
     render(): void {
         this.composer.render();
+    }
+
+    dispose(): void {
+        super.dispose();
+        (this.fxaaPass.fsQuad as Pass.FullScreenQuad).dispose();
     }
 }
