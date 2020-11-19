@@ -1,4 +1,4 @@
-import { applyMixins, CapeContainer, ModelType, SkinContainer, RemoteImage, TextureSource, TextureCanvas, loadImage, isTextureSource } from "skinview-utils";
+import { applyMixins, CapeContainer, EarsContainer, ModelType, SkinContainer, RemoteImage, TextureSource } from "skinview-utils";
 import { NearestFilter, PerspectiveCamera, Scene, Texture, Vector2, WebGLRenderer } from "three";
 import { RootAnimation } from "./animation.js";
 import { BackEquipment, PlayerObject } from "./model.js";
@@ -59,18 +59,10 @@ class SkinViewer {
 
 	readonly skinCanvas: HTMLCanvasElement;
 	readonly capeCanvas: HTMLCanvasElement;
-	readonly earCanvas: HTMLCanvasElement;
+	readonly earsCanvas: HTMLCanvasElement;
 	private readonly skinTexture: Texture;
 	private readonly capeTexture: Texture;
 	private readonly earTexture: Texture;
-
-	// Animated Capes (MinecraftCapes)
-	private isCapeAnimated: boolean
-	private customCapeImage: TextureSource
-	private lastFrame: number;
-	private maxFrames: number;
-	private lastFrameTime: number;
-	private capeInterval: number;
 
 	private _disposed: boolean = false;
 	private _renderPaused: boolean = false;
@@ -89,18 +81,10 @@ class SkinViewer {
 		this.capeTexture.magFilter = NearestFilter;
 		this.capeTexture.minFilter = NearestFilter;
 
-		this.earCanvas = document.createElement("canvas");
-		this.earTexture = new Texture(this.earCanvas);
+		this.earsCanvas = document.createElement("canvas");
+		this.earTexture = new Texture(this.earsCanvas);
 		this.earTexture.magFilter = NearestFilter;
 		this.earTexture.minFilter = NearestFilter;
-
-		// Animated Capes (MinecraftCapes)
-		this.isCapeAnimated = false;
-		this.customCapeImage = new Image()
-		this.lastFrame = 0,
-		this.maxFrames = 1,
-		this.lastFrameTime = 0,
-		this.capeInterval = 100,
 
 		// scene
 		this.scene = new Scene();
@@ -108,7 +92,7 @@ class SkinViewer {
 		// Use smaller fov to avoid distortion
 		this.camera = new PerspectiveCamera(40);
 		this.camera.position.y = -8;
-		this.camera.position.z = 60;
+		this.camera.position.z = 63;
 
 		this.renderer = new WebGLRenderer({
 			canvas: this.canvas,
@@ -129,7 +113,7 @@ class SkinViewer {
 			this.loadSkin(options.skin);
 		}
 		if (options.cape !== undefined) {
-			this.loadCustomCape(options.cape);
+			this.loadCape(options.cape);
 		}
 		if (options.ears !== undefined) {
 			this.loadEars(options.ears);
@@ -163,9 +147,9 @@ class SkinViewer {
 		}
 	}
 
-	protected earsLoaded(options?: LoadOptions): void {
+	protected earsLoaded(options: LoadOptions = {}): void {
 		this.earTexture.needsUpdate = true;
-		if (toMakeVisible(options)) {
+		if (options.makeVisible !== false) {
 			this.playerObject.ears.visible = true;
 		}
 	}
@@ -189,7 +173,8 @@ class SkinViewer {
 		this.animations.runAnimationLoop(this.playerObject);
 		this.render();
 
-		this.animatedCape();
+		this.animateCape({ makeVisible: false })
+
 		window.requestAnimationFrame(() => this.draw());
 	}
 
@@ -212,6 +197,7 @@ class SkinViewer {
 		this.renderer.dispose();
 		this.skinTexture.dispose();
 		this.capeTexture.dispose();
+		this.earTexture.dispose();
 	}
 
 	get disposed(): boolean {
@@ -250,94 +236,7 @@ class SkinViewer {
 	set height(newHeight: number) {
 		this.setSize(this.width, newHeight);
 	}
-
-	/**
-	 * Code for MinecraftCapes
-	 */
-	public loadCustomCape(source: TextureSource | RemoteImage | null): void | Promise<void> {
-		if(source === null) {
-			this.resetCape();
-		} else if(isTextureSource(source)) {
-			this.customCapeImage = source;
-			this.loadCapeToCanvas(this.capeCanvas, source, 0);
-		} else {
-			loadImage(source).then(image => this.loadCustomCape(image));
-		}
-	}
-
-	protected loadCapeToCanvas(canvas: TextureCanvas, image: TextureSource, offset: number): void {
-		let canvasWidth = 64;
-		let canvasHeight = 32;
-
-		if((image.height > image.width / 2) && (image.height >= image.width)) {
-			this.isCapeAnimated = true;
-			canvasWidth = image.width
-			canvasHeight = image.width / 2
-		} else {
-			while(image.width > canvasWidth) {
-				canvasWidth *= 2
-				canvasHeight *= 2
-			}
-		}
-
-		canvas.width = canvasWidth,
-		canvas.height = canvasHeight;
-
-		const frame = canvas.getContext("2d");
-		if(frame != null) {
-			frame.clearRect(0, 0, canvas.width, canvas.height);
-			if(this.isCapeAnimated) {
-				frame.drawImage(image, 0, offset, canvas.width, canvas.height, 0, 0, canvas.width, canvas.height);
-			} else {
-				frame.drawImage(image, 0, 0);
-			}
-			this.capeLoaded();
-		}
-    }
-
-	protected animatedCape(): void {
-		if(!this.isCapeAnimated) return;
-
-		if (this.customCapeImage.height !== this.customCapeImage.width / 2) {
-			const currentTime = Date.now();
-			if (currentTime > this.lastFrameTime + this.capeInterval) {
-				this.maxFrames = this.customCapeImage.height / (this.customCapeImage.width / 2);
-				const currentFrame = this.lastFrame + 1 > this.maxFrames - 1 ? 0 : this.lastFrame + 1;
-				this.lastFrame = currentFrame,
-				this.lastFrameTime = currentTime;
-				const offset = currentFrame * (this.customCapeImage.width / 2);
-				this.loadCapeToCanvas(this.capeCanvas, this.customCapeImage, offset),
-				this.capeTexture.needsUpdate = true
-				this.playerObject.cape.visible = !this.playerObject.elytra.visible;
-			}
-		}
-	}
-
-	public loadEars(source: TextureSource | RemoteImage | null): void | Promise<void> {
-		if(source === null) {
-			this.resetEars();
-		} else if(isTextureSource(source)) {
-			this.loadEarsToCanvas(this.earCanvas, source);
-			this.earsLoaded();
-		} else {
-			loadImage(source).then(image => this.loadEars(image));
-		}
-	}
-
-	protected loadEarsToCanvas(canvas: TextureCanvas, image: TextureSource): void {
-		canvas.width = 14;
-		canvas.height = 7;
-
-		const context = canvas.getContext("2d");
-		context?.clearRect(0, 0, canvas.width, canvas.height);
-		context?.drawImage(image, 0, 0, image.width, image.height);
-	}
-
-	public toggleElytra(): void {
-		this.playerObject.cape.visible = !this.playerObject.cape.visible;
-		this.playerObject.elytra.visible = !this.playerObject.cape.visible;
-	}
 }
-interface SkinViewer extends SkinContainer<LoadOptions>, CapeContainer<CapeLoadOptions> { }
-applyMixins(SkinViewer, [SkinContainer, CapeContainer]);
+interface SkinViewer extends SkinContainer<LoadOptions>, CapeContainer<CapeLoadOptions>, EarsContainer<LoadOptions> { }
+applyMixins(SkinViewer, [SkinContainer, CapeContainer, EarsContainer]);
 export { SkinViewer };

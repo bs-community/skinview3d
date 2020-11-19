@@ -366,15 +366,8 @@ export class EarsObject extends Group {
 		// front = inside
 		const earBox = new BoxGeometry(6, 6, 1);
 		//x1: number, y1: number, x2: number, y2: number
-		setVertices(earBox,
-			//from look at back
-			toEarVertices(1, 0, 7, 1), //top
-			toEarVertices(7, 0, 13, 1), //bottom
-			toEarVertices(0, 1, 1, 7), //right
-			toEarVertices(1, 1, 7, 7), //front
-			toEarVertices(0, 1, 1, 7), //left
-			toEarVertices(8, 1, 14, 7) //back
-		);
+		setEarUVs(earBox, 0, 0, 6, 6, 1);
+		//setCapeUVs(leftWingBox, 22, 0, 10, 20, 2);
 
 		this.leftEar = new Mesh(earBox, earMaterial);
 		this.leftEar.position.x = -5.5;
@@ -412,6 +405,7 @@ export class PlayerObject extends Group {
 		this.cape = new CapeObject(capeTexture);
 		this.cape.name = "cape";
 		this.cape.position.z = -2;
+		this.cape.position.y = -2;
 		this.cape.rotation.x = 10.8 * Math.PI / 180;
 		this.cape.rotation.y = Math.PI;
 		this.add(this.cape);
@@ -419,12 +413,13 @@ export class PlayerObject extends Group {
 		this.elytra = new ElytraObject(capeTexture);
 		this.elytra.name = "elytra";
 		this.elytra.position.z = -2;
+		this.elytra.position.y = -2;
 		this.elytra.visible = false;
 		this.add(this.elytra);
 
 		this.ears = new EarsObject(earTexture);
 		this.ears.name = "ears";
-		this.ears.position.y = 3.5;
+		this.ears.position.y = 7;
 		this.add(this.ears);
 	}
 

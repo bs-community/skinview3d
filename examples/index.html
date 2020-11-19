@@ -235,8 +235,6 @@
 					<input id="cape_url_upload" type="file" accept="image/*" style="display: none;">
 					<button type="button" class="control"
 						onclick="document.getElementById('cape_url_upload').click();">Browse...</button>
-					<button type="button" class="control"
-						onclick="skinViewer.toggleElytra()">Toggle Elytra</button>
 				</div>
 			</div>
 		</div>
@@ -309,11 +307,11 @@
 			const input = document.getElementById("cape_url");
 			const url = input.value;
 			if (url === "") {
-				skinViewer.loadCustomCape(null);
+				skinViewer.loadCape(null);
 				input.setCustomValidity("");
 			} else {
 				const selectedBackEquipment = document.querySelector('input[type="radio"][name="back_equipment"]:checked');
-				skinViewer.loadCustomCape(url, { backEquipment: selectedBackEquipment.value })
+				skinViewer.loadCape(url, { backEquipment: selectedBackEquipment.value })
 					.then(() => input.setCustomValidity(""))
 					.catch(e => {
 						input.setCustomValidity("Image can't be loaded.");
