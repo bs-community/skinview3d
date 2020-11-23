@@ -189,7 +189,8 @@ class SkinViewer {
 	setSize(width: number, height: number): void {
 		this.camera.aspect = width / height;
 		this.camera.updateProjectionMatrix();
-		this.renderer.setSize(width, height);
+		//False at the end to disable updateStyle to stop the canvas having inline styles added
+		this.renderer.setSize(width, height, false);
 	}
 
 	dispose(): void {
