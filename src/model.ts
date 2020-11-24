@@ -419,7 +419,7 @@ export class PlayerObject extends Group {
 
 		this.ears = new EarsObject(earTexture);
 		this.ears.name = "ears";
-		this.ears.position.y = 7;
+		this.ears.position.y = 8;
 		this.add(this.ears);
 	}
 
