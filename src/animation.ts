@@ -162,7 +162,6 @@ export const WalkingAnimation: Animation = (player, time) => {
 	// Always add an angle for cape around the x axis
 	const basicCapeRotationX = Math.PI * 0.06;
 	player.cape.rotation.x = Math.sin(time / 1.5) * 0.06 + basicCapeRotationX;
-	player.elytra.rotation.x = player.cape.rotation.x
 };
 
 export const RunningAnimation: Animation = (player, time) => {
@@ -193,7 +192,6 @@ export const RunningAnimation: Animation = (player, time) => {
 	// to cape when running.
 	const basicCapeRotationX = Math.PI * 0.3;
 	player.cape.rotation.x = Math.sin(time * 2) * 0.1 + basicCapeRotationX;
-	player.elytra.rotation.x = player.cape.rotation.x
 
 	// What about head shaking?
 	// You shouldn't glance right and left when running dude :P

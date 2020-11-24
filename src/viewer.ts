@@ -92,7 +92,7 @@ class SkinViewer {
 		// Use smaller fov to avoid distortion
 		this.camera = new PerspectiveCamera(40);
 		this.camera.position.y = -8;
-		this.camera.position.z = 63;
+		this.camera.position.z = 64;
 
 		this.renderer = new WebGLRenderer({
 			canvas: this.canvas,
@@ -108,7 +108,7 @@ class SkinViewer {
 		this.playerObject.cape.visible = false;
 		this.playerObject.ears.visible = false;
 		this.scene.add(this.playerObject);
-
+``
 		if (options.skin !== undefined) {
 			this.loadSkin(options.skin);
 		}
