@@ -1,4 +1,4 @@
-import { applyMixins, CapeContainer, EarsContainer, ModelType, SkinContainer, RemoteImage, TextureSource } from "skinview-utils";
+import { inferModelType, isTextureSource, loadCapeToCanvas, loadImage, loadSkinToCanvas, ModelType, RemoteImage, TextureSource } from "skinview-utils";
 import { NearestFilter, PerspectiveCamera, Scene, Texture, Vector2, WebGLRenderer } from "three";
 import { RootAnimation } from "./animation.js";
 import { BackEquipment, PlayerObject } from "./model.js";
@@ -49,7 +49,7 @@ export interface SkinViewerOptions {
 	renderPaused?: boolean;
 }
 
-class SkinViewer {
+export class SkinViewer {
 	readonly canvas: HTMLCanvasElement;
 	readonly scene: Scene;
 	readonly camera: PerspectiveCamera;
@@ -132,19 +132,35 @@ class SkinViewer {
 		}
 	}
 
-	protected skinLoaded(model: ModelType, options: LoadOptions = {}): void {
-		this.skinTexture.needsUpdate = true;
-		this.playerObject.skin.modelType = model;
-		if (options.makeVisible !== false) {
-			this.playerObject.skin.visible = true;
+	loadSkin(empty: null): void;
+	loadSkin<S extends TextureSource | RemoteImage>(
+		source: S,
+		model?: ModelType | "auto-detect",
+		options?: LoadOptions
+	): S extends TextureSource ? void : Promise<void>;
+
+	loadSkin(
+		source: TextureSource | RemoteImage | null,
+		model: ModelType | "auto-detect" = "auto-detect",
+		options: LoadOptions = {}
+	): void | Promise<void> {
+		if (source === null) {
+			this.resetSkin();
+		} else if (isTextureSource(source)) {
+			loadSkinToCanvas(this.skinCanvas, source);
+			const actualModel = model === "auto-detect" ? inferModelType(this.skinCanvas) : model;
+			this.skinTexture.needsUpdate = true;
+			this.playerObject.skin.modelType = actualModel;
+			if (options.makeVisible !== false) {
+				this.playerObject.skin.visible = true;
+			}
+		} else {
+			return loadImage(source).then(image => this.loadSkin(image, model, options));
 		}
 	}
 
-	protected capeLoaded(options: CapeLoadOptions = {}): void {
-		this.capeTexture.needsUpdate = true;
-		if (options.makeVisible !== false) {
-			this.playerObject.backEquipment = options.backEquipment === undefined ? "cape" : options.backEquipment;
-		}
+	resetSkin(): void {
+		this.playerObject.skin.visible = false;
 	}
 
 	protected earsLoaded(options: LoadOptions = {}): void {
@@ -158,7 +174,7 @@ class SkinViewer {
 		this.playerObject.skin.visible = false;
 	}
 
-	protected resetCape(): void {
+	resetCape(): void {
 		this.playerObject.backEquipment = null;
 	}
 
@@ -238,6 +254,3 @@ class SkinViewer {
 		this.setSize(this.width, newHeight);
 	}
 }
-interface SkinViewer extends SkinContainer<LoadOptions>, CapeContainer<CapeLoadOptions>, EarsContainer<LoadOptions> { }
-applyMixins(SkinViewer, [SkinContainer, CapeContainer, EarsContainer]);
-export { SkinViewer };

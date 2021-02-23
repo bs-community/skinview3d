@@ -1,5 +1,5 @@
 import { ModelType } from "skinview-utils";
-import { BoxGeometry, DoubleSide, FrontSide, Group, Mesh, MeshBasicMaterial, Object3D, Texture, Vector2 } from "three";
+import { BoxGeometry, BufferAttribute, DoubleSide, FrontSide, Group, Mesh, MeshBasicMaterial, Object3D, Texture, Vector2 } from "three";
 
 function setUVs(box: BoxGeometry, u: number, v: number, width: number, height: number, depth: number, textureWidth: number, textureHeight: number): void {
 	const toFaceVertices = (x1: number, y1: number, x2: number, y2: number) => [
@@ -16,20 +16,16 @@ function setUVs(box: BoxGeometry, u: number, v: number, width: number, height: n
 	const right = toFaceVertices(u + width + depth, v + depth, u + width + depth * 2, v + height + depth);
 	const back = toFaceVertices(u + width + depth * 2, v + depth, u + width * 2 + depth * 2, v + height + depth);
 
-	box.faceVertexUvs[0] = [
-		[right[3], right[0], right[2]],
-		[right[0], right[1], right[2]],
-		[left[3], left[0], left[2]],
-		[left[0], left[1], left[2]],
-		[top[3], top[0], top[2]],
-		[top[0], top[1], top[2]],
-		[bottom[0], bottom[3], bottom[1]],
-		[bottom[3], bottom[2], bottom[1]],
-		[front[3], front[0], front[2]],
-		[front[0], front[1], front[2]],
-		[back[3], back[0], back[2]],
-		[back[0], back[1], back[2]]
-	];
+	const uvAttr = box.attributes.uv as BufferAttribute;
+	uvAttr.copyVector2sArray([
+		right[3], right[2], right[0], right[1],
+		left[3], left[2], left[0], left[1],
+		top[3], top[2], top[0], top[1],
+		bottom[0], bottom[1], bottom[3], bottom[2],
+		front[3], front[2], front[0], front[1],
+		back[3], back[2], back[0], back[1]
+	]);
+	uvAttr.needsUpdate = true;
 }
 
 function setSkinUVs(box: BoxGeometry, u: number, v: number, width: number, height: number, depth: number): void {
@@ -133,8 +129,6 @@ export class SkinObject extends Group {
 			rightArmMesh.scale.y = 12;
 			rightArmMesh.scale.z = 4;
 			setSkinUVs(rightArmBox, 40, 16, this.slim ? 3 : 4, 12, 4);
-			rightArmBox.uvsNeedUpdate = true;
-			rightArmBox.elementsNeedUpdate = true;
 		});
 
 		const rightArm2Box = new BoxGeometry();
@@ -144,8 +138,6 @@ export class SkinObject extends Group {
 			rightArm2Mesh.scale.y = 12.5;
 			rightArm2Mesh.scale.z = 4.5;
 			setSkinUVs(rightArm2Box, 40, 32, this.slim ? 3 : 4, 12, 4);
-			rightArm2Box.uvsNeedUpdate = true;
-			rightArm2Box.elementsNeedUpdate = true;
 		});
 
 		const rightArmPivot = new Group();
@@ -170,8 +162,6 @@ export class SkinObject extends Group {
 			leftArmMesh.scale.y = 12;
 			leftArmMesh.scale.z = 4;
 			setSkinUVs(leftArmBox, 32, 48, this.slim ? 3 : 4, 12, 4);
-			leftArmBox.uvsNeedUpdate = true;
-			leftArmBox.elementsNeedUpdate = true;
 		});
 
 		const leftArm2Box = new BoxGeometry();
@@ -181,8 +171,6 @@ export class SkinObject extends Group {
 			leftArm2Mesh.scale.y = 12.5;
 			leftArm2Mesh.scale.z = 4.5;
 			setSkinUVs(leftArm2Box, 48, 48, this.slim ? 3 : 4, 12, 4);
-			leftArm2Box.uvsNeedUpdate = true;
-			leftArm2Box.elementsNeedUpdate = true;
 		});
 
 		const leftArmPivot = new Group();
