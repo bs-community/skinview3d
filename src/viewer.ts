@@ -1,4 +1,4 @@
-import { inferModelType, isTextureSource, loadCapeToCanvas, loadImage, loadSkinToCanvas, ModelType, RemoteImage, TextureSource } from "skinview-utils";
+import { inferModelType, isTextureSource, loadImage, loadSkinToCanvas, loadCapeToCanvas, animateCape, loadEarsToCanvas, ModelType, RemoteImage, TextureSource } from "skinview-utils";
 import { NearestFilter, PerspectiveCamera, Scene, Texture, Vector2, WebGLRenderer } from "three";
 import { RootAnimation } from "./animation.js";
 import { BackEquipment, PlayerObject } from "./model.js";
@@ -63,6 +63,8 @@ export class SkinViewer {
 	private readonly skinTexture: Texture;
 	private readonly capeTexture: Texture;
 	private readonly earTexture: Texture;
+
+	private capeImage: TextureSource | undefined;
 
 	private _disposed: boolean = false;
 	private _renderPaused: boolean = false;
@@ -132,6 +134,9 @@ export class SkinViewer {
 		}
 	}
 
+	/**
+	 * 	Loads the Skin
+	 */
 	loadSkin(empty: null): void;
 	loadSkin<S extends TextureSource | RemoteImage>(
 		source: S,
@@ -159,14 +164,61 @@ export class SkinViewer {
 		}
 	}
 
-	resetSkin(): void {
-		this.playerObject.skin.visible = false;
+	/**
+	 * Loads the cape
+	 */
+	loadCape(empty: null): void;
+	loadCape<S extends TextureSource | RemoteImage>(
+		source: S,
+		options?: CapeLoadOptions
+	): S extends TextureSource ? void : Promise<void>;
+
+	loadCape(
+		source: TextureSource | RemoteImage | null,
+		options: CapeLoadOptions = {}
+	): void | Promise<void> {
+		if (source === null) {
+			this.resetCape();
+		} else if (isTextureSource(source)) {
+			loadCapeToCanvas(this.capeCanvas, source);
+			this.capeTexture.needsUpdate = true;
+			if (options.makeVisible !== false) {
+				this.playerObject.backEquipment = options.backEquipment === undefined ? "cape" : options.backEquipment;
+			}
+		} else {
+			return loadImage(source).then(image => {
+				this.capeImage = image
+				this.loadCape(image, options)
+			});
+		}
 	}
 
-	protected earsLoaded(options: LoadOptions = {}): void {
-		this.earTexture.needsUpdate = true;
-		if (options.makeVisible !== false) {
-			this.playerObject.ears.visible = true;
+	/**
+	 * Load Ears
+	 */
+	loadEars(empty: null): void;
+	loadEars<S extends TextureSource | RemoteImage>(
+		source: S,
+		options?: LoadOptions
+	): S extends TextureSource ? void : Promise<void>;
+
+	loadEars(
+		source: TextureSource | RemoteImage | null,
+		options: LoadOptions = {}
+	): void | Promise<void> {
+		if (source === null) {
+			this.resetEars();
+		} else if (isTextureSource(source)) {
+			loadEarsToCanvas(this.earsCanvas, source);
+			this.earTexture.needsUpdate = true;
+		} else {
+			return loadImage(source).then(image => this.loadEars(image, options));
+		}
+	}
+
+	protected animateCape(options?: LoadOptions): void {
+		if(this.capeImage != undefined) {
+			animateCape(this.capeCanvas, this.capeImage);
 		}
 	}
 
@@ -174,7 +226,7 @@ export class SkinViewer {
 		this.playerObject.skin.visible = false;
 	}
 
-	resetCape(): void {
+	protected resetCape(): void {
 		this.playerObject.backEquipment = null;
 	}
 
