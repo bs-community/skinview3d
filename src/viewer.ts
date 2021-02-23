@@ -96,13 +96,21 @@ export class SkinViewer {
 		this.camera.position.y = -8;
 		this.camera.position.z = 64;
 
-		this.renderer = new WebGLRenderer({
-			canvas: this.canvas,
-			alpha: options.alpha !== false, // default: true
-			preserveDrawingBuffer: options.preserveDrawingBuffer === true // default: false
-
-		});
-		this.renderer.setPixelRatio(window.devicePixelRatio);
+		try {
+			this.renderer = new WebGLRenderer({
+				canvas: this.canvas,
+				alpha: options.alpha !== false, // default: true
+				preserveDrawingBuffer: options.preserveDrawingBuffer === true // default: false
+			});
+			this.renderer.setPixelRatio(window.devicePixelRatio);
+		} catch(error) {
+			const errorDiv = document.createElement('div');
+			errorDiv.classList.add(`${this.canvas.id}_error`);
+			errorDiv.textContent = "Your browser doesn't support WebGL. You will encounter issues!";
+			document.body.insertBefore(errorDiv, this.canvas.nextSibling)
+			this.canvas.remove();
+			throw "No WebGL Support";
+		}
 
 		this.playerObject = new PlayerObject(this.skinTexture, this.capeTexture, this.earTexture);
 		this.playerObject.name = "player";
@@ -143,7 +151,6 @@ export class SkinViewer {
 		model?: ModelType | "auto-detect",
 		options?: LoadOptions
 	): S extends TextureSource ? void : Promise<void>;
-
 	loadSkin(
 		source: TextureSource | RemoteImage | null,
 		model: ModelType | "auto-detect" = "auto-detect",
@@ -172,7 +179,6 @@ export class SkinViewer {
 		source: S,
 		options?: CapeLoadOptions
 	): S extends TextureSource ? void : Promise<void>;
-
 	loadCape(
 		source: TextureSource | RemoteImage | null,
 		options: CapeLoadOptions = {}
@@ -201,7 +207,6 @@ export class SkinViewer {
 		source: S,
 		options?: LoadOptions
 	): S extends TextureSource ? void : Promise<void>;
-
 	loadEars(
 		source: TextureSource | RemoteImage | null,
 		options: LoadOptions = {}
@@ -211,14 +216,9 @@ export class SkinViewer {
 		} else if (isTextureSource(source)) {
 			loadEarsToCanvas(this.earsCanvas, source);
 			this.earTexture.needsUpdate = true;
+			this.playerObject.ears.visible = true;
 		} else {
 			return loadImage(source).then(image => this.loadEars(image, options));
-		}
-	}
-
-	protected animateCape(options?: LoadOptions): void {
-		if(this.capeImage != undefined) {
-			animateCape(this.capeCanvas, this.capeImage);
 		}
 	}
 
@@ -241,7 +241,9 @@ export class SkinViewer {
 		this.animations.runAnimationLoop(this.playerObject);
 		this.render();
 
-		this.animateCape({ makeVisible: false })
+		if(this.capeImage != undefined) {
+			this.capeTexture.needsUpdate = animateCape(this.capeCanvas, this.capeImage);
+		}
 
 		window.requestAnimationFrame(() => this.draw());
 	}
