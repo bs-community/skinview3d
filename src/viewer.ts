@@ -1,4 +1,4 @@
-import { inferModelType, isTextureSource, loadImage, loadSkinToCanvas, loadCapeToCanvas, animateCape, loadEarsToCanvas, ModelType, RemoteImage, TextureSource } from "skinview-utils";
+import { inferModelType, isTextureSource, loadImage, loadSkinToCanvas, loadCapeToCanvas, animateCape, loadEarsToCanvas, ModelType, RemoteImage, TextureSource } from "@james090500/skinview-utils";
 import { NearestFilter, PerspectiveCamera, Scene, Texture, Vector2, WebGLRenderer } from "three";
 import { RootAnimation } from "./animation.js";
 import { BackEquipment, PlayerObject } from "./model.js";

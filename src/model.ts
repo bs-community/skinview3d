@@ -1,4 +1,4 @@
-import { ModelType } from "skinview-utils";
+import { ModelType } from "@james090500/skinview-utils";
 import { BoxGeometry, BufferAttribute, DoubleSide, FrontSide, Group, Mesh, MeshBasicMaterial, Object3D, Texture, Vector2 } from "three";
 
 function setUVs(box: BoxGeometry, u: number, v: number, width: number, height: number, depth: number, textureWidth: number, textureHeight: number): void {
