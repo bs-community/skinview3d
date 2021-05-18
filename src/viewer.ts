@@ -22,6 +22,7 @@ export interface SkinViewerOptions {
 	width?: number;
 	height?: number;
 	skin?: RemoteImage | TextureSource;
+	model?: ModelType | "auto-detect";
 	cape?: RemoteImage | TextureSource;
 
 	/**
@@ -100,7 +101,7 @@ export class SkinViewer {
 		this.scene.add(this.playerObject);
 
 		if (options.skin !== undefined) {
-			this.loadSkin(options.skin);
+			this.loadSkin(options.skin, options.model);
 		}
 		if (options.cape !== undefined) {
 			this.loadCape(options.cape);
