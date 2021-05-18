@@ -38,8 +38,9 @@
 		"bundles"
 	],
 	"dependencies": {
+		"@types/three": "^0.128.0",
 		"skinview-utils": "^0.6.0",
-		"three": "^0.125.2"
+		"three": "^0.128.0"
 	},
 	"devDependencies": {
 		"@rollup/plugin-node-resolve": "^13.0.0",
