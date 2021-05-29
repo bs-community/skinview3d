@@ -1,5 +1,5 @@
 import { inferModelType, isTextureSource, loadCapeToCanvas, loadImage, loadSkinToCanvas, ModelType, RemoteImage, TextureSource } from "skinview-utils";
-import { NearestFilter, PerspectiveCamera, Scene, Texture, Vector2, WebGLRenderer } from "three";
+import { NearestFilter, PerspectiveCamera, Scene, Texture, Vector2, WebGLRenderer, TextureLoader, EquirectangularReflectionMapping } from "three";
 import { RootAnimation } from "./animation.js";
 import { BackEquipment, PlayerObject } from "./model.js";
 
@@ -47,6 +47,12 @@ export interface SkinViewerOptions {
 	 * If this option is true, rendering and animation loops will not start.
 	 */
 	renderPaused?: boolean;
+
+	/**
+	 * Background image to render as a skybox in the skin viewer.
+	 * When this is undefined, it will just default to using the colored background.
+	 */
+	backgroundPana?: string;
 }
 
 export class SkinViewer {
@@ -111,6 +117,9 @@ export class SkinViewer {
 		}
 		if (options.height !== undefined) {
 			this.height = options.height;
+		}
+		if (options.backgroundPana !== undefined) {
+			this.backgroundPana = options.backgroundPana;
 		}
 
 		if (options.renderPaused === true) {
@@ -243,5 +252,13 @@ export class SkinViewer {
 
 	set height(newHeight: number) {
 		this.setSize(this.width, newHeight);
+	}
+
+	set backgroundPana(url: string) {
+		const loader = new TextureLoader();
+		loader.load(url , (texture) => {  
+			texture.mapping = EquirectangularReflectionMapping;
+			this.scene.background = texture;
+		});
 	}
 }
