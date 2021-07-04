@@ -1,5 +1,5 @@
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
-import { Pass } from "three/examples/jsm/postprocessing/Pass.js";
+import { FullScreenQuad } from "three/examples/jsm/postprocessing/Pass.js";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
 import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
 import { FXAAShader } from "three/examples/jsm/shaders/FXAAShader.js";
@@ -46,6 +46,6 @@ export class FXAASkinViewer extends SkinViewer {
 
     dispose(): void {
         super.dispose();
-        (this.fxaaPass.fsQuad as Pass.FullScreenQuad).dispose();
+        (this.fxaaPass.fsQuad as FullScreenQuad).dispose();
     }
 }

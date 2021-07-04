@@ -6,6 +6,9 @@ extends:
   - 'eslint:recommended'
   - 'plugin:@typescript-eslint/eslint-recommended'
   - 'plugin:@typescript-eslint/recommended'
+ignorePatterns:
+  - bundles/**/*
+  - libs/**/*
 rules:
   '@typescript-eslint/no-inferrable-types': off
   '@typescript-eslint/interface-name-prefix': off
