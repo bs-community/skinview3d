@@ -168,7 +168,9 @@ export class SkinViewer {
 				this.playerObject.skin.visible = true;
 			}
 		} else {
-			return loadImage(source).then(image => this.loadSkin(image, model, options));
+			return loadImage(source).then(image => this.loadSkin(image, model, options)).catch(e => {
+				console.log(e);
+			});
 		}
 	}
 
@@ -196,6 +198,8 @@ export class SkinViewer {
 			return loadImage(source).then(image => {
 				this.capeImage = image
 				this.loadCape(image, options)
+			}).catch(e => {
+				console.log(e);
 			});
 		}
 	}
@@ -219,7 +223,9 @@ export class SkinViewer {
 			this.earTexture.needsUpdate = true;
 			this.playerObject.ears.visible = true;
 		} else {
-			return loadImage(source).then(image => this.loadEars(image, options));
+			return loadImage(source).then(image => this.loadEars(image, options)).catch(e => {
+				console.log(e);
+			});
 		}
 	}
 
