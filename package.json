@@ -39,7 +39,7 @@
 	],
 	"dependencies": {
 		"@types/three": "^0.129.1",
-		"@james090500/skinview-utils": "^0.6.1",
+		"@james090500/skinview-utils": "^0.6.2",
 		"three": "^0.129.0"
 	},
 	"devDependencies": {
