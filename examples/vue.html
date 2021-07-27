@@ -1,0 +1,51 @@
+<html>
+    <head>
+        <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+        <script src="../bundles/skinview3d.bundle.js"></script>
+    </head>
+    <body>
+        <div id="app">
+            <button @click="toggleCape">show model</button>
+            <player-model v-if="showCape"/>
+            {{showCape}}
+        </div>
+        <script>
+            Vue.component('player-model', {
+                template: '<canvas id="skin_container"></canvas>',
+                mounted() {
+                    this.skinViewer = new skinview3d.SkinViewer({
+                        canvas: document.getElementById("skin_container"),
+                        width: 300,
+                        height: 400,
+                        skin: `https://minecraftapi.net/api/v1/profile/james090500/skin`,
+                        cape: "img/animated.png",
+                        ears: null
+                    });
+
+                    // Control objects with your mouse!
+                    let control = skinview3d.createOrbitControls(this.skinViewer);
+                    control.enableRotate = true;
+                    control.enableZoom = false;
+                    control.enablePan = false;
+
+                    this.skinViewer.playerObject.rotation.y = Math.PI;
+                },
+                beforeDestroy() {
+                    this.skinViewer.dispose();
+                }
+            })
+
+            var app = new Vue({
+                el: '#app',
+                data: {
+                    showCape: false
+                },
+                methods: {
+                    toggleCape() {
+                        this.showCape = !this.showCape
+                    }
+                }
+            })
+        </script>
+    </body>
+</html>
