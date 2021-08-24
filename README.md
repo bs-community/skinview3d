@@ -74,16 +74,14 @@ Three.js powered Minecraft skin viewer.
 skinview3d supports FXAA (fast approximate anti-aliasing).
 To enable it, you need to replace `SkinViewer` with `FXAASkinViewer`.
 
-It's recommended to use an opaque background when FXAA is enabled,
-as transparent background may look buggy.
+You must use an **opaque** background when FXAA is enabled,
+because FXAA is incompatible with transparent backgrounds.
 
+By default, the background color is white.
+To use a different color:
 ```javascript
-let skinViewer = new skinview3d.FXAASkinViewer({
-	// we do not use transparent background, so disable alpha to improve performance
-	alpha: false,
-	...
-});
-// set the background color
+let skinViewer = new skinview3d.FXAASkinViewer(...);
+// Set the background color to blue
 skinViewer.renderer.setClearColor(0x5a76f3);
 ```
 

@@ -394,8 +394,7 @@
 
 		function initializeViewer() {
 			skinViewer = new skinview3d.FXAASkinViewer({
-				canvas: document.getElementById("skin_container"),
-				alpha: false
+				canvas: document.getElementById("skin_container")
 			});
 			skinViewer.renderer.setClearColor(0x5a76f3);
 			orbitControl = skinview3d.createOrbitControls(skinViewer);
