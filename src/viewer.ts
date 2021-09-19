@@ -65,6 +65,10 @@ export class SkinViewer {
 	private _disposed: boolean = false;
 	private _renderPaused: boolean = false;
 
+	private animationID: number | null;
+	private onContextLost: (event: Event) => void;
+	private onContextRestored: () => void;
+
 	constructor(options: SkinViewerOptions = {}) {
 		this.canvas = options.canvas === undefined ? document.createElement("canvas") : options.canvas;
 
@@ -115,9 +119,27 @@ export class SkinViewer {
 
 		if (options.renderPaused === true) {
 			this._renderPaused = true;
+			this.animationID = null;
 		} else {
-			window.requestAnimationFrame(() => this.draw());
+			this.animationID = window.requestAnimationFrame(() => this.draw());
 		}
+
+		this.onContextLost = (event: Event) => {
+			event.preventDefault();
+			if (this.animationID !== null) {
+				window.cancelAnimationFrame(this.animationID);
+				this.animationID = null;
+			}
+		};
+
+		this.onContextRestored = () => {
+			if (!this._renderPaused && !this._disposed && this.animationID === null) {
+				this.animationID = window.requestAnimationFrame(() => this.draw());
+			}
+		};
+
+		this.canvas.addEventListener("webglcontextlost", this.onContextLost, false);
+		this.canvas.addEventListener("webglcontextrestored", this.onContextRestored, false);
 	}
 
 	loadSkin(empty: null): void;
@@ -179,12 +201,9 @@ export class SkinViewer {
 	}
 
 	private draw(): void {
-		if (this.disposed || this._renderPaused) {
-			return;
-		}
 		this.animations.runAnimationLoop(this.playerObject);
 		this.render();
-		window.requestAnimationFrame(() => this.draw());
+		this.animationID = window.requestAnimationFrame(() => this.draw());
 	}
 
 	/**
@@ -203,6 +222,15 @@ export class SkinViewer {
 
 	dispose(): void {
 		this._disposed = true;
+
+		this.canvas.removeEventListener("webglcontextlost", this.onContextLost, false);
+		this.canvas.removeEventListener("webglcontextrestored", this.onContextRestored, false);
+
+		if (this.animationID !== null) {
+			window.cancelAnimationFrame(this.animationID);
+			this.animationID = null;
+		}
+
 		this.renderer.dispose();
 		this.skinTexture.dispose();
 		this.capeTexture.dispose();
@@ -222,10 +250,13 @@ export class SkinViewer {
 	}
 
 	set renderPaused(value: boolean) {
-		const toResume = !this.disposed && !value && this._renderPaused;
 		this._renderPaused = value;
-		if (toResume) {
-			window.requestAnimationFrame(() => this.draw());
+
+		if (this._renderPaused && this.animationID !== null) {
+			window.cancelAnimationFrame(this.animationID);
+			this.animationID = null;
+		} else if (!this._renderPaused && !this._disposed && !this.renderer.getContext().isContextLost() && this.animationID == null) {
+			this.animationID = window.requestAnimationFrame(() => this.draw());
 		}
 	}
 
