@@ -77,12 +77,12 @@ To enable it, you need to replace `SkinViewer` with `FXAASkinViewer`.
 You must use an **opaque** background when FXAA is enabled,
 because FXAA is incompatible with transparent backgrounds.
 
-By default, the background color is white.
+By default, when FXAA is enabled, the background color is white.
 To use a different color:
 ```javascript
 let skinViewer = new skinview3d.FXAASkinViewer(...);
 // Set the background color to blue
-skinViewer.renderer.setClearColor(0x5a76f3);
+skinViewer.background = 0x5a76f3;
 ```
 
 # Build

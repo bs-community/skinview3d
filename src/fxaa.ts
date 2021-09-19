@@ -14,9 +14,12 @@ export class FXAASkinViewer extends SkinViewer {
     constructor(options?: SkinViewerOptions) {
         // Force options.alpha to false, because FXAA is incompatible with transparent backgrounds
         if (options === undefined) {
-            options = { alpha: false };
+            options = { alpha: false, background: "white" };
         } else {
             options.alpha = false;
+            if (options.background === undefined) {
+                options.background = "white";
+            }
         }
 
         super(options);

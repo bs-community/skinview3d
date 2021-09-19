@@ -1,5 +1,5 @@
 import { inferModelType, isTextureSource, loadCapeToCanvas, loadImage, loadSkinToCanvas, ModelType, RemoteImage, TextureSource } from "skinview-utils";
-import { NearestFilter, PerspectiveCamera, Scene, Texture, Vector2, WebGLRenderer } from "three";
+import { Color, ColorRepresentation, NearestFilter, PerspectiveCamera, Scene, Texture, Vector2, WebGLRenderer } from "three";
 import { RootAnimation } from "./animation.js";
 import { BackEquipment, PlayerObject } from "./model.js";
 
@@ -47,6 +47,11 @@ export interface SkinViewerOptions {
 	 * If this option is true, rendering and animation loops will not start.
 	 */
 	renderPaused?: boolean;
+
+	/**
+	 * The background of the scene. Default is transparent.
+	 */
+	background?: ColorRepresentation | Texture;
 }
 
 export class SkinViewer {
@@ -115,6 +120,9 @@ export class SkinViewer {
 		}
 		if (options.height !== undefined) {
 			this.height = options.height;
+		}
+		if (options.background !== undefined) {
+			this.background = options.background;
 		}
 
 		if (options.renderPaused === true) {
@@ -274,5 +282,17 @@ export class SkinViewer {
 
 	set height(newHeight: number) {
 		this.setSize(this.width, newHeight);
+	}
+
+	get background(): null | Color | Texture {
+		return this.scene.background;
+	}
+
+	set background(value: null | ColorRepresentation | Texture) {
+		if (value === null || value instanceof Color || value instanceof Texture) {
+			this.scene.background = value;
+		} else {
+			this.scene.background = new Color(value);
+		}
 	}
 }
