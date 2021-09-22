@@ -22,17 +22,11 @@
 
 		h1,
 		h2 {
-			margin-bottom: 0;
-		}
-
-		input[type="number"] {
-			max-width: 60px;
+			margin: 5px 0 0 0;
 		}
 
 		input[type="text"] {
 			box-sizing: border-box;
-			max-width: 250px;
-			width: calc(100% - 100px);
 		}
 
 		.control {
@@ -118,18 +112,18 @@
 
 		<div class="control-section">
 			<h1>Canvas Size</h1>
-			<label class="control">Width: <input id="canvas_width" type="number" value="300"></label>
-			<label class="control">Height: <input id="canvas_height" type="number" value="300"></label>
+			<label class="control">Width: <input id="canvas_width" type="number" value="300" size="4"></label>
+			<label class="control">Height: <input id="canvas_height" type="number" value="300" size="4"></label>
 		</div>
 
 		<div class="control-section">
 			<h1>Animation</h1>
-			<label class="control">Global Speed: <input id="global_animation_speed" type="number" value="1" step="0.1"></label>
+			<label class="control">Global Speed: <input id="global_animation_speed" type="number" value="1" step="0.1" size="3"></label>
 			<button id="animation_pause_resume" type="button" class="control">Pause / Resume</button>
 			<div>
 				<h2>Rotate</h2>
 				<label class="control"><input id="rotate_animation" type="checkbox"> Enable</label>
-				<label class="control">Speed: <input id="rotate_animation_speed" type="number" value="1" step="0.1"></label>
+				<label class="control">Speed: <input id="rotate_animation_speed" type="number" value="1" step="0.1" size="3"></label>
 			</div>
 			<div>
 				<h2>Walk / Run / Fly</h2>
@@ -139,7 +133,7 @@
 					<label><input type="radio" id="primary_animation_run" name="primary_animation" value="run"> Run</label>
 					<label><input type="radio" id="primary_animation_fly" name="primary_animation" value="fly"> Fly</label>
 				</div>
-				<label class="control">Speed: <input id="primary_animation_speed" type="number" value="1" step="0.1"></label>
+				<label class="control">Speed: <input id="primary_animation_speed" type="number" value="1" step="0.1" size="3"></label>
 			</div>
 		</div>
 
@@ -197,10 +191,10 @@
 		</div>
 
 		<div class="control-section">
-			<h1>Textures</h1>
+			<h1>Skin</h1>
 			<div>
 				<div class="control">
-					<label>Skin URL: <input id="skin_url" type="text" value="img/1_8_texturemap_redux.png" placeholder="none" list="default_skins"></label>
+					<label>URL: <input id="skin_url" type="text" value="img/1_8_texturemap_redux.png" placeholder="none" list="default_skins" size="20"></label>
 					<datalist id="default_skins">
 						<option value="img/1_8_texturemap_redux.png">
 						<option value="img/hacksore.png">
@@ -214,6 +208,8 @@
 					<button type="button" class="control"
 						onclick="document.getElementById('skin_url_upload').click();">Browse...</button>
 				</div>
+			</div>
+			<div>
 				<label class="control">Model:
 					<select id="skin_model">
 						<option value="auto-detect" selected>Auto detect</option>
@@ -222,32 +218,36 @@
 					</select>
 				</label>
 			</div>
-			<div>
-				<div class="control">
-					<label>Cape URL: <input id="cape_url" type="text" value="" placeholder="none" list="default_capes"></label>
-					<datalist id="default_capes">
-						<option value="">
-						<option value="img/mojang_cape.png">
-						<option value="img/legacy_cape.png">
-						<option value="img/hd_cape.png">
-					</datalist>
-					<input id="cape_url_upload" type="file" class="hidden" accept="image/*">
-					<button id="cape_url_unset" type="button" class="control hidden">Unset</button>
-					<button type="button" class="control"
-						onclick="document.getElementById('cape_url_upload').click();">Browse...</button>
-				</div>
+		</div>
+
+		<div class="control-section">
+			<h1>Cape</h1>
+			<div class="control">
+				<label>URL: <input id="cape_url" type="text" value="" placeholder="none" list="default_capes" size="20"></label>
+				<datalist id="default_capes">
+					<option value="">
+					<option value="img/mojang_cape.png">
+					<option value="img/legacy_cape.png">
+					<option value="img/hd_cape.png">
+				</datalist>
+				<input id="cape_url_upload" type="file" class="hidden" accept="image/*">
+				<button id="cape_url_unset" type="button" class="control hidden">Unset</button>
+				<button type="button" class="control"
+					onclick="document.getElementById('cape_url_upload').click();">Browse...</button>
 			</div>
-			<div>
-				<div class="control">
-					<label>Panorama URL: <input id="panorama_url" type="text" value="" placeholder="none" list="default_panorama"></label>
-					<datalist id="default_panorama">
-						<option value="">
-					</datalist>
-					<input id="panorama_url_upload" type="file" class="hidden" accept="image/*">
-					<button id="panorama_url_unset" type="button" class="control hidden">Unset</button>
-					<button type="button" class="control"
-						onclick="document.getElementById('panorama_url_upload').click();">Browse...</button>
-				</div>
+		</div>
+
+		<div class="control-section">
+			<h1>Panorama</h1>
+			<div class="control">
+				<label>URL: <input id="panorama_url" type="text" value="" placeholder="none" list="default_panorama" size="20"></label>
+				<datalist id="default_panorama">
+					<option value="">
+				</datalist>
+				<input id="panorama_url_upload" type="file" class="hidden" accept="image/*">
+				<button id="panorama_url_unset" type="button" class="control hidden">Unset</button>
+				<button type="button" class="control"
+					onclick="document.getElementById('panorama_url_upload').click();">Browse...</button>
 			</div>
 		</div>
 
