@@ -101,6 +101,10 @@
 			margin-top: 0;
 			padding-left: 20px;
 		}
+
+		.hidden {
+			display: none;
+		}
 	</style>
 </head>
 
@@ -205,7 +209,8 @@
 						<option value="img/ironman_hd.png">
 						<option value="img/sethbling.png">
 					</datalist>
-					<input id="skin_url_upload" type="file" accept="image/*" style="display: none;">
+					<input id="skin_url_upload" type="file" class="hidden" accept="image/*">
+					<button id="skin_url_unset" type="button" class="control hidden">Unset</button>
 					<button type="button" class="control"
 						onclick="document.getElementById('skin_url_upload').click();">Browse...</button>
 				</div>
@@ -226,7 +231,8 @@
 						<option value="img/legacy_cape.png">
 						<option value="img/hd_cape.png">
 					</datalist>
-					<input id="cape_url_upload" type="file" accept="image/*" style="display: none;">
+					<input id="cape_url_upload" type="file" class="hidden" accept="image/*">
+					<button id="cape_url_unset" type="button" class="control hidden">Unset</button>
 					<button type="button" class="control"
 						onclick="document.getElementById('cape_url_upload').click();">Browse...</button>
 				</div>
@@ -237,7 +243,8 @@
 					<datalist id="default_panorama">
 						<option value="">
 					</datalist>
-					<input id="panorama_url_upload" type="file" accept="image/*" style="display: none;">
+					<input id="panorama_url_upload" type="file" class="hidden" accept="image/*">
+					<button id="panorama_url_unset" type="button" class="control hidden">Unset</button>
 					<button type="button" class="control"
 						onclick="document.getElementById('panorama_url_upload').click();">Browse...</button>
 				</div>
@@ -281,9 +288,27 @@
 		let rotateAnimation;
 		let primaryAnimation;
 
+		function obtainTextureUrl(id) {
+			const urlInput = document.getElementById(id);
+			const fileInput = document.getElementById(id + "_upload");
+			const unsetButton = document.getElementById(id + "_unset");
+			const file = fileInput.files[0];
+			if (file === undefined) {
+				if (!unsetButton.classList.contains("hidden")) {
+					unsetButton.classList.add("hidden");
+				}
+				return urlInput.value;
+			} else {
+				unsetButton.classList.remove("hidden");
+				urlInput.value = `Local file: ${file.name}`;
+				urlInput.readOnly = true;
+				return URL.createObjectURL(file);
+			}
+		}
+
 		function reloadSkin() {
 			const input = document.getElementById("skin_url");
-			const url = input.value;
+			const url = obtainTextureUrl("skin_url");
 			if (url === "") {
 				skinViewer.loadSkin(null);
 				input.setCustomValidity("");
@@ -299,7 +324,7 @@
 
 		function reloadCape() {
 			const input = document.getElementById("cape_url");
-			const url = input.value;
+			const url = obtainTextureUrl("cape_url");
 			if (url === "") {
 				skinViewer.loadCape(null);
 				input.setCustomValidity("");
@@ -316,7 +341,7 @@
 
 		function reloadPanorama() {
 			const input = document.getElementById("panorama_url");
-			const url = input.value;
+			const url = obtainTextureUrl("panorama_url");
 			if (url === "") {
 				skinViewer.background = "white";
 				input.setCustomValidity("");
@@ -376,22 +401,27 @@
 				}
 			}
 
-			const initializeUploadButton = (urlInput, browseButton, callback) => {
-				const reader = new FileReader();
-				reader.addEventListener("load", e => {
-					document.getElementById(urlInput).value = reader.result;
+			const initializeUploadButton = (id, callback) => {
+				const urlInput = document.getElementById(id);
+				const fileInput = document.getElementById(id + "_upload");
+				const unsetButton = document.getElementById(id + "_unset");
+				const unsetAction = () => {
+					urlInput.readOnly = false;
+					urlInput.value = "";
+					fileInput.value = fileInput.defaultValue;
 					callback();
-				});
-				document.getElementById(browseButton).addEventListener("change", e => {
-					const file = e.target.files[0];
-					if (file !== undefined) {
-						reader.readAsDataURL(file);
+				};
+				fileInput.addEventListener("change", e => callback());
+				urlInput.addEventListener("keydown", e => {
+					if (e.key === "Backspace" && urlInput.readOnly) {
+						unsetAction();
 					}
 				});
+				unsetButton.addEventListener("click", e => unsetAction());
 			};
-			initializeUploadButton("skin_url", "skin_url_upload", reloadSkin);
-			initializeUploadButton("cape_url", "cape_url_upload", reloadCape);
-			initializeUploadButton("panorama_url", "panorama_url_upload", reloadPanorama);
+			initializeUploadButton("skin_url", reloadSkin);
+			initializeUploadButton("cape_url", reloadCape);
+			initializeUploadButton("panorama_url", reloadPanorama);
 
 			document.getElementById("skin_url").addEventListener("change", () => reloadSkin());
 			document.getElementById("skin_model").addEventListener("change", () => reloadSkin());
