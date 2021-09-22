@@ -52,6 +52,11 @@ export interface SkinViewerOptions {
 	 * The background of the scene. Default is transparent.
 	 */
 	background?: ColorRepresentation | Texture;
+
+	/**
+	 * The panorama background to use. This option overrides 'background' option.
+	 */
+	panorama?: RemoteImage | TextureSource;
 }
 
 export class SkinViewer {
@@ -124,6 +129,9 @@ export class SkinViewer {
 		}
 		if (options.background !== undefined) {
 			this.background = options.background;
+		}
+		if (options.panorama !== undefined) {
+			this.loadPanorama(options.panorama);
 		}
 
 		if (options.renderPaused === true) {
