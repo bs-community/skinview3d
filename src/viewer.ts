@@ -1,5 +1,5 @@
 import { inferModelType, isTextureSource, loadCapeToCanvas, loadImage, loadSkinToCanvas, ModelType, RemoteImage, TextureSource } from "skinview-utils";
-import { Color, ColorRepresentation, NearestFilter, PerspectiveCamera, Scene, Texture, Vector2, WebGLRenderer } from "three";
+import { Color, ColorRepresentation, EquirectangularReflectionMapping, NearestFilter, PerspectiveCamera, Scene, Texture, Vector2, WebGLRenderer } from "three";
 import { RootAnimation } from "./animation.js";
 import { BackEquipment, PlayerObject } from "./model.js";
 
@@ -66,6 +66,7 @@ export class SkinViewer {
 	readonly capeCanvas: HTMLCanvasElement;
 	private readonly skinTexture: Texture;
 	private readonly capeTexture: Texture;
+	private backgroundTexture: Texture | null = null;
 
 	private _disposed: boolean = false;
 	private _renderPaused: boolean = false;
@@ -208,6 +209,27 @@ export class SkinViewer {
 		this.playerObject.backEquipment = null;
 	}
 
+	loadPanorama<S extends TextureSource | RemoteImage>(
+		source: S
+	): S extends TextureSource ? void : Promise<void>;
+
+	loadPanorama<S extends TextureSource | RemoteImage>(
+		source: S
+	): void | Promise<void> {
+		if (isTextureSource(source)) {
+			if (this.backgroundTexture !== null) {
+				this.backgroundTexture.dispose();
+			}
+			this.backgroundTexture = new Texture();
+			this.backgroundTexture.image = source;
+			this.backgroundTexture.mapping = EquirectangularReflectionMapping;
+			this.backgroundTexture.needsUpdate = true;
+			this.scene.background = this.backgroundTexture;
+		} else {
+			return loadImage(source).then(image => this.loadPanorama(image));
+		}
+	}
+
 	private draw(): void {
 		this.animations.runAnimationLoop(this.playerObject);
 		this.render();
@@ -242,6 +264,10 @@ export class SkinViewer {
 		this.renderer.dispose();
 		this.skinTexture.dispose();
 		this.capeTexture.dispose();
+		if (this.backgroundTexture !== null) {
+			this.backgroundTexture.dispose();
+			this.backgroundTexture = null;
+		}
 	}
 
 	get disposed(): boolean {
@@ -293,6 +319,10 @@ export class SkinViewer {
 			this.scene.background = value;
 		} else {
 			this.scene.background = new Color(value);
+		}
+		if (this.backgroundTexture !== null && value !== this.backgroundTexture) {
+			this.backgroundTexture.dispose();
+			this.backgroundTexture = null;
 		}
 	}
 }

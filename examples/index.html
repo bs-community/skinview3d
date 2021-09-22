@@ -231,6 +231,17 @@
 						onclick="document.getElementById('cape_url_upload').click();">Browse...</button>
 				</div>
 			</div>
+			<div>
+				<div class="control">
+					<label>Panorama URL: <input id="panorama_url" type="text" value="" placeholder="none" list="default_panorama"></label>
+					<datalist id="default_panorama">
+						<option value="">
+					</datalist>
+					<input id="panorama_url_upload" type="file" accept="image/*" style="display: none;">
+					<button type="button" class="control"
+						onclick="document.getElementById('panorama_url_upload').click();">Browse...</button>
+				</div>
+			</div>
 		</div>
 
 		<div class="control-section">
@@ -303,6 +314,22 @@
 			}
 		}
 
+		function reloadPanorama() {
+			const input = document.getElementById("panorama_url");
+			const url = input.value;
+			if (url === "") {
+				skinViewer.background = "white";
+				input.setCustomValidity("");
+			} else {
+				skinViewer.loadPanorama(url)
+					.then(() => input.setCustomValidity(""))
+					.catch(e => {
+						input.setCustomValidity("Image can't be loaded.");
+						console.error(e);
+					});
+			}
+		}
+
 		function initializeControls() {
 			document.getElementById("canvas_width").addEventListener("change", e => skinViewer.width = e.target.value);
 			document.getElementById("canvas_height").addEventListener("change", e => skinViewer.height = e.target.value);
@@ -348,31 +375,28 @@
 						.addEventListener("change", e => skinViewer.playerObject.skin[part][layer].visible = e.target.checked);
 				}
 			}
-			const skinReader = new FileReader();
-			skinReader.addEventListener("load", e => {
-				document.getElementById("skin_url").value = skinReader.result;
-				reloadSkin();
-			});
-			document.getElementById("skin_url_upload").addEventListener("change", e => {
-				const file = e.target.files[0];
-				if (file !== undefined) {
-					skinReader.readAsDataURL(file);
-				}
-			});
-			const capeReader = new FileReader();
-			capeReader.addEventListener("load", e => {
-				document.getElementById("cape_url").value = capeReader.result;
-				reloadCape();
-			});
-			document.getElementById("cape_url_upload").addEventListener("change", e => {
-				const file = e.target.files[0];
-				if (file !== undefined) {
-					capeReader.readAsDataURL(file);
-				}
-			});
+
+			const initializeUploadButton = (urlInput, browseButton, callback) => {
+				const reader = new FileReader();
+				reader.addEventListener("load", e => {
+					document.getElementById(urlInput).value = reader.result;
+					callback();
+				});
+				document.getElementById(browseButton).addEventListener("change", e => {
+					const file = e.target.files[0];
+					if (file !== undefined) {
+						reader.readAsDataURL(file);
+					}
+				});
+			};
+			initializeUploadButton("skin_url", "skin_url_upload", reloadSkin);
+			initializeUploadButton("cape_url", "cape_url_upload", reloadCape);
+			initializeUploadButton("panorama_url", "panorama_url_upload", reloadPanorama);
+
 			document.getElementById("skin_url").addEventListener("change", () => reloadSkin());
 			document.getElementById("skin_model").addEventListener("change", () => reloadSkin());
 			document.getElementById("cape_url").addEventListener("change", () => reloadCape());
+			document.getElementById("panorama_url").addEventListener("change", () => reloadPanorama());
 
 			for (const el of document.querySelectorAll('input[type="radio"][name="back_equipment"]')) {
 				el.addEventListener("change", e => {
@@ -394,8 +418,7 @@
 
 		function initializeViewer() {
 			skinViewer = new skinview3d.FXAASkinViewer({
-				canvas: document.getElementById("skin_container"),
-				background: 0x5a76f3
+				canvas: document.getElementById("skin_container")
 			});
 			orbitControl = skinview3d.createOrbitControls(skinViewer);
 			rotateAnimation = null;
@@ -424,6 +447,7 @@
 			}
 			reloadSkin();
 			reloadCape();
+			reloadPanorama();
 		}
 
 		initializeControls();
