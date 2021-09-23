@@ -38,11 +38,17 @@ Three.js powered Minecraft skin viewer.
 	// Load a cape
 	skinViewer.loadCape("img/cape.png");
 
-	// Load a elytra (from a cape texture)
+	// Load an elytra (from a cape texture)
 	skinViewer.loadCape("img/cape.png", { backEquipment: "elytra" });
 
 	// Unload(hide) the cape / elytra
 	skinViewer.loadCape(null);
+
+	// Set the background color
+	skinViewer.background = 0x5a76f3;
+
+	// Set the background to a panoramic image!
+	skinViewer.loadPanorama("img/panorama1.png");
 
 	// Control objects with your mouse!
 	let control = skinview3d.createOrbitControls(skinViewer);
@@ -74,16 +80,8 @@ Three.js powered Minecraft skin viewer.
 skinview3d supports FXAA (fast approximate anti-aliasing).
 To enable it, you need to replace `SkinViewer` with `FXAASkinViewer`.
 
-You must use an **opaque** background when FXAA is enabled,
-because FXAA is incompatible with transparent backgrounds.
-
-By default, when FXAA is enabled, the background color is white.
-To use a different color:
-```javascript
-let skinViewer = new skinview3d.FXAASkinViewer(...);
-// Set the background color to blue
-skinViewer.background = 0x5a76f3;
-```
+Note that FXAA is incompatible with transparent backgrounds.
+So when FXAA is enabled, the default background color will be white instead of transparent.
 
 # Build
 `npm run build`
