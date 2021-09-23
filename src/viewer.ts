@@ -1,5 +1,5 @@
 import { inferModelType, isTextureSource, loadCapeToCanvas, loadImage, loadSkinToCanvas, ModelType, RemoteImage, TextureSource } from "skinview-utils";
-import { Color, ColorRepresentation, EquirectangularReflectionMapping, NearestFilter, PerspectiveCamera, Scene, Texture, Vector2, WebGLRenderer } from "three";
+import { Color, ColorRepresentation, EquirectangularReflectionMapping, Group, NearestFilter, PerspectiveCamera, Scene, Texture, Vector2, WebGLRenderer } from "three";
 import { RootAnimation } from "./animation.js";
 import { BackEquipment, PlayerObject } from "./model.js";
 
@@ -57,6 +57,12 @@ export interface SkinViewerOptions {
 	 * The panorama background to use. This option overrides 'background' option.
 	 */
 	panorama?: RemoteImage | TextureSource;
+
+	/**
+	 * Camera vertical field of view, in degrees. Default is 50.
+	 * The distance between the object and the camera is automatically computed.
+	 */
+	fov?: number;
 }
 
 export class SkinViewer {
@@ -65,6 +71,7 @@ export class SkinViewer {
 	readonly camera: PerspectiveCamera;
 	readonly renderer: WebGLRenderer;
 	readonly playerObject: PlayerObject;
+	readonly playerWrapper: Group;
 	readonly animations: RootAnimation = new RootAnimation();
 
 	readonly skinCanvas: HTMLCanvasElement;
@@ -96,9 +103,7 @@ export class SkinViewer {
 
 		this.scene = new Scene();
 
-		// Use smaller fov to avoid distortion
-		this.camera = new PerspectiveCamera(40);
-		this.camera.position.y = -8;
+		this.camera = new PerspectiveCamera();
 		this.camera.position.z = 60;
 
 		this.renderer = new WebGLRenderer({
@@ -113,7 +118,10 @@ export class SkinViewer {
 		this.playerObject.name = "player";
 		this.playerObject.skin.visible = false;
 		this.playerObject.cape.visible = false;
-		this.scene.add(this.playerObject);
+		this.playerWrapper = new Group();
+		this.playerWrapper.add(this.playerObject);
+		this.playerWrapper.position.y = 8;
+		this.scene.add(this.playerWrapper);
 
 		if (options.skin !== undefined) {
 			this.loadSkin(options.skin, options.model);
@@ -133,6 +141,7 @@ export class SkinViewer {
 		if (options.panorama !== undefined) {
 			this.loadPanorama(options.panorama);
 		}
+		this.fov = options.fov === undefined ? 50 : options.fov;
 
 		if (options.renderPaused === true) {
 			this._renderPaused = true;
@@ -332,5 +341,19 @@ export class SkinViewer {
 			this.backgroundTexture.dispose();
 			this.backgroundTexture = null;
 		}
+	}
+
+	get fov(): number {
+		return this.camera.fov;
+	}
+
+	set fov(value: number) {
+		this.camera.fov = value;
+		let distance = 4 + 20 / Math.tan(value / 180 * Math.PI / 2);
+		if (distance < 10) {
+			distance = 10;
+		}
+		this.camera.position.multiplyScalar(distance / this.camera.position.length());
+		this.camera.updateProjectionMatrix();
 	}
 }

@@ -50,6 +50,9 @@ Three.js powered Minecraft skin viewer.
 	// Set the background to a panoramic image!
 	skinViewer.loadPanorama("img/panorama1.png");
 
+	// Change camera FOV
+	skinViewer.fov = 70;
+
 	// Control objects with your mouse!
 	let control = skinview3d.createOrbitControls(skinViewer);
 	control.enableRotate = true;

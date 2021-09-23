@@ -111,9 +111,14 @@
 		<button id="reset_all" type="button" class="control">Reset All</button>
 
 		<div class="control-section">
-			<h1>Canvas Size</h1>
-			<label class="control">Width: <input id="canvas_width" type="number" value="300" size="4"></label>
-			<label class="control">Height: <input id="canvas_height" type="number" value="300" size="4"></label>
+			<h1>Viewport</h1>
+			<div>
+				<label class="control">Width: <input id="canvas_width" type="number" value="300" size="4"></label>
+				<label class="control">Height: <input id="canvas_height" type="number" value="300" size="4"></label>
+			</div>
+			<div>
+				<label class="control">FOV: <input id="fov" type="number" value="50" step="1" min="1" max="179" size="2"></label>
+			</div>
 		</div>
 
 		<div class="control-section">
@@ -358,6 +363,7 @@
 		function initializeControls() {
 			document.getElementById("canvas_width").addEventListener("change", e => skinViewer.width = e.target.value);
 			document.getElementById("canvas_height").addEventListener("change", e => skinViewer.height = e.target.value);
+			document.getElementById("fov").addEventListener("change", e => skinViewer.fov = e.target.value);
 			document.getElementById("global_animation_speed").addEventListener("change", e => skinViewer.animations.speed = e.target.value);
 			document.getElementById("animation_pause_resume").addEventListener("click", () => skinViewer.animations.paused = !skinViewer.animations.paused);
 			document.getElementById("rotate_animation").addEventListener("change", e => {
@@ -456,6 +462,7 @@
 
 			skinViewer.width = document.getElementById("canvas_width").value;
 			skinViewer.height = document.getElementById("canvas_height").value;
+			skinViewer.fov = document.getElementById("fov").value;
 			skinViewer.animations.speed = document.getElementById("global_animation_speed").value;
 			if (document.getElementById("rotate_animation").checked) {
 				rotateAnimation = skinViewer.animations.add(skinview3d.RotatingAnimation);
