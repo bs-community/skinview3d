@@ -99,16 +99,39 @@
 		.hidden {
 			display: none;
 		}
+
+		.skin_wrap {			
+			position: relative;			
+		}
+
+		#debug_canvas {
+			position: absolute;
+			background: rgba(0, 0, 0, 0.5);
+			padding: 6px;
+			color: #fff;
+			top: 0px;	
+			left: 0px;
+			width: 100px;
+			height: 150px;
+		}
+
 	</style>
 </head>
 
 <body>
 
-	<canvas id="skin_container"></canvas>
+	<div class="skin_wrap">
+		<canvas id="skin_container"></canvas>
+	</div>
 
 	<div class="controls">
 
 		<button id="reset_all" type="button" class="control">Reset All</button>
+
+		<div class="control-section">
+			<h1>Debug Mode</h1>
+			<label class="control"><input id="debug_mode_checkbox" type="checkbox"> Enable</label>
+		</div>
 
 		<div class="control-section">
 			<h1>Viewport</h1>
@@ -381,6 +404,14 @@
 					rotateAnimation.speed = e.target.value;
 				}
 			});
+			document.getElementById("debug_mode_checkbox").addEventListener("change", e => {
+				const value = e.target.checked;
+				skinViewer.debugInfo = value
+
+				// toggle it
+				skinViewer.debugCanvas.setState(value);
+			});
+
 			for (const el of document.querySelectorAll('input[type="radio"][name="primary_animation"]')) {
 				el.addEventListener("change", e => {
 					if (primaryAnimation !== null) {

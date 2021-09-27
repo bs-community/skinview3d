@@ -2,6 +2,7 @@ import { inferModelType, isTextureSource, loadCapeToCanvas, loadImage, loadSkinT
 import { Color, ColorRepresentation, EquirectangularReflectionMapping, Group, NearestFilter, PerspectiveCamera, Scene, Texture, Vector2, WebGLRenderer } from "three";
 import { RootAnimation } from "./animation.js";
 import { BackEquipment, PlayerObject } from "./model.js";
+import { DebugCanvas } from "./debug.js";
 
 export interface LoadOptions {
 	/**
@@ -87,6 +88,8 @@ export class SkinViewer {
 	private onContextLost: (event: Event) => void;
 	private onContextRestored: () => void;
 
+	public debugCanvas: DebugCanvas;
+
 	constructor(options: SkinViewerOptions = {}) {
 		this.canvas = options.canvas === undefined ? document.createElement("canvas") : options.canvas;
 
@@ -100,6 +103,9 @@ export class SkinViewer {
 		this.capeTexture = new Texture(this.capeCanvas);
 		this.capeTexture.magFilter = NearestFilter;
 		this.capeTexture.minFilter = NearestFilter;
+
+		// setup debug canvas class
+		this.debugCanvas = new DebugCanvas(this);
 
 		this.scene = new Scene();
 
@@ -251,6 +257,10 @@ export class SkinViewer {
 		this.animations.runAnimationLoop(this.playerObject);
 		this.render();
 		this.animationID = window.requestAnimationFrame(() => this.draw());
+
+		// render the debug canvas
+		this.debugCanvas.render();
+	
 	}
 
 	/**
