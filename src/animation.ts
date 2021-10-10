@@ -133,6 +133,22 @@ export class RootAnimation extends CompositeAnimation implements AnimationHandle
 	}
 }
 
+export const IdleAnimation: Animation = (player, time) => {
+	const skin = player.skin;
+
+	// Multiply by animation's natural speed
+	time *= 2;
+
+	// Arm swing
+	const basicArmRotationZ = Math.PI * 0.02;
+	skin.leftArm.rotation.z = Math.cos(time) * 0.03 + basicArmRotationZ;
+	skin.rightArm.rotation.z = Math.cos(time + Math.PI) * 0.03 - basicArmRotationZ;
+
+	// Always add an angle for cape around the x axis
+	const basicCapeRotationX = Math.PI * 0.06;
+	player.cape.rotation.x = Math.sin(time) * 0.01 + basicCapeRotationX;
+};
+
 export const WalkingAnimation: Animation = (player, time) => {
 	const skin = player.skin;
 
