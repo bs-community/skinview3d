@@ -134,6 +134,7 @@
 				<h2>Walk / Run / Fly</h2>
 				<div class="control">
 					<label><input type="radio" id="primary_animation_none" name="primary_animation" value="" checked> None</label>
+					<label><input type="radio" id="primary_animation_idle" name="primary_animation" value="idle"> Idle</label>
 					<label><input type="radio" id="primary_animation_walk" name="primary_animation" value="walk"> Walk</label>
 					<label><input type="radio" id="primary_animation_run" name="primary_animation" value="run"> Run</label>
 					<label><input type="radio" id="primary_animation_fly" name="primary_animation" value="fly"> Fly</label>
@@ -284,6 +285,7 @@
 		const skinParts = ["head", "body", "rightArm", "leftArm", "rightLeg", "leftLeg"];
 		const skinLayers = ["innerLayer", "outerLayer"];
 		const availableAnimations = {
+			idle: skinview3d.IdleAnimation,
 			walk: skinview3d.WalkingAnimation,
 			run: skinview3d.RunningAnimation,
 			fly: skinview3d.FlyingAnimation
