@@ -99,7 +99,8 @@ export class SkinObject extends Group {
 		this.head = new BodyPart(headMesh, head2Mesh);
 		this.head.name = "head";
 		this.head.add(headMesh, head2Mesh);
-		this.head.position.y = 4;
+		headMesh.position.y = 4;
+		head2Mesh.position.y = 4;
 		this.add(this.head);
 
 		// Body
