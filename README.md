@@ -89,5 +89,17 @@ To enable it, you need to replace `SkinViewer` with `FXAASkinViewer`.
 Note that FXAA is incompatible with transparent backgrounds.
 So when FXAA is enabled, the default background color will be white instead of transparent.
 
+## Lighting
+By default, there are two lights on the scene. One is an ambient light, and the other is a point light from the camera.
+
+To change the light intensity:
+```js
+skinViewer.cameraLight.intensity = 0.9;
+skinViewer.globalLight.intensity = 0.1;
+```
+
+Setting `globalLight.intensity` to `1.0` and `cameraLight.intensity` to `0.0`
+will completely disable shadows.
+
 # Build
 `npm run build`

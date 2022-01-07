@@ -1,5 +1,5 @@
 import { ModelType } from "skinview-utils";
-import { BoxGeometry, BufferAttribute, DoubleSide, FrontSide, Group, Mesh, MeshBasicMaterial, Object3D, Texture, Vector2 } from "three";
+import { BoxGeometry, BufferAttribute, DoubleSide, FrontSide, Group, Mesh, MeshStandardMaterial, Object3D, Texture, Vector2 } from "three";
 
 function setUVs(box: BoxGeometry, u: number, v: number, width: number, height: number, depth: number, textureWidth: number, textureHeight: number): void {
 	const toFaceVertices = (x1: number, y1: number, x2: number, y2: number) => [
@@ -66,11 +66,11 @@ export class SkinObject extends Group {
 	constructor(texture: Texture) {
 		super();
 
-		const layer1Material = new MeshBasicMaterial({
+		const layer1Material = new MeshStandardMaterial({
 			map: texture,
 			side: FrontSide
 		});
-		const layer2Material = new MeshBasicMaterial({
+		const layer2Material = new MeshStandardMaterial({
 			map: texture,
 			side: DoubleSide,
 			transparent: true,
@@ -258,7 +258,7 @@ export class CapeObject extends Group {
 	constructor(texture: Texture) {
 		super();
 
-		const capeMaterial = new MeshBasicMaterial({
+		const capeMaterial = new MeshStandardMaterial({
 			map: texture,
 			side: DoubleSide,
 			transparent: true,
@@ -284,7 +284,7 @@ export class ElytraObject extends Group {
 	constructor(texture: Texture) {
 		super();
 
-		const elytraMaterial = new MeshBasicMaterial({
+		const elytraMaterial = new MeshStandardMaterial({
 			map: texture,
 			side: DoubleSide,
 			transparent: true,
