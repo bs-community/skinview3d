@@ -120,7 +120,6 @@ export class SkinViewer {
 		this.playerObject.cape.visible = false;
 		this.playerWrapper = new Group();
 		this.playerWrapper.add(this.playerObject);
-		this.playerWrapper.position.y = 8;
 		this.scene.add(this.playerWrapper);
 
 		if (options.skin !== undefined) {
