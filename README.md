@@ -53,6 +53,9 @@ Three.js powered Minecraft skin viewer.
 	// Change camera FOV
 	skinViewer.fov = 70;
 
+	// Zoom out
+	skinViewer.zoom = 0.5;
+
 	// Control objects with your mouse!
 	let control = skinview3d.createOrbitControls(skinViewer);
 	control.enableRotate = true;

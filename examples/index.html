@@ -118,6 +118,7 @@
 			</div>
 			<div>
 				<label class="control">FOV: <input id="fov" type="number" value="70" step="1" min="1" max="179" size="2"></label>
+				<label class="control">Zoom: <input id="zoom" type="number" value="0.90" step="0.01" min="0.01" max="2.00" size="2"></label>
 			</div>
 		</div>
 
@@ -367,6 +368,7 @@
 			document.getElementById("canvas_width").addEventListener("change", e => skinViewer.width = e.target.value);
 			document.getElementById("canvas_height").addEventListener("change", e => skinViewer.height = e.target.value);
 			document.getElementById("fov").addEventListener("change", e => skinViewer.fov = e.target.value);
+			document.getElementById("zoom").addEventListener("change", e => skinViewer.zoom = e.target.value);
 			document.getElementById("global_animation_speed").addEventListener("change", e => skinViewer.animations.speed = e.target.value);
 			document.getElementById("animation_pause_resume").addEventListener("click", () => skinViewer.animations.paused = !skinViewer.animations.paused);
 			document.getElementById("rotate_animation").addEventListener("change", e => {
@@ -466,6 +468,7 @@
 			skinViewer.width = document.getElementById("canvas_width").value;
 			skinViewer.height = document.getElementById("canvas_height").value;
 			skinViewer.fov = document.getElementById("fov").value;
+			skinViewer.zoom = document.getElementById("zoom").value;
 			skinViewer.animations.speed = document.getElementById("global_animation_speed").value;
 			if (document.getElementById("rotate_animation").checked) {
 				rotateAnimation = skinViewer.animations.add(skinview3d.RotatingAnimation);

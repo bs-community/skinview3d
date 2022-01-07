@@ -63,6 +63,13 @@ export interface SkinViewerOptions {
 	 * The distance between the object and the camera is automatically computed.
 	 */
 	fov?: number;
+
+	/**
+	 * Zoom ratio of the player. Default is 0.9.
+	 * This value affects the distance between the object and the camera.
+	 * When set to 1.0, the top edge of the player's head coincides with the edge of the view.
+	 */
+	zoom?: number;
 }
 
 export class SkinViewer {
@@ -82,6 +89,7 @@ export class SkinViewer {
 
 	private _disposed: boolean = false;
 	private _renderPaused: boolean = false;
+	private _zoom: number;
 
 	private animationID: number | null;
 	private onContextLost: (event: Event) => void;
@@ -104,7 +112,6 @@ export class SkinViewer {
 		this.scene = new Scene();
 
 		this.camera = new PerspectiveCamera();
-		this.camera.position.z = 60;
 
 		this.renderer = new WebGLRenderer({
 			canvas: this.canvas,
@@ -140,6 +147,8 @@ export class SkinViewer {
 		if (options.panorama !== undefined) {
 			this.loadPanorama(options.panorama);
 		}
+		this.camera.position.z = 1;
+		this._zoom = options.zoom === undefined ? 0.9 : options.zoom;
 		this.fov = options.fov === undefined ? 50 : options.fov;
 
 		if (options.renderPaused === true) {
@@ -342,17 +351,35 @@ export class SkinViewer {
 		}
 	}
 
+	adjustCameraDistance(): void {
+		let distance = 4.5 + 16.5 / Math.tan(this.fov / 180 * Math.PI / 2) / this.zoom;
+
+		// limit distance between 10 ~ 256 (default min / max distance of OrbitControls)
+		if (distance < 10) {
+			distance = 10;
+		} else if (distance > 256) {
+			distance = 256;
+		}
+
+		this.camera.position.multiplyScalar(distance / this.camera.position.length());
+		this.camera.updateProjectionMatrix();
+	}
+
 	get fov(): number {
 		return this.camera.fov;
 	}
 
 	set fov(value: number) {
 		this.camera.fov = value;
-		let distance = 4 + 20 / Math.tan(value / 180 * Math.PI / 2);
-		if (distance < 10) {
-			distance = 10;
-		}
-		this.camera.position.multiplyScalar(distance / this.camera.position.length());
-		this.camera.updateProjectionMatrix();
+		this.adjustCameraDistance();
+	}
+
+	get zoom(): number {
+		return this._zoom;
+	}
+
+	set zoom(value: number) {
+		this._zoom = value;
+		this.adjustCameraDistance();
 	}
 }
