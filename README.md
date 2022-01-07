@@ -47,7 +47,10 @@ Three.js powered Minecraft skin viewer.
 	// Set the background color
 	skinViewer.background = 0x5a76f3;
 
-	// Set the background to a panoramic image!
+	// Set the background to a normal image
+	skinViewer.loadBackground("img/background.png");
+
+	// Set the background to a panoramic image
 	skinViewer.loadPanorama("img/panorama1.png");
 
 	// Change camera FOV

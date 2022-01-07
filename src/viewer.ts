@@ -1,5 +1,5 @@
 import { inferModelType, isTextureSource, loadCapeToCanvas, loadImage, loadSkinToCanvas, ModelType, RemoteImage, TextureSource } from "skinview-utils";
-import { Color, ColorRepresentation, PointLight, EquirectangularReflectionMapping, Group, NearestFilter, PerspectiveCamera, Scene, Texture, Vector2, WebGLRenderer, AmbientLight } from "three";
+import { Color, ColorRepresentation, PointLight, EquirectangularReflectionMapping, Group, NearestFilter, PerspectiveCamera, Scene, Texture, Vector2, WebGLRenderer, AmbientLight, Mapping } from "three";
 import { RootAnimation } from "./animation.js";
 import { BackEquipment, PlayerObject } from "./model.js";
 
@@ -241,10 +241,18 @@ export class SkinViewer {
 
 	loadPanorama<S extends TextureSource | RemoteImage>(
 		source: S
+	): S extends TextureSource ? void : Promise<void> {
+		return this.loadBackground(source, EquirectangularReflectionMapping);
+	}
+
+	loadBackground<S extends TextureSource | RemoteImage>(
+		source: S,
+		mapping?: Mapping
 	): S extends TextureSource ? void : Promise<void>;
 
-	loadPanorama<S extends TextureSource | RemoteImage>(
-		source: S
+	loadBackground<S extends TextureSource | RemoteImage>(
+		source: S,
+		mapping?: Mapping
 	): void | Promise<void> {
 		if (isTextureSource(source)) {
 			if (this.backgroundTexture !== null) {
@@ -252,11 +260,13 @@ export class SkinViewer {
 			}
 			this.backgroundTexture = new Texture();
 			this.backgroundTexture.image = source;
-			this.backgroundTexture.mapping = EquirectangularReflectionMapping;
+			if (mapping !== undefined) {
+				this.backgroundTexture.mapping = mapping;
+			}
 			this.backgroundTexture.needsUpdate = true;
 			this.scene.background = this.backgroundTexture;
 		} else {
-			return loadImage(source).then(image => this.loadPanorama(image));
+			return loadImage(source).then(image => this.loadBackground(image, mapping));
 		}
 	}
 
