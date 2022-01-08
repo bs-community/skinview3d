@@ -215,6 +215,7 @@
 						<option value="img/hatsune_miku.png">
 						<option value="img/ironman_hd.png">
 						<option value="img/sethbling.png">
+						<option value="img/deadmau5.png">
 					</datalist>
 					<input id="skin_url_upload" type="file" class="hidden" accept="image/*">
 					<button id="skin_url_unset" type="button" class="control hidden">Unset</button>
@@ -247,6 +248,32 @@
 				<button id="cape_url_unset" type="button" class="control hidden">Unset</button>
 				<button type="button" class="control"
 					onclick="document.getElementById('cape_url_upload').click();">Browse...</button>
+			</div>
+		</div>
+
+		<div class="control-section">
+			<h1>Ears</h1>
+			<div>
+				<label class="control">Source:
+					<select id="ears_source">
+						<option value="none">None</option>
+						<option value="current_skin">Current skin</option>
+						<option value="skin">Skin texture</option>
+						<option value="standalone">Standalone texture</option>
+					</select>
+				</label>
+			</div>
+			<div id="ears_texture_input">
+				<label class="control">URL: <input id="ears_url" type="text" value="" placeholder="none" list="default_ears" size="20"></label>
+				<datalist id="default_ears">
+					<option value="">
+					<option value="img/ears.png" data-texture-type="standalone">
+					<option value="img/deadmau5.png" data-texture-type="skin">
+				</datalist>
+				<input id="ears_url_upload" type="file" class="hidden" accept="image/*">
+				<button id="ears_url_unset" type="button" class="control hidden">Unset</button>
+				<button type="button" class="control"
+					onclick="document.getElementById('ears_url_upload').click();">Browse...</button>
 			</div>
 		</div>
 
@@ -329,7 +356,8 @@
 				input.setCustomValidity("");
 			} else {
 				skinViewer.loadSkin(url, {
-					model: document.getElementById("skin_model").value
+					model: document.getElementById("skin_model").value,
+					ears: document.getElementById("ears_source").value === "current_skin"
 				})
 					.then(() => input.setCustomValidity(""))
 					.catch(e => {
@@ -353,6 +381,46 @@
 						input.setCustomValidity("Image can't be loaded.");
 						console.error(e);
 					});
+			}
+		}
+
+		function reloadEars(skipSkinReload = false) {
+			const sourceType = document.getElementById("ears_source").value;
+			let hideInput = true;
+			if (sourceType === "none") {
+				skinViewer.loadEars(null);
+			} else if (sourceType === "current_skin") {
+				if (!skipSkinReload){
+					reloadSkin();
+				}
+			} else {
+				hideInput = false;
+				document.querySelectorAll("#default_ears option[data-texture-type]").forEach(opt => {
+					opt.disabled = opt.dataset.textureType !== sourceType;
+				});
+
+				const input = document.getElementById("ears_url");
+				const url = obtainTextureUrl("ears_url");
+				if (url === "") {
+					skinViewer.loadEars(null);
+					input.setCustomValidity("");
+				} else {
+					skinViewer.loadEars(url, { textureType: sourceType })
+						.then(() => input.setCustomValidity(""))
+						.catch(e => {
+							input.setCustomValidity("Image can't be loaded.");
+							console.error(e);
+						});
+				}
+			}
+
+			const el = document.getElementById("ears_texture_input");
+			if (hideInput) {
+				if (!(el.classList.contains("hidden"))){
+					el.classList.add("hidden");
+				}
+			} else {
+				el.classList.remove("hidden");
 			}
 		}
 
@@ -442,11 +510,14 @@
 			};
 			initializeUploadButton("skin_url", reloadSkin);
 			initializeUploadButton("cape_url", reloadCape);
+			initializeUploadButton("ears_url", reloadEars);
 			initializeUploadButton("panorama_url", reloadPanorama);
 
 			document.getElementById("skin_url").addEventListener("change", () => reloadSkin());
 			document.getElementById("skin_model").addEventListener("change", () => reloadSkin());
 			document.getElementById("cape_url").addEventListener("change", () => reloadCape());
+			document.getElementById("ears_source").addEventListener("change", () => reloadEars());
+			document.getElementById("ears_url").addEventListener("change", () => reloadEars());
 			document.getElementById("panorama_url").addEventListener("change", () => reloadPanorama());
 
 			for (const el of document.querySelectorAll('input[type="radio"][name="back_equipment"]')) {
@@ -502,6 +573,7 @@
 			}
 			reloadSkin();
 			reloadCape();
+			reloadEars(true);
 			reloadPanorama();
 		}
 
