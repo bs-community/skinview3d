@@ -22,17 +22,11 @@
 
 		h1,
 		h2 {
-			margin-bottom: 0;
-		}
-
-		input[type="number"] {
-			max-width: 60px;
+			margin: 5px 0 0 0;
 		}
 
 		input[type="text"] {
 			box-sizing: border-box;
-			max-width: 250px;
-			width: calc(100% - 100px);
 		}
 
 		.control {
@@ -102,13 +96,8 @@
 			padding-left: 20px;
 		}
 
-		.skin_container_error {
-			padding: 1rem;
-			margin: 1rem;
-			display: inline-block;
-			background: red;
-			color: white;
-			font-weight: bold;
+		.hidden {
+			display: none;
 		}
 	</style>
 </head>
@@ -122,29 +111,42 @@
 		<button id="reset_all" type="button" class="control">Reset All</button>
 
 		<div class="control-section">
-			<h1>Canvas Size</h1>
-			<label class="control">Width: <input id="canvas_width" type="number" value="300"></label>
-			<label class="control">Height: <input id="canvas_height" type="number" value="300"></label>
+			<h1>Viewport</h1>
+			<div>
+				<label class="control">Width: <input id="canvas_width" type="number" value="300" size="4"></label>
+				<label class="control">Height: <input id="canvas_height" type="number" value="300" size="4"></label>
+			</div>
+			<div>
+				<label class="control">FOV: <input id="fov" type="number" value="70" step="1" min="1" max="179" size="2"></label>
+				<label class="control">Zoom: <input id="zoom" type="number" value="0.90" step="0.01" min="0.01" max="2.00" size="4"></label>
+			</div>
+		</div>
+
+		<div class="control-section">
+			<h1>Light</h1>
+			<label class="control">Global: <input id="global_light" type="number" value="0.40" step="0.01" min="0.00" max="2.00" size="4"></label>
+			<label class="control">Camera: <input id="camera_light" type="number" value="0.60" step="0.01" min="0.00" max="2.00" size="4"></label>
 		</div>
 
 		<div class="control-section">
 			<h1>Animation</h1>
-			<label class="control">Global Speed: <input id="global_animation_speed" type="number" value="1" step="0.1"></label>
+			<label class="control">Global Speed: <input id="global_animation_speed" type="number" value="1" step="0.1" size="3"></label>
 			<button id="animation_pause_resume" type="button" class="control">Pause / Resume</button>
 			<div>
 				<h2>Rotate</h2>
 				<label class="control"><input id="rotate_animation" type="checkbox"> Enable</label>
-				<label class="control">Speed: <input id="rotate_animation_speed" type="number" value="1" step="0.1"></label>
+				<label class="control">Speed: <input id="rotate_animation_speed" type="number" value="1" step="0.1" size="3"></label>
 			</div>
 			<div>
 				<h2>Walk / Run / Fly</h2>
 				<div class="control">
 					<label><input type="radio" id="primary_animation_none" name="primary_animation" value="" checked> None</label>
+					<label><input type="radio" id="primary_animation_idle" name="primary_animation" value="idle"> Idle</label>
 					<label><input type="radio" id="primary_animation_walk" name="primary_animation" value="walk"> Walk</label>
 					<label><input type="radio" id="primary_animation_run" name="primary_animation" value="run"> Run</label>
 					<label><input type="radio" id="primary_animation_fly" name="primary_animation" value="fly"> Fly</label>
 				</div>
-				<label class="control">Speed: <input id="primary_animation_speed" type="number" value="1" step="0.1"></label>
+				<label class="control">Speed: <input id="primary_animation_speed" type="number" value="1" step="0.1" size="3"></label>
 			</div>
 		</div>
 
@@ -202,10 +204,10 @@
 		</div>
 
 		<div class="control-section">
-			<h1>Textures</h1>
+			<h1>Skin</h1>
 			<div>
 				<div class="control">
-					<label>Skin URL: <input id="skin_url" type="text" value="img/1_8_texturemap_redux.png" placeholder="none" list="default_skins"></label>
+					<label>URL: <input id="skin_url" type="text" value="img/hatsune_miku.png" placeholder="none" list="default_skins" size="20"></label>
 					<datalist id="default_skins">
 						<option value="img/1_8_texturemap_redux.png">
 						<option value="img/hacksore.png">
@@ -213,12 +215,15 @@
 						<option value="img/hatsune_miku.png">
 						<option value="img/ironman_hd.png">
 						<option value="img/sethbling.png">
-						<option value="img/james090500.png">
+						<option value="img/deadmau5.png">
 					</datalist>
-					<input id="skin_url_upload" type="file" accept="image/*" style="display: none;">
+					<input id="skin_url_upload" type="file" class="hidden" accept="image/*">
+					<button id="skin_url_unset" type="button" class="control hidden">Unset</button>
 					<button type="button" class="control"
 						onclick="document.getElementById('skin_url_upload').click();">Browse...</button>
 				</div>
+			</div>
+			<div>
 				<label class="control">Model:
 					<select id="skin_model">
 						<option value="auto-detect" selected>Auto detect</option>
@@ -227,32 +232,63 @@
 					</select>
 				</label>
 			</div>
-			<div>
-				<div class="control">
-					<label>Ear URL: <input id="ears_url" type="text" value="" placeholder="none" list="default_ears"></label>
-					<datalist id="default_ears">
-						<option value="">
-						<option value="img/ears.png">
-					</datalist>
-					<input id="ears_url_upload" type="file" accept="image/*" style="display: none;">
-					<button type="button" class="control"
-						onclick="document.getElementById('ears_url_upload').click();">Browse...</button>
-				</div>
+		</div>
+
+		<div class="control-section">
+			<h1>Cape</h1>
+			<div class="control">
+				<label>URL: <input id="cape_url" type="text" value="img/mojang_cape.png" placeholder="none" list="default_capes" size="20"></label>
+				<datalist id="default_capes">
+					<option value="">
+					<option value="img/mojang_cape.png">
+					<option value="img/legacy_cape.png">
+					<option value="img/hd_cape.png">
+				</datalist>
+				<input id="cape_url_upload" type="file" class="hidden" accept="image/*">
+				<button id="cape_url_unset" type="button" class="control hidden">Unset</button>
+				<button type="button" class="control"
+					onclick="document.getElementById('cape_url_upload').click();">Browse...</button>
 			</div>
+		</div>
+
+		<div class="control-section">
+			<h1>Ears</h1>
 			<div>
-				<div class="control">
-					<label>Cape URL: <input id="cape_url" type="text" value="" placeholder="none" list="default_capes"></label>
-					<datalist id="default_capes">
-						<option value="">
-						<option value="img/mojang_cape.png">
-						<option value="img/legacy_cape.png">
-						<option value="img/hd_cape.png">
-						<option value="img/animated.png">
-					</datalist>
-					<input id="cape_url_upload" type="file" accept="image/*" style="display: none;">
-					<button type="button" class="control"
-						onclick="document.getElementById('cape_url_upload').click();">Browse...</button>
-				</div>
+				<label class="control">Source:
+					<select id="ears_source">
+						<option value="none">None</option>
+						<option value="current_skin">Current skin</option>
+						<option value="skin">Skin texture</option>
+						<option value="standalone">Standalone texture</option>
+					</select>
+				</label>
+			</div>
+			<div id="ears_texture_input">
+				<label class="control">URL: <input id="ears_url" type="text" value="" placeholder="none" list="default_ears" size="20"></label>
+				<datalist id="default_ears">
+					<option value="">
+					<option value="img/ears.png" data-texture-type="standalone">
+					<option value="img/deadmau5.png" data-texture-type="skin">
+				</datalist>
+				<input id="ears_url_upload" type="file" class="hidden" accept="image/*">
+				<button id="ears_url_unset" type="button" class="control hidden">Unset</button>
+				<button type="button" class="control"
+					onclick="document.getElementById('ears_url_upload').click();">Browse...</button>
+			</div>
+		</div>
+
+		<div class="control-section">
+			<h1>Panorama</h1>
+			<div class="control">
+				<label>URL: <input id="panorama_url" type="text" value="img/panorama.png" placeholder="none" list="default_panorama" size="20"></label>
+				<datalist id="default_panorama">
+					<option value="">
+					<option value="img/panorama.png">
+				</datalist>
+				<input id="panorama_url_upload" type="file" class="hidden" accept="image/*">
+				<button id="panorama_url_unset" type="button" class="control hidden">Unset</button>
+				<button type="button" class="control"
+					onclick="document.getElementById('panorama_url_upload').click();">Browse...</button>
 			</div>
 		</div>
 
@@ -283,6 +319,7 @@
 		const skinParts = ["head", "body", "rightArm", "leftArm", "rightLeg", "leftLeg"];
 		const skinLayers = ["innerLayer", "outerLayer"];
 		const availableAnimations = {
+			idle: skinview3d.IdleAnimation,
 			walk: skinview3d.WalkingAnimation,
 			run: skinview3d.RunningAnimation,
 			fly: skinview3d.FlyingAnimation
@@ -293,14 +330,35 @@
 		let rotateAnimation;
 		let primaryAnimation;
 
+		function obtainTextureUrl(id) {
+			const urlInput = document.getElementById(id);
+			const fileInput = document.getElementById(id + "_upload");
+			const unsetButton = document.getElementById(id + "_unset");
+			const file = fileInput.files[0];
+			if (file === undefined) {
+				if (!unsetButton.classList.contains("hidden")) {
+					unsetButton.classList.add("hidden");
+				}
+				return urlInput.value;
+			} else {
+				unsetButton.classList.remove("hidden");
+				urlInput.value = `Local file: ${file.name}`;
+				urlInput.readOnly = true;
+				return URL.createObjectURL(file);
+			}
+		}
+
 		function reloadSkin() {
 			const input = document.getElementById("skin_url");
-			const url = input.value;
+			const url = obtainTextureUrl("skin_url");
 			if (url === "") {
 				skinViewer.loadSkin(null);
 				input.setCustomValidity("");
 			} else {
-				skinViewer.loadSkin(url, document.getElementById("skin_model").value)
+				skinViewer.loadSkin(url, {
+					model: document.getElementById("skin_model").value,
+					ears: document.getElementById("ears_source").value === "current_skin"
+				})
 					.then(() => input.setCustomValidity(""))
 					.catch(e => {
 						input.setCustomValidity("Image can't be loaded.");
@@ -322,7 +380,7 @@
 
 		function reloadCape() {
 			const input = document.getElementById("cape_url");
-			const url = input.value;
+			const url = obtainTextureUrl("cape_url");
 			if (url === "") {
 				skinViewer.loadCape(null);
 				input.setCustomValidity("");
@@ -337,9 +395,69 @@
 			}
 		}
 
+		function reloadEars(skipSkinReload = false) {
+			const sourceType = document.getElementById("ears_source").value;
+			let hideInput = true;
+			if (sourceType === "none") {
+				skinViewer.loadEars(null);
+			} else if (sourceType === "current_skin") {
+				if (!skipSkinReload){
+					reloadSkin();
+				}
+			} else {
+				hideInput = false;
+				document.querySelectorAll("#default_ears option[data-texture-type]").forEach(opt => {
+					opt.disabled = opt.dataset.textureType !== sourceType;
+				});
+
+				const input = document.getElementById("ears_url");
+				const url = obtainTextureUrl("ears_url");
+				if (url === "") {
+					skinViewer.loadEars(null);
+					input.setCustomValidity("");
+				} else {
+					skinViewer.loadEars(url, { textureType: sourceType })
+						.then(() => input.setCustomValidity(""))
+						.catch(e => {
+							input.setCustomValidity("Image can't be loaded.");
+							console.error(e);
+						});
+				}
+			}
+
+			const el = document.getElementById("ears_texture_input");
+			if (hideInput) {
+				if (!(el.classList.contains("hidden"))){
+					el.classList.add("hidden");
+				}
+			} else {
+				el.classList.remove("hidden");
+			}
+		}
+
+		function reloadPanorama() {
+			const input = document.getElementById("panorama_url");
+			const url = obtainTextureUrl("panorama_url");
+			if (url === "") {
+				skinViewer.background = "white";
+				input.setCustomValidity("");
+			} else {
+				skinViewer.loadPanorama(url)
+					.then(() => input.setCustomValidity(""))
+					.catch(e => {
+						input.setCustomValidity("Image can't be loaded.");
+						console.error(e);
+					});
+			}
+		}
+
 		function initializeControls() {
 			document.getElementById("canvas_width").addEventListener("change", e => skinViewer.width = e.target.value);
 			document.getElementById("canvas_height").addEventListener("change", e => skinViewer.height = e.target.value);
+			document.getElementById("fov").addEventListener("change", e => skinViewer.fov = e.target.value);
+			document.getElementById("zoom").addEventListener("change", e => skinViewer.zoom = e.target.value);
+			document.getElementById("global_light").addEventListener("change", e => skinViewer.globalLight.intensity = e.target.value);
+			document.getElementById("camera_light").addEventListener("change", e => skinViewer.cameraLight.intensity = e.target.value);
 			document.getElementById("global_animation_speed").addEventListener("change", e => skinViewer.animations.speed = e.target.value);
 			document.getElementById("animation_pause_resume").addEventListener("click", () => skinViewer.animations.paused = !skinViewer.animations.paused);
 			document.getElementById("rotate_animation").addEventListener("change", e => {
@@ -382,43 +500,37 @@
 						.addEventListener("change", e => skinViewer.playerObject.skin[part][layer].visible = e.target.checked);
 				}
 			}
-			const skinReader = new FileReader();
-			skinReader.addEventListener("load", e => {
-				document.getElementById("skin_url").value = skinReader.result;
-				reloadSkin();
-			});
-			document.getElementById("skin_url_upload").addEventListener("change", e => {
-				const file = e.target.files[0];
-				if (file !== undefined) {
-					skinReader.readAsDataURL(file);
-				}
-			});
-			const earsReader = new FileReader();
-			earsReader.addEventListener("load", e => {
-				document.getElementById("ears_url").value = earsReader.result;
-				reloadEars();
-			});
-			document.getElementById("ears_url_upload").addEventListener("change", e => {
-				const file = e.target.files[0];
-				if (file !== undefined) {
-					earsReader.readAsDataURL(file);
-				}
-			});
-			const capeReader = new FileReader();
-			capeReader.addEventListener("load", e => {
-				document.getElementById("cape_url").value = capeReader.result;
-				reloadCape();
-			});
-			document.getElementById("cape_url_upload").addEventListener("change", e => {
-				const file = e.target.files[0];
-				if (file !== undefined) {
-					capeReader.readAsDataURL(file);
-				}
-			});
+
+			const initializeUploadButton = (id, callback) => {
+				const urlInput = document.getElementById(id);
+				const fileInput = document.getElementById(id + "_upload");
+				const unsetButton = document.getElementById(id + "_unset");
+				const unsetAction = () => {
+					urlInput.readOnly = false;
+					urlInput.value = "";
+					fileInput.value = fileInput.defaultValue;
+					callback();
+				};
+				fileInput.addEventListener("change", e => callback());
+				urlInput.addEventListener("keydown", e => {
+					if (e.key === "Backspace" && urlInput.readOnly) {
+						unsetAction();
+					}
+				});
+				unsetButton.addEventListener("click", e => unsetAction());
+			};
+			initializeUploadButton("skin_url", reloadSkin);
+			initializeUploadButton("cape_url", reloadCape);
+			initializeUploadButton("ears_url", reloadEars);
+			initializeUploadButton("panorama_url", reloadPanorama);
+
 			document.getElementById("skin_url").addEventListener("change", () => reloadSkin());
 			document.getElementById("skin_model").addEventListener("change", () => reloadSkin());
 			document.getElementById("ears_url").addEventListener("change", () => reloadEars());
 			document.getElementById("cape_url").addEventListener("change", () => reloadCape());
+			document.getElementById("ears_source").addEventListener("change", () => reloadEars());
+			document.getElementById("ears_url").addEventListener("change", () => reloadEars());
+			document.getElementById("panorama_url").addEventListener("change", () => reloadPanorama());
 
 			for (const el of document.querySelectorAll('input[type="radio"][name="back_equipment"]')) {
 				el.addEventListener("change", e => {
@@ -440,16 +552,18 @@
 
 		function initializeViewer() {
 			skinViewer = new skinview3d.FXAASkinViewer({
-				canvas: document.getElementById("skin_container"),
-				alpha: false
+				canvas: document.getElementById("skin_container")
 			});
-			skinViewer.renderer.setClearColor(0x5a76f3);
 			orbitControl = skinview3d.createOrbitControls(skinViewer);
 			rotateAnimation = null;
 			primaryAnimation = null;
 
 			skinViewer.width = document.getElementById("canvas_width").value;
 			skinViewer.height = document.getElementById("canvas_height").value;
+			skinViewer.fov = document.getElementById("fov").value;
+			skinViewer.zoom = document.getElementById("zoom").value;
+			skinViewer.globalLight.intensity = document.getElementById("global_light").value;
+			skinViewer.cameraLight.intensity = document.getElementById("camera_light").value;
 			skinViewer.animations.speed = document.getElementById("global_animation_speed").value;
 			if (document.getElementById("rotate_animation").checked) {
 				rotateAnimation = skinViewer.animations.add(skinview3d.RotatingAnimation);
@@ -472,6 +586,8 @@
 			reloadSkin();
 			reloadEars();
 			reloadCape();
+			reloadEars(true);
+			reloadPanorama();
 		}
 
 		initializeControls();
