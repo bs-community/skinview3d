@@ -38,8 +38,8 @@
 		"bundles"
 	],
 	"dependencies": {
+		"@james090500/skinview-utils": "github:james090500/skinview-utils",
 		"@types/three": "^0.136.1",
-		"skinview-utils": "^0.7.0",
 		"three": "^0.136.0"
 	},
 	"devDependencies": {

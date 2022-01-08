@@ -48,7 +48,6 @@ export interface SkinViewerOptions {
 	skin?: RemoteImage | TextureSource;
 	model?: ModelType | "auto-detect";
 	cape?: RemoteImage | TextureSource;
-	ears?: RemoteImage | TextureSource;
 
 	/**
 	 * If you want to show the ears drawn on the current skin, set this to "current-skin".
@@ -125,6 +124,7 @@ export class SkinViewer {
 	private readonly skinTexture: Texture;
 	private readonly capeTexture: Texture;
 	private readonly earsTexture: Texture;
+	private capeImage: TextureSource | undefined;
 	private backgroundTexture: Texture | null = null;
 
 	private _disposed: boolean = false;
@@ -270,7 +270,7 @@ export class SkinViewer {
 			}
 
 			if (options.ears === true || options.ears == "load-only") {
-				loadEarsToCanvasFromSkin(this.earsCanvas, source);
+				loadEarsToCanvas(this.earsCanvas, source);
 				this.earsTexture.needsUpdate = true;
 				if (options.ears === true) {
 					this.playerObject.ears.visible = true;
@@ -315,31 +315,6 @@ export class SkinViewer {
 		}
 	}
 
-	/**
-	 * Load Ears
-	 */
-	loadEars(empty: null): void;
-	loadEars<S extends TextureSource | RemoteImage>(
-		source: S,
-		options?: LoadOptions
-	): S extends TextureSource ? void : Promise<void>;
-	loadEars(
-		source: TextureSource | RemoteImage | null,
-		options: LoadOptions = {}
-	): void | Promise<void> {
-		if (source === null) {
-			this.resetEars();
-		} else if (isTextureSource(source)) {
-			loadEarsToCanvas(this.earsCanvas, source);
-			this.earTexture.needsUpdate = true;
-			this.playerObject.ears.visible = true;
-		} else {
-			return loadImage(source).then(image => this.loadEars(image, options)).catch(e => {
-				console.log(e);
-			});
-		}
-	}
-
 	protected resetSkin(): void {
 		this.playerObject.skin.visible = false;
 	}
@@ -363,7 +338,7 @@ export class SkinViewer {
 
 		} else if (isTextureSource(source)) {
 			if (options.textureType === "skin") {
-				loadEarsToCanvasFromSkin(this.earsCanvas, source);
+				loadEarsToCanvas(this.earsCanvas, source);
 			} else {
 				loadEarsToCanvas(this.earsCanvas, source);
 			}

@@ -1,4 +1,4 @@
-import { ModelType } from "skinview-utils";
+import { ModelType } from "@james090500/skinview-utils";
 import { BoxGeometry, BufferAttribute, DoubleSide, FrontSide, Group, Mesh, MeshStandardMaterial, Object3D, Texture, Vector2 } from "three";
 
 function setUVs(box: BoxGeometry, u: number, v: number, width: number, height: number, depth: number, textureWidth: number, textureHeight: number): void {
@@ -377,23 +377,21 @@ export class PlayerObject extends Group {
 
 		this.skin = new SkinObject(skinTexture);
 		this.skin.name = "skin";
-		this.skin.position.y = 8;
+		this.skin.position.y = 5
 		this.add(this.skin);
 
 		this.cape = new CapeObject(capeTexture);
 		this.cape.name = "cape";
-		this.cape.position.y = 8;
+		this.cape.position.y = 5;
 		this.cape.position.z = -2;
-		this.cape.position.y = -2;
 		this.cape.rotation.x = 10.8 * Math.PI / 180;
 		this.cape.rotation.y = Math.PI;
 		this.add(this.cape);
 
 		this.elytra = new ElytraObject(capeTexture);
 		this.elytra.name = "elytra";
-		this.elytra.position.y = 8;
+		this.elytra.position.y = 5;
 		this.elytra.position.z = -2;
-		this.elytra.position.y = -2;
 		this.elytra.visible = false;
 		this.add(this.elytra);
 
