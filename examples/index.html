@@ -328,7 +328,9 @@
 				skinViewer.loadSkin(null);
 				input.setCustomValidity("");
 			} else {
-				skinViewer.loadSkin(url, document.getElementById("skin_model").value)
+				skinViewer.loadSkin(url, {
+					model: document.getElementById("skin_model").value
+				})
 					.then(() => input.setCustomValidity(""))
 					.catch(e => {
 						input.setCustomValidity("Image can't be loaded.");

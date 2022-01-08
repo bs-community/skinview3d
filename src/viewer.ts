@@ -10,6 +10,13 @@ export interface LoadOptions {
 	makeVisible?: boolean;
 }
 
+export interface SkinLoadOptions extends LoadOptions {
+	/**
+	 * The model type of skin. Default is "auto-detect".
+	 */
+	model?: ModelType | "auto-detect";
+}
+
 export interface CapeLoadOptions extends LoadOptions {
 	/**
 	 * The equipment (cape or elytra) to show, defaults to "cape".
@@ -135,7 +142,9 @@ export class SkinViewer {
 		this.scene.add(this.playerWrapper);
 
 		if (options.skin !== undefined) {
-			this.loadSkin(options.skin, options.model);
+			this.loadSkin(options.skin, {
+				model: options.model
+			});
 		}
 		if (options.cape !== undefined) {
 			this.loadCape(options.cape);
@@ -184,27 +193,32 @@ export class SkinViewer {
 	loadSkin(empty: null): void;
 	loadSkin<S extends TextureSource | RemoteImage>(
 		source: S,
-		model?: ModelType | "auto-detect",
-		options?: LoadOptions
+		options?: SkinLoadOptions
 	): S extends TextureSource ? void : Promise<void>;
 
 	loadSkin(
 		source: TextureSource | RemoteImage | null,
-		model: ModelType | "auto-detect" = "auto-detect",
-		options: LoadOptions = {}
+		options: SkinLoadOptions = {}
 	): void | Promise<void> {
 		if (source === null) {
 			this.resetSkin();
+
 		} else if (isTextureSource(source)) {
 			loadSkinToCanvas(this.skinCanvas, source);
-			const actualModel = model === "auto-detect" ? inferModelType(this.skinCanvas) : model;
 			this.skinTexture.needsUpdate = true;
-			this.playerObject.skin.modelType = actualModel;
+
+			if (options.model === undefined || options.model === "auto-detect") {
+				this.playerObject.skin.modelType = inferModelType(this.skinCanvas);
+			} else {
+				this.playerObject.skin.modelType = options.model;
+			}
+
 			if (options.makeVisible !== false) {
 				this.playerObject.skin.visible = true;
 			}
+
 		} else {
-			return loadImage(source).then(image => this.loadSkin(image, model, options));
+			return loadImage(source).then(image => this.loadSkin(image, options));
 		}
 	}
 
