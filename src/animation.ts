@@ -83,9 +83,9 @@ class AnimationWrapper implements SubAnimationHandle, IAnimation {
 
 export class CompositeAnimation implements IAnimation {
 
-	readonly handles: Set<AnimationHandle & IAnimation> = new Set();
+	readonly handles: Set<SubAnimationHandle & IAnimation> = new Set();
 
-	add(animation: Animation): AnimationHandle {
+	add(animation: Animation): SubAnimationHandle {
 		const handle = new AnimationWrapper(animation);
 		handle.remove = (): void => {
 			this.handles.delete(handle);
