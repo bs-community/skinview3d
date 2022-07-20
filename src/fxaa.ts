@@ -12,16 +12,6 @@ export class FXAASkinViewer extends SkinViewer {
     readonly fxaaPass: ShaderPass;
 
     constructor(options?: SkinViewerOptions) {
-        // Force options.alpha to false, because FXAA is incompatible with transparent backgrounds
-        if (options === undefined) {
-            options = { alpha: false, background: "white" };
-        } else {
-            options.alpha = false;
-            if (options.background === undefined) {
-                options.background = "white";
-            }
-        }
-
         super(options);
         this.composer = new EffectComposer(this.renderer);
         this.renderPass = new RenderPass(this.scene, this.camera);
@@ -29,9 +19,6 @@ export class FXAASkinViewer extends SkinViewer {
         this.composer.addPass(this.renderPass);
         this.composer.addPass(this.fxaaPass);
         this.updateComposerSize();
-
-        // Default background: white
-        this.renderer.setClearColor("white");
     }
 
     setSize(width: number, height: number): void {

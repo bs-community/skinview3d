@@ -428,7 +428,7 @@
 			const input = document.getElementById("panorama_url");
 			const url = obtainTextureUrl("panorama_url");
 			if (url === "") {
-				skinViewer.background = "white";
+				skinViewer.background = null;
 				input.setCustomValidity("");
 			} else {
 				skinViewer.loadPanorama(url)
