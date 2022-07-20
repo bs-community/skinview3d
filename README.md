@@ -16,6 +16,7 @@ Three.js powered Minecraft skin viewer.
 * Elytras
 * Slim Arms
   * Automatic model detection (Slim / Default)
+* FXAA (fast approximate anti-aliasing)
 
 # Usage
 [Example of using skinview3d](https://bs-community.github.io/skinview3d/)
@@ -85,10 +86,6 @@ Three.js powered Minecraft skin viewer.
 	skinViewer.animations.paused = true;
 </script>
 ```
-
-## Anti-aliasing
-skinview3d supports FXAA (fast approximate anti-aliasing).
-To enable it, you need to replace `SkinViewer` with `FXAASkinViewer`.
 
 ## Lighting
 By default, there are two lights on the scene. One is an ambient light, and the other is a point light from the camera.

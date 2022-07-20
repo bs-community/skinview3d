@@ -1,5 +1,9 @@
 import { inferModelType, isTextureSource, loadCapeToCanvas, loadEarsToCanvas, loadEarsToCanvasFromSkin, loadImage, loadSkinToCanvas, ModelType, RemoteImage, TextureSource } from "skinview-utils";
 import { Color, ColorRepresentation, PointLight, EquirectangularReflectionMapping, Group, NearestFilter, PerspectiveCamera, Scene, Texture, Vector2, WebGLRenderer, AmbientLight, Mapping } from "three";
+import { EffectComposer, FullScreenQuad } from "three/examples/jsm/postprocessing/EffectComposer.js";
+import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
+import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
+import { FXAAShader } from "three/examples/jsm/shaders/FXAAShader.js";
 import { RootAnimation } from "./animation.js";
 import { BackEquipment, PlayerObject } from "./model.js";
 
@@ -118,6 +122,10 @@ export class SkinViewer {
 	readonly globalLight: AmbientLight = new AmbientLight(0xffffff, 0.4);
 	readonly cameraLight: PointLight = new PointLight(0xffffff, 0.6);
 
+	readonly composer: EffectComposer;
+	readonly renderPass: RenderPass;
+	readonly fxaaPass: ShaderPass;
+
 	readonly skinCanvas: HTMLCanvasElement;
 	readonly capeCanvas: HTMLCanvasElement;
 	readonly earsCanvas: HTMLCanvasElement;
@@ -167,6 +175,12 @@ export class SkinViewer {
 
 		});
 		this.renderer.setPixelRatio(window.devicePixelRatio);
+
+		this.composer = new EffectComposer(this.renderer);
+		this.renderPass = new RenderPass(this.scene, this.camera);
+		this.fxaaPass = new ShaderPass(FXAAShader);
+		this.composer.addPass(this.renderPass);
+		this.composer.addPass(this.fxaaPass);
 
 		this.playerObject = new PlayerObject(this.skinTexture, this.capeTexture, this.earsTexture);
 		this.playerObject.name = "player";
@@ -229,6 +243,16 @@ export class SkinViewer {
 
 		this.canvas.addEventListener("webglcontextlost", this.onContextLost, false);
 		this.canvas.addEventListener("webglcontextrestored", this.onContextRestored, false);
+
+		this.updateComposerSize();
+	}
+
+	private updateComposerSize(): void {
+		this.composer.setSize(this.width, this.height);
+		const pixelRatio = this.renderer.getPixelRatio();
+		this.composer.setPixelRatio(pixelRatio);
+		this.fxaaPass.material.uniforms["resolution"].value.x = 1 / (this.width * pixelRatio);
+		this.fxaaPass.material.uniforms["resolution"].value.y = 1 / (this.height * pixelRatio);
 	}
 
 	loadSkin(empty: null): void;
@@ -381,13 +405,14 @@ export class SkinViewer {
 	* This method does not change the animation progress.
 	*/
 	render(): void {
-		this.renderer.render(this.scene, this.camera);
+		this.composer.render();
 	}
 
 	setSize(width: number, height: number): void {
 		this.camera.aspect = width / height;
 		this.camera.updateProjectionMatrix();
 		this.renderer.setSize(width, height);
+		this.updateComposerSize();
 	}
 
 	dispose(): void {
@@ -408,6 +433,7 @@ export class SkinViewer {
 			this.backgroundTexture.dispose();
 			this.backgroundTexture = null;
 		}
+		(this.fxaaPass.fsQuad as FullScreenQuad).dispose();
 	}
 
 	get disposed(): boolean {
