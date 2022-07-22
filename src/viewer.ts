@@ -272,7 +272,7 @@ export class SkinViewer {
 		this.earsTexture = new CanvasTexture(this.earsCanvas);
 		this.earsTexture.magFilter = NearestFilter;
 		this.earsTexture.minFilter = NearestFilter;
-		this.playerObject.cape.map = this.earsTexture;
+		this.playerObject.ears.map = this.earsTexture;
 	}
 
 	loadSkin(empty: null): void;
