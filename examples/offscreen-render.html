@@ -47,10 +47,6 @@
                 renderPaused: true
             });
 
-            // Transparent background doesn't work when calling render() for the first time.
-            // As a workaround, we call render() once before doing actual rendering.
-            skinViewer.render();
-
             skinViewer.camera.rotation.x = -0.620;
             skinViewer.camera.rotation.y = 0.534;
             skinViewer.camera.rotation.z = 0.348;

@@ -65,12 +65,6 @@ export interface SkinViewerOptions {
 	}
 
 	/**
-	 * Whether the canvas contains an alpha buffer. Default is true.
-	 * This option can be turned off if you use an opaque background.
-	 */
-	alpha?: boolean;
-
-	/**
 	 * Render target.
 	 * A new canvas is created if this parameter is unspecified.
 	 */
@@ -157,11 +151,10 @@ export class SkinViewer {
 
 		this.renderer = new WebGLRenderer({
 			canvas: this.canvas,
-			alpha: options.alpha !== false, // default: true
 			preserveDrawingBuffer: options.preserveDrawingBuffer === true // default: false
-
 		});
 		this.renderer.setPixelRatio(window.devicePixelRatio);
+		this.renderer.setClearColor(0, 0);
 
 		this.composer = new EffectComposer(this.renderer);
 		this.renderPass = new RenderPass(this.scene, this.camera);
