@@ -1,5 +1,5 @@
 import { inferModelType, isTextureSource, loadCapeToCanvas, loadEarsToCanvas, loadEarsToCanvasFromSkin, loadImage, loadSkinToCanvas, ModelType, RemoteImage, TextureSource } from "skinview-utils";
-import { Color, ColorRepresentation, PointLight, EquirectangularReflectionMapping, Group, NearestFilter, PerspectiveCamera, Scene, Texture, Vector2, WebGLRenderer, AmbientLight, Mapping, CanvasTexture } from "three";
+import { Color, ColorRepresentation, PointLight, EquirectangularReflectionMapping, Group, NearestFilter, PerspectiveCamera, Scene, Texture, Vector2, WebGLRenderer, AmbientLight, Mapping, CanvasTexture, WebGLRenderTarget, FloatType, DepthTexture } from "three";
 import { EffectComposer, FullScreenQuad } from "three/examples/jsm/postprocessing/EffectComposer.js";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
 import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
@@ -156,7 +156,15 @@ export class SkinViewer {
 		this.renderer.setPixelRatio(window.devicePixelRatio);
 		this.renderer.setClearColor(0, 0);
 
-		this.composer = new EffectComposer(this.renderer);
+		let renderTarget;
+		if (this.renderer.capabilities.isWebGL2) {
+			// Use float precision depth if possible
+			// see https://github.com/bs-community/skinview3d/issues/111
+			renderTarget = new WebGLRenderTarget(0, 0, {
+				depthTexture: new DepthTexture(0, 0, FloatType)
+			});
+		}
+		this.composer = new EffectComposer(this.renderer, renderTarget);
 		this.renderPass = new RenderPass(this.scene, this.camera);
 		this.fxaaPass = new ShaderPass(FXAAShader);
 		this.composer.addPass(this.renderPass);
