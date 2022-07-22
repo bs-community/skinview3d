@@ -74,7 +74,7 @@ Three.js powered Minecraft skin viewer.
 	// Remove an animation, stop walking dude
 	walk.remove();
 	// Remove the rotating animation, and make the player face forward
-	rotate.resetAndRemove();
+	rotate.remove();
 	// And run for now!
 	let run = skinViewer.animations.add(skinview3d.RunningAnimation);
 

@@ -30,7 +30,6 @@ export interface AnimationHandle {
 
 export interface SubAnimationHandle extends AnimationHandle {
 	remove(): void;
-	resetAndRemove(): void;
 }
 
 class AnimationWrapper implements SubAnimationHandle, IAnimation {
@@ -41,19 +40,12 @@ class AnimationWrapper implements SubAnimationHandle, IAnimation {
 
 	private lastTime: number = 0;
 	private started: boolean = false;
-	private toResetAndRemove: boolean = false;
 
 	constructor(animation: Animation) {
 		this.animation = animation;
 	}
 
 	play(player: PlayerObject, time: number): void {
-		if (this.toResetAndRemove) {
-			invokeAnimation(this.animation, player, 0);
-			this.remove();
-			return;
-		}
-
 		let delta: number;
 		if (this.started) {
 			delta = time - this.lastTime;
@@ -74,10 +66,6 @@ class AnimationWrapper implements SubAnimationHandle, IAnimation {
 
 	remove(): void {
 		// stub get's overriden
-	}
-
-	resetAndRemove(): void {
-		this.toResetAndRemove = true;
 	}
 }
 
@@ -122,9 +110,11 @@ export class RootAnimation extends CompositeAnimation implements AnimationHandle
 
 	runAnimationLoop(player: PlayerObject): void {
 		if (this.handles.size === 0) {
+			player.resetJoints();
 			return;
 		}
 		this.progress += this.clock.getDelta() * this.speed;
+		player.resetJoints();
 		this.play(player, this.progress);
 	}
 

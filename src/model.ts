@@ -273,6 +273,14 @@ export class SkinObject extends Group {
 	setOuterLayerVisible(value: boolean): void {
 		this.getBodyParts().forEach(part => part.outerLayer.visible = value);
 	}
+
+	resetJoints(): void {
+		this.head.rotation.set(0, 0, 0);
+		this.leftArm.rotation.set(0, 0, 0);
+		this.rightArm.rotation.set(0, 0, 0);
+		this.leftLeg.rotation.set(0, 0, 0);
+		this.rightLeg.rotation.set(0, 0, 0);
+	}
 }
 
 export class CapeObject extends Group {
@@ -349,6 +357,10 @@ export class ElytraObject extends Group {
 
 		this.leftWing.position.x = 5;
 		this.leftWing.rotation.x = .2617994;
+		this.resetJoints();
+	}
+
+	resetJoints(): void {
 		this.leftWing.rotation.y = .01; // to avoid z-fighting
 		this.leftWing.rotation.z = .2617994;
 		this.updateRightWing();
@@ -415,6 +427,8 @@ export class EarsObject extends Group {
 
 export type BackEquipment = "cape" | "elytra";
 
+const CapeDefaultAngle = 10.8 * Math.PI / 180;
+
 export class PlayerObject extends Group {
 
 	readonly skin: SkinObject;
@@ -434,7 +448,7 @@ export class PlayerObject extends Group {
 		this.cape.name = "cape";
 		this.cape.position.y = 8;
 		this.cape.position.z = -2;
-		this.cape.rotation.x = 10.8 * Math.PI / 180;
+		this.cape.rotation.x = CapeDefaultAngle;
 		this.cape.rotation.y = Math.PI;
 		this.add(this.cape);
 
@@ -466,5 +480,13 @@ export class PlayerObject extends Group {
 	set backEquipment(value: BackEquipment | null) {
 		this.cape.visible = value === "cape";
 		this.elytra.visible = value === "elytra";
+	}
+
+	resetJoints(): void {
+		this.skin.resetJoints();
+		this.cape.rotation.x = CapeDefaultAngle;
+		this.elytra.resetJoints();
+		this.position.set(0, 0, 0);
+		this.rotation.set(0, 0, 0);
 	}
 }

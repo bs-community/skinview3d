@@ -454,7 +454,7 @@
 					rotateAnimation = skinViewer.animations.add(skinview3d.RotatingAnimation);
 					rotateAnimation.speed = document.getElementById("rotate_animation_speed").value;
 				} else if (!e.target.checked && rotateAnimation !== null) {
-					rotateAnimation.resetAndRemove();
+					rotateAnimation.remove();
 					rotateAnimation = null;
 				}
 			});
@@ -466,7 +466,7 @@
 			for (const el of document.querySelectorAll('input[type="radio"][name="primary_animation"]')) {
 				el.addEventListener("change", e => {
 					if (primaryAnimation !== null) {
-						primaryAnimation.resetAndRemove();
+						primaryAnimation.remove();
 						primaryAnimation = null;
 					}
 					if (e.target.value !== "") {
