@@ -315,6 +315,11 @@ export class SkinViewer {
 
 	resetSkin(): void {
 		this.playerObject.skin.visible = false;
+		this.playerObject.skin.map = null;
+		if (this.skinTexture !== null) {
+			this.skinTexture.dispose();
+			this.skinTexture = null;
+		}
 	}
 
 	loadCape(empty: null): void;
@@ -345,6 +350,12 @@ export class SkinViewer {
 
 	resetCape(): void {
 		this.playerObject.backEquipment = null;
+		this.playerObject.cape.map = null;
+		this.playerObject.elytra.map = null;
+		if (this.capeTexture !== null) {
+			this.capeTexture.dispose();
+			this.capeTexture = null;
+		}
 	}
 
 	loadEars(empty: null): void;
@@ -379,6 +390,11 @@ export class SkinViewer {
 
 	resetEars(): void {
 		this.playerObject.ears.visible = false;
+		this.playerObject.ears.map = null;
+		if (this.earsTexture !== null) {
+			this.earsTexture.dispose();
+			this.earsTexture = null;
+		}
 	}
 
 	loadPanorama<S extends TextureSource | RemoteImage>(
@@ -445,22 +461,10 @@ export class SkinViewer {
 		}
 
 		this.renderer.dispose();
-		if (this.skinTexture !== null) {
-			this.skinTexture.dispose();
-			this.skinTexture = null;
-		}
-		if (this.capeTexture !== null) {
-			this.capeTexture.dispose();
-			this.capeTexture = null;
-		}
-		if (this.earsTexture !== null) {
-			this.earsTexture.dispose();
-			this.earsTexture = null;
-		}
-		if (this.backgroundTexture !== null) {
-			this.backgroundTexture.dispose();
-			this.backgroundTexture = null;
-		}
+		this.resetSkin();
+		this.resetCape();
+		this.resetEars();
+		this.background = null;
 		(this.fxaaPass.fsQuad as FullScreenQuad).dispose();
 	}
 
