@@ -70,6 +70,8 @@ export interface SkinViewerOptions {
 	 */
 	canvas?: HTMLCanvasElement;
 
+	pixelRatio?: number | "match-device";
+
 	/**
 	 * Whether to preserve the buffers until manually cleared or overwritten. Default is false.
 	 */
@@ -136,6 +138,10 @@ export class SkinViewer {
 	private onContextLost: (event: Event) => void;
 	private onContextRestored: () => void;
 
+	private _pixelRatio: number | "match-device";
+	private devicePixelRatioQuery: MediaQueryList | null;
+	private onDevicePixelRatioChange: () => void;
+
 	constructor(options: SkinViewerOptions = {}) {
 		this.canvas = options.canvas === undefined ? document.createElement("canvas") : options.canvas;
 
@@ -153,7 +159,27 @@ export class SkinViewer {
 			canvas: this.canvas,
 			preserveDrawingBuffer: options.preserveDrawingBuffer === true // default: false
 		});
-		this.renderer.setPixelRatio(window.devicePixelRatio);
+
+		this.onDevicePixelRatioChange = () => {
+			this.renderer.setPixelRatio(window.devicePixelRatio);
+			this.updateComposerSize();
+
+			if (this._pixelRatio === "match-device") {
+				this.devicePixelRatioQuery = matchMedia(`(resolution: ${window.devicePixelRatio}dppx)`);
+				this.devicePixelRatioQuery.addEventListener("change", this.onDevicePixelRatioChange, { once: true });
+			}
+		};
+		if (options.pixelRatio === undefined || options.pixelRatio === "match-device") {
+			this._pixelRatio = "match-device";
+			this.devicePixelRatioQuery = matchMedia(`(resolution: ${window.devicePixelRatio}dppx)`);
+			this.devicePixelRatioQuery.addEventListener("change", this.onDevicePixelRatioChange, { once: true });
+			this.renderer.setPixelRatio(window.devicePixelRatio);
+		} else {
+			this._pixelRatio = options.pixelRatio;
+			this.devicePixelRatioQuery = null;
+			this.renderer.setPixelRatio(options.pixelRatio);
+		}
+
 		this.renderer.setClearColor(0, 0);
 
 		let renderTarget;
@@ -232,8 +258,6 @@ export class SkinViewer {
 
 		this.canvas.addEventListener("webglcontextlost", this.onContextLost, false);
 		this.canvas.addEventListener("webglcontextrestored", this.onContextRestored, false);
-
-		this.updateComposerSize();
 	}
 
 	private updateComposerSize(): void {
@@ -457,6 +481,11 @@ export class SkinViewer {
 		this.canvas.removeEventListener("webglcontextlost", this.onContextLost, false);
 		this.canvas.removeEventListener("webglcontextrestored", this.onContextRestored, false);
 
+		if (this.devicePixelRatioQuery !== null) {
+			this.devicePixelRatioQuery.removeEventListener("change", this.onDevicePixelRatioChange);
+			this.devicePixelRatioQuery = null;
+		}
+
 		if (this.animationID !== null) {
 			window.cancelAnimationFrame(this.animationID);
 			this.animationID = null;
@@ -556,5 +585,26 @@ export class SkinViewer {
 	set zoom(value: number) {
 		this._zoom = value;
 		this.adjustCameraDistance();
+	}
+
+	get pixelRatio(): number | "match-device" {
+		return this._pixelRatio;
+	}
+
+	set pixelRatio(newValue: number | "match-device") {
+		if (newValue === "match-device") {
+			if (this._pixelRatio !== "match-device") {
+				this._pixelRatio = newValue;
+				this.onDevicePixelRatioChange();
+			}
+		} else {
+			if (this._pixelRatio === "match-device" && this.devicePixelRatioQuery !== null) {
+				this.devicePixelRatioQuery.removeEventListener("change", this.onDevicePixelRatioChange);
+				this.devicePixelRatioQuery = null;
+			}
+			this._pixelRatio = newValue;
+			this.renderer.setPixelRatio(newValue);
+			this.updateComposerSize();
+		}
 	}
 }
