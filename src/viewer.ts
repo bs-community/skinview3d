@@ -1,5 +1,5 @@
 import { inferModelType, isTextureSource, loadCapeToCanvas, loadEarsToCanvas, loadEarsToCanvasFromSkin, loadImage, loadSkinToCanvas, ModelType, RemoteImage, TextureSource } from "skinview-utils";
-import { Color, ColorRepresentation, PointLight, EquirectangularReflectionMapping, Group, NearestFilter, PerspectiveCamera, Scene, Texture, Vector2, WebGLRenderer, AmbientLight, Mapping } from "three";
+import { Color, ColorRepresentation, PointLight, EquirectangularReflectionMapping, Group, NearestFilter, PerspectiveCamera, Scene, Texture, Vector2, WebGLRenderer, AmbientLight, Mapping, CanvasTexture } from "three";
 import { EffectComposer, FullScreenQuad } from "three/examples/jsm/postprocessing/EffectComposer.js";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
 import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
@@ -129,9 +129,9 @@ export class SkinViewer {
 	readonly skinCanvas: HTMLCanvasElement;
 	readonly capeCanvas: HTMLCanvasElement;
 	readonly earsCanvas: HTMLCanvasElement;
-	private readonly skinTexture: Texture;
-	private readonly capeTexture: Texture;
-	private readonly earsTexture: Texture;
+	private skinTexture: Texture | null = null;
+	private capeTexture: Texture | null = null;
+	private earsTexture: Texture | null = null;
 	private backgroundTexture: Texture | null = null;
 
 	private _disposed: boolean = false;
@@ -145,24 +145,11 @@ export class SkinViewer {
 	constructor(options: SkinViewerOptions = {}) {
 		this.canvas = options.canvas === undefined ? document.createElement("canvas") : options.canvas;
 
-		// texture
 		this.skinCanvas = document.createElement("canvas");
-		this.skinTexture = new Texture(this.skinCanvas);
-		this.skinTexture.magFilter = NearestFilter;
-		this.skinTexture.minFilter = NearestFilter;
-
 		this.capeCanvas = document.createElement("canvas");
-		this.capeTexture = new Texture(this.capeCanvas);
-		this.capeTexture.magFilter = NearestFilter;
-		this.capeTexture.minFilter = NearestFilter;
-
 		this.earsCanvas = document.createElement("canvas");
-		this.earsTexture = new Texture(this.earsCanvas);
-		this.earsTexture.magFilter = NearestFilter;
-		this.earsTexture.minFilter = NearestFilter;
 
 		this.scene = new Scene();
-
 		this.camera = new PerspectiveCamera();
 		this.camera.add(this.cameraLight);
 		this.scene.add(this.camera);
@@ -182,7 +169,7 @@ export class SkinViewer {
 		this.composer.addPass(this.renderPass);
 		this.composer.addPass(this.fxaaPass);
 
-		this.playerObject = new PlayerObject(this.skinTexture, this.capeTexture, this.earsTexture);
+		this.playerObject = new PlayerObject();
 		this.playerObject.name = "player";
 		this.playerObject.skin.visible = false;
 		this.playerObject.cape.visible = false;
@@ -255,6 +242,37 @@ export class SkinViewer {
 		this.fxaaPass.material.uniforms["resolution"].value.y = 1 / (this.height * pixelRatio);
 	}
 
+	private recreateSkinTexture(): void {
+		if (this.skinTexture !== null) {
+			this.skinTexture.dispose();
+		}
+		this.skinTexture = new CanvasTexture(this.skinCanvas);
+		this.skinTexture.magFilter = NearestFilter;
+		this.skinTexture.minFilter = NearestFilter;
+		this.playerObject.skin.map = this.skinTexture;
+	}
+
+	private recreateCapeTexture(): void {
+		if (this.capeTexture !== null) {
+			this.capeTexture.dispose();
+		}
+		this.capeTexture = new CanvasTexture(this.capeCanvas);
+		this.capeTexture.magFilter = NearestFilter;
+		this.capeTexture.minFilter = NearestFilter;
+		this.playerObject.cape.map = this.capeTexture;
+		this.playerObject.elytra.map = this.capeTexture;
+	}
+
+	private recreateEarsTexture(): void {
+		if (this.earsTexture !== null) {
+			this.earsTexture.dispose();
+		}
+		this.earsTexture = new CanvasTexture(this.earsCanvas);
+		this.earsTexture.magFilter = NearestFilter;
+		this.earsTexture.minFilter = NearestFilter;
+		this.playerObject.cape.map = this.earsTexture;
+	}
+
 	loadSkin(empty: null): void;
 	loadSkin<S extends TextureSource | RemoteImage>(
 		source: S,
@@ -270,7 +288,7 @@ export class SkinViewer {
 
 		} else if (isTextureSource(source)) {
 			loadSkinToCanvas(this.skinCanvas, source);
-			this.skinTexture.needsUpdate = true;
+			this.recreateSkinTexture();
 
 			if (options.model === undefined || options.model === "auto-detect") {
 				this.playerObject.skin.modelType = inferModelType(this.skinCanvas);
@@ -284,7 +302,7 @@ export class SkinViewer {
 
 			if (options.ears === true || options.ears == "load-only") {
 				loadEarsToCanvasFromSkin(this.earsCanvas, source);
-				this.earsTexture.needsUpdate = true;
+				this.recreateEarsTexture();
 				if (options.ears === true) {
 					this.playerObject.ears.visible = true;
 				}
@@ -314,7 +332,7 @@ export class SkinViewer {
 
 		} else if (isTextureSource(source)) {
 			loadCapeToCanvas(this.capeCanvas, source);
-			this.capeTexture.needsUpdate = true;
+			this.recreateCapeTexture();
 
 			if (options.makeVisible !== false) {
 				this.playerObject.backEquipment = options.backEquipment === undefined ? "cape" : options.backEquipment;
@@ -348,7 +366,7 @@ export class SkinViewer {
 			} else {
 				loadEarsToCanvas(this.earsCanvas, source);
 			}
-			this.earsTexture.needsUpdate = true;
+			this.recreateEarsTexture();
 
 			if (options.makeVisible !== false) {
 				this.playerObject.ears.visible = true;
@@ -427,8 +445,18 @@ export class SkinViewer {
 		}
 
 		this.renderer.dispose();
-		this.skinTexture.dispose();
-		this.capeTexture.dispose();
+		if (this.skinTexture !== null) {
+			this.skinTexture.dispose();
+			this.skinTexture = null;
+		}
+		if (this.capeTexture !== null) {
+			this.capeTexture.dispose();
+			this.capeTexture = null;
+		}
+		if (this.earsTexture !== null) {
+			this.earsTexture.dispose();
+			this.earsTexture = null;
+		}
 		if (this.backgroundTexture !== null) {
 			this.backgroundTexture.dispose();
 			this.backgroundTexture = null;
