@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <title>skinview3d / preview</title>
+</head>
+
+<body>
+    <div id="rendered_imgs"></div>
+    <script src="../bundles/skinview3d.bundle.js"></script>
+    <script>
+        const configurations = [
+            {
+                skin: "img/hatsune_miku.png",
+                prepareFn: skinview3d.ViewedFromBackRight
+            },
+            {
+                skin: "img/hatsune_miku.png",
+                prepareFn: skinview3d.ViewedFromFrontLeft
+            },
+            {
+                skin: "img/hacksore.png",
+                cape: "img/mojang_cape.png",
+                prepareFn: viewer => {
+                    skinview3d.IdleAnimation(viewer.playerObject, 0);
+                    skinview3d.ViewedFromBackRight(viewer);
+                }
+            },
+            {
+                skin: "img/hacksore.png",
+                cape: "img/mojang_cape.png",
+                prepareFn: viewer => {
+                    skinview3d.IdleAnimation(viewer.playerObject, 0);
+                    skinview3d.ViewedFromFrontLeft(viewer);
+                }
+            },
+        ];
+
+        (async function () {
+            const previewer = new skinview3d.SkinPreviewRenderer();
+            const width = 150;
+            const height = 300;
+
+            const imageBlobs = configurations.map(
+                cfg => previewer.renderBlob({ ...cfg, width, height })
+            );
+
+            for (const imageBlob of await Promise.all(imageBlobs)) {
+                const imgElement = document.createElement("img");
+                imgElement.src = URL.createObjectURL(imageBlob);
+                imgElement.width = width;
+                imgElement.height = height;
+                document.getElementById("rendered_imgs").appendChild(imgElement);
+            }
+
+            previewer.dispose();
+        })();
+    </script>
+</body>
+
+</html>
