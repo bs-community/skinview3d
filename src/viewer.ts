@@ -224,6 +224,7 @@ export class SkinViewer {
 		};
 
 		this.onContextRestored = () => {
+			this.renderer.setClearColor(0, 0); // Clear color might be lost
 			if (!this._renderPaused && !this._disposed && this.animationID === null) {
 				this.animationID = window.requestAnimationFrame(() => this.draw());
 			}
