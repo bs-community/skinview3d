@@ -569,6 +569,12 @@ export class SkinViewer {
 		this.camera.updateProjectionMatrix();
 	}
 
+	resetCameraPose(): void {
+		this.camera.position.set(0, 0, 1);
+		this.camera.rotation.set(0, 0, 0);
+		this.adjustCameraDistance();
+	}
+
 	get fov(): number {
 		return this.camera.fov;
 	}
