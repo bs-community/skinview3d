@@ -2,6 +2,7 @@ root: true
 parser: '@typescript-eslint/parser'
 plugins:
   - '@typescript-eslint'
+  - 'eslint-plugin-tsdoc'
 extends:
   - 'eslint:recommended'
   - 'plugin:@typescript-eslint/eslint-recommended'
@@ -13,3 +14,4 @@ rules:
   '@typescript-eslint/no-inferrable-types': off
   '@typescript-eslint/interface-name-prefix': off
   '@typescript-eslint/no-empty-interface': off
+  'tsdoc/syntax': warn
