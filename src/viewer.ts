@@ -8,56 +8,133 @@ import { RootAnimation } from "./animation.js";
 import { BackEquipment, PlayerObject } from "./model.js";
 
 export interface LoadOptions {
+
 	/**
-	 * Whether to make the object visible after the texture is loaded. Default is true.
+	 * Whether to make the object visible after the texture is loaded.
+	 *
+	 * @defaultValue `true`
 	 */
 	makeVisible?: boolean;
+
 }
 
 export interface SkinLoadOptions extends LoadOptions {
+
 	/**
-	 * The model type of skin. Default is "auto-detect".
+	 * The model of the player (`"default"` for normal arms, and `"slim"` for slim arms).
+	 *
+	 * When set to `"auto-detect"`, the model will be inferred from the skin texture.
+	 *
+	 * @defaultValue `"auto-detect"`
 	 */
 	model?: ModelType | "auto-detect";
 
 	/**
-	 * true: Loads the ears drawn on the skin texture, and show it.
-	 * "load-only": Loads the ears drawn on the skin texture, but do not make it visible.
-	 * false: Do not load ears from the skin texture.
-	 * Default is false.
+	 * Whether to display the ears drawn on the skin texture.
+	 *
+	 * - `true` - Display the ears drawn on the skin texture.
+	 * - `"load-only"` - Loads the ear texture, but do not make them visible.
+	 *   You can make them visible later by setting `PlayerObject.ears.visible` to `true`.
+	 * - `false` - Do not load or show the ears.
+	 *
+	 * @defaultValue `false`
 	 */
 	ears?: boolean | "load-only";
+
 }
 
 export interface CapeLoadOptions extends LoadOptions {
+
 	/**
-	 * The equipment (cape or elytra) to show, defaults to "cape".
-	 * If makeVisible is set to false, this option will have no effect.
+	 * The equipment (`"cape"` or `"elytra"`) to show when the cape texture is loaded.
+	 *
+	 * If `makeVisible` is set to false, this option will have no effect.
+	 *
+	 * @defaultValue `"cape"`
 	 */
 	backEquipment?: BackEquipment;
+
 }
 
 export interface EarsLoadOptions extends LoadOptions {
+
 	/**
-	 * "standalone": The texture is a 14x7 image that only contains the ears;
-	 * "skin": The texture is a skin that contains ears, and we only show its ear part.
-	 * Default is "standalone".
+	 * The type of the provided ear texture.
+	 *
+	 * - `"standalone"` means the provided texture is a 14x7 image that only contains the ears.
+	 * - `"skin"` means the provided texture is a skin texture with ears, and we will use its ear part.
+	 *
+	 * @defaultValue `"standalone"`
 	 */
 	textureType?: "standalone" | "skin";
+
 }
 
 export interface SkinViewerOptions {
+
+	/**
+	 * The canvas where the renderer draws its output.
+	 *
+	 * @defaultValue If unspecified, a new canvas element will be created.
+	 */
+	canvas?: HTMLCanvasElement;
+
+	/**
+	 * The CSS width of the canvas.
+	 */
 	width?: number;
+
+	/**
+	 * The CSS height of the canvas.
+	 */
 	height?: number;
+
+	/**
+	 * The pixel ratio of the canvas.
+	 *
+	 * When set to `"match-device"`, the current device pixel ratio will be used,
+	 * and it will be automatically updated when the device pixel ratio changes.
+	 *
+	 * @defaultValue `"match-device"`
+	 */
+	pixelRatio?: number | "match-device";
+
+	/**
+	 * The skin texture of the player.
+	 *
+	 * @defaultValue If unspecified, the skin will be invisible.
+	 */
 	skin?: RemoteImage | TextureSource;
+
+	/**
+	 * The model of the player (`"default"` for normal arms, and `"slim"` for slim arms).
+	 *
+	 * When set to `"auto-detect"`, the model will be inferred from the skin texture.
+	 *
+	 * If the `skin` option is not specified, this option will have no effect.
+	 *
+	 * @defaultValue `"auto-detect"`
+	 */
 	model?: ModelType | "auto-detect";
+
+	/**
+	 * The cape texture of the player.
+	 *
+	 * @defaultValue If unspecified, the cape will be invisible.
+	 */
 	cape?: RemoteImage | TextureSource;
 
 	/**
-	 * If you want to show the ears drawn on the current skin, set this to "current-skin".
-	 * To show ears that come from a separate texture, you have to specify 'textureType' ("standalone" or "skin") and 'source'.
-	 * "standalone" means the provided texture is a 14x7 image that only contains the ears.
-	 * "skin" means the provided texture is a skin that contains ears, and we only show its ear part.
+	 * The ear texture of the player.
+	 *
+	 * When set to `"current-skin"`, the ears drawn on the current skin texture (as is specified in the `skin` option) will be shown.
+	 *
+	 * To use an individual ear texture, you have to specify the `textureType` and the `source` option.
+	 * `source` is the texture to use, and `textureType` can be either `"standalone"` or `"skin"`:
+	 *   - `"standalone"` means the provided texture is a 14x7 image that only contains the ears.
+	 *   - `"skin"` means the provided texture is a skin texture with ears, and we will show its ear part.
+	 *
+	 * @defaultValue If unspecified, the ears will be invisible.
 	 */
 	ears?: "current-skin" | {
 		textureType: "standalone" | "skin",
@@ -65,55 +142,86 @@ export interface SkinViewerOptions {
 	}
 
 	/**
-	 * Render target.
-	 * A new canvas is created if this parameter is unspecified.
-	 */
-	canvas?: HTMLCanvasElement;
-
-	pixelRatio?: number | "match-device";
-
-	/**
-	 * Whether to preserve the buffers until manually cleared or overwritten. Default is false.
+	 * Whether to preserve the buffers until manually cleared or overwritten.
+	 *
+	 * @defaultValue `false`
 	 */
 	preserveDrawingBuffer?: boolean;
 
 	/**
-	 * The initial value of `SkinViewer.renderPaused`. Default is false.
-	 * If this option is true, rendering and animation loops will not start.
+	 * Whether to pause the rendering and animation loop.
+	 *
+	 * @defaultValue `false`
 	 */
 	renderPaused?: boolean;
 
 	/**
-	 * The background of the scene. Default is transparent.
+	 * The background of the scene.
+	 *
+	 * @defaultValue transparent
 	 */
 	background?: ColorRepresentation | Texture;
 
 	/**
-	 * The panorama background to use. This option overrides 'background' option.
+	 * The panorama background to use.
+	 *
+	 * This option overrides the `background` option.
 	 */
 	panorama?: RemoteImage | TextureSource;
 
 	/**
-	 * Camera vertical field of view, in degrees. Default is 50.
-	 * The distance between the object and the camera is automatically computed.
+	 * Camera vertical field of view, in degrees.
+	 *
+	 * The distance between the player and the camera will be automatically computed from `fov` and `zoom`.
+	 *
+	 * @defaultValue `50`
+	 *
+	 * @see {@link SkinViewer.adjustCameraDistance}
 	 */
 	fov?: number;
 
 	/**
-	 * Zoom ratio of the player. Default is 0.9.
+	 * Zoom ratio of the player.
+	 *
 	 * This value affects the distance between the object and the camera.
-	 * When set to 1.0, the top edge of the player's head coincides with the edge of the view.
+	 * When set to `1.0`, the top edge of the player's head coincides with the edge of the canvas.
+	 *
+	 * The distance between the player and the camera will be automatically computed from `fov` and `zoom`.
+	 *
+	 * @defaultValue `0.9`
+	 *
+	 * @see {@link SkinViewer.adjustCameraDistance}
 	 */
 	zoom?: number;
 }
 
+/**
+ * The SkinViewer renders the player on a canvas.
+ */
 export class SkinViewer {
+
+	/**
+	 * The canvas where the renderer draws its output.
+	 */
 	readonly canvas: HTMLCanvasElement;
+
 	readonly scene: Scene;
+
 	readonly camera: PerspectiveCamera;
+
 	readonly renderer: WebGLRenderer;
+
+	/**
+	 * The player object.
+	 */
 	readonly playerObject: PlayerObject;
+
+	/**
+	 * A group that wraps the player object.
+	 * It is used to center the player in the world.
+	 */
 	readonly playerWrapper: Group;
+
 	readonly animations: RootAnimation = new RootAnimation();
 	readonly globalLight: AmbientLight = new AmbientLight(0xffffff, 0.4);
 	readonly cameraLight: PointLight = new PointLight(0xffffff, 0.6);
