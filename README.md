@@ -61,20 +61,13 @@ Three.js powered Minecraft skin viewer.
 	// Zoom out
 	skinViewer.zoom = 0.5;
 
-	// Control objects with your mouse!
-	let control = skinview3d.createOrbitControls(skinViewer);
-	control.enableRotate = true;
-	control.enableZoom = false;
-	control.enablePan = false;
+	// Rotate the camera around the player
+	skinViewer.controls.autoRotate = true;
 
 	// Add an animation
 	let walk = skinViewer.animations.add(skinview3d.WalkingAnimation);
-	// Add another animation
-	let rotate = skinViewer.animations.add(skinview3d.RotatingAnimation);
 	// Remove an animation, stop walking dude
 	walk.remove();
-	// Remove the rotating animation, and make the player face forward
-	rotate.remove();
 	// And run for now!
 	let run = skinViewer.animations.add(skinview3d.RunningAnimation);
 
