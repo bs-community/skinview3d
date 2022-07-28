@@ -129,25 +129,22 @@
 		</div>
 
 		<div class="control-section">
+			<h1>Camera Rotation</h1>
+			<label class="control"><input id="auto_rotate" type="checkbox"> Enable</label>
+			<label class="control">Speed: <input id="auto_rotate_speed" type="number" value="2" step="0.1" size="3"></label>
+		</div>
+
+		<div class="control-section">
 			<h1>Animation</h1>
-			<label class="control">Global Speed: <input id="global_animation_speed" type="number" value="1" step="0.1" size="3"></label>
+			<div>
+				<label><input type="radio" id="primary_animation_none" name="primary_animation" value="" checked> None</label>
+				<label><input type="radio" id="primary_animation_idle" name="primary_animation" value="idle"> Idle</label>
+				<label><input type="radio" id="primary_animation_walk" name="primary_animation" value="walk"> Walk</label>
+				<label><input type="radio" id="primary_animation_run" name="primary_animation" value="run"> Run</label>
+				<label><input type="radio" id="primary_animation_fly" name="primary_animation" value="fly"> Fly</label>
+			</div>
+			<label class="control">Speed: <input id="primary_animation_speed" type="number" value="1" step="0.1" size="3"></label>
 			<button id="animation_pause_resume" type="button" class="control">Pause / Resume</button>
-			<div>
-				<h2>Rotate</h2>
-				<label class="control"><input id="rotate_animation" type="checkbox"> Enable</label>
-				<label class="control">Speed: <input id="rotate_animation_speed" type="number" value="1" step="0.1" size="3"></label>
-			</div>
-			<div>
-				<h2>Walk / Run / Fly</h2>
-				<div class="control">
-					<label><input type="radio" id="primary_animation_none" name="primary_animation" value="" checked> None</label>
-					<label><input type="radio" id="primary_animation_idle" name="primary_animation" value="idle"> Idle</label>
-					<label><input type="radio" id="primary_animation_walk" name="primary_animation" value="walk"> Walk</label>
-					<label><input type="radio" id="primary_animation_run" name="primary_animation" value="run"> Run</label>
-					<label><input type="radio" id="primary_animation_fly" name="primary_animation" value="fly"> Fly</label>
-				</div>
-				<label class="control">Speed: <input id="primary_animation_speed" type="number" value="1" step="0.1" size="3"></label>
-			</div>
 		</div>
 
 		<div class="control-section">
@@ -326,7 +323,6 @@
 		};
 
 		let skinViewer;
-		let rotateAnimation;
 		let primaryAnimation;
 
 		function obtainTextureUrl(id) {
@@ -446,22 +442,9 @@
 			document.getElementById("zoom").addEventListener("change", e => skinViewer.zoom = e.target.value);
 			document.getElementById("global_light").addEventListener("change", e => skinViewer.globalLight.intensity = e.target.value);
 			document.getElementById("camera_light").addEventListener("change", e => skinViewer.cameraLight.intensity = e.target.value);
-			document.getElementById("global_animation_speed").addEventListener("change", e => skinViewer.animations.speed = e.target.value);
 			document.getElementById("animation_pause_resume").addEventListener("click", () => skinViewer.animations.paused = !skinViewer.animations.paused);
-			document.getElementById("rotate_animation").addEventListener("change", e => {
-				if (e.target.checked && rotateAnimation === null) {
-					rotateAnimation = skinViewer.animations.add(skinview3d.RotatingAnimation);
-					rotateAnimation.speed = document.getElementById("rotate_animation_speed").value;
-				} else if (!e.target.checked && rotateAnimation !== null) {
-					rotateAnimation.remove();
-					rotateAnimation = null;
-				}
-			});
-			document.getElementById("rotate_animation_speed").addEventListener("change", e => {
-				if (rotateAnimation !== null) {
-					rotateAnimation.speed = e.target.value;
-				}
-			});
+			document.getElementById("auto_rotate").addEventListener("change", e => skinViewer.controls.autoRotate = e.target.checked);
+			document.getElementById("auto_rotate_speed").addEventListener("change", e => skinViewer.controls.autoRotateSpeed = e.target.value);
 			for (const el of document.querySelectorAll('input[type="radio"][name="primary_animation"]')) {
 				el.addEventListener("change", e => {
 					if (primaryAnimation !== null) {
@@ -540,7 +523,6 @@
 			skinViewer = new skinview3d.SkinViewer({
 				canvas: document.getElementById("skin_container")
 			});
-			rotateAnimation = null;
 			primaryAnimation = null;
 
 			skinViewer.width = document.getElementById("canvas_width").value;
@@ -549,11 +531,8 @@
 			skinViewer.zoom = document.getElementById("zoom").value;
 			skinViewer.globalLight.intensity = document.getElementById("global_light").value;
 			skinViewer.cameraLight.intensity = document.getElementById("camera_light").value;
-			skinViewer.animations.speed = document.getElementById("global_animation_speed").value;
-			if (document.getElementById("rotate_animation").checked) {
-				rotateAnimation = skinViewer.animations.add(skinview3d.RotatingAnimation);
-				rotateAnimation.speed = document.getElementById("rotate_animation_speed").value;
-			}
+			skinViewer.controls.autoRotate = document.getElementById("auto_rotate").checked;
+			skinViewer.controls.autoRotateSpeed = document.getElementById("auto_rotate_speed").value;
 			const primaryAnimationName = document.querySelector('input[type="radio"][name="primary_animation"]:checked').value;
 			if (primaryAnimationName !== "") {
 				primaryAnimation = skinViewer.animations.add(availableAnimations[primaryAnimationName]);

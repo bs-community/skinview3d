@@ -198,10 +198,6 @@ export const RunningAnimation: Animation = (player, time) => {
 	// You shouldn't glance right and left when running dude :P
 };
 
-export const RotatingAnimation: Animation = (player, time) => {
-	player.rotation.y = time;
-};
-
 function clamp(num: number, min: number, max: number): number {
 	return num <= min ? min : num >= max ? max : num;
 }
