@@ -137,13 +137,13 @@
 		<div class="control-section">
 			<h1>Animation</h1>
 			<div>
-				<label><input type="radio" id="primary_animation_none" name="primary_animation" value="" checked> None</label>
-				<label><input type="radio" id="primary_animation_idle" name="primary_animation" value="idle"> Idle</label>
-				<label><input type="radio" id="primary_animation_walk" name="primary_animation" value="walk"> Walk</label>
-				<label><input type="radio" id="primary_animation_run" name="primary_animation" value="run"> Run</label>
-				<label><input type="radio" id="primary_animation_fly" name="primary_animation" value="fly"> Fly</label>
+				<label><input type="radio" id="animation_none" name="animation" value="" checked> None</label>
+				<label><input type="radio" id="animation_idle" name="animation" value="idle"> Idle</label>
+				<label><input type="radio" id="animation_walk" name="animation" value="walk"> Walk</label>
+				<label><input type="radio" id="animation_run" name="animation" value="run"> Run</label>
+				<label><input type="radio" id="animation_fly" name="animation" value="fly"> Fly</label>
 			</div>
-			<label class="control">Speed: <input id="primary_animation_speed" type="number" value="1" step="0.1" size="3"></label>
+			<label class="control">Speed: <input id="animation_speed" type="number" value="1" step="0.1" size="3"></label>
 			<button id="animation_pause_resume" type="button" class="control">Pause / Resume</button>
 		</div>
 
@@ -316,14 +316,13 @@
 		const skinParts = ["head", "body", "rightArm", "leftArm", "rightLeg", "leftLeg"];
 		const skinLayers = ["innerLayer", "outerLayer"];
 		const availableAnimations = {
-			idle: skinview3d.IdleAnimation,
-			walk: skinview3d.WalkingAnimation,
-			run: skinview3d.RunningAnimation,
-			fly: skinview3d.FlyingAnimation
+			idle: new skinview3d.IdleAnimation(),
+			walk: new skinview3d.WalkingAnimation(),
+			run: new skinview3d.RunningAnimation(),
+			fly: new skinview3d.FlyingAnimation()
 		};
 
 		let skinViewer;
-		let primaryAnimation;
 
 		function obtainTextureUrl(id) {
 			const urlInput = document.getElementById(id);
@@ -445,21 +444,19 @@
 			document.getElementById("animation_pause_resume").addEventListener("click", () => skinViewer.animations.paused = !skinViewer.animations.paused);
 			document.getElementById("auto_rotate").addEventListener("change", e => skinViewer.controls.autoRotate = e.target.checked);
 			document.getElementById("auto_rotate_speed").addEventListener("change", e => skinViewer.controls.autoRotateSpeed = e.target.value);
-			for (const el of document.querySelectorAll('input[type="radio"][name="primary_animation"]')) {
+			for (const el of document.querySelectorAll('input[type="radio"][name="animation"]')) {
 				el.addEventListener("change", e => {
-					if (primaryAnimation !== null) {
-						primaryAnimation.remove();
-						primaryAnimation = null;
-					}
-					if (e.target.value !== "") {
-						primaryAnimation = skinViewer.animations.add(availableAnimations[e.target.value]);
-						primaryAnimation.speed = document.getElementById("primary_animation_speed").value;
+					if (e.target.value === "") {
+						skinViewer.animation = null;
+					} else {
+						skinViewer.animation = availableAnimations[e.target.value];
+						skinViewer.animation.speed = document.getElementById("animation_speed").value;
 					}
 				});
 			}
-			document.getElementById("primary_animation_speed").addEventListener("change", e => {
-				if (primaryAnimation !== null) {
-					primaryAnimation.speed = e.target.value;
+			document.getElementById("animation_speed").addEventListener("change", e => {
+				if (skinViewer.animation !== null) {
+					skinViewer.animation.speed = e.target.value;
 				}
 			});
 			document.getElementById("control_rotate").addEventListener("change", e => skinViewer.controls.enableRotate = e.target.checked);
@@ -523,7 +520,6 @@
 			skinViewer = new skinview3d.SkinViewer({
 				canvas: document.getElementById("skin_container")
 			});
-			primaryAnimation = null;
 
 			skinViewer.width = document.getElementById("canvas_width").value;
 			skinViewer.height = document.getElementById("canvas_height").value;
@@ -533,10 +529,10 @@
 			skinViewer.cameraLight.intensity = document.getElementById("camera_light").value;
 			skinViewer.controls.autoRotate = document.getElementById("auto_rotate").checked;
 			skinViewer.controls.autoRotateSpeed = document.getElementById("auto_rotate_speed").value;
-			const primaryAnimationName = document.querySelector('input[type="radio"][name="primary_animation"]:checked').value;
-			if (primaryAnimationName !== "") {
-				primaryAnimation = skinViewer.animations.add(availableAnimations[primaryAnimationName]);
-				primaryAnimation.speed = document.getElementById("primary_animation_speed").value;
+			const animationName = document.querySelector('input[type="radio"][name="animation"]:checked').value;
+			if (animationName !== "") {
+				skinViewer.animation = availableAnimations[animationName];
+				skinViewer.animation.speed = document.getElementById("animation_speed").value;
 			}
 			skinViewer.controls.enableRotate = document.getElementById("control_rotate").checked;
 			skinViewer.controls.enableZoom = document.getElementById("control_zoom").checked;

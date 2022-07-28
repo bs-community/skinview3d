@@ -1,11 +1,11 @@
 import { inferModelType, isTextureSource, loadCapeToCanvas, loadEarsToCanvas, loadEarsToCanvasFromSkin, loadImage, loadSkinToCanvas, ModelType, RemoteImage, TextureSource } from "skinview-utils";
-import { Color, ColorRepresentation, PointLight, EquirectangularReflectionMapping, Group, NearestFilter, PerspectiveCamera, Scene, Texture, Vector2, WebGLRenderer, AmbientLight, Mapping, CanvasTexture, WebGLRenderTarget, FloatType, DepthTexture } from "three";
+import { Color, ColorRepresentation, PointLight, EquirectangularReflectionMapping, Group, NearestFilter, PerspectiveCamera, Scene, Texture, Vector2, WebGLRenderer, AmbientLight, Mapping, CanvasTexture, WebGLRenderTarget, FloatType, DepthTexture, Clock } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { EffectComposer, FullScreenQuad } from "three/examples/jsm/postprocessing/EffectComposer.js";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
 import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
 import { FXAAShader } from "three/examples/jsm/shaders/FXAAShader.js";
-import { RootAnimation } from "./animation.js";
+import { PlayerAnimation } from "./animation.js";
 import { BackEquipment, PlayerObject } from "./model.js";
 
 export interface LoadOptions {
@@ -204,6 +204,13 @@ export interface SkinViewerOptions {
 	 * @defaultValue `true`
 	 */
 	enableControls?: boolean;
+
+	/**
+	 * The animation to play on the player.
+	 *
+	 * @defaultValue If unspecified, no animation will be played.
+	 */
+	animation?: PlayerAnimation;
 }
 
 /**
@@ -240,7 +247,6 @@ export class SkinViewer {
 	 */
 	readonly playerWrapper: Group;
 
-	readonly animations: RootAnimation = new RootAnimation();
 	readonly globalLight: AmbientLight = new AmbientLight(0xffffff, 0.4);
 	readonly cameraLight: PointLight = new PointLight(0xffffff, 0.6);
 
@@ -259,6 +265,9 @@ export class SkinViewer {
 	private _disposed: boolean = false;
 	private _renderPaused: boolean = false;
 	private _zoom: number;
+
+	private _animation: PlayerAnimation | null;
+	private clock: Clock;
 
 	private animationID: number | null;
 	private onContextLost: (event: Event) => void;
@@ -368,6 +377,9 @@ export class SkinViewer {
 		this.camera.position.z = 1;
 		this._zoom = options.zoom === undefined ? 0.9 : options.zoom;
 		this.fov = options.fov === undefined ? 50 : options.fov;
+
+		this._animation = options.animation === undefined ? null : options.animation;
+		this.clock = new Clock();
 
 		if (options.renderPaused === true) {
 			this._renderPaused = true;
@@ -590,7 +602,9 @@ export class SkinViewer {
 	}
 
 	private draw(): void {
-		this.animations.runAnimationLoop(this.playerObject);
+		if (this._animation !== null) {
+			this._animation.update(this.playerObject, this.clock.getDelta());
+		}
 		this.controls.update();
 		this.render();
 		this.animationID = window.requestAnimationFrame(() => this.draw());
@@ -655,6 +669,8 @@ export class SkinViewer {
 		if (this._renderPaused && this.animationID !== null) {
 			window.cancelAnimationFrame(this.animationID);
 			this.animationID = null;
+			this.clock.stop();
+			this.clock.autoStart = true;
 		} else if (!this._renderPaused && !this._disposed && !this.renderer.getContext().isContextLost() && this.animationID == null) {
 			this.animationID = window.requestAnimationFrame(() => this.draw());
 		}
@@ -749,5 +765,31 @@ export class SkinViewer {
 			this.renderer.setPixelRatio(newValue);
 			this.updateComposerSize();
 		}
+	}
+
+	/**
+	 * The animation that is current playing, or `null` if no animation is playing.
+	 *
+	 * Setting this property to a different value will change the current animation.
+	 * The player's pose and the progress of the new animation will be reset before playing.
+	 *
+	 * Setting this property to `null` will stop the current animation and reset the player's pose.
+	 */
+	get animation(): PlayerAnimation | null {
+		return this._animation;
+	}
+
+	set animation(animation: PlayerAnimation | null) {
+		if (this._animation !== animation) {
+			this.playerObject.resetJoints();
+			this.playerObject.position.set(0, 0, 0);
+			this.playerObject.rotation.set(0, 0, 0);
+			this.clock.stop();
+			this.clock.autoStart = true;
+		}
+		if (animation !== null) {
+			animation.progress = 0;
+		}
+		this._animation = animation;
 	}
 }

@@ -64,19 +64,17 @@ Three.js powered Minecraft skin viewer.
 	// Rotate the camera around the player
 	skinViewer.controls.autoRotate = true;
 
-	// Add an animation
-	let walk = skinViewer.animations.add(skinview3d.WalkingAnimation);
-	// Remove an animation, stop walking dude
-	walk.remove();
-	// And run for now!
-	let run = skinViewer.animations.add(skinview3d.RunningAnimation);
+	// Apply an animation
+	skinViewer.animation = new skinview3d.WalkingAnimation();
 
-	// Set the speed of an animation
-	run.speed = 3;
-	// Pause single animation
-	run.paused = true;
-	// Pause all animations!
-	skinViewer.animations.paused = true;
+	// Set the speed of the animation
+	skinViewer.animation.speed = 3;
+
+	// Pause the animation
+	skinViewer.animation.paused = true;
+
+	// Remove the animation
+	skinViewer.animation = null;
 </script>
 ```
 
