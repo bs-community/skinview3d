@@ -35,7 +35,8 @@
 	"homepage": "https://github.com/bs-community/skinview3d",
 	"files": [
 		"libs",
-		"bundles"
+		"bundles",
+		"assets"
 	],
 	"dependencies": {
 		"@types/three": "^0.142.0",

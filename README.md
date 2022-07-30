@@ -119,5 +119,30 @@ skinViewer.loadEars("img/ears.png", { textureType: "standalone" });
 skinViewer.loadEars("img/deadmau5.png", { textureType: "skin" });
 ```
 
+## Name Tag
+Usage:
+```js
+// Name tag with text "hello"
+skinViewer.nameTag = "hello";
+
+// Specify the text color
+skinViewer.nameTag = new skinview3d.NameTagObject("hello", { textStyle: "yellow" });
+
+// Unset the name tag
+skinViewer.nameTag = null;
+```
+
+In order to display name tags correctly, you need the `Minecraft` font from
+[South-Paw/typeface-minecraft](https://github.com/South-Paw/typeface-minecraft).
+This font is available at [`assets/minecraft.woff2`](assets/minecraft.woff2).
+
+To load this font, please add the `@font-face` rule to your CSS:
+```css
+@font-face {
+	font-family: 'Minecraft';
+	src: url('/path/to/minecraft.woff2') format('woff2');
+}
+```
+
 # Build
 `npm run build`
