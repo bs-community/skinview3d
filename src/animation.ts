@@ -96,6 +96,13 @@ export class IdleAnimation extends PlayerAnimation {
 
 export class WalkingAnimation extends PlayerAnimation {
 
+	/**
+	 * Whether to shake head when walking.
+	 *
+	 * @defaultValue `true`
+	 */
+	headBobbing: boolean = true;
+
 	protected animate(player: PlayerObject): void {
 		// Multiply by animation's natural speed
 		const t = this.progress * 8;
@@ -111,9 +118,14 @@ export class WalkingAnimation extends PlayerAnimation {
 		player.skin.leftArm.rotation.z = Math.cos(t) * 0.03 + basicArmRotationZ;
 		player.skin.rightArm.rotation.z = Math.cos(t + Math.PI) * 0.03 - basicArmRotationZ;
 
-		// Head shaking with different frequency & amplitude
-		player.skin.head.rotation.y = Math.sin(t / 4) * 0.2;
-		player.skin.head.rotation.x = Math.sin(t / 5) * 0.1;
+		if (this.headBobbing) {
+			// Head shaking with different frequency & amplitude
+			player.skin.head.rotation.y = Math.sin(t / 4) * 0.2;
+			player.skin.head.rotation.x = Math.sin(t / 5) * 0.1;
+		} else {
+			player.skin.head.rotation.y = 0;
+			player.skin.head.rotation.x = 0;
+		}
 
 		// Always add an angle for cape around the x axis
 		const basicCapeRotationX = Math.PI * 0.06;
