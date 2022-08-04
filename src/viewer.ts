@@ -620,9 +620,6 @@ export class SkinViewer {
 			this._animation.update(this.playerObject, this.clock.getDelta());
 		}
 		this.controls.update();
-		if (this._nameTag !== null) {
-			this._nameTag.rotation.copy(this.camera.rotation);
-		}
 		this.render();
 		this.animationID = window.requestAnimationFrame(() => this.draw());
 	}

@@ -1,4 +1,4 @@
-import { CanvasTexture, Mesh, MeshBasicMaterial, NearestFilter, PlaneGeometry } from "three";
+import { CanvasTexture, NearestFilter, Sprite, SpriteMaterial } from "three";
 
 export interface NameTagOptions {
 
@@ -69,7 +69,7 @@ export interface NameTagOptions {
 /**
  * A Minecraft name tag, i.e. a text label with background.
  */
-export class NameTagObject extends Mesh {
+export class NameTagObject extends Sprite {
 
 	/**
 	 * A promise that is resolved after the name tag is fully painted.
@@ -92,16 +92,15 @@ export class NameTagObject extends Mesh {
 	private textStyle: string | CanvasGradient | CanvasPattern;
 	private backgroundStyle: string | CanvasGradient | CanvasPattern;
 	private height: number;
-	private textMaterial: MeshBasicMaterial;
+	private textMaterial: SpriteMaterial;
 
 	constructor(text: string = "", options: NameTagOptions = {}) {
-		const geometry = new PlaneGeometry();
-		const material = new MeshBasicMaterial({
+		const material = new SpriteMaterial({
 			transparent: true,
 			alphaTest: 1e-5
 		});
 
-		super(geometry, material);
+		super(material);
 
 		this.textMaterial = material;
 
