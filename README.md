@@ -61,8 +61,8 @@ Three.js powered Minecraft skin viewer.
 	// Zoom out
 	skinViewer.zoom = 0.5;
 
-	// Rotate the camera around the player
-	skinViewer.controls.autoRotate = true;
+	// Rotate the player
+	skinViewer.autoRotate = true;
 
 	// Apply an animation
 	skinViewer.animation = new skinview3d.WalkingAnimation();

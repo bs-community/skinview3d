@@ -129,7 +129,7 @@
 		</div>
 
 		<div class="control-section">
-			<h1>Camera Rotation</h1>
+			<h1>Rotation</h1>
 			<label class="control"><input id="auto_rotate" type="checkbox"> Enable</label>
 			<label class="control">Speed: <input id="auto_rotate_speed" type="number" value="2" step="0.1" size="3"></label>
 		</div>
@@ -442,8 +442,8 @@
 			document.getElementById("global_light").addEventListener("change", e => skinViewer.globalLight.intensity = e.target.value);
 			document.getElementById("camera_light").addEventListener("change", e => skinViewer.cameraLight.intensity = e.target.value);
 			document.getElementById("animation_pause_resume").addEventListener("click", () => skinViewer.animations.paused = !skinViewer.animations.paused);
-			document.getElementById("auto_rotate").addEventListener("change", e => skinViewer.controls.autoRotate = e.target.checked);
-			document.getElementById("auto_rotate_speed").addEventListener("change", e => skinViewer.controls.autoRotateSpeed = e.target.value);
+			document.getElementById("auto_rotate").addEventListener("change", e => skinViewer.autoRotate = e.target.checked);
+			document.getElementById("auto_rotate_speed").addEventListener("change", e => skinViewer.autoRotateSpeed = e.target.value);
 			for (const el of document.querySelectorAll('input[type="radio"][name="animation"]')) {
 				el.addEventListener("change", e => {
 					if (e.target.value === "") {
@@ -527,8 +527,8 @@
 			skinViewer.zoom = document.getElementById("zoom").value;
 			skinViewer.globalLight.intensity = document.getElementById("global_light").value;
 			skinViewer.cameraLight.intensity = document.getElementById("camera_light").value;
-			skinViewer.controls.autoRotate = document.getElementById("auto_rotate").checked;
-			skinViewer.controls.autoRotateSpeed = document.getElementById("auto_rotate_speed").value;
+			skinViewer.autoRotate = document.getElementById("auto_rotate").checked;
+			skinViewer.autoRotateSpeed = document.getElementById("auto_rotate_speed").value;
 			const animationName = document.querySelector('input[type="radio"][name="animation"]:checked').value;
 			if (animationName !== "") {
 				skinViewer.animation = availableAnimations[animationName];

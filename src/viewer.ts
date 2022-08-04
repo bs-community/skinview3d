@@ -266,6 +266,21 @@ export class SkinViewer {
 	private _renderPaused: boolean = false;
 	private _zoom: number;
 
+	/**
+	 * Whether to rotate the player along the y axis.
+	 *
+	 * @defaultValue `false`
+	 */
+	autoRotate: boolean = false;
+
+	/**
+	 * The angular velocity of the player, in rad/s.
+	 *
+	 * @defaultValue `1.0`
+	 * @see {@link autoRotate}
+	 */
+	autoRotateSpeed: number = 1.0;
+
 	private _animation: PlayerAnimation | null;
 	private clock: Clock;
 
@@ -602,8 +617,12 @@ export class SkinViewer {
 	}
 
 	private draw(): void {
+		const dt = this.clock.getDelta()
 		if (this._animation !== null) {
-			this._animation.update(this.playerObject, this.clock.getDelta());
+			this._animation.update(this.playerObject, dt);
+		}
+		if (this.autoRotate) {
+			this.playerWrapper.rotation.y += dt * this.autoRotateSpeed;
 		}
 		this.controls.update();
 		this.render();
