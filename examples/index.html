@@ -7,6 +7,11 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 	<title>skinview3d</title>
 	<style>
+		@font-face {
+			font-family: 'Minecraft';
+			src: url('/assets/minecraft.woff2') format('woff2');
+		}
+
 		body {
 			font-family: "Helvetica Neue", "Helvetica", "Arial", "sans-serif";
 			margin: 5px;
@@ -290,6 +295,13 @@
 		</div>
 
 		<div class="control-section">
+			<h1>Name Tag</h1>
+			<div class="control">
+				<label>Text: <input id="nametag_text" type="text" value="" placeholder="none" size="20"></label>
+			</div>
+		</div>
+
+		<div class="control-section">
 			<h1>Other examples</h1>
 			<ul>
 				<li><a href="offscreen-render.html">offscreen-render</a></li>
@@ -434,6 +446,15 @@
 			}
 		}
 
+		function reloadNameTag() {
+			const text = document.getElementById("nametag_text").value;
+			if (text === "") {
+				skinViewer.nameTag = null;
+			} else {
+				skinViewer.nameTag = text;
+			}
+		}
+
 		function initializeControls() {
 			document.getElementById("canvas_width").addEventListener("change", e => skinViewer.width = e.target.value);
 			document.getElementById("canvas_height").addEventListener("change", e => skinViewer.height = e.target.value);
@@ -514,6 +535,8 @@
 				skinViewer.dispose();
 				initializeViewer();
 			});
+
+			document.getElementById("nametag_text").addEventListener("change", () => reloadNameTag());
 		}
 
 		function initializeViewer() {
@@ -547,6 +570,7 @@
 			reloadCape();
 			reloadEars(true);
 			reloadPanorama();
+			reloadNameTag();
 		}
 
 		initializeControls();
