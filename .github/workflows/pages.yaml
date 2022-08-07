@@ -37,7 +37,7 @@ jobs:
 
       - name: Setup Pages
         run: |
-          cp -r examples public
+          cp -rL examples public
           cp -r bundles public/js
           build_commit="${{ github.sha }}"
           build_time=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
