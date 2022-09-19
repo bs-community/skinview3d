@@ -144,5 +144,8 @@ To load this font, please add the `@font-face` rule to your CSS:
 }
 ```
 
+# Install packages from package.json
+`npm install`
+
 # Build
 `npm run build`
