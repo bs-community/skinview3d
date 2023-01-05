@@ -1,4 +1,4 @@
-import { inferModelType, isTextureSource, loadCapeToCanvas, loadEarsToCanvas, loadEarsToCanvasFromSkin, loadImage, loadSkinToCanvas, ModelType, RemoteImage, TextureSource } from "skinview-utils";
+import { inferModelType, isTextureSource, loadEarsToCanvas, loadEarsToCanvasFromSkin, loadImage, loadSkinToCanvas, ModelType, RemoteImage, TextureSource } from "skinview-utils";
 import { Color, ColorRepresentation, PointLight, EquirectangularReflectionMapping, Group, NearestFilter, PerspectiveCamera, Scene, Texture, Vector2, WebGLRenderer, AmbientLight, Mapping, CanvasTexture, WebGLRenderTarget, FloatType, DepthTexture, Clock, Object3D } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { EffectComposer, FullScreenQuad } from "three/examples/jsm/postprocessing/EffectComposer.js";
@@ -8,6 +8,9 @@ import { FXAAShader } from "three/examples/jsm/shaders/FXAAShader.js";
 import { PlayerAnimation } from "./animation.js";
 import { BackEquipment, PlayerObject } from "./model.js";
 import { NameTagObject } from "./nametag.js";
+
+//james090500
+import { loadCapeToCanvas } from "./skinview-overrides.js";
 
 export interface LoadOptions {
 
@@ -524,6 +527,29 @@ export class SkinViewer {
 		}
 	}
 
+	//james090500
+	private frameDelay = 100;
+	private lastFrameTime = 0;
+	private capeSource?: TextureSource;
+	private capeOptions: CapeLoadOptions = {}
+	private totalFrames = 1;
+	private currentFrame = 1;
+	animatedCape(): void {
+		const currentTime = Date.now();
+		if(this.lastFrameTime + this.frameDelay > currentTime) return;
+		this.lastFrameTime = currentTime
+
+		if(this.capeSource != null && this.totalFrames > 1) {
+			this.loadCape(this.capeSource, this.capeOptions)
+
+			//Increase frames
+			this.currentFrame++;
+			if(this.currentFrame > this.totalFrames) {
+				this.currentFrame = 1;
+			}
+		}
+	}
+
 	loadCape(empty: null): void;
 	loadCape<S extends TextureSource | RemoteImage>(
 		source: S,
@@ -538,7 +564,13 @@ export class SkinViewer {
 			this.resetCape();
 
 		} else if (isTextureSource(source)) {
-			loadCapeToCanvas(this.capeCanvas, source);
+			//james090500
+			this.capeSource = source;
+			this.capeOptions = options;
+			this.totalFrames = source.height / (source.width / 2)
+
+			loadCapeToCanvas(this.capeCanvas, source, this.currentFrame);
+
 			this.recreateCapeTexture();
 
 			if (options.makeVisible !== false) {
@@ -551,6 +583,10 @@ export class SkinViewer {
 	}
 
 	resetCape(): void {
+		//james090500
+		this.totalFrames = 1;
+		this.currentFrame = 1;
+
 		this.playerObject.backEquipment = null;
 		this.playerObject.cape.map = null;
 		this.playerObject.elytra.map = null;
@@ -639,6 +675,10 @@ export class SkinViewer {
 			this.playerWrapper.rotation.y += dt * this.autoRotateSpeed;
 		}
 		this.controls.update();
+
+		//james090500
+		this.animatedCape();
+
 		this.render();
 		this.animationID = window.requestAnimationFrame(() => this.draw());
 	}
