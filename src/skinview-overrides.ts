@@ -12,14 +12,14 @@ function computeCapeScale(image: TextureSource): number {
 		// 46x22
 		return image.width / 46;
     } else if ((image.height % (image.width / 2)) == 0) {
-        //Animated cape HD with raito 64x32
-        return image.width / 64
+		//Animated cape HD with raito 64x32
+		return image.width / 64
 	} else {
 		throw new Error(`Bad cape size: ${image.width}x${image.height}`);
 	}
 }
 
-export function loadCapeToCanvas(canvas: TextureCanvas, image: TextureSource, frame: number): void {
+export function loadCapeToCanvas(canvas: HTMLCanvasElement, image: TextureSource, frame: number): void {
 	const scale = computeCapeScale(image);
 	canvas.width = 64 * scale;
 	canvas.height = 32 * scale;

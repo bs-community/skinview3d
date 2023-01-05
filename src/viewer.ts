@@ -349,7 +349,7 @@ export class SkinViewer {
 		let renderTarget;
 		if (this.renderer.capabilities.isWebGL2) {
 			// Use float precision depth if possible
-			// see https://github.com/bs-community/skinview3d/issues/111
+			// see https://github.com/james090500/skinview3d/issues/111
 			renderTarget = new WebGLRenderTarget(0, 0, {
 				depthTexture: new DepthTexture(0, 0, FloatType)
 			});

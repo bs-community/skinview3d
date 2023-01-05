@@ -16,16 +16,21 @@ function setUVs(box: BoxGeometry, u: number, v: number, width: number, height: n
 	const right = toFaceVertices(u + width + depth, v + depth, u + width + depth * 2, v + height + depth);
 	const back = toFaceVertices(u + width + depth * 2, v + depth, u + width * 2 + depth * 2, v + height + depth);
 
-	const uvAttr = box.attributes.uv as BufferAttribute;
-	uvAttr.copyVector2sArray([
+	const vectors = [
 		right[3], right[2], right[0], right[1],
 		left[3], left[2], left[0], left[1],
 		top[3], top[2], top[0], top[1],
 		bottom[0], bottom[1], bottom[3], bottom[2],
 		front[3], front[2], front[0], front[1],
 		back[3], back[2], back[0], back[1]
-	]);
-	uvAttr.needsUpdate = true;
+	];
+
+	for ( let i = 0; i < vectors.length; i ++ ) {
+		const vector = vectors[i];
+		box.attributes.uv.setXY(i, vector.x, vector.y)
+	}
+
+	box.attributes.uv.needsUpdate = true;
 }
 
 function setSkinUVs(box: BoxGeometry, u: number, v: number, width: number, height: number, depth: number): void {

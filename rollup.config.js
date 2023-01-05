@@ -9,7 +9,7 @@ export default {
         file: "bundles/skinview3d.bundle.js",
         format: "umd",
         name: "skinview3d",
-        banner: "/* @preserve skinview3d / MIT License / https://github.com/bs-community/skinview3d */",
+        banner: "/* @preserve skinview3d / MIT License / https://github.com/james090500/skinview3d */",
         sourcemap: true,
         compact: true
     },
