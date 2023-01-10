@@ -1,5 +1,5 @@
 import { ModelType } from "skinview-utils";
-import { BoxGeometry, BufferAttribute, DoubleSide, FrontSide, Group, Mesh, MeshStandardMaterial, Object3D, Texture, Vector2 } from "three";
+import { BoxGeometry, DoubleSide, FrontSide, Group, Mesh, MeshStandardMaterial, Object3D, Texture, Vector2 } from "three";
 
 function setUVs(box: BoxGeometry, u: number, v: number, width: number, height: number, depth: number, textureWidth: number, textureHeight: number): void {
 	const toFaceVertices = (x1: number, y1: number, x2: number, y2: number) => [
