@@ -253,7 +253,7 @@
 			</div>
 			<div>
 				<label>Frame Delay</label>
-				<input id="frame_delay" type="number" value="100">
+				<input id="frame_delay" type="number" value="100" step="1" min="1" size="4">
 			</div>
 		</div>
 
@@ -380,7 +380,6 @@
 		function reloadCape() {
 			const input = document.getElementById("cape_url");
 			const url = obtainTextureUrl("cape_url");
-			skinViewer.frameDelay = document.getElementById("frame_delay").value;
 			if (url === "") {
 				skinViewer.loadCape(null);
 				input.setCustomValidity("");
@@ -521,7 +520,7 @@
 			document.getElementById("skin_url").addEventListener("change", () => reloadSkin());
 			document.getElementById("skin_model").addEventListener("change", () => reloadSkin());
 			document.getElementById("cape_url").addEventListener("change", () => reloadCape());
-			document.getElementById("frame_delay").addEventListener("change", () => reloadCape());
+			document.getElementById("frame_delay").addEventListener("change", e => skinViewer.frameDelay = e.target.value);
 			document.getElementById("ears_source").addEventListener("change", () => reloadEars());
 			document.getElementById("ears_url").addEventListener("change", () => reloadEars());
 			document.getElementById("panorama_url").addEventListener("change", () => reloadPanorama());

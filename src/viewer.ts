@@ -279,7 +279,7 @@ export class SkinViewer {
 	private earsTexture: Texture | null = null;
 	private backgroundTexture: Texture | null = null;
 
-	private frameDelay: number;
+	private _frameDelay: number = 100;
 
 	private _disposed: boolean = false;
 	private _renderPaused: boolean = false;
@@ -413,7 +413,7 @@ export class SkinViewer {
 		if (options.nameTag !== undefined) {
 			this.nameTag = options.nameTag;
 		}
-		this.frameDelay = options.frameDelay === undefined ? 100 : options.frameDelay;
+		this._frameDelay = options.frameDelay === undefined ? 100 : options.frameDelay;
 		this.camera.position.z = 1;
 		this._zoom = options.zoom === undefined ? 0.9 : options.zoom;
 		this.fov = options.fov === undefined ? 50 : options.fov;
@@ -535,15 +535,14 @@ export class SkinViewer {
 		}
 	}
 
-	//james090500
-	private lastFrameTime = 0;
+	private lastFrameTime: number = 0;
 	private capeSource?: TextureSource;
 	private capeOptions: CapeLoadOptions = {}
 	private totalFrames = 1;
 	private currentFrame = 1;
 	animatedCape(): void {
-		const currentTime = Date.now();
-		if(this.lastFrameTime + this.frameDelay > currentTime) return;
+		const currentTime: number = Date.now();
+		if(this.lastFrameTime + +this._frameDelay > currentTime) return;
 		this.lastFrameTime = currentTime
 
 		if(this.capeSource != null && this.totalFrames > 1) {
@@ -555,6 +554,14 @@ export class SkinViewer {
 				this.currentFrame = 1;
 			}
 		}
+	}
+
+	get frameDelay(): number {
+		return this._frameDelay;
+	}
+
+	set frameDelay(value: number) {
+		this._frameDelay = value;
 	}
 
 	loadCape(empty: null): void;
@@ -571,12 +578,11 @@ export class SkinViewer {
 			this.resetCape();
 
 		} else if (isTextureSource(source)) {
-			//james090500
 			this.capeSource = source;
 			this.capeOptions = options;
 			this.totalFrames = source.height / (source.width / 2)
 
-			// loadCapeToCanvas(this.capeCanvas, source, this.currentFrame);
+			loadCapeToCanvas(this.capeCanvas, source, this.currentFrame);
 
 			this.recreateCapeTexture();
 
@@ -590,7 +596,6 @@ export class SkinViewer {
 	}
 
 	resetCape(): void {
-		//james090500
 		this.totalFrames = 1;
 		this.currentFrame = 1;
 
@@ -683,7 +688,6 @@ export class SkinViewer {
 		}
 		this.controls.update();
 
-		//james090500
 		this.animatedCape();
 
 		this.render();
