@@ -1,4 +1,4 @@
-import { inferModelType, isTextureSource, loadEarsToCanvas, loadEarsToCanvasFromSkin, loadImage, loadSkinToCanvas, ModelType, RemoteImage, TextureSource } from "skinview-utils";
+import { inferModelType, isTextureSource, loadCapeToCanvas, loadEarsToCanvas, loadEarsToCanvasFromSkin, loadImage, loadSkinToCanvas, ModelType, RemoteImage, TextureSource } from "skinview-utils";
 import { Color, ColorRepresentation, PointLight, EquirectangularReflectionMapping, Group, NearestFilter, PerspectiveCamera, Scene, Texture, Vector2, WebGLRenderer, AmbientLight, Mapping, CanvasTexture, WebGLRenderTarget, FloatType, DepthTexture, Clock, Object3D } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { EffectComposer, FullScreenQuad } from "three/examples/jsm/postprocessing/EffectComposer.js";
@@ -8,9 +8,6 @@ import { FXAAShader } from "three/examples/jsm/shaders/FXAAShader.js";
 import { PlayerAnimation } from "./animation.js";
 import { BackEquipment, PlayerObject } from "./model.js";
 import { NameTagObject } from "./nametag.js";
-
-//james090500
-import { loadCapeToCanvas } from "./skinview-overrides.js";
 
 export interface LoadOptions {
 
