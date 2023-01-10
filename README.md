@@ -1,9 +1,9 @@
 skinview3d
 ========
 
-[![CI Status](https://img.shields.io/github/workflow/status/james090500/skinview3d/CI?label=CI&logo=github&style=flat-square)](https://github.com/james090500/skinview3d/actions?query=workflow:CI)
+[![CI Status](https://img.shields.io/github/workflow/status/bs-community/skinview3d/CI?label=CI&logo=github&style=flat-square)](https://github.com/bs-community/skinview3d/actions?query=workflow:CI)
 [![NPM Package](https://img.shields.io/npm/v/skinview3d.svg?style=flat-square)](https://www.npmjs.com/package/skinview3d)
-[![MIT License](https://img.shields.io/badge/license-MIT-yellowgreen.svg?style=flat-square)](https://github.com/james090500/skinview3d/blob/master/LICENSE)
+[![MIT License](https://img.shields.io/badge/license-MIT-yellowgreen.svg?style=flat-square)](https://github.com/bs-community/skinview3d/blob/master/LICENSE)
 [![Gitter Chat](https://img.shields.io/gitter/room/TechnologyAdvice/Stardust.svg?style=flat-square)](https://gitter.im/skinview3d/Lobby)
 
 Three.js powered Minecraft skin viewer.
@@ -92,7 +92,7 @@ will completely disable shadows.
 
 ## Ears
 skinview3d supports two types of ear texture:
-* `standalone`: 14x7 image that contains the ear ([example](https://github.com/james090500/skinview3d/blob/master/examples/img/ears.png))
+* `standalone`: 14x7 image that contains the ear ([example](https://github.com/bs-community/skinview3d/blob/master/examples/img/ears.png))
 * `skin`: Skin texture that contains the ear (e.g. [deadmau5's skin](https://minecraft.fandom.com/wiki/Easter_eggs#Deadmau5.27s_ears))
 
 Usage:

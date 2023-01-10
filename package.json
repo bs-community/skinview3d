@@ -1,5 +1,5 @@
 {
-	"name": "@james090500/skinview3d",
+	"name": "@bs-community/skinview3d",
 	"version": "3.0.0-alpha.1",
 	"description": "Three.js powered Minecraft skin viewer",
 	"main": "libs/skinview3d.js",
@@ -19,7 +19,7 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/james090500/skinview3d.git"
+		"url": "git+https://github.com/bs-community/skinview3d.git"
 	},
 	"author": "Haowei Wen <yushijinhun@gmail.com> (https://github.com/yushijinhun)",
 	"contributors": [
@@ -30,9 +30,9 @@
 	],
 	"license": "MIT",
 	"bugs": {
-		"url": "https://github.com/james090500/skinview3d/issues"
+		"url": "https://github.com/bs-community/skinview3d/issues"
 	},
-	"homepage": "https://github.com/james090500/skinview3d",
+	"homepage": "https://github.com/bs-community/skinview3d",
 	"files": [
 		"libs",
 		"bundles",
