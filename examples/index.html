@@ -251,6 +251,10 @@
 				<button type="button" class="control"
 					onclick="document.getElementById('cape_url_upload').click();">Browse...</button>
 			</div>
+			<div>
+				<label>Frame Delay</label>
+				<input id="frame_delay" type="number" value="100">
+			</div>
 		</div>
 
 		<div class="control-section">
@@ -376,6 +380,7 @@
 		function reloadCape() {
 			const input = document.getElementById("cape_url");
 			const url = obtainTextureUrl("cape_url");
+			skinViewer.frameDelay = document.getElementById("frame_delay").value;
 			if (url === "") {
 				skinViewer.loadCape(null);
 				input.setCustomValidity("");
@@ -516,6 +521,7 @@
 			document.getElementById("skin_url").addEventListener("change", () => reloadSkin());
 			document.getElementById("skin_model").addEventListener("change", () => reloadSkin());
 			document.getElementById("cape_url").addEventListener("change", () => reloadCape());
+			document.getElementById("frame_delay").addEventListener("change", () => reloadCape());
 			document.getElementById("ears_source").addEventListener("change", () => reloadEars());
 			document.getElementById("ears_url").addEventListener("change", () => reloadEars());
 			document.getElementById("panorama_url").addEventListener("change", () => reloadPanorama());
@@ -548,6 +554,7 @@
 			skinViewer.height = document.getElementById("canvas_height").value;
 			skinViewer.fov = document.getElementById("fov").value;
 			skinViewer.zoom = document.getElementById("zoom").value;
+			skinViewer.frameDelay = document.getElementById("frame_delay").value;
 			skinViewer.globalLight.intensity = document.getElementById("global_light").value;
 			skinViewer.cameraLight.intensity = document.getElementById("camera_light").value;
 			skinViewer.autoRotate = document.getElementById("auto_rotate").checked;

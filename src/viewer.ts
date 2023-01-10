@@ -220,6 +220,14 @@ export interface SkinViewerOptions {
 	 * @see {@link SkinViewer.nameTag}
 	 */
 	nameTag?: NameTagObject | string;
+
+	/**
+	 * The delay between frames when a displaying an animated cape.
+	 *
+	 * @defaultValue `100`
+	 * @see {@link SkinViewer.animatedCape}
+	 */
+	frameDelay?: number
 }
 
 /**
@@ -270,6 +278,8 @@ export class SkinViewer {
 	private capeTexture: Texture | null = null;
 	private earsTexture: Texture | null = null;
 	private backgroundTexture: Texture | null = null;
+
+	private frameDelay: number;
 
 	private _disposed: boolean = false;
 	private _renderPaused: boolean = false;
@@ -403,6 +413,7 @@ export class SkinViewer {
 		if (options.nameTag !== undefined) {
 			this.nameTag = options.nameTag;
 		}
+		this.frameDelay = options.frameDelay === undefined ? 100 : options.frameDelay;
 		this.camera.position.z = 1;
 		this._zoom = options.zoom === undefined ? 0.9 : options.zoom;
 		this.fov = options.fov === undefined ? 50 : options.fov;
@@ -525,7 +536,6 @@ export class SkinViewer {
 	}
 
 	//james090500
-	private frameDelay = 100;
 	private lastFrameTime = 0;
 	private capeSource?: TextureSource;
 	private capeOptions: CapeLoadOptions = {}
@@ -566,7 +576,7 @@ export class SkinViewer {
 			this.capeOptions = options;
 			this.totalFrames = source.height / (source.width / 2)
 
-			loadCapeToCanvas(this.capeCanvas, source, this.currentFrame);
+			// loadCapeToCanvas(this.capeCanvas, source, this.currentFrame);
 
 			this.recreateCapeTexture();
 
