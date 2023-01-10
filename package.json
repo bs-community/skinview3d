@@ -1,5 +1,5 @@
 {
-	"name": "@bs-community/skinview3d",
+	"name": "skinview3d",
 	"version": "3.0.0-alpha.1",
 	"description": "Three.js powered Minecraft skin viewer",
 	"main": "libs/skinview3d.js",
