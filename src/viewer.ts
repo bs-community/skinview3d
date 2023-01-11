@@ -550,9 +550,6 @@ export class SkinViewer {
 
 			//Increase frames
 			this.currentFrame++;
-			if(this.currentFrame > this.totalFrames) {
-				this.currentFrame = 1;
-			}
 		}
 	}
 
@@ -581,6 +578,14 @@ export class SkinViewer {
 			this.capeSource = source;
 			this.capeOptions = options;
 			this.totalFrames = source.height / (source.width / 2)
+
+			if(!Number.isInteger(this.totalFrames)) {
+				this.totalFrames = 1;
+			}
+
+			if(this.currentFrame > this.totalFrames) {
+				this.currentFrame = 1;
+			}
 
 			loadCapeToCanvas(this.capeCanvas, source, this.currentFrame);
 
