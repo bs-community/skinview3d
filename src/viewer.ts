@@ -220,6 +220,14 @@ export interface SkinViewerOptions {
 	 * @see {@link SkinViewer.nameTag}
 	 */
 	nameTag?: NameTagObject | string;
+
+	/**
+	 * The delay between frames when a displaying an animated cape.
+	 *
+	 * @defaultValue `100`
+	 * @see {@link SkinViewer.animatedCape}
+	 */
+	frameDelay?: number
 }
 
 /**
@@ -270,6 +278,8 @@ export class SkinViewer {
 	private capeTexture: Texture | null = null;
 	private earsTexture: Texture | null = null;
 	private backgroundTexture: Texture | null = null;
+
+	private _frameDelay: number = 100;
 
 	private _disposed: boolean = false;
 	private _renderPaused: boolean = false;
@@ -403,6 +413,7 @@ export class SkinViewer {
 		if (options.nameTag !== undefined) {
 			this.nameTag = options.nameTag;
 		}
+		this._frameDelay = options.frameDelay === undefined ? 100 : options.frameDelay;
 		this.camera.position.z = 1;
 		this._zoom = options.zoom === undefined ? 0.9 : options.zoom;
 		this.fov = options.fov === undefined ? 50 : options.fov;
@@ -524,6 +535,32 @@ export class SkinViewer {
 		}
 	}
 
+	private lastFrameTime: number = 0;
+	private capeSource?: TextureSource;
+	private capeOptions: CapeLoadOptions = {}
+	private totalFrames = 1;
+	private currentFrame = 1;
+	animatedCape(): void {
+		const currentTime: number = Date.now();
+		if(this.lastFrameTime + +this._frameDelay > currentTime) return;
+		this.lastFrameTime = currentTime
+
+		if(this.capeSource != null && this.totalFrames > 1) {
+			this.loadCape(this.capeSource, this.capeOptions)
+
+			//Increase frames
+			this.currentFrame++;
+		}
+	}
+
+	get frameDelay(): number {
+		return this._frameDelay;
+	}
+
+	set frameDelay(value: number) {
+		this._frameDelay = value;
+	}
+
 	loadCape(empty: null): void;
 	loadCape<S extends TextureSource | RemoteImage>(
 		source: S,
@@ -538,7 +575,20 @@ export class SkinViewer {
 			this.resetCape();
 
 		} else if (isTextureSource(source)) {
-			loadCapeToCanvas(this.capeCanvas, source);
+			this.capeSource = source;
+			this.capeOptions = options;
+			this.totalFrames = source.height / (source.width / 2)
+
+			if(!Number.isInteger(this.totalFrames)) {
+				this.totalFrames = 1;
+			}
+
+			if(this.currentFrame > this.totalFrames) {
+				this.currentFrame = 1;
+			}
+
+			loadCapeToCanvas(this.capeCanvas, source, this.currentFrame);
+
 			this.recreateCapeTexture();
 
 			if (options.makeVisible !== false) {
@@ -551,6 +601,9 @@ export class SkinViewer {
 	}
 
 	resetCape(): void {
+		this.totalFrames = 1;
+		this.currentFrame = 1;
+
 		this.playerObject.backEquipment = null;
 		this.playerObject.cape.map = null;
 		this.playerObject.elytra.map = null;
@@ -639,6 +692,9 @@ export class SkinViewer {
 			this.playerWrapper.rotation.y += dt * this.autoRotateSpeed;
 		}
 		this.controls.update();
+
+		this.animatedCape();
+
 		this.render();
 		this.animationID = window.requestAnimationFrame(() => this.draw());
 	}
