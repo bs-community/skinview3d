@@ -1,14 +1,9 @@
 {
+	"extends": "@gplane/tsconfig",
 	"compilerOptions": {
-		"module": "es2015",
-		"moduleResolution": "node",
-		"target": "es2017",
-		"lib": [
-			"dom"
-		],
-		"strict": true
+		"target": "es2019",
+		"outDir": "libs",
+		"noUncheckedIndexedAccess": false
 	},
-	"include": [
-		"src"
-	]
+	"include": ["src"]
 }
