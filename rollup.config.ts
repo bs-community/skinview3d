@@ -1,7 +1,6 @@
 import { defineConfig } from "rollup";
+import { swc } from "rollup-plugin-swc3";
 import resolve from "@rollup/plugin-node-resolve";
-import typescript from "@rollup/plugin-typescript";
-import { terser } from "rollup-plugin-terser";
 import { threeMinifier } from "@yushijinhun/three-minifier-rollup";
 
 export default defineConfig({
@@ -15,5 +14,13 @@ export default defineConfig({
 		sourcemap: true,
 		compact: true,
 	},
-	plugins: [threeMinifier(), typescript(), resolve(), terser()],
+	plugins: [
+		threeMinifier(),
+		resolve(),
+		swc({
+			jsc: { minify: { compress: true, mangle: true, sourceMap: true } },
+			minify: true,
+			sourceMaps: true,
+		}),
+	],
 });
