@@ -462,7 +462,7 @@
 			document.getElementById("zoom").addEventListener("change", e => skinViewer.zoom = e.target.value);
 			document.getElementById("global_light").addEventListener("change", e => skinViewer.globalLight.intensity = e.target.value);
 			document.getElementById("camera_light").addEventListener("change", e => skinViewer.cameraLight.intensity = e.target.value);
-			document.getElementById("animation_pause_resume").addEventListener("click", () => skinViewer.animations.paused = !skinViewer.animations.paused);
+			document.getElementById("animation_pause_resume").addEventListener("click", () => skinViewer.animation.paused = !skinViewer.animation.paused);
 			document.getElementById("auto_rotate").addEventListener("change", e => skinViewer.autoRotate = e.target.checked);
 			document.getElementById("auto_rotate_speed").addEventListener("change", e => skinViewer.autoRotateSpeed = e.target.value);
 			for (const el of document.querySelectorAll('input[type="radio"][name="animation"]')) {
