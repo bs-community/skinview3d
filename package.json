@@ -12,6 +12,7 @@
 		"format": "prettier src --write",
 		"test:lint": "eslint --ext .ts src",
 		"test": "npm run test:lint",
+		"format": "prettier --write src",
 		"dev:watch:modules": "tsc -w --preserveWatchOutput --declaration --sourceMap --outDir libs -p .",
 		"dev:watch:bundles": "rollup -w --no-watch.clearScreen -c --configPlugin=swc3",
 		"dev:serve": "ws",

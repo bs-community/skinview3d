@@ -40,6 +40,7 @@ import { FXAAShader } from "three/examples/jsm/shaders/FXAAShader.js";
 import { PlayerAnimation } from "./animation.js";
 import { type BackEquipment, PlayerObject } from "./model.js";
 import { NameTagObject } from "./nametag.js";
+import { isWebGLAvailable } from "./utils.js";
 
 export interface LoadOptions {
 	/**
@@ -339,6 +340,19 @@ export class SkinViewer {
 		this.camera.add(this.cameraLight);
 		this.scene.add(this.camera);
 		this.scene.add(this.globalLight);
+
+		// if webgl is not available, throw an error and render text saying not avail
+		if(!isWebGLAvailable()){
+			const container = document.createElement("div");
+			container.style.width = `${this.canvas.width}px`;
+			container.style.height = `${this.canvas.height * 2}px`;
+			container.style.backgroundColor = "black";
+			container.style.color = "white";
+			container.innerText = "WebGL is not available on this device. Please try another device.";
+			this.canvas.replaceWith(container);
+
+			throw new Error("WebGL is not available on this device. Please try another device.")
+		}
 
 		this.renderer = new WebGLRenderer({
 			canvas: this.canvas,
