@@ -49,12 +49,12 @@ function setUVs(
 	// Iterate over the arrays and copy the data to uvData
 	let index = 0;
 	for (const uvArray of [uvRight, uvLeft, uvTop, uvBottom, uvFront, uvBack]) {
-  	for (const uv of uvArray) {
-  		// @ts-ignore
-    	uvData[index++] = uv.x;
-  		// @ts-ignore
-    	uvData[index++] = uv.y;
-  	}
+		for (const uv of uvArray) {
+			// @ts-ignore
+			uvData[index++] = uv.x;
+			// @ts-ignore
+			uvData[index++] = uv.y;
+		}
 	}
 	uvAttr.needsUpdate = true;
 }
