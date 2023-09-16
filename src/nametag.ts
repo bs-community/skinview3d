@@ -1,7 +1,6 @@
 import { CanvasTexture, NearestFilter, Sprite, SpriteMaterial } from "three";
 
 export interface NameTagOptions {
-
 	/**
 	 * A font specification using the CSS value syntax.
 	 *
@@ -70,7 +69,6 @@ export interface NameTagOptions {
  * A Minecraft name tag, i.e. a text label with background.
  */
 export class NameTagObject extends Sprite {
-
 	/**
 	 * A promise that is resolved after the name tag is fully painted.
 	 *
@@ -97,7 +95,7 @@ export class NameTagObject extends Sprite {
 	constructor(text: string = "", options: NameTagOptions = {}) {
 		const material = new SpriteMaterial({
 			transparent: true,
-			alphaTest: 1e-5
+			alphaTest: 1e-5,
 		});
 
 		super(material);
@@ -137,7 +135,8 @@ export class NameTagObject extends Sprite {
 
 		// Compute canvas size
 		canvas.width = this.margin[3] + metrics.actualBoundingBoxLeft + metrics.actualBoundingBoxRight + this.margin[1];
-		canvas.height = this.margin[0] + metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent + this.margin[2];
+		canvas.height =
+			this.margin[0] + metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent + this.margin[2];
 
 		// After change canvas size, the context needs to be re-created
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -150,7 +149,11 @@ export class NameTagObject extends Sprite {
 
 		// Draw text
 		ctx.fillStyle = this.textStyle;
-		ctx.fillText(this.text, this.margin[3] + metrics.actualBoundingBoxLeft, this.margin[0] + metrics.actualBoundingBoxAscent);
+		ctx.fillText(
+			this.text,
+			this.margin[3] + metrics.actualBoundingBoxLeft,
+			this.margin[0] + metrics.actualBoundingBoxAscent
+		);
 
 		// Apply texture
 		const texture = new CanvasTexture(canvas);
@@ -160,8 +163,7 @@ export class NameTagObject extends Sprite {
 		this.textMaterial.needsUpdate = true;
 
 		// Update size
-		this.scale.x = canvas.width / canvas.height * this.height;
+		this.scale.x = (canvas.width / canvas.height) * this.height;
 		this.scale.y = this.height;
 	}
-
 }
