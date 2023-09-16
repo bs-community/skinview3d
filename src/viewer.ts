@@ -1,5 +1,36 @@
-import { inferModelType, isTextureSource, loadCapeToCanvas, loadEarsToCanvas, loadEarsToCanvasFromSkin, loadImage, loadSkinToCanvas, type ModelType, type RemoteImage, type TextureSource } from "skinview-utils";
-import { Color, type ColorRepresentation, PointLight, EquirectangularReflectionMapping, Group, NearestFilter, PerspectiveCamera, Scene, Texture, Vector2, WebGLRenderer, AmbientLight, Mapping, CanvasTexture, WebGLRenderTarget, FloatType, DepthTexture, Clock, Object3D } from "three";
+import {
+	inferModelType,
+	isTextureSource,
+	loadCapeToCanvas,
+	loadEarsToCanvas,
+	loadEarsToCanvasFromSkin,
+	loadImage,
+	loadSkinToCanvas,
+	type ModelType,
+	type RemoteImage,
+	type TextureSource,
+} from "skinview-utils";
+import {
+	Color,
+	type ColorRepresentation,
+	PointLight,
+	EquirectangularReflectionMapping,
+	Group,
+	NearestFilter,
+	PerspectiveCamera,
+	Scene,
+	Texture,
+	Vector2,
+	WebGLRenderer,
+	AmbientLight,
+	Mapping,
+	CanvasTexture,
+	WebGLRenderTarget,
+	FloatType,
+	DepthTexture,
+	Clock,
+	Object3D,
+} from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { EffectComposer, FullScreenQuad } from "three/examples/jsm/postprocessing/EffectComposer.js";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
@@ -10,18 +41,15 @@ import { type BackEquipment, PlayerObject } from "./model.js";
 import { NameTagObject } from "./nametag.js";
 
 export interface LoadOptions {
-
 	/**
 	 * Whether to make the object visible after the texture is loaded.
 	 *
 	 * @defaultValue `true`
 	 */
 	makeVisible?: boolean;
-
 }
 
 export interface SkinLoadOptions extends LoadOptions {
-
 	/**
 	 * The model of the player (`"default"` for normal arms, and `"slim"` for slim arms).
 	 *
@@ -42,11 +70,9 @@ export interface SkinLoadOptions extends LoadOptions {
 	 * @defaultValue `false`
 	 */
 	ears?: boolean | "load-only";
-
 }
 
 export interface CapeLoadOptions extends LoadOptions {
-
 	/**
 	 * The equipment (`"cape"` or `"elytra"`) to show when the cape texture is loaded.
 	 *
@@ -55,11 +81,9 @@ export interface CapeLoadOptions extends LoadOptions {
 	 * @defaultValue `"cape"`
 	 */
 	backEquipment?: BackEquipment;
-
 }
 
 export interface EarsLoadOptions extends LoadOptions {
-
 	/**
 	 * The type of the provided ear texture.
 	 *
@@ -69,11 +93,9 @@ export interface EarsLoadOptions extends LoadOptions {
 	 * @defaultValue `"standalone"`
 	 */
 	textureType?: "standalone" | "skin";
-
 }
 
 export interface SkinViewerOptions {
-
 	/**
 	 * The canvas where the renderer draws its output.
 	 *
@@ -138,10 +160,12 @@ export interface SkinViewerOptions {
 	 *
 	 * @defaultValue If unspecified, the ears will be invisible.
 	 */
-	ears?: "current-skin" | {
-		textureType: "standalone" | "skin",
-		source: RemoteImage | TextureSource
-	}
+	ears?:
+		| "current-skin"
+		| {
+				textureType: "standalone" | "skin";
+				source: RemoteImage | TextureSource;
+		  };
 
 	/**
 	 * Whether to preserve the buffers until manually cleared or overwritten.
@@ -226,7 +250,6 @@ export interface SkinViewerOptions {
  * The SkinViewer renders the player on a canvas.
  */
 export class SkinViewer {
-
 	/**
 	 * The canvas where the renderer draws its output.
 	 */
@@ -318,7 +341,7 @@ export class SkinViewer {
 
 		this.renderer = new WebGLRenderer({
 			canvas: this.canvas,
-			preserveDrawingBuffer: options.preserveDrawingBuffer === true // default: false
+			preserveDrawingBuffer: options.preserveDrawingBuffer === true, // default: false
 		});
 
 		this.onDevicePixelRatioChange = () => {
@@ -348,7 +371,7 @@ export class SkinViewer {
 			// Use float precision depth if possible
 			// see https://github.com/bs-community/skinview3d/issues/111
 			renderTarget = new WebGLRenderTarget(0, 0, {
-				depthTexture: new DepthTexture(0, 0, FloatType)
+				depthTexture: new DepthTexture(0, 0, FloatType),
 			});
 		}
 		this.composer = new EffectComposer(this.renderer, renderTarget);
@@ -377,7 +400,7 @@ export class SkinViewer {
 		if (options.skin !== undefined) {
 			this.loadSkin(options.skin, {
 				model: options.model,
-				ears: options.ears === "current-skin"
+				ears: options.ears === "current-skin",
 			});
 		}
 		if (options.cape !== undefined) {
@@ -385,7 +408,7 @@ export class SkinViewer {
 		}
 		if (options.ears !== undefined && options.ears !== "current-skin") {
 			this.loadEars(options.ears.source, {
-				textureType: options.ears.textureType
+				textureType: options.ears.textureType,
 			});
 		}
 		if (options.width !== undefined) {
@@ -481,13 +504,9 @@ export class SkinViewer {
 		options?: SkinLoadOptions
 	): S extends TextureSource ? void : Promise<void>;
 
-	loadSkin(
-		source: TextureSource | RemoteImage | null,
-		options: SkinLoadOptions = {}
-	): void | Promise<void> {
+	loadSkin(source: TextureSource | RemoteImage | null, options: SkinLoadOptions = {}): void | Promise<void> {
 		if (source === null) {
 			this.resetSkin();
-
 		} else if (isTextureSource(source)) {
 			loadSkinToCanvas(this.skinCanvas, source);
 			this.recreateSkinTexture();
@@ -509,7 +528,6 @@ export class SkinViewer {
 					this.playerObject.ears.visible = true;
 				}
 			}
-
 		} else {
 			return loadImage(source).then(image => this.loadSkin(image, options));
 		}
@@ -530,13 +548,9 @@ export class SkinViewer {
 		options?: CapeLoadOptions
 	): S extends TextureSource ? void : Promise<void>;
 
-	loadCape(
-		source: TextureSource | RemoteImage | null,
-		options: CapeLoadOptions = {}
-	): void | Promise<void> {
+	loadCape(source: TextureSource | RemoteImage | null, options: CapeLoadOptions = {}): void | Promise<void> {
 		if (source === null) {
 			this.resetCape();
-
 		} else if (isTextureSource(source)) {
 			loadCapeToCanvas(this.capeCanvas, source);
 			this.recreateCapeTexture();
@@ -544,7 +558,6 @@ export class SkinViewer {
 			if (options.makeVisible !== false) {
 				this.playerObject.backEquipment = options.backEquipment === undefined ? "cape" : options.backEquipment;
 			}
-
 		} else {
 			return loadImage(source).then(image => this.loadCape(image, options));
 		}
@@ -566,13 +579,9 @@ export class SkinViewer {
 		options?: EarsLoadOptions
 	): S extends TextureSource ? void : Promise<void>;
 
-	loadEars(
-		source: TextureSource | RemoteImage | null,
-		options: EarsLoadOptions = {}
-	): void | Promise<void> {
+	loadEars(source: TextureSource | RemoteImage | null, options: EarsLoadOptions = {}): void | Promise<void> {
 		if (source === null) {
 			this.resetEars();
-
 		} else if (isTextureSource(source)) {
 			if (options.textureType === "skin") {
 				loadEarsToCanvasFromSkin(this.earsCanvas, source);
@@ -584,7 +593,6 @@ export class SkinViewer {
 			if (options.makeVisible !== false) {
 				this.playerObject.ears.visible = true;
 			}
-
 		} else {
 			return loadImage(source).then(image => this.loadEars(image, options));
 		}
@@ -599,9 +607,7 @@ export class SkinViewer {
 		}
 	}
 
-	loadPanorama<S extends TextureSource | RemoteImage>(
-		source: S
-	): S extends TextureSource ? void : Promise<void> {
+	loadPanorama<S extends TextureSource | RemoteImage>(source: S): S extends TextureSource ? void : Promise<void> {
 		return this.loadBackground(source, EquirectangularReflectionMapping);
 	}
 
@@ -610,10 +616,7 @@ export class SkinViewer {
 		mapping?: Mapping
 	): S extends TextureSource ? void : Promise<void>;
 
-	loadBackground<S extends TextureSource | RemoteImage>(
-		source: S,
-		mapping?: Mapping
-	): void | Promise<void> {
+	loadBackground<S extends TextureSource | RemoteImage>(source: S, mapping?: Mapping): void | Promise<void> {
 		if (isTextureSource(source)) {
 			if (this.backgroundTexture !== null) {
 				this.backgroundTexture.dispose();
@@ -631,7 +634,7 @@ export class SkinViewer {
 	}
 
 	private draw(): void {
-		const dt = this.clock.getDelta()
+		const dt = this.clock.getDelta();
 		if (this._animation !== null) {
 			this._animation.update(this.playerObject, dt);
 		}
@@ -644,9 +647,9 @@ export class SkinViewer {
 	}
 
 	/**
-	* Renders the scene to the canvas.
-	* This method does not change the animation progress.
-	*/
+	 * Renders the scene to the canvas.
+	 * This method does not change the animation progress.
+	 */
 	render(): void {
 		this.composer.render();
 	}
@@ -704,7 +707,12 @@ export class SkinViewer {
 			this.animationID = null;
 			this.clock.stop();
 			this.clock.autoStart = true;
-		} else if (!this._renderPaused && !this._disposed && !this.renderer.getContext().isContextLost() && this.animationID == null) {
+		} else if (
+			!this._renderPaused &&
+			!this._disposed &&
+			!this.renderer.getContext().isContextLost() &&
+			this.animationID == null
+		) {
 			this.animationID = window.requestAnimationFrame(() => this.draw());
 		}
 	}
@@ -742,7 +750,7 @@ export class SkinViewer {
 	}
 
 	adjustCameraDistance(): void {
-		let distance = 4.5 + 16.5 / Math.tan(this.fov / 180 * Math.PI / 2) / this.zoom;
+		let distance = 4.5 + 16.5 / Math.tan(((this.fov / 180) * Math.PI) / 2) / this.zoom;
 
 		// limit distance between 10 ~ 256 (default min / max distance of OrbitControls)
 		if (distance < 10) {

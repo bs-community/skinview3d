@@ -1,12 +1,32 @@
 import type { ModelType } from "skinview-utils";
-import { BoxGeometry, BufferAttribute, DoubleSide, FrontSide, Group, Mesh, MeshStandardMaterial, Object3D, Texture, Vector2 } from "three";
+import {
+	BoxGeometry,
+	BufferAttribute,
+	DoubleSide,
+	FrontSide,
+	Group,
+	Mesh,
+	MeshStandardMaterial,
+	Object3D,
+	Texture,
+	Vector2,
+} from "three";
 
-function setUVs(box: BoxGeometry, u: number, v: number, width: number, height: number, depth: number, textureWidth: number, textureHeight: number): void {
+function setUVs(
+	box: BoxGeometry,
+	u: number,
+	v: number,
+	width: number,
+	height: number,
+	depth: number,
+	textureWidth: number,
+	textureHeight: number
+): void {
 	const toFaceVertices = (x1: number, y1: number, x2: number, y2: number) => [
 		new Vector2(x1 / textureWidth, 1.0 - y2 / textureHeight),
 		new Vector2(x2 / textureWidth, 1.0 - y2 / textureHeight),
 		new Vector2(x2 / textureWidth, 1.0 - y1 / textureHeight),
-		new Vector2(x1 / textureWidth, 1.0 - y1 / textureHeight)
+		new Vector2(x1 / textureWidth, 1.0 - y1 / textureHeight),
 	];
 
 	const top = toFaceVertices(u + depth, v, u + width + depth, v + depth);
@@ -18,12 +38,30 @@ function setUVs(box: BoxGeometry, u: number, v: number, width: number, height: n
 
 	const uvAttr = box.attributes.uv as BufferAttribute;
 	uvAttr.copyVector2sArray([
-		right[3], right[2], right[0], right[1],
-		left[3], left[2], left[0], left[1],
-		top[3], top[2], top[0], top[1],
-		bottom[0], bottom[1], bottom[3], bottom[2],
-		front[3], front[2], front[0], front[1],
-		back[3], back[2], back[0], back[1]
+		right[3],
+		right[2],
+		right[0],
+		right[1],
+		left[3],
+		left[2],
+		left[0],
+		left[1],
+		top[3],
+		top[2],
+		top[0],
+		top[1],
+		bottom[0],
+		bottom[1],
+		bottom[3],
+		bottom[2],
+		front[3],
+		front[2],
+		front[0],
+		front[1],
+		back[3],
+		back[2],
+		back[0],
+		back[1],
 	]);
 	uvAttr.needsUpdate = true;
 }
@@ -51,7 +89,6 @@ export class BodyPart extends Group {
 }
 
 export class SkinObject extends Group {
-
 	// body parts
 	readonly head: BodyPart;
 	readonly body: BodyPart;
@@ -73,12 +110,12 @@ export class SkinObject extends Group {
 		super();
 
 		this.layer1Material = new MeshStandardMaterial({
-			side: FrontSide
+			side: FrontSide,
 		});
 		this.layer2Material = new MeshStandardMaterial({
 			side: DoubleSide,
 			transparent: true,
-			alphaTest: 1e-5
+			alphaTest: 1e-5,
 		});
 
 		this.layer1MaterialBiased = this.layer1Material.clone();
@@ -144,7 +181,7 @@ export class SkinObject extends Group {
 		const rightArmPivot = new Group();
 		rightArmPivot.add(rightArmMesh, rightArm2Mesh);
 		this.modelListeners.push(() => {
-			rightArmPivot.position.x = this.slim ? -.5 : -1;
+			rightArmPivot.position.x = this.slim ? -0.5 : -1;
 		});
 		rightArmPivot.position.y = -4;
 
@@ -206,7 +243,7 @@ export class SkinObject extends Group {
 		this.rightLeg.add(rightLegPivot);
 		this.rightLeg.position.x = -1.9;
 		this.rightLeg.position.y = -12;
-		this.rightLeg.position.z = -.1;
+		this.rightLeg.position.z = -0.1;
 		this.add(this.rightLeg);
 
 		// Left Leg
@@ -227,7 +264,7 @@ export class SkinObject extends Group {
 		this.leftLeg.add(leftLegPivot);
 		this.leftLeg.position.x = 1.9;
 		this.leftLeg.position.y = -12;
-		this.leftLeg.position.z = -.1;
+		this.leftLeg.position.z = -0.1;
 		this.add(this.leftLeg);
 
 		this.modelType = "default";
@@ -267,11 +304,11 @@ export class SkinObject extends Group {
 	}
 
 	setInnerLayerVisible(value: boolean): void {
-		this.getBodyParts().forEach(part => part.innerLayer.visible = value);
+		this.getBodyParts().forEach(part => (part.innerLayer.visible = value));
 	}
 
 	setOuterLayerVisible(value: boolean): void {
-		this.getBodyParts().forEach(part => part.outerLayer.visible = value);
+		this.getBodyParts().forEach(part => (part.outerLayer.visible = value));
 	}
 
 	resetJoints(): void {
@@ -284,7 +321,6 @@ export class SkinObject extends Group {
 }
 
 export class CapeObject extends Group {
-
 	readonly cape: Mesh;
 
 	private material: MeshStandardMaterial;
@@ -295,7 +331,7 @@ export class CapeObject extends Group {
 		this.material = new MeshStandardMaterial({
 			side: DoubleSide,
 			transparent: true,
-			alphaTest: 1e-5
+			alphaTest: 1e-5,
 		});
 
 		// +z (front) - inside of cape
@@ -304,7 +340,7 @@ export class CapeObject extends Group {
 		setCapeUVs(capeBox, 0, 0, 10, 16, 1);
 		this.cape = new Mesh(capeBox, this.material);
 		this.cape.position.y = -8;
-		this.cape.position.z = .5;
+		this.cape.position.z = 0.5;
 		this.add(this.cape);
 	}
 
@@ -319,7 +355,6 @@ export class CapeObject extends Group {
 }
 
 export class ElytraObject extends Group {
-
 	readonly leftWing: Group;
 	readonly rightWing: Group;
 
@@ -331,7 +366,7 @@ export class ElytraObject extends Group {
 		this.material = new MeshStandardMaterial({
 			side: DoubleSide,
 			transparent: true,
-			alphaTest: 1e-5
+			alphaTest: 1e-5,
 		});
 
 		const leftWingBox = new BoxGeometry(12, 22, 4);
@@ -356,13 +391,13 @@ export class ElytraObject extends Group {
 		this.add(this.rightWing);
 
 		this.leftWing.position.x = 5;
-		this.leftWing.rotation.x = .2617994;
+		this.leftWing.rotation.x = 0.2617994;
 		this.resetJoints();
 	}
 
 	resetJoints(): void {
-		this.leftWing.rotation.y = .01; // to avoid z-fighting
-		this.leftWing.rotation.z = .2617994;
+		this.leftWing.rotation.y = 0.01; // to avoid z-fighting
+		this.leftWing.rotation.z = 0.2617994;
 		this.updateRightWing();
 	}
 
@@ -389,7 +424,6 @@ export class ElytraObject extends Group {
 }
 
 export class EarsObject extends Group {
-
 	readonly rightEar: Mesh;
 	readonly leftEar: Mesh;
 
@@ -399,7 +433,7 @@ export class EarsObject extends Group {
 		super();
 
 		this.material = new MeshStandardMaterial({
-			side: FrontSide
+			side: FrontSide,
 		});
 		const earBox = new BoxGeometry(8, 8, 4 / 3);
 		setUVs(earBox, 0, 0, 6, 6, 1, 14, 7);
@@ -427,10 +461,9 @@ export class EarsObject extends Group {
 
 export type BackEquipment = "cape" | "elytra";
 
-const CapeDefaultAngle = 10.8 * Math.PI / 180;
+const CapeDefaultAngle = (10.8 * Math.PI) / 180;
 
 export class PlayerObject extends Group {
-
 	readonly skin: SkinObject;
 	readonly cape: CapeObject;
 	readonly elytra: ElytraObject;

@@ -7,7 +7,6 @@ import { PlayerObject } from "./model.js";
  * particular animations.
  */
 export abstract class PlayerAnimation {
-
 	/**
 	 * The speed of the animation.
 	 *
@@ -64,7 +63,6 @@ export abstract class PlayerAnimation {
  * ```
  */
 export class FunctionAnimation extends PlayerAnimation {
-
 	fn: (player: PlayerObject, progress: number, delta: number) => void;
 
 	constructor(fn: (player: PlayerObject, progress: number, delta: number) => void) {
@@ -78,7 +76,6 @@ export class FunctionAnimation extends PlayerAnimation {
 }
 
 export class IdleAnimation extends PlayerAnimation {
-
 	protected animate(player: PlayerObject): void {
 		// Multiply by animation's natural speed
 		const t = this.progress * 2;
@@ -95,7 +92,6 @@ export class IdleAnimation extends PlayerAnimation {
 }
 
 export class WalkingAnimation extends PlayerAnimation {
-
 	/**
 	 * Whether to shake head when walking.
 	 *
@@ -134,7 +130,6 @@ export class WalkingAnimation extends PlayerAnimation {
 }
 
 export class RunningAnimation extends PlayerAnimation {
-
 	protected animate(player: PlayerObject): void {
 		// Multiply by animation's natural speed
 		const t = this.progress * 15 + Math.PI * 0.5;
@@ -173,7 +168,6 @@ function clamp(num: number, min: number, max: number): number {
 }
 
 export class FlyingAnimation extends PlayerAnimation {
-
 	protected animate(player: PlayerObject): void {
 		// Body rotation finishes in 0.5s
 		// Elytra expansion finishes in 3.3s
@@ -181,18 +175,18 @@ export class FlyingAnimation extends PlayerAnimation {
 		const t = this.progress > 0 ? this.progress * 20 : 0;
 		const startProgress = clamp((t * t) / 100, 0, 1);
 
-		player.rotation.x = startProgress * Math.PI / 2;
-		player.skin.head.rotation.x = startProgress > .5 ? Math.PI / 4 - player.rotation.x : 0;
+		player.rotation.x = (startProgress * Math.PI) / 2;
+		player.skin.head.rotation.x = startProgress > 0.5 ? Math.PI / 4 - player.rotation.x : 0;
 
-		const basicArmRotationZ = Math.PI * .25 * startProgress;
+		const basicArmRotationZ = Math.PI * 0.25 * startProgress;
 		player.skin.leftArm.rotation.z = basicArmRotationZ;
 		player.skin.rightArm.rotation.z = -basicArmRotationZ;
 
-		const elytraRotationX = .34906584;
+		const elytraRotationX = 0.34906584;
 		const elytraRotationZ = Math.PI / 2;
-		const interpolation = Math.pow(.9, t);
-		player.elytra.leftWing.rotation.x = elytraRotationX + interpolation * (.2617994 - elytraRotationX);
-		player.elytra.leftWing.rotation.z = elytraRotationZ + interpolation * (.2617994 - elytraRotationZ);
+		const interpolation = Math.pow(0.9, t);
+		player.elytra.leftWing.rotation.x = elytraRotationX + interpolation * (0.2617994 - elytraRotationX);
+		player.elytra.leftWing.rotation.z = elytraRotationZ + interpolation * (0.2617994 - elytraRotationZ);
 		player.elytra.updateRightWing();
 	}
 }
