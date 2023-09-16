@@ -37,8 +37,6 @@ function setUVs(
 	const back = toFaceVertices(u + width + depth * 2, v + depth, u + width * 2 + depth * 2, v + height + depth);
 
 	const uvAttr = box.attributes.uv as BufferAttribute;
-	const uvData = uvAttr.array;
-
 	const uvRight = [right[3], right[2], right[0], right[1]];
 	const uvLeft = [left[3], left[2], left[0], left[1]];
 	const uvTop = [top[3], top[2], top[0], top[1]];
@@ -46,16 +44,17 @@ function setUVs(
 	const uvFront = [front[3], front[2], front[0], front[1]];
 	const uvBack = [back[3], back[2], back[0], back[1]];
 
+	// Create a new array to hold the modified UV data
+	const newUVData = [];
+
 	// Iterate over the arrays and copy the data to uvData
-	let index = 0;
 	for (const uvArray of [uvRight, uvLeft, uvTop, uvBottom, uvFront, uvBack]) {
 		for (const uv of uvArray) {
-			// @ts-ignore
-			uvData[index++] = uv.x;
-			// @ts-ignore
-			uvData[index++] = uv.y;
+			newUVData.push(uv.x, uv.y);
 		}
 	}
+
+	uvAttr.set(new Float32Array(newUVData));
 	uvAttr.needsUpdate = true;
 }
 
