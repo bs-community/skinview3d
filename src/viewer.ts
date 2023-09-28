@@ -23,7 +23,7 @@ import {
 	Vector2,
 	WebGLRenderer,
 	AmbientLight,
-	Mapping,
+	type Mapping,
 	CanvasTexture,
 	WebGLRenderTarget,
 	FloatType,
@@ -32,7 +32,8 @@ import {
 	Object3D,
 } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-import { EffectComposer, FullScreenQuad } from "three/examples/jsm/postprocessing/EffectComposer.js";
+import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
+import { FullScreenQuad } from "three/examples/jsm/postprocessing/Pass.js";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
 import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
 import { FXAAShader } from "three/examples/jsm/shaders/FXAAShader.js";
