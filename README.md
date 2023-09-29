@@ -20,6 +20,9 @@ Three.js powered Minecraft skin viewer.
 
 # Usage
 [Example of using skinview3d](https://bs-community.github.io/skinview3d/)
+
+[![CodeSandbox](https://img.shields.io/badge/Codesandbox-040404?style=for-the-badge&logo=codesandbox&logoColor=DBDBDB)](https://codesandbox.io/s/skinview3d-template-vdmuh4)
+
 ```html
 <canvas id="skin_container"></canvas>
 <script>
