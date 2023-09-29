@@ -1,9 +1,30 @@
 {
-	"extends": "@gplane/tsconfig",
 	"compilerOptions": {
-		"target": "es2019",
 		"outDir": "libs",
-		"noUncheckedIndexedAccess": false
+		"allowJs": false,
+		"allowSyntheticDefaultImports": true,
+		"allowUnreachableCode": false,
+		"allowUnusedLabels": false,
+		"alwaysStrict": true,
+		"declaration": true,
+		"esModuleInterop": true,
+		"verbatimModuleSyntax": true,
+		"isolatedModules": true,
+		"module": "nodenext",
+		"moduleResolution": "nodenext",
+		"newLine": "LF",
+		"noEmitOnError": true,
+		"noUncheckedIndexedAccess": false,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"pretty": true,
+		"resolveJsonModule": true,
+		"skipLibCheck": true,
+		"sourceMap": true,
+		"strict": true,
+		"stripInternal": true,
+		"target": "es2021",
+		"useDefineForClassFields": true
 	},
 	"include": ["src"]
 }

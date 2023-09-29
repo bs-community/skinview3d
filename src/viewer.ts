@@ -279,7 +279,7 @@ export class SkinViewer {
 	 */
 	readonly playerWrapper: Group;
 
-	readonly globalLight: AmbientLight = new AmbientLight(0xffffff, 0.4);
+	readonly globalLight: AmbientLight = new AmbientLight(0xffffff, 3);
 	readonly cameraLight: PointLight = new PointLight(0xffffff, 0.6);
 
 	readonly composer: EffectComposer;
