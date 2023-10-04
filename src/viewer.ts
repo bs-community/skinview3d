@@ -342,16 +342,19 @@ export class SkinViewer {
 		this.scene.add(this.globalLight);
 
 		// if webgl is not available, throw an error and render text saying not avail
-		if(!isWebGLAvailable()){
-			const container = document.createElement("div");
+		if (!isWebGLAvailable()) {
+			const errorMessage = "WebGL is not available on this device. Please try another device."; const container = document.createElement("div");
 			container.style.width = `${this.canvas.width}px`;
 			container.style.height = `${this.canvas.height * 2}px`;
+			container.style.display = "flex";
+			container.style.alignItems = "center";
 			container.style.backgroundColor = "black";
+			container.style.textAlign = "center";
 			container.style.color = "white";
-			container.innerText = "WebGL is not available on this device. Please try another device.";
+			container.innerText = errorMessage;
 			this.canvas.replaceWith(container);
 
-			throw new Error("WebGL is not available on this device. Please try another device.")
+			throw new Error(errorMessage)
 		}
 
 		this.renderer = new WebGLRenderer({
