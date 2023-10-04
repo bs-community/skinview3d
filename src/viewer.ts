@@ -344,6 +344,7 @@ export class SkinViewer {
 		// if webgl is not available, throw an error and render text saying not avail
 		if (!isWebGLAvailable()) {
 			const errorMessage = "WebGL is not available on this device. Please try another device.";
+			// TODO: allow styling of this somehow?
 			const container = document.createElement("div");
 			container.style.width = `${this.canvas.width}px`;
 			container.style.height = `${this.canvas.height * 2}px`;
@@ -355,6 +356,7 @@ export class SkinViewer {
 			container.innerText = errorMessage;
 			this.canvas.replaceWith(container);
 
+			// NOTE: this is the only error this library throws
 			throw new Error(errorMessage);
 		}
 
