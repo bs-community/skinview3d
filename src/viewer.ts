@@ -163,11 +163,11 @@ export interface SkinViewerOptions {
 	 * @defaultValue If unspecified, the ears will be invisible.
 	 */
 	ears?:
-	| "current-skin"
-	| {
-		textureType: "standalone" | "skin";
-		source: RemoteImage | TextureSource;
-	};
+		| "current-skin"
+		| {
+				textureType: "standalone" | "skin";
+				source: RemoteImage | TextureSource;
+		  };
 
 	/**
 	 * Whether to preserve the buffers until manually cleared or overwritten.
@@ -343,7 +343,8 @@ export class SkinViewer {
 
 		// if webgl is not available, throw an error and render text saying not avail
 		if (!isWebGLAvailable()) {
-			const errorMessage = "WebGL is not available on this device. Please try another device."; const container = document.createElement("div");
+			const errorMessage = "WebGL is not available on this device. Please try another device.";
+			const container = document.createElement("div");
 			container.style.width = `${this.canvas.width}px`;
 			container.style.height = `${this.canvas.height * 2}px`;
 			container.style.display = "flex";
@@ -354,7 +355,7 @@ export class SkinViewer {
 			container.innerText = errorMessage;
 			this.canvas.replaceWith(container);
 
-			throw new Error(errorMessage)
+			throw new Error(errorMessage);
 		}
 
 		this.renderer = new WebGLRenderer({
