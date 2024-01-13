@@ -8,6 +8,7 @@
 		"clean": "rimraf libs bundles",
 		"build:modules": "tsc -p .",
 		"build:bundles": "rollup -c --configPlugin=swc3",
+		"build:docs": "typedoc src/viewer.ts",
 		"build": "npm run build:modules && npm run build:bundles",
 		"format": "prettier src --write",
 		"test:lint": "eslint --ext .ts src",
@@ -58,6 +59,7 @@
 		"rimraf": "^3.0.2",
 		"rollup": "^3.20.7",
 		"rollup-plugin-swc3": "^0.8.1",
+		"typedoc": "^0.25.7",
 		"typescript": "^5.0.4"
 	}
 }
