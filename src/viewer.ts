@@ -40,6 +40,7 @@ import { FXAAShader } from "three/examples/jsm/shaders/FXAAShader.js";
 import { PlayerAnimation } from "./animation.js";
 import { type BackEquipment, PlayerObject } from "./model.js";
 import { NameTagObject } from "./nametag.js";
+import { isWebGLAvailable } from "./utils.js";
 
 export interface LoadOptions {
 	/**
@@ -162,11 +163,11 @@ export interface SkinViewerOptions {
 	 * @defaultValue If unspecified, the ears will be invisible.
 	 */
 	ears?:
-	| "current-skin"
-	| {
-		textureType: "standalone" | "skin";
-		source: RemoteImage | TextureSource;
-	};
+		| "current-skin"
+		| {
+				textureType: "standalone" | "skin";
+				source: RemoteImage | TextureSource;
+		  };
 
 	/**
 	 * Whether to preserve the buffers until manually cleared or overwritten.
@@ -339,6 +340,25 @@ export class SkinViewer {
 		this.camera.add(this.cameraLight);
 		this.scene.add(this.camera);
 		this.scene.add(this.globalLight);
+
+		// if webgl is not available, throw an error and render text saying not avail
+		if (!isWebGLAvailable()) {
+			const errorMessage = "WebGL is not available on this device. Please try another device.";
+			// TODO: allow styling of this somehow?
+			const container = document.createElement("div");
+			container.style.width = `${this.canvas.width}px`;
+			container.style.height = `${this.canvas.height * 2}px`;
+			container.style.display = "flex";
+			container.style.alignItems = "center";
+			container.style.backgroundColor = "black";
+			container.style.textAlign = "center";
+			container.style.color = "white";
+			container.innerText = errorMessage;
+			this.canvas.replaceWith(container);
+
+			// NOTE: this is the only error this library throws
+			throw new Error(errorMessage);
+		}
 
 		this.renderer = new WebGLRenderer({
 			canvas: this.canvas,
