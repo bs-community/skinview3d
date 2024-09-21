@@ -190,3 +190,21 @@ export class FlyingAnimation extends PlayerAnimation {
 		player.elytra.updateRightWing();
 	}
 }
+
+export class WaveAnimation extends PlayerAnimation {
+
+    whichArm: string;
+
+    constructor(whichArm: 'left' | 'right' = 'left') {
+        super();
+        this.whichArm = whichArm;
+    }
+
+    protected animate(player: PlayerObject): void {
+        const t = this.progress * 2 * Math.PI * 0.5;
+
+        const targetArm = this.whichArm === 'left' ? player.skin.leftArm : player.skin.rightArm;
+        targetArm.rotation.x = 180
+        targetArm.rotation.z = Math.sin(t) * 0.5;
+    }
+}

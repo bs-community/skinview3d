@@ -8,6 +8,7 @@ const availableAnimations = {
 	walk: new skinview3d.WalkingAnimation(),
 	run: new skinview3d.RunningAnimation(),
 	fly: new skinview3d.FlyingAnimation(),
+	wave: new skinview3d.WaveAnimation(),
 };
 
 let skinViewer: skinview3d.SkinViewer;
