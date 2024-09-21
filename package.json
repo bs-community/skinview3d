@@ -13,10 +13,7 @@
 		"format": "prettier src --write",
 		"test:lint": "eslint --ext .ts src",
 		"test": "npm run test:lint",
-		"dev:watch:modules": "tsc -w --preserveWatchOutput --declaration --sourceMap --outDir libs -p .",
-		"dev:watch:bundles": "rollup -w --no-watch.clearScreen -c --configPlugin=swc3",
-		"dev:serve": "ws",
-		"dev": "npm-run-all --parallel dev:watch:bundles dev:serve",
+		"dev": "vite",
 		"prepublishOnly": "npm run clean && npm run build"
 	},
 	"repository": {
@@ -60,6 +57,7 @@
 		"rollup": "^3.20.7",
 		"rollup-plugin-swc3": "^0.8.1",
 		"typedoc": "^0.25.7",
-		"typescript": "^5.0.4"
+		"typescript": "^5.0.4",
+		"vite": "^5.4.7"
 	}
 }
