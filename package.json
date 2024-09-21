@@ -9,11 +9,13 @@
 		"build:modules": "tsc -p .",
 		"build:bundles": "rollup -c --configPlugin=swc3",
 		"build:docs": "typedoc src/viewer.ts",
-		"build": "npm run build:modules && npm run build:bundles",
+		"build:preview": "vite build",
+		"build": "npm-run-all --parallel build:modules build:bundles build:preview",
 		"format": "prettier src --write",
 		"test:lint": "eslint --ext .ts src",
 		"test": "npm run test:lint",
 		"dev": "vite",
+		"preview": "vite preview",
 		"prepublishOnly": "npm run clean && npm run build"
 	},
 	"repository": {
