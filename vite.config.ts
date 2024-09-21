@@ -1,4 +1,4 @@
-import { defineConfig } from 'vite';
+import { defineConfig } from "vite";
 
 export default defineConfig({
 	base: "./",
@@ -6,8 +6,8 @@ export default defineConfig({
 	build: {
 		rollupOptions: {
 			input: {
-				main: './examples/index.html',
-				offscreen: './examples/offscreen-render.html'
+				main: "./examples/index.html",
+				offscreen: "./examples/offscreen-render.html",
 			},
 		},
 	},
