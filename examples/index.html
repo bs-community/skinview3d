@@ -1,595 +1,288 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>skinview3d</title>
+	</head>
 
-<head>
-	<meta charset="utf-8">
-	<meta http-equiv="x-ua-compatible" content="ie=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-	<title>skinview3d</title>
-	<style>
-		@font-face {
-			font-family: 'Minecraft';
-			src: url('font/minecraft.woff2') format('woff2');
-		}
+	<body>
+		<canvas id="skin_container"></canvas>
 
-		body {
-			font-family: "Helvetica Neue", "Helvetica", "Arial", "sans-serif";
-			margin: 5px;
-		}
+		<div class="controls">
+			<button id="reset_all" type="button" class="control">Reset All</button>
 
-		h1 {
-			font-size: 1.25em;
-		}
-
-		h2 {
-			font-size: 1em;
-		}
-
-		h1,
-		h2 {
-			margin: 5px 0 0 0;
-		}
-
-		input[type="text"] {
-			box-sizing: border-box;
-		}
-
-		.control {
-			display: inline;
-		}
-
-		.control + .control {
-			margin-left: 10px;
-		}
-
-		.control-section {
-			margin-left: 10px;
-		}
-
-		.control-section>h1,
-		.control-section>h2 {
-			margin-left: -10px;
-		}
-
-		table {
-			border-collapse: collapse;
-		}
-
-		table td,
-		table th {
-			border: 1px black dashed;
-			text-align: left;
-		}
-
-		thead th {
-			border-top: unset;
-		}
-
-		tbody tr:last-child td,
-		tbody tr:last-child th {
-			border-bottom: unset;
-		}
-
-		table th:first-child,
-		table td:first-child {
-			border-left: unset;
-		}
-
-		table th:last-child,
-		table td:last-child {
-			border-right: unset;
-		}
-
-		table td input[type="checkbox"] {
-			vertical-align: middle;
-			margin: 0;
-			width: 100%;
-		}
-
-		footer {
-			margin-top: 10px;
-			padding-top: 10px;
-			border-top: 1px grey solid;
-		}
-
-		label {
-			white-space: nowrap;
-		}
-
-		.control-section ul {
-			margin-top: 0;
-			padding-left: 20px;
-		}
-
-		.hidden {
-			display: none;
-		}
-	</style>
-</head>
-
-<body>
-
-	<canvas id="skin_container"></canvas>
-
-	<div class="controls">
-
-		<button id="reset_all" type="button" class="control">Reset All</button>
-
-		<div class="control-section">
-			<h1>Viewport</h1>
-			<div>
-				<label class="control">Width: <input id="canvas_width" type="number" value="300" size="4"></label>
-				<label class="control">Height: <input id="canvas_height" type="number" value="300" size="4"></label>
-			</div>
-			<div>
-				<label class="control">FOV: <input id="fov" type="number" value="70" step="1" min="1" max="179" size="2"></label>
-				<label class="control">Zoom: <input id="zoom" type="number" value="0.90" step="0.01" min="0.01" max="2.00" size="4"></label>
-			</div>
-		</div>
-
-		<div class="control-section">
-			<h1>Light</h1>
-			<label class="control">Global: <input id="global_light" type="number" value="3" step="0.01" min="0.00" max="2.00" size="4"></label>
-			<label class="control">Camera: <input id="camera_light" type="number" value="0.60" step="0.01" min="0.00" max="2.00" size="4"></label>
-		</div>
-
-		<div class="control-section">
-			<h1>Rotation</h1>
-			<label class="control"><input id="auto_rotate" type="checkbox"> Enable</label>
-			<label class="control">Speed: <input id="auto_rotate_speed" type="number" value="2" step="0.1" size="3"></label>
-		</div>
-
-		<div class="control-section">
-			<h1>Animation</h1>
-			<div>
-				<label><input type="radio" id="animation_none" name="animation" value="" checked> None</label>
-				<label><input type="radio" id="animation_idle" name="animation" value="idle"> Idle</label>
-				<label><input type="radio" id="animation_walk" name="animation" value="walk"> Walk</label>
-				<label><input type="radio" id="animation_run" name="animation" value="run"> Run</label>
-				<label><input type="radio" id="animation_fly" name="animation" value="fly"> Fly</label>
-			</div>
-			<label class="control">Speed: <input id="animation_speed" type="number" value="1" step="0.1" size="3"></label>
-			<button id="animation_pause_resume" type="button" class="control">Pause / Resume</button>
-		</div>
-
-		<div class="control-section">
-			<h1>Mouse Control</h1>
-			<div class="control">
-				<label><input type="checkbox" id="control_rotate" checked> Enable Rotate</label>
-				<label><input type="checkbox" id="control_zoom" checked> Enable Zoom</label>
-				<label><input type="checkbox" id="control_pan"> Enable Pan</label>
-			</div>
-		</div>
-
-		<div class="control-section">
-			<h1>Skin Layers</h1>
-			<table id="layers_table">
-				<thead>
-					<tr>
-						<th></th>
-						<th>head</th>
-						<th>body</th>
-						<th>right arm</th>
-						<th>left arm</th>
-						<th>right leg</th>
-						<th>left leg</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<th>inner</th>
-						<td><input type="checkbox" data-layer="innerLayer" data-part="head" checked></td>
-						<td><input type="checkbox" data-layer="innerLayer" data-part="body" checked></td>
-						<td><input type="checkbox" data-layer="innerLayer" data-part="rightArm" checked></td>
-						<td><input type="checkbox" data-layer="innerLayer" data-part="leftArm" checked></td>
-						<td><input type="checkbox" data-layer="innerLayer" data-part="rightLeg" checked></td>
-						<td><input type="checkbox" data-layer="innerLayer" data-part="leftLeg" checked></td>
-					</tr>
-					<tr>
-						<th>outer</th>
-						<td><input type="checkbox" data-layer="outerLayer" data-part="head" checked></td>
-						<td><input type="checkbox" data-layer="outerLayer" data-part="body" checked></td>
-						<td><input type="checkbox" data-layer="outerLayer" data-part="rightArm" checked></td>
-						<td><input type="checkbox" data-layer="outerLayer" data-part="leftArm" checked></td>
-						<td><input type="checkbox" data-layer="outerLayer" data-part="rightLeg" checked></td>
-						<td><input type="checkbox" data-layer="outerLayer" data-part="leftLeg" checked></td>
-					</tr>
-				</tbody>
-			</table>
-			<div>
-				<h2>Back Equipment</h2>
-				<div class="control">
-					<label><input type="radio" id="back_equipment_cape" name="back_equipment" value="cape" checked> Cape</label>
-					<label><input type="radio" id="back_equipment_elytra" name="back_equipment" value="elytra"> Elytra</label>
+			<div class="control-section">
+				<h1>Viewport</h1>
+				<div>
+					<label class="control">Width: <input id="canvas_width" type="number" value="300" size="4" /></label>
+					<label class="control">Height: <input id="canvas_height" type="number" value="300" size="4" /></label>
+				</div>
+				<div>
+					<label class="control"
+						>FOV: <input id="fov" type="number" value="70" step="1" min="1" max="179" size="2"
+					/></label>
+					<label class="control"
+						>Zoom: <input id="zoom" type="number" value="0.90" step="0.01" min="0.01" max="2.00" size="4"
+					/></label>
 				</div>
 			</div>
-		</div>
 
-		<div class="control-section">
-			<h1>Skin</h1>
-			<div>
+			<div class="control-section">
+				<h1>Light</h1>
+				<label class="control"
+					>Global: <input id="global_light" type="number" value="3" step="0.01" min="0.00" max="2.00" size="4"
+				/></label>
+				<label class="control"
+					>Camera: <input id="camera_light" type="number" value="0.60" step="0.01" min="0.00" max="2.00" size="4"
+				/></label>
+			</div>
+
+			<div class="control-section">
+				<h1>Rotation</h1>
+				<label class="control"><input id="auto_rotate" type="checkbox" /> Enable</label>
+				<label class="control"
+					>Speed: <input id="auto_rotate_speed" type="number" value="2" step="0.1" size="3"
+				/></label>
+			</div>
+
+			<div class="control-section">
+				<h1>Animation</h1>
+				<div>
+					<label><input type="radio" id="animation_none" name="animation" value="" checked /> None</label>
+					<label><input type="radio" id="animation_idle" name="animation" value="idle" /> Idle</label>
+					<label><input type="radio" id="animation_walk" name="animation" value="walk" /> Walk</label>
+					<label><input type="radio" id="animation_run" name="animation" value="run" /> Run</label>
+					<label><input type="radio" id="animation_fly" name="animation" value="fly" /> Fly</label>
+				</div>
+				<label class="control">Speed: <input id="animation_speed" type="number" value="1" step="0.1" size="3" /></label>
+				<button id="animation_pause_resume" type="button" class="control">Pause / Resume</button>
+			</div>
+
+			<div class="control-section">
+				<h1>Mouse Control</h1>
 				<div class="control">
-					<label>URL: <input id="skin_url" type="text" value="img/hatsune_miku.png" placeholder="none" list="default_skins" size="20"></label>
-					<datalist id="default_skins">
-						<option value="img/1_8_texturemap_redux.png">
-						<option value="img/hacksore.png">
-						<option value="img/haka.png">
-						<option value="img/hatsune_miku.png">
-						<option value="img/ironman_hd.png">
-						<option value="img/sethbling.png">
-						<option value="img/deadmau5.png">
+					<label><input type="checkbox" id="control_rotate" checked /> Enable Rotate</label>
+					<label><input type="checkbox" id="control_zoom" checked /> Enable Zoom</label>
+					<label><input type="checkbox" id="control_pan" /> Enable Pan</label>
+				</div>
+			</div>
+
+			<div class="control-section">
+				<h1>Skin Layers</h1>
+				<table id="layers_table">
+					<thead>
+						<tr>
+							<th></th>
+							<th>head</th>
+							<th>body</th>
+							<th>right arm</th>
+							<th>left arm</th>
+							<th>right leg</th>
+							<th>left leg</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<th>inner</th>
+							<td><input type="checkbox" data-layer="innerLayer" data-part="head" checked /></td>
+							<td><input type="checkbox" data-layer="innerLayer" data-part="body" checked /></td>
+							<td><input type="checkbox" data-layer="innerLayer" data-part="rightArm" checked /></td>
+							<td><input type="checkbox" data-layer="innerLayer" data-part="leftArm" checked /></td>
+							<td><input type="checkbox" data-layer="innerLayer" data-part="rightLeg" checked /></td>
+							<td><input type="checkbox" data-layer="innerLayer" data-part="leftLeg" checked /></td>
+						</tr>
+						<tr>
+							<th>outer</th>
+							<td><input type="checkbox" data-layer="outerLayer" data-part="head" checked /></td>
+							<td><input type="checkbox" data-layer="outerLayer" data-part="body" checked /></td>
+							<td><input type="checkbox" data-layer="outerLayer" data-part="rightArm" checked /></td>
+							<td><input type="checkbox" data-layer="outerLayer" data-part="leftArm" checked /></td>
+							<td><input type="checkbox" data-layer="outerLayer" data-part="rightLeg" checked /></td>
+							<td><input type="checkbox" data-layer="outerLayer" data-part="leftLeg" checked /></td>
+						</tr>
+					</tbody>
+				</table>
+				<div>
+					<h2>Back Equipment</h2>
+					<div class="control">
+						<label
+							><input type="radio" id="back_equipment_cape" name="back_equipment" value="cape" checked /> Cape</label
+						>
+						<label><input type="radio" id="back_equipment_elytra" name="back_equipment" value="elytra" /> Elytra</label>
+					</div>
+				</div>
+			</div>
+
+			<div class="control-section">
+				<h1>Skin</h1>
+				<div>
+					<div class="control">
+						<label
+							>URL:
+							<input
+								id="skin_url"
+								type="text"
+								value="img/hatsune_miku.png"
+								placeholder="none"
+								list="default_skins"
+								size="20"
+						/></label>
+						<datalist id="default_skins">
+							<option value="img/1_8_texturemap_redux.png"></option>
+							<option value="img/hacksore.png"></option>
+							<option value="img/haka.png"></option>
+							<option value="img/hatsune_miku.png"></option>
+							<option value="img/ironman_hd.png"></option>
+							<option value="img/sethbling.png"></option>
+							<option value="img/deadmau5.png"></option>
+						</datalist>
+						<input id="skin_url_upload" type="file" class="hidden" accept="image/*" />
+						<button id="skin_url_unset" type="button" class="control hidden">Unset</button>
+						<button type="button" class="control" onclick="document.getElementById('skin_url_upload').click();">
+							Browse...
+						</button>
+					</div>
+				</div>
+				<div>
+					<label class="control"
+						>Model:
+						<select id="skin_model">
+							<option value="auto-detect" selected>Auto detect</option>
+							<option value="default">Default</option>
+							<option value="slim">Slim</option>
+						</select>
+					</label>
+				</div>
+			</div>
+
+			<div class="control-section">
+				<h1>Cape</h1>
+				<div class="control">
+					<label
+						>URL:
+						<input
+							id="cape_url"
+							type="text"
+							value="img/mojang_cape.png"
+							placeholder="none"
+							list="default_capes"
+							size="20"
+					/></label>
+					<datalist id="default_capes">
+						<option value=""></option>
+						<option value="img/mojang_cape.png"></option>
+						<option value="img/legacy_cape.png"></option>
+						<option value="img/hd_cape.png"></option>
 					</datalist>
-					<input id="skin_url_upload" type="file" class="hidden" accept="image/*">
-					<button id="skin_url_unset" type="button" class="control hidden">Unset</button>
-					<button type="button" class="control"
-						onclick="document.getElementById('skin_url_upload').click();">Browse...</button>
+					<input id="cape_url_upload" type="file" class="hidden" accept="image/*" />
+					<button id="cape_url_unset" type="button" class="control hidden">Unset</button>
+					<button type="button" class="control" onclick="document.getElementById('cape_url_upload').click();">
+						Browse...
+					</button>
 				</div>
 			</div>
-			<div>
-				<label class="control">Model:
-					<select id="skin_model">
-						<option value="auto-detect" selected>Auto detect</option>
-						<option value="default">Default</option>
-						<option value="slim">Slim</option>
-					</select>
-				</label>
+
+			<div class="control-section">
+				<h1>Ears</h1>
+				<div>
+					<label class="control"
+						>Source:
+						<select id="ears_source">
+							<option value="none">None</option>
+							<option value="current_skin">Current skin</option>
+							<option value="skin">Skin texture</option>
+							<option value="standalone">Standalone texture</option>
+						</select>
+					</label>
+				</div>
+				<div id="ears_texture_input">
+					<label class="control"
+						>URL: <input id="ears_url" type="text" value="" placeholder="none" list="default_ears" size="20"
+					/></label>
+					<datalist id="default_ears">
+						<option value=""></option>
+						<option value="img/ears.png" data-texture-type="standalone"></option>
+						<option value="img/deadmau5.png" data-texture-type="skin"></option>
+					</datalist>
+					<input id="ears_url_upload" type="file" class="hidden" accept="image/*" />
+					<button id="ears_url_unset" type="button" class="control hidden">Unset</button>
+					<button type="button" class="control" onclick="document.getElementById('ears_url_upload').click();">
+						Browse...
+					</button>
+				</div>
+			</div>
+
+			<div class="control-section">
+				<h1>Panorama</h1>
+				<div class="control">
+					<label
+						>URL:
+						<input
+							id="panorama_url"
+							type="text"
+							value="img/panorama.png"
+							placeholder="none"
+							list="default_panorama"
+							size="20"
+					/></label>
+					<datalist id="default_panorama">
+						<option value=""></option>
+						<option value="img/panorama.png"></option>
+					</datalist>
+					<input id="panorama_url_upload" type="file" class="hidden" accept="image/*" />
+					<button id="panorama_url_unset" type="button" class="control hidden">Unset</button>
+					<button type="button" class="control" onclick="document.getElementById('panorama_url_upload').click();">
+						Browse...
+					</button>
+				</div>
+			</div>
+
+			<div class="control-section">
+				<h1>Name Tag</h1>
+				<div class="control">
+					<label>Text: <input id="nametag_text" type="text" value="" placeholder="none" size="20" /></label>
+				</div>
+			</div>
+
+			<div class="control-section">
+				<h1>Other examples</h1>
+				<ul>
+					<li><a href="offscreen-render.html">offscreen-render</a></li>
+				</ul>
 			</div>
 		</div>
 
-		<div class="control-section">
-			<h1>Cape</h1>
-			<div class="control">
-				<label>URL: <input id="cape_url" type="text" value="img/mojang_cape.png" placeholder="none" list="default_capes" size="20"></label>
-				<datalist id="default_capes">
-					<option value="">
-					<option value="img/mojang_cape.png">
-					<option value="img/legacy_cape.png">
-					<option value="img/hd_cape.png">
-				</datalist>
-				<input id="cape_url_upload" type="file" class="hidden" accept="image/*">
-				<button id="cape_url_unset" type="button" class="control hidden">Unset</button>
-				<button type="button" class="control"
-					onclick="document.getElementById('cape_url_upload').click();">Browse...</button>
-			</div>
-		</div>
-
-		<div class="control-section">
-			<h1>Ears</h1>
-			<div>
-				<label class="control">Source:
-					<select id="ears_source">
-						<option value="none">None</option>
-						<option value="current_skin">Current skin</option>
-						<option value="skin">Skin texture</option>
-						<option value="standalone">Standalone texture</option>
-					</select>
-				</label>
-			</div>
-			<div id="ears_texture_input">
-				<label class="control">URL: <input id="ears_url" type="text" value="" placeholder="none" list="default_ears" size="20"></label>
-				<datalist id="default_ears">
-					<option value="">
-					<option value="img/ears.png" data-texture-type="standalone">
-					<option value="img/deadmau5.png" data-texture-type="skin">
-				</datalist>
-				<input id="ears_url_upload" type="file" class="hidden" accept="image/*">
-				<button id="ears_url_unset" type="button" class="control hidden">Unset</button>
-				<button type="button" class="control"
-					onclick="document.getElementById('ears_url_upload').click();">Browse...</button>
-			</div>
-		</div>
-
-		<div class="control-section">
-			<h1>Panorama</h1>
-			<div class="control">
-				<label>URL: <input id="panorama_url" type="text" value="img/panorama.png" placeholder="none" list="default_panorama" size="20"></label>
-				<datalist id="default_panorama">
-					<option value="">
-					<option value="img/panorama.png">
-				</datalist>
-				<input id="panorama_url_upload" type="file" class="hidden" accept="image/*">
-				<button id="panorama_url_unset" type="button" class="control hidden">Unset</button>
-				<button type="button" class="control"
-					onclick="document.getElementById('panorama_url_upload').click();">Browse...</button>
-			</div>
-		</div>
-
-		<div class="control-section">
-			<h1>Name Tag</h1>
-			<div class="control">
-				<label>Text: <input id="nametag_text" type="text" value="" placeholder="none" size="20"></label>
-			</div>
-		</div>
-
-		<div class="control-section">
-			<h1>Other examples</h1>
-			<ul>
-				<li><a href="offscreen-render.html">offscreen-render</a></li>
-			</ul>
-		</div>
-
-	</div>
-
-	<footer>
-		<div>
-			GitHub: <a href="https://github.com/bs-community/skinview3d">bs-community/skinview3d</a>
-		</div>
-		<!--%%deploy_only%%
+		<footer>
+			<div>GitHub: <a href="https://github.com/bs-community/skinview3d">bs-community/skinview3d</a></div>
+			<!--%%deploy_only%%
 			<div>
 				Built from
 				commit <a href="https://github.com/bs-community/skinview3d/commit/{{build_commit}}">{{build_commit}}</a>
 				at <time datetime="{{build_time}}">{{build_time}}</time>
 			</div>
 		-->
-	</footer>
+		</footer>
+		<script type="module" src="./main.ts"></script>
 
-	<script src="../bundles/skinview3d.bundle.js"></script>
-	<script>
-		const skinParts = ["head", "body", "rightArm", "leftArm", "rightLeg", "leftLeg"];
-		const skinLayers = ["innerLayer", "outerLayer"];
-		const availableAnimations = {
-			idle: new skinview3d.IdleAnimation(),
-			walk: new skinview3d.WalkingAnimation(),
-			run: new skinview3d.RunningAnimation(),
-			fly: new skinview3d.FlyingAnimation()
-		};
-
-		let skinViewer;
-
-		function obtainTextureUrl(id) {
-			const urlInput = document.getElementById(id);
-			const fileInput = document.getElementById(id + "_upload");
-			const unsetButton = document.getElementById(id + "_unset");
-			const file = fileInput.files[0];
-			if (file === undefined) {
-				if (!unsetButton.classList.contains("hidden")) {
-					unsetButton.classList.add("hidden");
-				}
-				return urlInput.value;
-			} else {
-				unsetButton.classList.remove("hidden");
-				urlInput.value = `Local file: ${file.name}`;
-				urlInput.readOnly = true;
-				return URL.createObjectURL(file);
+		<script
+			type="module"
+			src="https://unpkg.com/stats.js@0.17.0/src/Stats.js"
+			integrity="sha384-W71K+d2HbqXqQWSj3Vj4RDsIVvIV7lR8O6RArKAiqB39ntwLci0W08qOn4Z1n8sM"
+			crossorigin="anonymous"
+			async
+		></script>
+		<script type="module" async>
+			import Stats from "https://unpkg.com/stats.js@0.17.0/src/Stats.js";
+			const stats = new Stats();
+			stats.dom.style.left = "";
+			stats.dom.style.right = "0";
+			document.body.appendChild(stats.dom);
+			function loop() {
+				stats.update();
+				requestAnimationFrame(loop);
 			}
-		}
-
-		function reloadSkin() {
-			const input = document.getElementById("skin_url");
-			const url = obtainTextureUrl("skin_url");
-			if (url === "") {
-				skinViewer.loadSkin(null);
-				input.setCustomValidity("");
-			} else {
-				skinViewer.loadSkin(url, {
-					model: document.getElementById("skin_model").value,
-					ears: document.getElementById("ears_source").value === "current_skin"
-				})
-					.then(() => input.setCustomValidity(""))
-					.catch(e => {
-						input.setCustomValidity("Image can't be loaded.");
-						console.error(e);
-					});
-			}
-		}
-
-		function reloadCape() {
-			const input = document.getElementById("cape_url");
-			const url = obtainTextureUrl("cape_url");
-			if (url === "") {
-				skinViewer.loadCape(null);
-				input.setCustomValidity("");
-			} else {
-				const selectedBackEquipment = document.querySelector('input[type="radio"][name="back_equipment"]:checked');
-				skinViewer.loadCape(url, { backEquipment: selectedBackEquipment.value })
-					.then(() => input.setCustomValidity(""))
-					.catch(e => {
-						input.setCustomValidity("Image can't be loaded.");
-						console.error(e);
-					});
-			}
-		}
-
-		function reloadEars(skipSkinReload = false) {
-			const sourceType = document.getElementById("ears_source").value;
-			let hideInput = true;
-			if (sourceType === "none") {
-				skinViewer.loadEars(null);
-			} else if (sourceType === "current_skin") {
-				if (!skipSkinReload){
-					reloadSkin();
-				}
-			} else {
-				hideInput = false;
-				document.querySelectorAll("#default_ears option[data-texture-type]").forEach(opt => {
-					opt.disabled = opt.dataset.textureType !== sourceType;
-				});
-
-				const input = document.getElementById("ears_url");
-				const url = obtainTextureUrl("ears_url");
-				if (url === "") {
-					skinViewer.loadEars(null);
-					input.setCustomValidity("");
-				} else {
-					skinViewer.loadEars(url, { textureType: sourceType })
-						.then(() => input.setCustomValidity(""))
-						.catch(e => {
-							input.setCustomValidity("Image can't be loaded.");
-							console.error(e);
-						});
-				}
-			}
-
-			const el = document.getElementById("ears_texture_input");
-			if (hideInput) {
-				if (!(el.classList.contains("hidden"))){
-					el.classList.add("hidden");
-				}
-			} else {
-				el.classList.remove("hidden");
-			}
-		}
-
-		function reloadPanorama() {
-			const input = document.getElementById("panorama_url");
-			const url = obtainTextureUrl("panorama_url");
-			if (url === "") {
-				skinViewer.background = null;
-				input.setCustomValidity("");
-			} else {
-				skinViewer.loadPanorama(url)
-					.then(() => input.setCustomValidity(""))
-					.catch(e => {
-						input.setCustomValidity("Image can't be loaded.");
-						console.error(e);
-					});
-			}
-		}
-
-		function reloadNameTag() {
-			const text = document.getElementById("nametag_text").value;
-			if (text === "") {
-				skinViewer.nameTag = null;
-			} else {
-				skinViewer.nameTag = text;
-			}
-		}
-
-		function initializeControls() {
-			document.getElementById("canvas_width").addEventListener("change", e => skinViewer.width = e.target.value);
-			document.getElementById("canvas_height").addEventListener("change", e => skinViewer.height = e.target.value);
-			document.getElementById("fov").addEventListener("change", e => skinViewer.fov = e.target.value);
-			document.getElementById("zoom").addEventListener("change", e => skinViewer.zoom = e.target.value);
-			document.getElementById("global_light").addEventListener("change", e => skinViewer.globalLight.intensity = e.target.value);
-			document.getElementById("camera_light").addEventListener("change", e => skinViewer.cameraLight.intensity = e.target.value);
-			document.getElementById("animation_pause_resume").addEventListener("click", () => skinViewer.animation.paused = !skinViewer.animation.paused);
-			document.getElementById("auto_rotate").addEventListener("change", e => skinViewer.autoRotate = e.target.checked);
-			document.getElementById("auto_rotate_speed").addEventListener("change", e => skinViewer.autoRotateSpeed = e.target.value);
-			for (const el of document.querySelectorAll('input[type="radio"][name="animation"]')) {
-				el.addEventListener("change", e => {
-					if (e.target.value === "") {
-						skinViewer.animation = null;
-					} else {
-						skinViewer.animation = availableAnimations[e.target.value];
-						skinViewer.animation.speed = document.getElementById("animation_speed").value;
-					}
-				});
-			}
-			document.getElementById("animation_speed").addEventListener("change", e => {
-				if (skinViewer.animation !== null) {
-					skinViewer.animation.speed = e.target.value;
-				}
-			});
-			document.getElementById("control_rotate").addEventListener("change", e => skinViewer.controls.enableRotate = e.target.checked);
-			document.getElementById("control_zoom").addEventListener("change", e => skinViewer.controls.enableZoom = e.target.checked);
-			document.getElementById("control_pan").addEventListener("change", e => skinViewer.controls.enablePan = e.target.checked);
-			for (const part of skinParts) {
-				for (const layer of skinLayers) {
-					document.querySelector(`#layers_table input[type="checkbox"][data-part="${part}"][data-layer="${layer}"]`)
-						.addEventListener("change", e => skinViewer.playerObject.skin[part][layer].visible = e.target.checked);
-				}
-			}
-
-			const initializeUploadButton = (id, callback) => {
-				const urlInput = document.getElementById(id);
-				const fileInput = document.getElementById(id + "_upload");
-				const unsetButton = document.getElementById(id + "_unset");
-				const unsetAction = () => {
-					urlInput.readOnly = false;
-					urlInput.value = "";
-					fileInput.value = fileInput.defaultValue;
-					callback();
-				};
-				fileInput.addEventListener("change", e => callback());
-				urlInput.addEventListener("keydown", e => {
-					if (e.key === "Backspace" && urlInput.readOnly) {
-						unsetAction();
-					}
-				});
-				unsetButton.addEventListener("click", e => unsetAction());
-			};
-			initializeUploadButton("skin_url", reloadSkin);
-			initializeUploadButton("cape_url", reloadCape);
-			initializeUploadButton("ears_url", reloadEars);
-			initializeUploadButton("panorama_url", reloadPanorama);
-
-			document.getElementById("skin_url").addEventListener("change", () => reloadSkin());
-			document.getElementById("skin_model").addEventListener("change", () => reloadSkin());
-			document.getElementById("cape_url").addEventListener("change", () => reloadCape());
-			document.getElementById("ears_source").addEventListener("change", () => reloadEars());
-			document.getElementById("ears_url").addEventListener("change", () => reloadEars());
-			document.getElementById("panorama_url").addEventListener("change", () => reloadPanorama());
-
-			for (const el of document.querySelectorAll('input[type="radio"][name="back_equipment"]')) {
-				el.addEventListener("change", e => {
-					if (skinViewer.playerObject.backEquipment === null) {
-						// cape texture hasn't been loaded yet
-						// this option will be processed on texture loading
-					} else {
-						skinViewer.playerObject.backEquipment = e.target.value;
-					}
-				});
-			}
-
-			document.getElementById("reset_all").addEventListener("click", () => {
-				skinViewer.dispose();
-				initializeViewer();
-			});
-
-			document.getElementById("nametag_text").addEventListener("change", () => reloadNameTag());
-		}
-
-		function initializeViewer() {
-			skinViewer = new skinview3d.SkinViewer({
-				canvas: document.getElementById("skin_container")
-			});
-
-			skinViewer.width = document.getElementById("canvas_width").value;
-			skinViewer.height = document.getElementById("canvas_height").value;
-			skinViewer.fov = document.getElementById("fov").value;
-			skinViewer.zoom = document.getElementById("zoom").value;
-			skinViewer.globalLight.intensity = document.getElementById("global_light").value;
-			skinViewer.cameraLight.intensity = document.getElementById("camera_light").value;
-			skinViewer.autoRotate = document.getElementById("auto_rotate").checked;
-			skinViewer.autoRotateSpeed = document.getElementById("auto_rotate_speed").value;
-			const animationName = document.querySelector('input[type="radio"][name="animation"]:checked').value;
-			if (animationName !== "") {
-				skinViewer.animation = availableAnimations[animationName];
-				skinViewer.animation.speed = document.getElementById("animation_speed").value;
-			}
-			skinViewer.controls.enableRotate = document.getElementById("control_rotate").checked;
-			skinViewer.controls.enableZoom = document.getElementById("control_zoom").checked;
-			skinViewer.controls.enablePan = document.getElementById("control_pan").checked;
-			for (const part of skinParts) {
-				for (const layer of skinLayers) {
-					skinViewer.playerObject.skin[part][layer].visible =
-						document.querySelector(`#layers_table input[type="checkbox"][data-part="${part}"][data-layer="${layer}"]`).checked;
-				}
-			}
-			reloadSkin();
-			reloadCape();
-			reloadEars(true);
-			reloadPanorama();
-			reloadNameTag();
-		}
-
-		initializeControls();
-		initializeViewer();
-	</script>
-
-	<script type="module" src="https://unpkg.com/stats.js@0.17.0/src/Stats.js" integrity="sha384-W71K+d2HbqXqQWSj3Vj4RDsIVvIV7lR8O6RArKAiqB39ntwLci0W08qOn4Z1n8sM" crossorigin="anonymous" async></script>
-	<script type="module" async>
-		import Stats from "https://unpkg.com/stats.js@0.17.0/src/Stats.js";
-		const stats = new Stats();
-		stats.dom.style.left = "";
-		stats.dom.style.right = "0";
-		document.body.appendChild(stats.dom);
-		function loop() {
-			stats.update();
-			requestAnimationFrame(loop)
-		}
-		requestAnimationFrame(loop);
-	</script>
-
-</body>
+			requestAnimationFrame(loop);
+		</script>
+	</body>
 </html>

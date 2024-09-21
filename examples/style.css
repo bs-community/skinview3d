@@ -1,0 +1,97 @@
+@font-face {
+	font-family: "Minecraft";
+	src: url("/font/minecraft.woff2") format("woff2");
+}
+
+body {
+	font-family: "Helvetica Neue", "Helvetica", "Arial", "sans-serif";
+	margin: 5px;
+}
+
+h1 {
+	font-size: 1.25em;
+}
+
+h2 {
+	font-size: 1em;
+}
+
+h1,
+h2 {
+	margin: 5px 0 0 0;
+}
+
+input[type="text"] {
+	box-sizing: border-box;
+}
+
+.control {
+	display: inline;
+}
+
+.control + .control {
+	margin-left: 10px;
+}
+
+.control-section {
+	margin-left: 10px;
+}
+
+.control-section > h1,
+.control-section > h2 {
+	margin-left: -10px;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table td,
+table th {
+	border: 1px black dashed;
+	text-align: left;
+}
+
+thead th {
+	border-top: unset;
+}
+
+tbody tr:last-child td,
+tbody tr:last-child th {
+	border-bottom: unset;
+}
+
+table th:first-child,
+table td:first-child {
+	border-left: unset;
+}
+
+table th:last-child,
+table td:last-child {
+	border-right: unset;
+}
+
+table td input[type="checkbox"] {
+	vertical-align: middle;
+	margin: 0;
+	width: 100%;
+}
+
+footer {
+	margin-top: 10px;
+	padding-top: 10px;
+	border-top: 1px grey solid;
+}
+
+label {
+	white-space: nowrap;
+}
+
+.control-section ul {
+	margin-top: 0;
+	padding-left: 20px;
+}
+
+.hidden {
+	display: none;
+}
