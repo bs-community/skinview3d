@@ -6,7 +6,8 @@ export default defineConfig({
 	build: {
 		rollupOptions: {
 			input: {
-				app: './examples/index.html'
+				main: './examples/index.html',
+				offscreen: './examples/offscreen-render.html'
 			},
 		},
 	},
