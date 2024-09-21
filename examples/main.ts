@@ -7,7 +7,7 @@ const availableAnimations = {
 	idle: new skinview3d.IdleAnimation(),
 	walk: new skinview3d.WalkingAnimation(),
 	run: new skinview3d.RunningAnimation(),
-	fly: new skinview3d.FlyingAnimation()
+	fly: new skinview3d.FlyingAnimation(),
 };
 
 let skinViewer: skinview3d.SkinViewer;
@@ -37,10 +37,11 @@ function reloadSkin() {
 		skinViewer.loadSkin(null);
 		input.setCustomValidity("");
 	} else {
-		skinViewer.loadSkin(url, {
-			model: document.getElementById("skin_model").value,
-			ears: document.getElementById("ears_source").value === "current_skin"
-		})
+		skinViewer
+			.loadSkin(url, {
+				model: document.getElementById("skin_model").value,
+				ears: document.getElementById("ears_source").value === "current_skin",
+			})
 			.then(() => input.setCustomValidity(""))
 			.catch(e => {
 				input.setCustomValidity("Image can't be loaded.");
@@ -57,7 +58,8 @@ function reloadCape() {
 		input.setCustomValidity("");
 	} else {
 		const selectedBackEquipment = document.querySelector('input[type="radio"][name="back_equipment"]:checked');
-		skinViewer.loadCape(url, { backEquipment: selectedBackEquipment.value })
+		skinViewer
+			.loadCape(url, { backEquipment: selectedBackEquipment.value })
 			.then(() => input.setCustomValidity(""))
 			.catch(e => {
 				input.setCustomValidity("Image can't be loaded.");
@@ -87,7 +89,8 @@ function reloadEars(skipSkinReload = false) {
 			skinViewer.loadEars(null);
 			input.setCustomValidity("");
 		} else {
-			skinViewer.loadEars(url, { textureType: sourceType })
+			skinViewer
+				.loadEars(url, { textureType: sourceType })
 				.then(() => input.setCustomValidity(""))
 				.catch(e => {
 					input.setCustomValidity("Image can't be loaded.");
@@ -98,7 +101,7 @@ function reloadEars(skipSkinReload = false) {
 
 	const el = document.getElementById("ears_texture_input");
 	if (hideInput) {
-		if (!(el.classList.contains("hidden"))) {
+		if (!el.classList.contains("hidden")) {
 			el.classList.add("hidden");
 		}
 	} else {
@@ -113,7 +116,8 @@ function reloadPanorama() {
 		skinViewer.background = null;
 		input.setCustomValidity("");
 	} else {
-		skinViewer.loadPanorama(url)
+		skinViewer
+			.loadPanorama(url)
 			.then(() => input.setCustomValidity(""))
 			.catch(e => {
 				input.setCustomValidity("Image can't be loaded.");
@@ -132,15 +136,23 @@ function reloadNameTag() {
 }
 
 function initializeControls() {
-	document.getElementById("canvas_width").addEventListener("change", e => skinViewer.width = e.target.value);
-	document.getElementById("canvas_height").addEventListener("change", e => skinViewer.height = e.target.value);
-	document.getElementById("fov").addEventListener("change", e => skinViewer.fov = e.target.value);
-	document.getElementById("zoom").addEventListener("change", e => skinViewer.zoom = e.target.value);
-	document.getElementById("global_light").addEventListener("change", e => skinViewer.globalLight.intensity = e.target.value);
-	document.getElementById("camera_light").addEventListener("change", e => skinViewer.cameraLight.intensity = e.target.value);
-	document.getElementById("animation_pause_resume").addEventListener("click", () => skinViewer.animation.paused = !skinViewer.animation.paused);
-	document.getElementById("auto_rotate").addEventListener("change", e => skinViewer.autoRotate = e.target.checked);
-	document.getElementById("auto_rotate_speed").addEventListener("change", e => skinViewer.autoRotateSpeed = e.target.value);
+	document.getElementById("canvas_width").addEventListener("change", e => (skinViewer.width = e.target.value));
+	document.getElementById("canvas_height").addEventListener("change", e => (skinViewer.height = e.target.value));
+	document.getElementById("fov").addEventListener("change", e => (skinViewer.fov = e.target.value));
+	document.getElementById("zoom").addEventListener("change", e => (skinViewer.zoom = e.target.value));
+	document
+		.getElementById("global_light")
+		.addEventListener("change", e => (skinViewer.globalLight.intensity = e.target.value));
+	document
+		.getElementById("camera_light")
+		.addEventListener("change", e => (skinViewer.cameraLight.intensity = e.target.value));
+	document
+		.getElementById("animation_pause_resume")
+		.addEventListener("click", () => (skinViewer.animation.paused = !skinViewer.animation.paused));
+	document.getElementById("auto_rotate").addEventListener("change", e => (skinViewer.autoRotate = e.target.checked));
+	document
+		.getElementById("auto_rotate_speed")
+		.addEventListener("change", e => (skinViewer.autoRotateSpeed = e.target.value));
 	for (const el of document.querySelectorAll('input[type="radio"][name="animation"]')) {
 		el.addEventListener("change", e => {
 			if (e.target.value === "") {
@@ -156,13 +168,20 @@ function initializeControls() {
 			skinViewer.animation.speed = e.target.value;
 		}
 	});
-	document.getElementById("control_rotate").addEventListener("change", e => skinViewer.controls.enableRotate = e.target.checked);
-	document.getElementById("control_zoom").addEventListener("change", e => skinViewer.controls.enableZoom = e.target.checked);
-	document.getElementById("control_pan").addEventListener("change", e => skinViewer.controls.enablePan = e.target.checked);
+	document
+		.getElementById("control_rotate")
+		.addEventListener("change", e => (skinViewer.controls.enableRotate = e.target.checked));
+	document
+		.getElementById("control_zoom")
+		.addEventListener("change", e => (skinViewer.controls.enableZoom = e.target.checked));
+	document
+		.getElementById("control_pan")
+		.addEventListener("change", e => (skinViewer.controls.enablePan = e.target.checked));
 	for (const part of skinParts) {
 		for (const layer of skinLayers) {
-			document.querySelector(`#layers_table input[type="checkbox"][data-part="${part}"][data-layer="${layer}"]`)
-				.addEventListener("change", e => skinViewer.playerObject.skin[part][layer].visible = e.target.checked);
+			document
+				.querySelector(`#layers_table input[type="checkbox"][data-part="${part}"][data-layer="${layer}"]`)
+				.addEventListener("change", e => (skinViewer.playerObject.skin[part][layer].visible = e.target.checked));
 		}
 	}
 
@@ -217,7 +236,7 @@ function initializeControls() {
 
 function initializeViewer() {
 	skinViewer = new skinview3d.SkinViewer({
-		canvas: document.getElementById("skin_container")
+		canvas: document.getElementById("skin_container"),
 	});
 
 	skinViewer.width = document.getElementById("canvas_width").value;
@@ -238,8 +257,9 @@ function initializeViewer() {
 	skinViewer.controls.enablePan = document.getElementById("control_pan").checked;
 	for (const part of skinParts) {
 		for (const layer of skinLayers) {
-			skinViewer.playerObject.skin[part][layer].visible =
-				document.querySelector(`#layers_table input[type="checkbox"][data-part="${part}"][data-layer="${layer}"]`).checked;
+			skinViewer.playerObject.skin[part][layer].visible = document.querySelector(
+				`#layers_table input[type="checkbox"][data-part="${part}"][data-layer="${layer}"]`
+			).checked;
 		}
 	}
 	reloadSkin();
@@ -251,4 +271,3 @@ function initializeViewer() {
 
 initializeControls();
 initializeViewer();
-

@@ -4,39 +4,39 @@ import "./style.css";
 const configurations = [
 	{
 		skin: "img/1_8_texturemap_redux.png",
-		cape: null
+		cape: null,
 	},
 	{
 		skin: "img/hacksore.png",
-		cape: "img/legacy_cape.png"
+		cape: "img/legacy_cape.png",
 	},
 	{
 		skin: "img/haka.png",
-		cape: "img/mojang_cape.png"
+		cape: "img/mojang_cape.png",
 	},
 	{
 		skin: "img/hatsune_miku.png",
 		cape: "img/mojang_cape.png",
-		backEquipment: "elytra"
+		backEquipment: "elytra",
 	},
 	{
 		skin: "img/ironman_hd.png",
-		cape: "img/hd_cape.png"
+		cape: "img/hd_cape.png",
 	},
 	{
 		skin: "img/sethbling.png",
-		cape: null
-	}
+		cape: null,
+	},
 ];
 
-(async function() {
+(async function () {
 	const skinViewer = new skinview3d.SkinViewer({
 		width: 200,
 		height: 300,
-		renderPaused: true
+		renderPaused: true,
 	});
 
-	skinViewer.camera.rotation.x = -0.620;
+	skinViewer.camera.rotation.x = -0.62;
 	skinViewer.camera.rotation.y = 0.534;
 	skinViewer.camera.rotation.z = 0.348;
 	skinViewer.camera.position.x = 30.5;
@@ -46,7 +46,7 @@ const configurations = [
 	for (const config of configurations) {
 		await Promise.all([
 			skinViewer.loadSkin(config.skin),
-			skinViewer.loadCape(config.cape, { backEquipment: config.backEquipment })
+			skinViewer.loadCape(config.cape, { backEquipment: config.backEquipment }),
 		]);
 		skinViewer.render();
 		const image = skinViewer.canvas.toDataURL();
@@ -60,4 +60,3 @@ const configurations = [
 
 	skinViewer.dispose();
 })();
-
