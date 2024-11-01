@@ -19,7 +19,7 @@ Three.js powered Minecraft skin viewer.
 * FXAA (fast approximate anti-aliasing)
 
 # Usage
-[Example of using skinview3d](https://bs-community.github.io/skinview3d/)
+[Example of using skinview3d](https://skinview3d-demo.vercel.app)
 
 [![CodeSandbox](https://img.shields.io/badge/Codesandbox-040404?style=for-the-badge&logo=codesandbox&logoColor=DBDBDB)](https://codesandbox.io/s/skinview3d-template-vdmuh4)
 
