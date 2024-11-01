@@ -95,7 +95,7 @@ will completely disable shadows.
 
 ## Ears
 skinview3d supports two types of ear texture:
-* `standalone`: 14x7 image that contains the ear ([example](https://github.com/bs-community/skinview3d/blob/master/examples/img/ears.png))
+* `standalone`: 14x7 image that contains the ear ([example](https://github.com/bs-community/skinview3d/blob/master/examples/public/img/ears.png))
 * `skin`: Skin texture that contains the ear (e.g. [deadmau5's skin](https://minecraft.wiki/w/Easter_eggs#deadmau5's_ears))
 
 Usage:
