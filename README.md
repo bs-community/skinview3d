@@ -30,7 +30,8 @@ Three.js powered Minecraft skin viewer.
 		canvas: document.getElementById("skin_container"),
 		width: 300,
 		height: 400,
-		skin: "img/skin.png"
+		skin: "img/skin.png",
+		allowTransparency: true // New option to allow transparency
 	});
 
 	// Change viewer size

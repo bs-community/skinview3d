@@ -71,6 +71,13 @@ export interface SkinLoadOptions extends LoadOptions {
 	 * @defaultValue `false`
 	 */
 	ears?: boolean | "load-only";
+
+	/**
+	 * Whether to allow transparency in the skin texture.
+	 *
+	 * @defaultValue `false`
+	 */
+	allowTransparency?: boolean;
 }
 
 export interface CapeLoadOptions extends LoadOptions {
@@ -245,6 +252,13 @@ export interface SkinViewerOptions {
 	 * @see {@link SkinViewer.nameTag}
 	 */
 	nameTag?: NameTagObject | string;
+
+	/**
+	 * Whether to allow transparency in the skin texture.
+	 *
+	 * @defaultValue `false`
+	 */
+	allowTransparency?: boolean;
 }
 
 /**
@@ -327,6 +341,8 @@ export class SkinViewer {
 
 	private _nameTag: NameTagObject | null = null;
 
+	private _allowTransparency: boolean;
+
 	constructor(options: SkinViewerOptions = {}) {
 		this.canvas = options.canvas === undefined ? document.createElement("canvas") : options.canvas;
 
@@ -402,6 +418,7 @@ export class SkinViewer {
 			this.loadSkin(options.skin, {
 				model: options.model,
 				ears: options.ears === "current-skin",
+				allowTransparency: options.allowTransparency,
 			});
 		}
 		if (options.cape !== undefined) {
@@ -433,6 +450,8 @@ export class SkinViewer {
 
 		this._animation = options.animation === undefined ? null : options.animation;
 		this.clock = new Clock();
+
+		this._allowTransparency = options.allowTransparency === undefined ? false : options.allowTransparency;
 
 		if (options.renderPaused === true) {
 			this._renderPaused = true;
@@ -509,7 +528,7 @@ export class SkinViewer {
 		if (source === null) {
 			this.resetSkin();
 		} else if (isTextureSource(source)) {
-			loadSkinToCanvas(this.skinCanvas, source);
+			loadSkinToCanvas(this.skinCanvas, source, { allowTransparency: options.allowTransparency });
 			this.recreateSkinTexture();
 
 			if (options.model === undefined || options.model === "auto-detect") {
