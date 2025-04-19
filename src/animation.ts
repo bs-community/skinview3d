@@ -227,7 +227,7 @@ export class CrouchAnimation extends PlayerAnimation {
 	/**
 	 * Add the hit animation.
 	 *
-	 * @ param speed - The speed of hit animation and the default is follow the speed of CrouchAnimation.But if the speed of CrouchAnimation is 0,this animation will not run.
+	 * @param speed - The speed of hit animation and the default is follow the speed of CrouchAnimation.But if the speed of CrouchAnimation is 0,this animation will not run.
 	 */
 	addHitAnimation(speed: number = this.speed): void {
 		this.isRunningHitAnimation = true;
