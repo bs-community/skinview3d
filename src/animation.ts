@@ -233,7 +233,7 @@ export class CrouchAnimation extends PlayerAnimation {
     this.isRunningHitAnimation = true;
     this.hitAnimationSpeed = speed;
   }
-  private erp: nomber = 0; //elytra rotate progress
+  private erp: number = 0; //elytra rotate progress
   private isCrouched: any;
   protected animate(player: PlayerObject): void {
     var pr = this.progress * 8;
