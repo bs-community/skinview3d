@@ -233,7 +233,8 @@ export class CrouchAnimation extends PlayerAnimation {
     this.isRunningHitAnimation = true;
     this.hitAnimationSpeed = speed;
   }
-
+  private erp: nomber = 0; //elytra rotate progress
+  private isCrouched: any;
   protected animate(player: PlayerObject): void {
     var pr = this.progress * 8;
     if (this.runOnce) {
@@ -260,6 +261,28 @@ export class CrouchAnimation extends PlayerAnimation {
       -2 +
       3.786619432 * Math.abs(Math.sin((pr * Math.PI) / 2)) -
       3.4500310377 * Math.abs(Math.sin((pr * Math.PI) / 2));
+    player.elytra.position.x = player.cape.position.x;
+    player.elytra.position.y = player.cape.position.y;
+    player.elytra.position.z = player.cape.position.z;
+    player.elytra.rotation.x = player.cape.rotation.x;
+    var pr1 = this.progress / this.speed;
+    if (Math.abs(Math.sin((pr * Math.PI) / 2)) === 1) {
+      this.erp = !this.isCrouched ? pr1 : this.erp;
+      this.isCrouched = true;
+      player.elytra.leftWing.rotation.z =
+        0.26179944 +
+        0.4582006 *
+          Math.abs(Math.sin((Math.min(pr1 - this.erp, 1) * Math.PI) / 2));
+      player.elytra.updateRightWing();
+    } else if (this.isCrouched !== undefined) {
+      this.erp = this.isCrouched ? pr1 : this.erp;
+      player.elytra.leftWing.rotation.z =
+        0.72 -
+        0.4582006 *
+          Math.abs(Math.sin((Math.min(pr1 - this.erp, 1) * Math.PI) / 2));
+      player.elytra.updateRightWing();
+      this.isCrouched = false;
+    }
     player.skin.head.position.y =
       -3.618325234674 * Math.abs(Math.sin((pr * Math.PI) / 2));
     player.skin.leftArm.position.z =
