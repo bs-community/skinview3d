@@ -227,7 +227,7 @@ export class CrouchAnimation extends PlayerAnimation {
 	/**
 	 * Add the hit animation.
 	 *
-	 * @param - speed (Default is follow the speed of CrouchAnimation.But is the speed of CrouchAnimation is 0,this animation will not run.)
+	 * @ param speed - The speed of hit animation and the default is follow the speed of CrouchAnimation.But if the speed of CrouchAnimation is 0,this animation will not run.
 	 */
 	addHitAnimation(speed: number = this.speed): void {
 		this.isRunningHitAnimation = true;
@@ -260,7 +260,7 @@ export class CrouchAnimation extends PlayerAnimation {
 		player.elytra.position.y = player.cape.position.y;
 		player.elytra.position.z = player.cape.position.z;
 		player.elytra.rotation.x = player.cape.rotation.x - (10.8 * Math.PI) / 180;
-		let pr1 = this.progress / this.speed;
+		const pr1 = this.progress / this.speed;
 		if (Math.abs(Math.sin((pr * Math.PI) / 2)) === 1) {
 			this.erp = !this.isCrouched ? pr1 : this.erp;
 			this.isCrouched = true;
@@ -287,12 +287,12 @@ export class CrouchAnimation extends PlayerAnimation {
 		player.skin.rightLeg.position.z = -3.4500310377 * Math.abs(Math.sin((pr * Math.PI) / 2));
 		player.skin.leftLeg.position.z = player.skin.rightLeg.position.z;
 		if (this.isRunningHitAnimation) {
-			let pr2 = this.progress;
+			const pr2 = this.progress;
 			let t = (this.progress * 18 * this.hitAnimationSpeed) / this.speed;
 			if (this.speed === 0) {
 				t = 0;
 			}
-			let isCrouching = Math.abs(Math.sin((pr2 * Math.PI) / 2)) === 1;
+			const isCrouching = Math.abs(Math.sin((pr2 * Math.PI) / 2)) === 1;
 			player.skin.rightArm.rotation.x =
 				-0.4537860552 + 2 * Math.sin(t + Math.PI) * 0.3 - (isCrouching ? 0.4537860552 : 0);
 			const basicArmRotationZ = 0.01 * Math.PI + 0.06;
