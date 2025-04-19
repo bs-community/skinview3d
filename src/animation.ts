@@ -237,6 +237,9 @@ export class CrouchAnimation extends PlayerAnimation {
   private isCrouched: any;
   protected animate(player: PlayerObject): void {
     var pr = this.progress * 8;
+    if (pr === 0) {
+      this.isCrouched = undefined;
+    }
     if (this.runOnce) {
       if (pr > 1) {
         pr = 1;
@@ -255,7 +258,7 @@ export class CrouchAnimation extends PlayerAnimation {
     player.cape.position.y =
       8 - 1.851236166577372 * Math.abs(Math.sin((pr * Math.PI) / 2));
     player.cape.rotation.x =
-      0.18849555921538758 +
+      (10.8 * Math.PI) / 180 +
       0.294220265771 * Math.abs(Math.sin((pr * Math.PI) / 2));
     player.cape.position.z =
       -2 +
@@ -264,7 +267,7 @@ export class CrouchAnimation extends PlayerAnimation {
     player.elytra.position.x = player.cape.position.x;
     player.elytra.position.y = player.cape.position.y;
     player.elytra.position.z = player.cape.position.z;
-    player.elytra.rotation.x = player.cape.rotation.x;
+    player.elytra.rotation.x = player.cape.rotation.x - (10.8 * Math.PI) / 180;
     var pr1 = this.progress / this.speed;
     if (Math.abs(Math.sin((pr * Math.PI) / 2)) === 1) {
       this.erp = !this.isCrouched ? pr1 : this.erp;
