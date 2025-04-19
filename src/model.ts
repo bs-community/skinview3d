@@ -526,8 +526,8 @@ export class PlayerObject extends Group {
 	resetJoints(): void {
 		this.skin.resetJoints();
 		this.cape.rotation.x = CapeDefaultAngle;
-		this.cape.position.y = -8;
-		this.cape.position.z = 0.5;
+		this.cape.position.y = 8;
+		this.cape.position.z = -2;
 		this.elytra.position.y = 8;
 		this.elytra.position.z = -2;
 		this.elytra.rotation.x = 0;
