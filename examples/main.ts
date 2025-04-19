@@ -158,6 +158,9 @@ function initializeControls() {
 		.addEventListener("change", e => (skinViewer.autoRotateSpeed = e.target.value));
 	for (const el of document.querySelectorAll('input[type="radio"][name="animation"]')) {
 		el.addEventListener("change", e => {
+			document.getElementById("crouch_setting").style.display = document.getElementById("animation_crouch").checked
+				? "block"
+				: "none";
 			if (e.target.value === "") {
 				skinViewer.animation = null;
 			} else {
@@ -166,9 +169,64 @@ function initializeControls() {
 			}
 		});
 	}
+	document.getElementById("animation_crouch").addEventListener("change", () => {
+		for (const el of document.querySelectorAll('input[type="checkbox"][name="crouch_setting_item"]')) {
+			el.checked = false;
+			document.getElementById("hit_speed").value = "";
+			document.getElementById("hit_speed_label").style.display = "none";
+		}
+	});
+	const crouchSettings = {
+		run_once: value => {
+			skinViewer.animation.runOnce = value;
+		},
+		show_progress: value => {
+			skinViewer.animation.showProgress = value;
+		},
+		add_hit_animation: value => {
+			document.getElementById("hit_speed_label").style.display = value ? "block" : "none";
+			const hitSpeed = document.getElementById("hit_speed").value;
+			if (value) {
+				if (hitSpeed === "") {
+					skinViewer.animation.addHitAnimation();
+				} else {
+					skinViewer.animation.addHitAnimation(hitSpeed);
+				}
+			}
+		},
+	};
+
+	const updateCrouchAnimation = () => {
+		skinViewer.animation = new skinview3d.CrouchAnimation();
+		skinViewer.animation.speed = document.getElementById("animation_speed").value;
+		for (const el of document.querySelectorAll('input[type="checkbox"][name="crouch_setting_item"]')) {
+			crouchSettings[el.value](el.checked);
+		}
+	};
+	for (const el of document.querySelectorAll('input[type="checkbox"][name="crouch_setting_item"]')) {
+		el.addEventListener("change", e => {
+			updateCrouchAnimation();
+		});
+	}
+	document.getElementById("hit_speed").addEventListener("change", e => {
+		updateCrouchAnimation();
+	});
+
 	document.getElementById("animation_speed").addEventListener("change", e => {
 		if (skinViewer.animation !== null) {
 			skinViewer.animation.speed = e.target.value;
+		}
+		console.log(
+			document.getElementById("animation_crouch").checked,
+			document.getElementById("hit_speed").style.display,
+			document.getElementById("hit_speed").value
+		);
+		if (
+			document.getElementById("animation_crouch").checked &&
+			document.getElementById("add_hitting_animation").checked &&
+			document.getElementById("hit_speed").value == ""
+		) {
+			updateCrouchAnimation();
 		}
 	});
 	document
