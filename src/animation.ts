@@ -289,7 +289,7 @@ export class CrouchAnimation extends PlayerAnimation {
 		if (this.isRunningHitAnimation) {
 			const pr2 = this.progress;
 			let t = (this.progress * 18 * this.hitAnimationSpeed) / this.speed;
-			if (this.speed === 0) {
+			if (this.speed == 0) {
 				t = 0;
 			}
 			const isCrouching = Math.abs(Math.sin((pr2 * Math.PI) / 2)) === 1;
