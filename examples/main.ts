@@ -216,11 +216,6 @@ function initializeControls() {
 		if (skinViewer.animation !== null) {
 			skinViewer.animation.speed = e.target.value;
 		}
-		console.log(
-			document.getElementById("animation_crouch").checked,
-			document.getElementById("hit_speed").style.display,
-			document.getElementById("hit_speed").value
-		);
 		if (
 			document.getElementById("animation_crouch").checked &&
 			document.getElementById("add_hitting_animation").checked &&
