@@ -309,6 +309,22 @@ export class SkinObject extends Group {
 		this.rightArm.rotation.set(0, 0, 0);
 		this.leftLeg.rotation.set(0, 0, 0);
 		this.rightLeg.rotation.set(0, 0, 0);
+		this.body.rotation.set(0, 0, 0);
+                this.head.position.y = 0;
+		this.body.position.y = -6;
+                this.body.position.z = 0;
+		this.rightArm.position.x = -5;
+		this.rightArm.position.y = -2;
+		this.rightArm.position.z = 0;
+		this.leftArm.position.x = 5;
+		this.leftArm.position.y = -2;
+		this.leftArm.position.z = 0;
+		this.rightLeg.position.x = -1.9;
+		this.rightLeg.position.y = -12;
+		this.rightLeg.position.z = -0.1;
+		this.leftLeg.position.x = 1.9;
+		this.leftLeg.position.y = -12;
+		this.leftLeg.position.z = -0.1;
 	}
 }
 
@@ -510,6 +526,11 @@ export class PlayerObject extends Group {
 	resetJoints(): void {
 		this.skin.resetJoints();
 		this.cape.rotation.x = CapeDefaultAngle;
+		this.cape.position.y = 8;
+		this.cape.position.z = -2;
+		this.elytra.position.y = 8;
+		this.elytra.position.z = -2;
+		this.elytra.rotation.x = 0;
 		this.elytra.resetJoints();
 	}
 }
