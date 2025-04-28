@@ -298,6 +298,7 @@ export class SkinViewer {
 	private _disposed: boolean = false;
 	private _renderPaused: boolean = false;
 	private _zoom: number;
+	private isUserRotating: boolean = false;
 
 	/**
 	 * Whether to rotate the player along the y axis.
@@ -458,6 +459,38 @@ export class SkinViewer {
 
 		this.canvas.addEventListener("webglcontextlost", this.onContextLost, false);
 		this.canvas.addEventListener("webglcontextrestored", this.onContextRestored, false);
+		this.canvas.addEventListener(
+			"mousedown",
+			() => {
+				this.isUserRotating = true;
+			},
+			false
+		);
+		this.canvas.addEventListener(
+			"mouseup",
+			() => {
+				this.isUserRotating = false;
+			},
+			false
+		);
+		this.canvas.addEventListener(
+			"touchmove",
+			e => {
+				if (e.touches.length === 1) {
+					this.isUserRotating = true;
+				} else {
+					this.isUserRotating = false;
+				}
+			},
+			false
+		);
+		this.canvas.addEventListener(
+			"touchend",
+			() => {
+				this.isUserRotating = false;
+			},
+			false
+		);
 	}
 
 	private updateComposerSize(): void {
@@ -640,7 +673,9 @@ export class SkinViewer {
 			this._animation.update(this.playerObject, dt);
 		}
 		if (this.autoRotate) {
-			this.playerWrapper.rotation.y += dt * this.autoRotateSpeed;
+			if (!(this.controls.enableRotate && this.isUserRotating)) {
+				this.playerWrapper.rotation.y += dt * this.autoRotateSpeed;
+			}
 		}
 		this.controls.update();
 		this.render();
