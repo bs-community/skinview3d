@@ -476,7 +476,6 @@ export class SkinViewer {
 		this.canvas.addEventListener(
 			"touchmove",
 			e => {
-				console.log(e.touches.length);
 				if (e.touches.length === 1) {
 					this.isUserRotating = true;
 				} else {
