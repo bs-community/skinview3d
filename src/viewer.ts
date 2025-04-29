@@ -30,6 +30,7 @@ import {
 	DepthTexture,
 	Clock,
 	Object3D,
+	ColorManagement,
 } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
@@ -340,6 +341,7 @@ export class SkinViewer {
 		this.camera.add(this.cameraLight);
 		this.scene.add(this.camera);
 		this.scene.add(this.globalLight);
+		ColorManagement.enabled = false;
 
 		this.renderer = new WebGLRenderer({
 			canvas: this.canvas,
@@ -769,41 +771,15 @@ export class SkinViewer {
 		this.setSize(this.width, newHeight);
 	}
 
-	private LinearToSRGB(color: ColorRepresentation): Color {
-		const linearToSRGB = (linear: number) => {
-			return linear <= 0.0031308 ? linear * 12.92 : 1.055 * Math.pow(linear, 1 / 2.4) - 0.055;
-		};
-		const padHex = (value: number) => {
-			return value.toString(16).padStart(2, "0");
-		};
-		if (color instanceof Color) {
-			color = color.getHexString();
-		} else {
-			color = new Color(color).getHexString();
-		}
-		const [r, g, b] = [
-			Number("0x" + color.slice(0, 2)),
-			Number("0x" + color.slice(2, 4)),
-			Number("0x" + color.slice(4, 6)),
-		].map(channel => channel / 255);
-		const srgbChannels = [r, g, b].map(linearToSRGB);
-		const correctedHex = "#" + srgbChannels.map(channel => padHex(Math.round(channel * 255))).join("");
-		return new Color(correctedHex);
-	}
-
 	get background(): null | Color | Texture {
 		return this.scene.background;
 	}
 
 	set background(value: null | ColorRepresentation | Texture) {
 		if (value === null || value instanceof Color || value instanceof Texture) {
-			if (value instanceof Color) {
-				this.scene.background = this.LinearToSRGB(value);
-			} else {
-				this.scene.background = value;
-			}
+			this.scene.background = value;
 		} else {
-			this.scene.background = this.LinearToSRGB(value);
+			this.scene.background = new Color(value);
 		}
 		if (this.backgroundTexture !== null && value !== this.backgroundTexture) {
 			this.backgroundTexture.dispose();
