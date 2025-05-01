@@ -218,7 +218,7 @@ export class FlyingAnimation extends PlayerAnimation {
 		// Elytra expansion finishes in 3.3s
 
 		const t = this.progress > 0 ? this.progress * 20 : 0;
-		const startProgress = clamp((t * t) / 100, -1, 1);
+		const startProgress = clamp((t * t) / 100, 0, 1);
 
 		player.rotation.x = (startProgress * Math.PI) / 2;
 		player.skin.head.rotation.x = startProgress > 0.5 ? Math.PI / 4 - player.rotation.x : 0;
@@ -285,7 +285,7 @@ export class CrouchAnimation extends PlayerAnimation {
 			this.isCrouched = undefined;
 		}
 		if (this.runOnce) {
-			pr = clamp(pr, 0, 1);
+			pr = clamp(pr, -1, 1);
 		}
 		if (!this.showProgress) {
 			pr = Math.floor(pr);
