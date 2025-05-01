@@ -34,8 +34,9 @@ export abstract class PlayerAnimation {
 	 */
 	protected abstract animate(player: PlayerObject, delta: number): void;
 
-	private progress0: Array<number | undefined> = [];
-	private animationObjects: Array<{ method: (player: PlayerObject, progress: number) => void }> = [];
+	private progress0: Map<number, number> = new Map();
+	private animationObjects: Map<number, (player: PlayerObject, progress: number, currentId: number) => void> =
+		new Map();
 	/**
 	 * Plays the animation, and update the progress.
 	 *
@@ -52,18 +53,19 @@ export abstract class PlayerAnimation {
 		const delta = deltaTime * this.speed;
 		this.animate(player, delta);
 		this.animationObjects.forEach(
-			(animation: { method: (player: PlayerObject, progress: number) => void }, index: number) => {
-				const progress0: number = this.progress0[index] ?? 0;
-				animation.method(player, this.progress - progress0);
+			(animation: (player: PlayerObject, progress: number, currentId: number) => void, id: number) => {
+				const progress0: number = this.progress0.get(id) as number;
+				animation(player, this.progress - progress0, id);
 			}
 		);
 		this.progress += delta;
 	}
 	/**
-	 * Adds a new animation based on the original animation and returns its index.
+	 * Adds a new animation based on the original animation and returns its id.
 	 *
 	 * @param fn - The animation function to be added, which takes a player object and progress value.When calling addAnimation. progress is 0.
-	 * @returns The index of the newly added animation.
+	 * @returns The id of the newly added animation.
+  	 *
 	 * @example
 	 * Rotate the player while playing the idle animation.
 	 * ```
@@ -71,29 +73,39 @@ export abstract class PlayerAnimation {
 	 * skinViewer.animation.addAnimation((player, progress)=>player.rotation.y = progress);
 	 * ```
 	 */
-	addAnimation(fn: (player: PlayerObject, progress: number) => void): number {
-		if (this.progress0[this.animationObjects.length] == undefined) {
-			this.progress0[this.animationObjects.length] = this.progress;
-		}
-		this.animationObjects.push({
-			method: fn,
-		});
-		return this.animationObjects.length - 1;
+	addAnimation(fn: (player: PlayerObject, progress: number, currentId: number) => void): number {
+		const id = Date.now();
+		this.progress0.set(id, this.progress);
+		this.animationObjects.set(id, fn);
+		return id;
 	}
 	/**
-	 * Removes an animation created by the addAnimation method by its index.
+	 * Removes an animation created by the addAnimation method by its id.
 	 *
-	 * Replaces the animation method with an empty function and clears its progress tracking.
-	 * If the index is undefined, this method will do nothing.
+	 * If the id is undefined, this method will do nothing.
 	 *
-	 * @param index - The index of the animation to remove.
+	 * @param id - The id of the animation to remove.
+  	 *
+	 * @example
+	 * Rotate the player then stop and reset the rotation after 1s.
+	 * ```
+	 * var r;
+	 * r=skinViewer.animation.addAnimation((pl, pr) => {
+	 * 	pl.rotation.x = pr;
+	 * });
+	 * setTimeout(()=>{
+	 * 	skinViewer.animation.addAnimation((pl, pr,id) => {
+	 * 		pl.rotation.x=0;
+	 * 		skinViewer.animation.removeAnimation(id);
+	 * 	})
+	 * 	skinViewer.animation.removeAnimation(r);
+	 * },1000)
+	 * ```
 	 */
-	removeAnimation(index: number | undefined): void {
-		if (index != undefined) {
-			this.animationObjects[index].method = function () {
-				// replace the animation method with empty function.
-			};
-			this.progress0[index] = undefined;
+	removeAnimation(id: number | undefined): void {
+		if (id != undefined) {
+			this.animationObjects.delete(id);
+			this.progress0.delete(id);
 		}
 	}
 }
