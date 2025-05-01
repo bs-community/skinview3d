@@ -34,6 +34,8 @@ export abstract class PlayerAnimation {
 	 */
 	protected abstract animate(player: PlayerObject, delta: number): void;
 
+	private progress0: Array<number | undefined> = [];
+	private animationObjects: Array<{ method: (player: PlayerObject, progress: number) => void }> = [];
 	/**
 	 * Plays the animation, and update the progress.
 	 *
@@ -49,7 +51,50 @@ export abstract class PlayerAnimation {
 		}
 		const delta = deltaTime * this.speed;
 		this.animate(player, delta);
+		this.animationObjects.forEach(
+			(animation: { method: (player: PlayerObject, progress: number) => void }, index: number) => {
+				const progress0: number = this.progress0[index] ?? 0;
+				animation.method(player, this.progress - progress0);
+			}
+		);
 		this.progress += delta;
+	}
+	/**
+	 * Adds a new animation based on the original animation and returns its index.
+	 *
+	 * @param fn - The animation function to be added, which takes a player object and progress value.When calling addAnimation. progress is 0.
+	 * @returns The index of the newly added animation.
+	 * @example
+	 * Rotate the player while playing the idle animation.
+	 * ```
+	 * skinViewer.animation = new skinview3d.IdleAnimation();
+	 * skinViewer.animation.addAnimation((player, progress)=>player.rotation.y = progress);
+	 * ```
+	 */
+	addAnimation(fn: (player: PlayerObject, progress: number) => void): number {
+		if (this.progress0[this.animationObjects.length] == undefined) {
+			this.progress0[this.animationObjects.length] = this.progress;
+		}
+		this.animationObjects.push({
+			method: fn,
+		});
+		return this.animationObjects.length - 1;
+	}
+	/**
+	 * Removes an animation created by the addAnimation method by its index.
+	 *
+	 * Replaces the animation method with an empty function and clears its progress tracking.
+	 * If the index is undefined, this method will do nothing.
+	 *
+	 * @param index - The index of the animation to remove.
+	 */
+	removeAnimation(index: number | undefined): void {
+		if (index != undefined) {
+			this.animationObjects[index].method = function () {
+				// replace the animation method with empty function.
+			};
+			this.progress0[index] = undefined;
+		}
 	}
 }
 
@@ -173,7 +218,7 @@ export class FlyingAnimation extends PlayerAnimation {
 		// Elytra expansion finishes in 3.3s
 
 		const t = this.progress > 0 ? this.progress * 20 : 0;
-		const startProgress = clamp((t * t) / 100, 0, 1);
+		const startProgress = clamp((t * t) / 100, -1, 1);
 
 		player.rotation.x = (startProgress * Math.PI) / 2;
 		player.skin.head.rotation.x = startProgress > 0.5 ? Math.PI / 4 - player.rotation.x : 0;
@@ -192,21 +237,20 @@ export class FlyingAnimation extends PlayerAnimation {
 }
 
 export class WaveAnimation extends PlayerAnimation {
+	whichArm: string;
 
-    whichArm: string;
+	constructor(whichArm: "left" | "right" = "left") {
+		super();
+		this.whichArm = whichArm;
+	}
 
-    constructor(whichArm: 'left' | 'right' = 'left') {
-        super();
-        this.whichArm = whichArm;
-    }
+	protected animate(player: PlayerObject): void {
+		const t = this.progress * 2 * Math.PI * 0.5;
 
-    protected animate(player: PlayerObject): void {
-        const t = this.progress * 2 * Math.PI * 0.5;
-
-        const targetArm = this.whichArm === 'left' ? player.skin.leftArm : player.skin.rightArm;
-        targetArm.rotation.x = 180
-        targetArm.rotation.z = Math.sin(t) * 0.5;
-    }
+		const targetArm = this.whichArm === "left" ? player.skin.leftArm : player.skin.rightArm;
+		targetArm.rotation.x = 180;
+		targetArm.rotation.z = Math.sin(t) * 0.5;
+	}
 }
 export class CrouchAnimation extends PlayerAnimation {
 	/**
@@ -287,9 +331,11 @@ export class CrouchAnimation extends PlayerAnimation {
 		if (this.isRunningHitAnimation) {
 			const pr2 = this.progress;
 			let t = (this.progress * 18 * this.hitAnimationSpeed) / this.speed;
+
 			if (this.speed == 0) {
 				t = 0;
 			}
+
 			const isCrouching = Math.abs(Math.sin((pr2 * Math.PI) / 2)) === 1;
 			player.skin.rightArm.rotation.x =
 				-0.4537860552 + 2 * Math.sin(t + Math.PI) * 0.3 - (isCrouching ? 0.4537860552 : 0);
