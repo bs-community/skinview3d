@@ -285,7 +285,7 @@ export class CrouchAnimation extends PlayerAnimation {
 			this.isCrouched = undefined;
 		}
 		if (this.runOnce) {
-			pr = clamp(pr, -1, 1);
+			pr = clamp(pr, 0, 1);
 		}
 		if (!this.showProgress) {
 			pr = Math.floor(pr);
