@@ -15,3 +15,5 @@ rules:
   '@typescript-eslint/interface-name-prefix': off
   '@typescript-eslint/no-empty-interface': off
   'tsdoc/syntax': warn
+  'indent': ['error', 'tab']
+  'no-mixed-spaces-and-tabs': ['error', 'smart-tabs']
