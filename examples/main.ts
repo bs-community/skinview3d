@@ -22,14 +22,14 @@ function obtainTextureUrl(id: string): string {
 	const fileInput = document.getElementById(`${id}_upload`) as HTMLInputElement;
 	const unsetButton = document.getElementById(`${id}_unset`);
 	const file = fileInput?.files?.[0];
-	
+
 	if (!file) {
 		if (unsetButton && !unsetButton.classList.contains("hidden")) {
 			unsetButton.classList.add("hidden");
 		}
 		return urlInput?.value || "";
 	}
-	
+
 	if (unsetButton) {
 		unsetButton.classList.remove("hidden");
 	}
@@ -49,7 +49,7 @@ function reloadSkin(): void {
 	} else {
 		const skinModel = document.getElementById("skin_model") as HTMLSelectElement;
 		const earsSource = document.getElementById("ears_source") as HTMLSelectElement;
-		
+
 		skinViewer
 			.loadSkin(url, {
 				model: skinModel?.value as ModelType,
@@ -70,7 +70,9 @@ function reloadCape(): void {
 		skinViewer.loadCape(null);
 		input?.setCustomValidity("");
 	} else {
-		const selectedBackEquipment = document.querySelector('input[type="radio"][name="back_equipment"]:checked') as HTMLInputElement;
+		const selectedBackEquipment = document.querySelector(
+			'input[type="radio"][name="back_equipment"]:checked'
+		) as HTMLInputElement;
 		skinViewer
 			.loadCape(url, { backEquipment: selectedBackEquipment?.value as BackEquipment })
 			.then(() => input?.setCustomValidity(""))
@@ -85,7 +87,7 @@ function reloadEars(skipSkinReload = false): void {
 	const earsSource = document.getElementById("ears_source") as HTMLSelectElement;
 	const sourceType = earsSource?.value;
 	let hideInput = true;
-	
+
 	if (sourceType === "none") {
 		skinViewer.loadEars(null);
 	} else if (sourceType === "current_skin") {
@@ -144,10 +146,11 @@ function reloadPanorama(): void {
 
 function updateBackground(): void {
 	const backgroundType = (document.getElementById("background_type") as HTMLSelectElement)?.value;
-	const panoramaSection = document.querySelector(".control-section h1")?.textContent === "Panorama" 
-		? document.querySelector(".control-section h1")?.parentElement 
-		: null;
-	
+	const panoramaSection =
+		document.querySelector(".control-section h1")?.textContent === "Panorama"
+			? document.querySelector(".control-section h1")?.parentElement
+			: null;
+
 	if (backgroundType === "color") {
 		const color = (document.getElementById("background_color") as HTMLInputElement)?.value;
 		skinViewer.background = color;
@@ -244,7 +247,7 @@ function initializeControls(): void {
 			if (crouchSetting) {
 				crouchSetting.style.display = animationCrouch?.checked ? "block" : "none";
 			}
-			
+
 			if (target.value === "") {
 				skinViewer.animation = null;
 			} else {
@@ -257,7 +260,9 @@ function initializeControls(): void {
 	}
 
 	animationCrouch?.addEventListener("change", () => {
-		const crouchSettings = document.querySelectorAll<HTMLInputElement>('input[type="checkbox"][name="crouch_setting_item"]');
+		const crouchSettings = document.querySelectorAll<HTMLInputElement>(
+			'input[type="checkbox"][name="crouch_setting_item"]'
+		);
 		for (const el of crouchSettings) {
 			el.checked = false;
 		}
@@ -289,7 +294,9 @@ function initializeControls(): void {
 				if (hitSpeedValue === "") {
 					(skinViewer.animation as unknown as { addHitAnimation: () => void }).addHitAnimation();
 				} else {
-					(skinViewer.animation as unknown as { addHitAnimation: (speed: string) => void }).addHitAnimation(hitSpeedValue);
+					(skinViewer.animation as unknown as { addHitAnimation: (speed: string) => void }).addHitAnimation(
+						hitSpeedValue
+					);
 				}
 			}
 		},
@@ -300,7 +307,9 @@ function initializeControls(): void {
 		if (skinViewer.animation && animationSpeed) {
 			skinViewer.animation.speed = Number(animationSpeed.value);
 		}
-		const crouchSettingItems = document.querySelectorAll<HTMLInputElement>('input[type="checkbox"][name="crouch_setting_item"]');
+		const crouchSettingItems = document.querySelectorAll<HTMLInputElement>(
+			'input[type="checkbox"][name="crouch_setting_item"]'
+		);
 		for (const el of crouchSettingItems) {
 			const setting = crouchSettings[el.value as keyof typeof crouchSettings];
 			if (setting) {
@@ -309,7 +318,9 @@ function initializeControls(): void {
 		}
 	};
 
-	const crouchSettingItems = document.querySelectorAll<HTMLInputElement>('input[type="checkbox"][name="crouch_setting_item"]');
+	const crouchSettingItems = document.querySelectorAll<HTMLInputElement>(
+		'input[type="checkbox"][name="crouch_setting_item"]'
+	);
 	for (const el of crouchSettingItems) {
 		el.addEventListener("change", () => {
 			updateCrouchAnimation();
@@ -325,11 +336,7 @@ function initializeControls(): void {
 		if (skinViewer.animation) {
 			skinViewer.animation.speed = Number(target.value);
 		}
-		if (
-			animationCrouch?.checked &&
-			addHittingAnimation?.checked &&
-			hitSpeed?.value === ""
-		) {
+		if (animationCrouch?.checked && addHittingAnimation?.checked && hitSpeed?.value === "") {
 			updateCrouchAnimation();
 		}
 	});
@@ -351,7 +358,9 @@ function initializeControls(): void {
 
 	for (const part of skinParts) {
 		for (const layer of skinLayers) {
-			const checkbox = document.querySelector<HTMLInputElement>(`#layers_table input[type="checkbox"][data-part="${part}"][data-layer="${layer}"]`);
+			const checkbox = document.querySelector<HTMLInputElement>(
+				`#layers_table input[type="checkbox"][data-part="${part}"][data-layer="${layer}"]`
+			);
 			checkbox?.addEventListener("change", e => {
 				const target = e.target as HTMLInputElement;
 				skinViewer.playerObject.skin[part][layer].visible = target.checked;
@@ -363,7 +372,7 @@ function initializeControls(): void {
 		const urlInput = document.getElementById(id) as HTMLInputElement;
 		const fileInput = document.getElementById(`${id}_upload`) as HTMLInputElement;
 		const unsetButton = document.getElementById(`${id}_unset`);
-		
+
 		const unsetAction = () => {
 			if (urlInput) {
 				urlInput.readOnly = false;
@@ -427,15 +436,15 @@ function initializeControls(): void {
 
 	const backgroundType = document.getElementById("background_type") as HTMLSelectElement;
 	const backgroundColor = document.getElementById("background_color") as HTMLInputElement;
-	
+
 	backgroundType?.addEventListener("change", updateBackground);
 	backgroundColor?.addEventListener("change", updateBackground);
-	
+
 	// Set panorama as default
 	if (backgroundType) {
 		backgroundType.value = "panorama";
 	}
-	
+
 	// Initialize background type
 	updateBackground();
 }
@@ -471,7 +480,7 @@ function initializeViewer(): void {
 	skinViewer.cameraLight.intensity = Number(cameraLight?.value);
 	skinViewer.autoRotate = autoRotate?.checked ?? false;
 	skinViewer.autoRotateSpeed = Number(autoRotateSpeed?.value);
-	
+
 	const animationRadio = document.querySelector<HTMLInputElement>('input[type="radio"][name="animation"]:checked');
 	const animationName = animationRadio?.value;
 	if (animationName) {
@@ -487,7 +496,9 @@ function initializeViewer(): void {
 
 	for (const part of skinParts) {
 		for (const layer of skinLayers) {
-			const checkbox = document.querySelector<HTMLInputElement>(`#layers_table input[type="checkbox"][data-part="${part}"][data-layer="${layer}"]`);
+			const checkbox = document.querySelector<HTMLInputElement>(
+				`#layers_table input[type="checkbox"][data-part="${part}"][data-layer="${layer}"]`
+			);
 			skinViewer.playerObject.skin[part][layer].visible = checkbox?.checked ?? false;
 		}
 	}
