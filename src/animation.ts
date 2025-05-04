@@ -65,7 +65,7 @@ export abstract class PlayerAnimation {
 	 *
 	 * @param fn - The animation function to be added, which takes a player object and progress value.When calling addAnimation. progress is 0.
 	 * @returns The id of the newly added animation.
-  	 *
+	 *
 	 * @example
 	 * Rotate the player while playing the idle animation.
 	 * ```
@@ -85,7 +85,7 @@ export abstract class PlayerAnimation {
 	 * If the id is undefined, this method will do nothing.
 	 *
 	 * @param id - The id of the animation to remove.
-  	 *
+	 *
 	 * @example
 	 * Rotate the player then stop and reset the rotation after 1s.
 	 * ```
@@ -290,7 +290,7 @@ export class CrouchAnimation extends PlayerAnimation {
 		this.hitAnimationSpeed = speed;
 	}
 	private erp: number = 0; //elytra rotate progress
-	private isCrouched: any;
+	private isCrouched: boolean | undefined;
 	protected animate(player: PlayerObject): void {
 		let pr = this.progress * 8;
 		if (pr === 0) {
