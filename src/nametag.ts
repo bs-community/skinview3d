@@ -128,7 +128,6 @@ export class NameTagObject extends Sprite {
 		const canvas = document.createElement("canvas");
 
 		// Measure the text size
-		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		let ctx = canvas.getContext("2d")!;
 		ctx.font = this.font;
 		const metrics = ctx.measureText(this.text);
@@ -139,7 +138,6 @@ export class NameTagObject extends Sprite {
 			this.margin[0] + metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent + this.margin[2];
 
 		// After change canvas size, the context needs to be re-created
-		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		ctx = canvas.getContext("2d")!;
 		ctx.font = this.font;
 

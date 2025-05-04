@@ -164,9 +164,9 @@ export interface SkinViewerOptions {
 	ears?:
 		| "current-skin"
 		| {
-			textureType: "standalone" | "skin";
-			source: RemoteImage | TextureSource;
-		};
+				textureType: "standalone" | "skin";
+				source: RemoteImage | TextureSource;
+		  };
 
 	/**
 	 * Whether to preserve the buffers until manually cleared or overwritten.
