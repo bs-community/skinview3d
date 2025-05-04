@@ -4,7 +4,7 @@ import tsdocPlugin from "eslint-plugin-tsdoc";
 
 export default [
 	{
-		ignores: ["dist/**/*"],
+		ignores: ["libs/**/*", "bundles/**/*"],
 	},
 	{
 		files: ["**/*.ts"],
