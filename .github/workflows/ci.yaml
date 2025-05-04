@@ -3,12 +3,25 @@ name: CI
 on: [push, pull_request]
 
 jobs:
+  lint:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install
+      run: npm ci
+    - name: Lint
+      run: "npm run test:lint"
   test:
 
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v3
-    - run: npm ci
-    - run: npm run build
-    - run: npm test
+    - name: Install
+      run: npm ci
+    - name: Build
+      run: npm run build
+    - name: Test
+      run: npm test
