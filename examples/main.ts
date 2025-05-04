@@ -431,6 +431,11 @@ function initializeControls(): void {
 	backgroundType?.addEventListener("change", updateBackground);
 	backgroundColor?.addEventListener("change", updateBackground);
 	
+	// Set panorama as default
+	if (backgroundType) {
+		backgroundType.value = "panorama";
+	}
+	
 	// Initialize background type
 	updateBackground();
 }
