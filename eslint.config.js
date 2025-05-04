@@ -24,6 +24,7 @@ export default [
 			"no-mixed-spaces-and-tabs": ["error", "smart-tabs"],
 			"@typescript-eslint/no-inferrable-types": "off",
 			"@typescript-eslint/no-empty-interface": "off",
+			"@typescript-eslint/no-non-null-assertion": "warn",
 			"tsdoc/syntax": "warn",
 		},
 	},
