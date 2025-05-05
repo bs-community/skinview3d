@@ -29,6 +29,23 @@
 				padding-right: 20px;
 			}
 
+			@media (max-width: 1024px) {
+				body {
+					flex-direction: column;
+				}
+
+				#skin_container {
+					width: 100%;
+					height: 400px;
+					position: relative;
+					top: 0;
+				}
+
+				.controls {
+					padding-right: 0;
+				}
+			}
+
 			.control-section {
 				margin-bottom: 20px;
 				padding: 15px;
@@ -312,11 +329,11 @@
 					<label
 						>Color:
 						<select id="background_color">
-							<option value="#8a76ff">Purple</option>
-							<option value="#87CEEB">Sky Blue</option>
-							<option value="#90EE90">Light Green</option>
-							<option value="#FFB6C1">Light Pink</option>
-							<option value="#DDA0DD">Plum</option>
+							<option value="#c2b4ff">Purple (#c2b4ff)</option>
+							<option value="#87CEEB">Sky Blue (#87CEEB)</option>
+							<option value="#90EE90">Light Green (#90EE90)</option>
+							<option value="#FFB6C1">Light Pink (#FFB6C1)</option>
+							<option value="#DDA0DD">Plum (#DDA0DD)</option>
 						</select>
 					</label>
 				</div>
