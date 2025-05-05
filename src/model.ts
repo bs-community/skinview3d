@@ -310,9 +310,9 @@ export class SkinObject extends Group {
 		this.leftLeg.rotation.set(0, 0, 0);
 		this.rightLeg.rotation.set(0, 0, 0);
 		this.body.rotation.set(0, 0, 0);
-                this.head.position.y = 0;
+		this.head.position.y = 0;
 		this.body.position.y = -6;
-                this.body.position.z = 0;
+		this.body.position.z = 0;
 		this.rightArm.position.x = -5;
 		this.rightArm.position.y = -2;
 		this.rightArm.position.z = 0;
