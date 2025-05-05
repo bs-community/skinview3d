@@ -30,6 +30,7 @@ import {
 	DepthTexture,
 	Clock,
 	Object3D,
+	ColorManagement,
 } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
@@ -340,6 +341,7 @@ export class SkinViewer {
 		this.camera.add(this.cameraLight);
 		this.scene.add(this.camera);
 		this.scene.add(this.globalLight);
+		ColorManagement.enabled = false;
 
 		this.renderer = new WebGLRenderer({
 			canvas: this.canvas,
