@@ -131,21 +131,16 @@
 				<button id="animation_pause_resume" type="button" class="control">Pause / Resume</button>
 
 				<br />
-
-				<label class="control" id="crouch_setting" style="display: none"
-					>Crouch settings:
-					<label><input type="checkbox" id="run_once" name="crouch_setting_item" value="run_once" />Run once</label>
+				<div class="control" id="crouch_setting" style="display: none">
+					Crouch settings:
+					<label><input type="checkbox" id="run_once" name="crouch_setting_item" value="runOnce" />Run once</label>
 					<label
-						><input type="checkbox" id="show_progress" name="crouch_setting_item" value="show_progress" />Show
+						><input type="checkbox" id="show_progress" name="crouch_setting_item" value="showProgress" />Show
 						progress</label
 					>
-					<label
-						><input
-							type="checkbox"
-							id="add_hitting_animation"
-							name="crouch_setting_item"
-							value="add_hit_animation"
-						/>Add hitting animation</label
+					<label>
+						<input type="checkbox" id="add_hitting_animation" name="crouch_setting_item" value="addHitAnimation" />Add
+						hitting animation</label
 					>
 					<br /><label class="control" id="hit_speed_label" style="display: none"
 						>Hit speed :<input
@@ -157,7 +152,7 @@
 							placeholder="default following crouch speed"
 							style="width: 190px"
 					/></label>
-				</label>
+				</div>
 			</div>
 
 			<div class="control-section">
