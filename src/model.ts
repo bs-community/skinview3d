@@ -132,8 +132,7 @@ export class SkinObject extends Group {
 		this.head = new BodyPart(headMesh, head2Mesh);
 		this.head.name = "head";
 		this.head.add(headMesh, head2Mesh);
-		headMesh.position.y = 4;
-		head2Mesh.position.y = 4;
+		this.head.position.y = 4;
 		this.add(this.head);
 
 		// Body
@@ -233,9 +232,8 @@ export class SkinObject extends Group {
 		this.rightLeg = new BodyPart(rightLegMesh, rightLeg2Mesh);
 		this.rightLeg.name = "rightLeg";
 		this.rightLeg.add(rightLegPivot);
-		this.rightLeg.position.x = -1.9;
+		this.rightLeg.position.x = -2;
 		this.rightLeg.position.y = -12;
-		this.rightLeg.position.z = -0.1;
 		this.add(this.rightLeg);
 
 		// Left Leg
@@ -254,9 +252,8 @@ export class SkinObject extends Group {
 		this.leftLeg = new BodyPart(leftLegMesh, leftLeg2Mesh);
 		this.leftLeg.name = "leftLeg";
 		this.leftLeg.add(leftLegPivot);
-		this.leftLeg.position.x = 1.9;
+		this.leftLeg.position.x = 2;
 		this.leftLeg.position.y = -12;
-		this.leftLeg.position.z = -0.1;
 		this.add(this.leftLeg);
 
 		this.modelType = "default";
@@ -467,6 +464,122 @@ export class EarsObject extends Group {
 	}
 }
 
+export class ArmorObject {
+
+	readonly helmet: Group;
+
+	readonly chestplate: Group;
+	readonly chestplateRight: Group;
+	readonly chestplateLeft: Group;
+
+	readonly leggingsTop: Group;
+	readonly leggingsRight: Group;
+	readonly leggingsLeft: Group;
+
+	readonly bootsRight: Group;
+	readonly bootsLeft: Group;
+
+	helmetMat: MeshStandardMaterial;
+	chestplateMat: MeshStandardMaterial;
+	leggingsMat: MeshStandardMaterial;
+	bootsMat: MeshStandardMaterial;
+
+	constructor() {
+		let defaultMat = {
+			side: DoubleSide,
+			transparent: true,
+			alphaTest: 1e-5
+		};
+
+		this.helmetMat = new MeshStandardMaterial(defaultMat);
+		this.chestplateMat = new MeshStandardMaterial(defaultMat);
+		this.leggingsMat = new MeshStandardMaterial(defaultMat);
+		this.bootsMat = new MeshStandardMaterial(defaultMat);
+
+		// helmet
+		const helmetBox = new BoxGeometry(10, 10, 10);
+		setUVs(helmetBox, 32, 0, 8, 8, 8, 64, 64);
+		const helmetMesh = new Mesh(helmetBox, this.helmetMat);
+		
+		this.helmet = new Group();
+		this.helmet.name = "helmet";
+		this.helmet.add(helmetMesh);
+
+
+		// torso part of the chestplate
+		const chestplateBox = new BoxGeometry(10, 14, 6);
+		setUVs(chestplateBox, 16, 32, 8, 12, 4, 64, 64);
+		const chestplateMesh = new Mesh(chestplateBox, this.chestplateMat);
+
+		this.chestplate = new Group();
+		this.chestplate.name = "chestplate";
+		this.chestplate.add(chestplateMesh);
+
+
+		// shoulder pads from the chestplate
+		const rightShoulderPadBox = new BoxGeometry(6, 14, 6);
+		setUVs(rightShoulderPadBox, 40, 32, 4, 12, 4, 64, 64);
+		const rightShoulderPadMesh = new Mesh(rightShoulderPadBox, this.chestplateMat);
+
+		const leftShoulderPadBox = new BoxGeometry(6, 14, 6);
+		setUVs(leftShoulderPadBox, 48, 48, 4, 12, 4, 64, 64);
+		const leftShoulderPadMesh = new Mesh(leftShoulderPadBox, this.chestplateMat);
+
+		this.chestplateRight = new Group();
+		this.chestplateRight.name = "chestplateRight";
+		this.chestplateRight.add(rightShoulderPadMesh);
+
+		this.chestplateLeft = new Group();
+		this.chestplateLeft.name = "chestplateLeft";
+		this.chestplateLeft.add(leftShoulderPadMesh);
+
+
+		// the hips part of the leggings
+		const leggingsTopBox = new BoxGeometry(9.2, 13.2, 5.2);
+		setUVs(leggingsTopBox, 16, 16, 8, 12, 4, 64, 64);
+		const leggingsTopMesh = new Mesh(leggingsTopBox, this.leggingsMat);
+
+		this.leggingsTop = new Group();
+		this.leggingsTop.name = "leggingsTop";
+		this.leggingsTop.add(leggingsTopMesh);
+
+		// leg parts of the leggings
+		const rightLeggingBox = new BoxGeometry(5, 13, 5);
+		setUVs(rightLeggingBox, 0, 16, 4, 12, 4, 64, 64);
+		const rightLeggingMesh = new Mesh(rightLeggingBox, this.leggingsMat);
+
+		const leftLeggingBox = new BoxGeometry(5, 13, 5);
+		setUVs(leftLeggingBox, 16, 48, 4, 12, 4, 64, 64);
+		const leftLeggingMesh = new Mesh(leftLeggingBox, this.leggingsMat);
+
+		this.leggingsRight = new Group();
+		this.leggingsRight.name = "leggingsRight";
+		this.leggingsRight.add(rightLeggingMesh);
+
+		this.leggingsLeft = new Group();
+		this.leggingsLeft.name = "leggingsLeft";
+		this.leggingsLeft.add(leftLeggingMesh);
+
+
+		// boots
+		const rightBoot = new BoxGeometry(6, 14, 6);
+		setUVs(rightBoot, 0, 32, 4, 12, 4, 64, 64);
+		const rightBootMesh = new Mesh(rightBoot, this.bootsMat);
+
+		const leftBoot = new BoxGeometry(6, 14, 6);
+		setUVs(leftBoot, 0, 48, 4, 12, 4, 64, 64);
+		const leftBootMesh = new Mesh(leftBoot, this.bootsMat);
+
+		this.bootsRight = new Group();
+		this.bootsRight.name = "bootsRight";
+		this.bootsRight.add(rightBootMesh);
+
+		this.bootsLeft = new Group();
+		this.bootsLeft.name = "bootsLeft";
+		this.bootsLeft.add(leftBootMesh);
+	}
+}
+
 export type BackEquipment = "cape" | "elytra";
 
 const CapeDefaultAngle = (10.8 * Math.PI) / 180;
@@ -476,6 +589,7 @@ export class PlayerObject extends Group {
 	readonly cape: CapeObject;
 	readonly elytra: ElytraObject;
 	readonly ears: EarsObject;
+	readonly armor: ArmorObject;
 
 	constructor() {
 		super();
@@ -506,6 +620,31 @@ export class PlayerObject extends Group {
 		this.ears.position.z = 2 / 3;
 		this.ears.visible = false;
 		this.skin.head.add(this.ears);
+
+		this.armor = new ArmorObject();
+		this.armor.helmet.visible = false;
+		this.armor.chestplate.visible = false;
+		this.armor.chestplateRight.visible = false;
+		this.armor.chestplateRight.position.x = -1;
+		this.armor.chestplateRight.position.y = -4;
+		this.armor.chestplateLeft.visible = false;
+		this.armor.chestplateLeft.position.x = 1;
+		this.armor.chestplateLeft.position.y = -4;
+		this.armor.leggingsTop.visible = false;
+		this.armor.leggingsRight.visible = false;
+		this.armor.leggingsRight.position.y = -6;
+		this.armor.leggingsLeft.visible = false;
+		this.armor.leggingsLeft.position.y = -6;
+		this.armor.bootsRight.visible = false;
+		this.armor.bootsRight.position.y = -6;
+		this.armor.bootsLeft.visible = false;
+		this.armor.bootsLeft.position.y = -6;
+		this.skin.head.add(this.armor.helmet);
+		this.skin.body.add(this.armor.chestplate, this.armor.leggingsTop);
+		this.skin.rightArm.add(this.armor.chestplateRight);
+		this.skin.leftArm.add(this.armor.chestplateLeft);
+		this.skin.rightLeg.add(this.armor.leggingsRight, this.armor.bootsRight);
+		this.skin.leftLeg.add(this.armor.leggingsLeft, this.armor.bootsLeft);
 	}
 
 	get backEquipment(): BackEquipment | null {
