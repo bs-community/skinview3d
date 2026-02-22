@@ -174,8 +174,8 @@ export class SkinObject extends Group {
 		rightArmPivot.add(rightArmMesh, rightArm2Mesh);
 		this.modelListeners.push(() => {
 			rightArmPivot.position.x = this.slim ? -0.5 : -1;
+			rightArmPivot.position.y = this.slim ? -4.5 : -4;
 		});
-		rightArmPivot.position.y = -4;
 
 		this.rightArm = new BodyPart(rightArmMesh, rightArm2Mesh);
 		this.rightArm.name = "rightArm";
@@ -207,8 +207,8 @@ export class SkinObject extends Group {
 		leftArmPivot.add(leftArmMesh, leftArm2Mesh);
 		this.modelListeners.push(() => {
 			leftArmPivot.position.x = this.slim ? 0.5 : 1;
+			leftArmPivot.position.y = this.slim ? -4.5 : -4;
 		});
-		leftArmPivot.position.y = -4;
 
 		this.leftArm = new BodyPart(leftArmMesh, leftArm2Mesh);
 		this.leftArm.name = "leftArm";
