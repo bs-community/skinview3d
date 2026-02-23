@@ -13,6 +13,7 @@ const availableAnimations = {
 	wave: new skinview3d.WaveAnimation(),
 	crouch: new skinview3d.CrouchAnimation(),
 	hit: new skinview3d.HitAnimation(),
+	swim: new skinview3d.SwimAnimation(),
 };
 
 let skinViewer: skinview3d.SkinViewer;
