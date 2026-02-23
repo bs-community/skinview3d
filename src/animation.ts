@@ -329,7 +329,6 @@ export class CrouchAnimation extends PlayerAnimation {
 				0.72 - 0.4582006 * Math.abs(Math.sin((Math.min(pr1 - this.erp, 1) * Math.PI) / 2));
 			player.elytra.leftWing.rotation.y = 0.3 - 0.3 * Math.abs(Math.sin((Math.min(pr1 - this.erp, 1) * Math.PI) / 2));
 			player.elytra.updateRightWing();
-
 			this.isCrouched = false;
 		}
 		player.skin.head.position.y = -3.618325234674 * Math.abs(Math.sin((pr * Math.PI) / 2));
