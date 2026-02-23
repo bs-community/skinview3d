@@ -404,7 +404,7 @@ export class SwimAnimation extends PlayerAnimation {
 
 		const toRad = Math.PI / 180;
 
-		function eulerZYXToQuat(z, y, x) {
+		function eulerZYXToQuat(z: number, y: number, x: number) {
 			const qz = new Quaternion().setFromAxisAngle(new Vector3(0, 0, 1), z);
 			const qy = new Quaternion().setFromAxisAngle(new Vector3(0, 1, 0), y);
 			const qx = new Quaternion().setFromAxisAngle(new Vector3(1, 0, 0), x);
@@ -414,7 +414,7 @@ export class SwimAnimation extends PlayerAnimation {
 		const leftQuats = leftEulerDeg.map(e => eulerZYXToQuat(e.z * toRad, e.y * toRad, e.x * toRad));
 		const rightQuats = rightEulerDeg.map(e => eulerZYXToQuat(e.z * toRad, e.y * toRad, e.x * toRad));
 
-		function findSegment(t) {
+		function findSegment(t: number) {
 			for (let i = 0; i < times.length - 1; i++) {
 				if (t >= times[i] && t <= times[i + 1]) {
 					return { i, t0: times[i], t1: times[i + 1] };
