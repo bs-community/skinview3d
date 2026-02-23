@@ -316,17 +316,20 @@ export class CrouchAnimation extends PlayerAnimation {
 		player.elytra.position.z = player.cape.position.z;
 		player.elytra.rotation.x = player.cape.rotation.x - (10.8 * Math.PI) / 180;
 		const pr1 = this.progress / this.speed;
-		if (Math.abs(Math.sin((pr * Math.PI) / 2)) === 1) {
+		if (Math.abs(Math.sin((pr * Math.PI) / 2)) === 1 || (this.showProgress && Math.floor(Math.abs(pr)) % 2 === 0)) {
 			this.erp = !this.isCrouched ? pr1 : this.erp;
 			this.isCrouched = true;
 			player.elytra.leftWing.rotation.z =
 				0.26179944 + 0.4582006 * Math.abs(Math.sin((Math.min(pr1 - this.erp, 1) * Math.PI) / 2));
+			player.elytra.leftWing.rotation.y = 0.3 * Math.abs(Math.sin((Math.min(pr1 - this.erp, 1) * Math.PI) / 2));
 			player.elytra.updateRightWing();
 		} else if (this.isCrouched !== undefined) {
 			this.erp = this.isCrouched ? pr1 : this.erp;
 			player.elytra.leftWing.rotation.z =
 				0.72 - 0.4582006 * Math.abs(Math.sin((Math.min(pr1 - this.erp, 1) * Math.PI) / 2));
+			player.elytra.leftWing.rotation.y = 0.3 - 0.3 * Math.abs(Math.sin((Math.min(pr1 - this.erp, 1) * Math.PI) / 2));
 			player.elytra.updateRightWing();
+
 			this.isCrouched = false;
 		}
 		player.skin.head.position.y = -3.618325234674 * Math.abs(Math.sin((pr * Math.PI) / 2));
