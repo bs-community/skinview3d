@@ -923,7 +923,8 @@ export class SkinViewer {
 			// Add the new name tag to the scene
 			this.playerWrapper.add(newVal);
 			// Set y position
-			newVal.position.y = this.playerObject.ears.visible ? 25 : 20;
+			this.nameTagYOffset = this.playerObject.ears.visible ? 25 : 20;
+			newVal.position.y = this.nameTagYOffset;
 		}
 
 		this._nameTag = newVal;
