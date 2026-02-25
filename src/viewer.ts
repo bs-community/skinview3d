@@ -562,6 +562,9 @@ export class SkinViewer {
 				this.recreateEarsTexture();
 				if (options.ears === true) {
 					this.playerObject.ears.visible = true;
+					if (this._nameTag) {
+						this._nameTag.position.y = 25;
+					}
 				}
 			}
 		} else {
@@ -628,6 +631,9 @@ export class SkinViewer {
 
 			if (options.makeVisible !== false) {
 				this.playerObject.ears.visible = true;
+				if (this._nameTag) {
+					this._nameTag.position.y = 25;
+				}
 			}
 		} else {
 			return loadImage(source).then(image => this.loadEars(image, options));
@@ -636,6 +642,9 @@ export class SkinViewer {
 
 	resetEars(): void {
 		this.playerObject.ears.visible = false;
+		if (this._nameTag) {
+			this._nameTag.position.y = 20;
+		}
 		this.playerObject.ears.map = null;
 		if (this.earsTexture !== null) {
 			this.earsTexture.dispose();
@@ -903,7 +912,7 @@ export class SkinViewer {
 			// Add the new name tag to the scene
 			this.playerWrapper.add(newVal);
 			// Set y position
-			newVal.position.y = 20;
+			newVal.position.y = this.playerObject.ears.visible ? 25 : 20;
 		}
 
 		this._nameTag = newVal;
