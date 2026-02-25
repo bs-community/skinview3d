@@ -21,6 +21,7 @@ import {
 	Scene,
 	Texture,
 	Vector2,
+	Vector3,
 	WebGLRenderer,
 	AmbientLight,
 	type Mapping,
@@ -328,6 +329,7 @@ export class SkinViewer {
 	private onDevicePixelRatioChange: () => void;
 
 	private _nameTag: NameTagObject | null = null;
+	private nameTagYOffset: number = 20;
 
 	constructor(options: SkinViewerOptions = {}) {
 		this.canvas = options.canvas === undefined ? document.createElement("canvas") : options.canvas;
@@ -563,7 +565,8 @@ export class SkinViewer {
 				if (options.ears === true) {
 					this.playerObject.ears.visible = true;
 					if (this._nameTag) {
-						this._nameTag.position.y = 25;
+						this.nameTagYOffset = 25;
+						this._nameTag.position.y = this.nameTagYOffset;
 					}
 				}
 			}
@@ -632,7 +635,8 @@ export class SkinViewer {
 			if (options.makeVisible !== false) {
 				this.playerObject.ears.visible = true;
 				if (this._nameTag) {
-					this._nameTag.position.y = 25;
+					this.nameTagYOffset = 25;
+					this._nameTag.position.y = this.nameTagYOffset;
 				}
 			}
 		} else {
@@ -643,7 +647,8 @@ export class SkinViewer {
 	resetEars(): void {
 		this.playerObject.ears.visible = false;
 		if (this._nameTag) {
-			this._nameTag.position.y = 20;
+			this.nameTagYOffset = 20;
+			this._nameTag.position.y = this.nameTagYOffset;
 		}
 		this.playerObject.ears.map = null;
 		if (this.earsTexture !== null) {
@@ -677,11 +682,14 @@ export class SkinViewer {
 			return loadImage(source).then(image => this.loadBackground(image, mapping));
 		}
 	}
-
 	private draw(): void {
 		const dt = this.clock.getDelta();
 		if (this._animation !== null) {
 			this._animation.update(this.playerObject, dt);
+			if (this._nameTag) {
+				this._nameTag.position.y =
+					this.playerObject.skin.head.getWorldPosition(new Vector3()).y + this.nameTagYOffset - 8;
+			}
 		}
 		if (this.autoRotate) {
 			if (!(this.controls.enableRotate && this.isUserRotating)) {
@@ -872,6 +880,9 @@ export class SkinViewer {
 			this.playerObject.resetJoints();
 			this.playerObject.position.set(0, 0, 0);
 			this.playerObject.rotation.set(0, 0, 0);
+			if (this._nameTag) {
+				this._nameTag.position.y = this.nameTagYOffset;
+			}
 			this.clock.stop();
 			this.clock.autoStart = true;
 		}
