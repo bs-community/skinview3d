@@ -62,6 +62,28 @@
 				margin: 5px 0;
 			}
 
+			#rotation_table {
+				width: 100%;
+				border-collapse: collapse;
+				font-size: 0.85em;
+			}
+
+			#rotation_table th,
+			#rotation_table td {
+				padding: 4px 2px;
+				text-align: center;
+			}
+
+			#rotation_table th {
+				font-weight: bold;
+			}
+
+			#rotation_table input[type="number"] {
+				width: 50px;
+				padding: 2px;
+				font-size: 0.9em;
+			}
+
 			footer {
 				position: fixed;
 				bottom: 0;
@@ -113,6 +135,62 @@
 				<label class="control"
 					>Speed: <input id="auto_rotate_speed" type="number" value="2" step="0.1" size="3"
 				/></label>
+
+				<h2>Body Part Rotation</h2>
+				<table id="rotation_table">
+					<thead>
+						<tr>
+							<th></th>
+							<th>Player</th>
+							<th>Head</th>
+							<th>Body</th>
+							<th>Right Arm</th>
+							<th>Left Arm</th>
+							<th>Right Leg</th>
+							<th>Left Leg</th>
+							<th>Cape</th>
+							<th>Elytra</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<th>X</th>
+							<td><input type="number" data-rotation-part="player" data-rotation-axis="x" value="0" step="0.1" size="4" /></td>
+							<td><input type="number" data-rotation-part="head" data-rotation-axis="x" value="0" step="0.1" size="4" /></td>
+							<td><input type="number" data-rotation-part="body" data-rotation-axis="x" value="0" step="0.1" size="4" /></td>
+							<td><input type="number" data-rotation-part="rightArm" data-rotation-axis="x" value="0" step="0.1" size="4" /></td>
+							<td><input type="number" data-rotation-part="leftArm" data-rotation-axis="x" value="0" step="0.1" size="4" /></td>
+							<td><input type="number" data-rotation-part="rightLeg" data-rotation-axis="x" value="0" step="0.1" size="4" /></td>
+							<td><input type="number" data-rotation-part="leftLeg" data-rotation-axis="x" value="0" step="0.1" size="4" /></td>
+							<td><input type="number" data-rotation-part="cape" data-rotation-axis="x" value="0" step="0.1" size="4" /></td>
+							<td><input type="number" data-rotation-part="elytra" data-rotation-axis="x" value="0" step="0.1" size="4" /></td>
+						</tr>
+						<tr>
+							<th>Y</th>
+							<td><input type="number" data-rotation-part="player" data-rotation-axis="y" value="0" step="0.1" size="4" /></td>
+							<td><input type="number" data-rotation-part="head" data-rotation-axis="y" value="0" step="0.1" size="4" /></td>
+							<td><input type="number" data-rotation-part="body" data-rotation-axis="y" value="0" step="0.1" size="4" /></td>
+							<td><input type="number" data-rotation-part="rightArm" data-rotation-axis="y" value="0" step="0.1" size="4" /></td>
+							<td><input type="number" data-rotation-part="leftArm" data-rotation-axis="y" value="0" step="0.1" size="4" /></td>
+							<td><input type="number" data-rotation-part="rightLeg" data-rotation-axis="y" value="0" step="0.1" size="4" /></td>
+							<td><input type="number" data-rotation-part="leftLeg" data-rotation-axis="y" value="0" step="0.1" size="4" /></td>
+							<td><input type="number" data-rotation-part="cape" data-rotation-axis="y" value="0" step="0.1" size="4" /></td>
+							<td><input type="number" data-rotation-part="elytra" data-rotation-axis="y" value="0" step="0.1" size="4" /></td>
+						</tr>
+						<tr>
+							<th>Z</th>
+							<td><input type="number" data-rotation-part="player" data-rotation-axis="z" value="0" step="0.1" size="4" /></td>
+							<td><input type="number" data-rotation-part="head" data-rotation-axis="z" value="0" step="0.1" size="4" /></td>
+							<td><input type="number" data-rotation-part="body" data-rotation-axis="z" value="0" step="0.1" size="4" /></td>
+							<td><input type="number" data-rotation-part="rightArm" data-rotation-axis="z" value="0" step="0.1" size="4" /></td>
+							<td><input type="number" data-rotation-part="leftArm" data-rotation-axis="z" value="0" step="0.1" size="4" /></td>
+							<td><input type="number" data-rotation-part="rightLeg" data-rotation-axis="z" value="0" step="0.1" size="4" /></td>
+							<td><input type="number" data-rotation-part="leftLeg" data-rotation-axis="z" value="0" step="0.1" size="4" /></td>
+							<td><input type="number" data-rotation-part="cape" data-rotation-axis="z" value="0" step="0.1" size="4" /></td>
+							<td><input type="number" data-rotation-part="elytra" data-rotation-axis="z" value="0" step="0.1" size="4" /></td>
+						</tr>
+					</tbody>
+				</table>
 			</div>
 
 			<div class="control-section">

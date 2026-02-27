@@ -39,7 +39,7 @@ import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
 import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
 import { FXAAShader } from "three/examples/jsm/shaders/FXAAShader.js";
 import { PlayerAnimation } from "./animation.js";
-import { type BackEquipment, PlayerObject } from "./model.js";
+import { type BackEquipment, PlayerObject, CapeDefaultAngle } from "./model.js";
 import { NameTagObject } from "./nametag.js";
 
 export interface LoadOptions {
@@ -246,6 +246,64 @@ export interface SkinViewerOptions {
 	 * @see {@link SkinViewer.nameTag}
 	 */
 	nameTag?: NameTagObject | string;
+
+	/**
+	 * The initial rotation of body parts.
+	 *
+	 * @defaultValue If unspecified, all rotations are 0.
+	 * @see {@link SkinViewer.rotation}
+	 */
+	rotation?: BodyPartRotation;
+}
+
+/**
+ * The rotation of body parts.
+ */
+export interface BodyPartRotation {
+	/**
+	 * The rotation of the whole player object.
+	 */
+	player?: { x?: number; y?: number; z?: number };
+
+	/**
+	 * The rotation of the head.
+	 */
+	head?: { x?: number; y?: number; z?: number };
+
+	/**
+	 * The rotation of the body.
+	 */
+	body?: { x?: number; y?: number; z?: number };
+
+	/**
+	 * The rotation of the right arm.
+	 */
+	rightArm?: { x?: number; y?: number; z?: number };
+
+	/**
+	 * The rotation of the left arm.
+	 */
+	leftArm?: { x?: number; y?: number; z?: number };
+
+	/**
+	 * The rotation of the right leg.
+	 */
+	rightLeg?: { x?: number; y?: number; z?: number };
+
+	/**
+	 * The rotation of the left leg.
+	 */
+	leftLeg?: { x?: number; y?: number; z?: number };
+
+	/**
+	 * The rotation of the cape.
+	 */
+	cape?: { x?: number; y?: number; z?: number };
+
+	/**
+	 * The rotation of the elytra.
+	 */
+	elytra?: { x?: number; y?: number; z?: number };
 }
 
 /**
@@ -429,6 +487,9 @@ export class SkinViewer {
 		}
 		if (options.nameTag !== undefined) {
 			this.nameTag = options.nameTag;
+		}
+		if (options.rotation !== undefined) {
+			this.rotation = options.rotation;
 		}
 		this.camera.position.z = 1;
 		this._zoom = options.zoom === undefined ? 0.9 : options.zoom;
@@ -907,5 +968,119 @@ export class SkinViewer {
 		}
 
 		this._nameTag = newVal;
+	}
+
+	/**
+	 * The rotation of body parts.
+	 *
+	 * This property allows you to control the rotation of individual body parts.
+	 * The rotations are in radians.
+	 *
+	 * @example
+	 * ```
+	 * // Rotate the head to look up
+	 * skinViewer.rotation.head = { x: -0.5, y: 0, z: 0 };
+	 *
+	 * // Rotate both arms
+	 * skinViewer.rotation.leftArm = { x: 0, y: 0, z: 0.5 };
+	 * skinViewer.rotation.rightArm = { x: 0, y: 0, z: -0.5 };
+	 * ```
+	 */
+	get rotation(): BodyPartRotation {
+		return {
+			player: {
+				x: this.playerObject.rotation.x,
+				y: this.playerObject.rotation.y,
+				z: this.playerObject.rotation.z,
+			},
+			head: {
+				x: this.playerObject.skin.head.rotation.x,
+				y: this.playerObject.skin.head.rotation.y,
+				z: this.playerObject.skin.head.rotation.z,
+			},
+			body: {
+				x: this.playerObject.skin.body.rotation.x,
+				y: this.playerObject.skin.body.rotation.y,
+				z: this.playerObject.skin.body.rotation.z,
+			},
+			rightArm: {
+				x: this.playerObject.skin.rightArm.rotation.x,
+				y: this.playerObject.skin.rightArm.rotation.y,
+				z: this.playerObject.skin.rightArm.rotation.z,
+			},
+			leftArm: {
+				x: this.playerObject.skin.leftArm.rotation.x,
+				y: this.playerObject.skin.leftArm.rotation.y,
+				z: this.playerObject.skin.leftArm.rotation.z,
+			},
+			rightLeg: {
+				x: this.playerObject.skin.rightLeg.rotation.x,
+				y: this.playerObject.skin.rightLeg.rotation.y,
+				z: this.playerObject.skin.rightLeg.rotation.z,
+			},
+			leftLeg: {
+				x: this.playerObject.skin.leftLeg.rotation.x,
+				y: this.playerObject.skin.leftLeg.rotation.y,
+				z: this.playerObject.skin.leftLeg.rotation.z,
+			},
+			cape: {
+				x: this.playerObject.cape.rotation.x - CapeDefaultAngle,
+				y: this.playerObject.cape.rotation.y,
+				z: this.playerObject.cape.rotation.z,
+			},
+			elytra: {
+				x: this.playerObject.elytra.rotation.x,
+				y: this.playerObject.elytra.rotation.y,
+				z: this.playerObject.elytra.rotation.z,
+			},
+		};
+	}
+
+	set rotation(value: BodyPartRotation) {
+		if (value.player !== undefined) {
+			if (value.player.x !== undefined) this.playerObject.rotation.x = value.player.x;
+			if (value.player.y !== undefined) this.playerObject.rotation.y = value.player.y;
+			if (value.player.z !== undefined) this.playerObject.rotation.z = value.player.z;
+		}
+		if (value.head !== undefined) {
+			if (value.head.x !== undefined) this.playerObject.skin.head.rotation.x = value.head.x;
+			if (value.head.y !== undefined) this.playerObject.skin.head.rotation.y = value.head.y;
+			if (value.head.z !== undefined) this.playerObject.skin.head.rotation.z = value.head.z;
+		}
+		if (value.body !== undefined) {
+			if (value.body.x !== undefined) this.playerObject.skin.body.rotation.x = value.body.x;
+			if (value.body.y !== undefined) this.playerObject.skin.body.rotation.y = value.body.y;
+			if (value.body.z !== undefined) this.playerObject.skin.body.rotation.z = value.body.z;
+		}
+		if (value.rightArm !== undefined) {
+			if (value.rightArm.x !== undefined) this.playerObject.skin.rightArm.rotation.x = value.rightArm.x;
+			if (value.rightArm.y !== undefined) this.playerObject.skin.rightArm.rotation.y = value.rightArm.y;
+			if (value.rightArm.z !== undefined) this.playerObject.skin.rightArm.rotation.z = value.rightArm.z;
+		}
+		if (value.leftArm !== undefined) {
+			if (value.leftArm.x !== undefined) this.playerObject.skin.leftArm.rotation.x = value.leftArm.x;
+			if (value.leftArm.y !== undefined) this.playerObject.skin.leftArm.rotation.y = value.leftArm.y;
+			if (value.leftArm.z !== undefined) this.playerObject.skin.leftArm.rotation.z = value.leftArm.z;
+		}
+		if (value.rightLeg !== undefined) {
+			if (value.rightLeg.x !== undefined) this.playerObject.skin.rightLeg.rotation.x = value.rightLeg.x;
+			if (value.rightLeg.y !== undefined) this.playerObject.skin.rightLeg.rotation.y = value.rightLeg.y;
+			if (value.rightLeg.z !== undefined) this.playerObject.skin.rightLeg.rotation.z = value.rightLeg.z;
+		}
+		if (value.leftLeg !== undefined) {
+			if (value.leftLeg.x !== undefined) this.playerObject.skin.leftLeg.rotation.x = value.leftLeg.x;
+			if (value.leftLeg.y !== undefined) this.playerObject.skin.leftLeg.rotation.y = value.leftLeg.y;
+			if (value.leftLeg.z !== undefined) this.playerObject.skin.leftLeg.rotation.z = value.leftLeg.z;
+		}
+		if (value.cape !== undefined) {
+			if (value.cape.x !== undefined) this.playerObject.cape.rotation.x = value.cape.x === 0 ? CapeDefaultAngle : value.cape.x;
+			if (value.cape.y !== undefined) this.playerObject.cape.rotation.y = value.cape.y;
+			if (value.cape.z !== undefined) this.playerObject.cape.rotation.z = value.cape.z;
+		}
+		if (value.elytra !== undefined) {
+			if (value.elytra.x !== undefined) this.playerObject.elytra.rotation.x = value.elytra.x;
+			if (value.elytra.y !== undefined) this.playerObject.elytra.rotation.y = value.elytra.y;
+			if (value.elytra.z !== undefined) this.playerObject.elytra.rotation.z = value.elytra.z;
+		}
 	}
 }

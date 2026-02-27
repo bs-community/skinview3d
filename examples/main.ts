@@ -240,6 +240,22 @@ function initializeControls(): void {
 		skinViewer.autoRotateSpeed = Number(target.value);
 	});
 
+	const rotationInputs = document.querySelectorAll<HTMLInputElement>("#rotation_table input[type='number']");
+	for (const input of rotationInputs) {
+		input.addEventListener("change", e => {
+			const target = e.target as HTMLInputElement;
+			const part = target.dataset.rotationPart;
+			const axis = target.dataset.rotationAxis as "x" | "y" | "z";
+			if (part && axis) {
+				const currentRotation = skinViewer.rotation[part as keyof typeof skinViewer.rotation];
+				if (currentRotation) {
+					(currentRotation as any)[axis] = Number(target.value);
+					skinViewer.rotation = { [part]: currentRotation };
+				}
+			}
+		});
+	}
+
 	const animationRadios = document.querySelectorAll<HTMLInputElement>('input[type="radio"][name="animation"]');
 	for (const el of animationRadios) {
 		el.addEventListener("change", e => {

@@ -469,7 +469,7 @@ export class EarsObject extends Group {
 
 export type BackEquipment = "cape" | "elytra";
 
-const CapeDefaultAngle = (10.8 * Math.PI) / 180;
+export const CapeDefaultAngle = (10.8 * Math.PI) / 180;
 
 export class PlayerObject extends Group {
 	readonly skin: SkinObject;
