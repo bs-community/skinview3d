@@ -6,7 +6,7 @@
 		<title>skinview3d</title>
 		<style>
 			body {
-				margin: unset !important;
+				margin: 0;
 				padding: 20px;
 				display: flex;
 				flex-direction: row;
@@ -37,19 +37,12 @@
 				#skin_container {
 					width: 100%;
 					height: 400px;
+					position: relative;
 					top: 0;
 				}
 
 				.controls {
 					padding-right: 0;
-				}
-				#canvas_warp {
-					width: 100%;
-					top: 0px;
-					background: rgba(255, 255, 255, 0.6);
-					position: sticky;
-					backdrop-filter: blur(10px);
-					padding-bottom: 10px;
 				}
 			}
 
@@ -83,9 +76,8 @@
 	</head>
 
 	<body>
-		<div id="canvas_warp">
-			<canvas id="skin_container"></canvas>
-		</div>
+		<canvas id="skin_container"></canvas>
+
 		<div class="controls">
 			<button id="reset_all" type="button" class="control">Reset All</button>
 
