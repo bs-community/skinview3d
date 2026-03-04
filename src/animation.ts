@@ -1,4 +1,5 @@
 import { PlayerObject } from "./model.js";
+import { Quaternion, Vector3 } from "three";
 
 /**
  * An animation which can be played on a {@link PlayerObject}.
@@ -209,7 +210,6 @@ export class RunningAnimation extends PlayerAnimation {
 		player.position.x = Math.cos(t) * 0.15;
 		// Slightly tilting when running
 		player.rotation.z = Math.cos(t + Math.PI) * 0.01;
-
 		// Apply higher swing frequency, lower amplitude,
 		// and greater basic rotation around x axis,
 		// to cape when running.
@@ -316,16 +316,18 @@ export class CrouchAnimation extends PlayerAnimation {
 		player.elytra.position.z = player.cape.position.z;
 		player.elytra.rotation.x = player.cape.rotation.x - (10.8 * Math.PI) / 180;
 		const pr1 = this.progress / this.speed;
-		if (Math.abs(Math.sin((pr * Math.PI) / 2)) === 1) {
+		if (Math.abs(Math.sin((pr * Math.PI) / 2)) === 1 || (this.showProgress && Math.floor(Math.abs(pr)) % 2 === 0)) {
 			this.erp = !this.isCrouched ? pr1 : this.erp;
 			this.isCrouched = true;
 			player.elytra.leftWing.rotation.z =
 				0.26179944 + 0.4582006 * Math.abs(Math.sin((Math.min(pr1 - this.erp, 1) * Math.PI) / 2));
+			player.elytra.leftWing.rotation.y = 0.3 * Math.abs(Math.sin((Math.min(pr1 - this.erp, 1) * Math.PI) / 2));
 			player.elytra.updateRightWing();
 		} else if (this.isCrouched !== undefined) {
 			this.erp = this.isCrouched ? pr1 : this.erp;
 			player.elytra.leftWing.rotation.z =
 				0.72 - 0.4582006 * Math.abs(Math.sin((Math.min(pr1 - this.erp, 1) * Math.PI) / 2));
+			player.elytra.leftWing.rotation.y = 0.3 - 0.3 * Math.abs(Math.sin((Math.min(pr1 - this.erp, 1) * Math.PI) / 2));
 			player.elytra.updateRightWing();
 			this.isCrouched = false;
 		}
@@ -375,5 +377,82 @@ export class HitAnimation extends PlayerAnimation {
 		player.skin.leftArm.rotation.z = -Math.cos(t) * 0.015 + 0.13 - 0.05;
 		player.skin.leftArm.position.z = Math.cos(t) * 0.3;
 		player.skin.leftArm.position.x = 5 - Math.cos(t) * 0.05;
+	}
+}
+
+export class SwimAnimation extends PlayerAnimation {
+	private lock: boolean = false;
+	protected animate(player: PlayerObject): void {
+		if (this.progress === 0) {
+			this.lock = false;
+		}
+		const period = 1.3;
+		const t = this.progress % period;
+		const phase = t / period;
+		// keyframe timing points
+		const times = [0, 0.7 / period, 1.1 / period, 1.0];
+		const leftEulerDeg = [
+			{ z: 180, y: 180, x: 0 },
+			{ z: 287.2, y: 180, x: 0 },
+			{ z: 180, y: 180, x: 90 },
+			{ z: 180, y: 180, x: 0 },
+		];
+		const rightEulerDeg = [
+			{ z: -180, y: 180, x: 0 },
+			{ z: -287.2, y: 180, x: 0 },
+			{ z: -180, y: 180, x: 90 },
+			{ z: -180, y: 180, x: 0 },
+		];
+
+		const toRad = Math.PI / 180;
+
+		function eulerZYXToQuat(z: number, y: number, x: number) {
+			const qz = new Quaternion().setFromAxisAngle(new Vector3(0, 0, 1), z);
+			const qy = new Quaternion().setFromAxisAngle(new Vector3(0, 1, 0), y);
+			const qx = new Quaternion().setFromAxisAngle(new Vector3(1, 0, 0), x);
+			return qx.multiply(qy).multiply(qz);
+		}
+
+		const leftQuats = leftEulerDeg.map(e => eulerZYXToQuat(e.z * toRad, e.y * toRad, e.x * toRad));
+		const rightQuats = rightEulerDeg.map(e => eulerZYXToQuat(e.z * toRad, e.y * toRad, e.x * toRad));
+
+		function findSegment(t: number) {
+			for (let i = 0; i < times.length - 1; i++) {
+				if (t >= times[i] && t <= times[i + 1]) {
+					return { i, t0: times[i], t1: times[i + 1] };
+				}
+			}
+			return { i: times.length - 2, t0: times[times.length - 2], t1: times[times.length - 1] };
+		}
+
+		const seg = findSegment(phase);
+		const p = (phase - seg.t0) / (seg.t1 - seg.t0);
+		const i = seg.i;
+		if (!this.lock) {
+			let k = 1.3;
+			if (i == 0 && p * k < 1) {
+				player.position.y = -5 * p * k;
+				player.rotation.x = (1.3 * p * Math.PI) / 2;
+				player.skin.head.rotation.x = (-Math.PI / 4) * p * k;
+				player.cape.rotation.x = (Math.PI / 4) * p * k;
+			} else {
+				this.lock = true;
+			}
+		}
+		const qLeft = new Quaternion().copy(leftQuats[i]).slerp(leftQuats[i + 1], p);
+		const qRight = new Quaternion().copy(rightQuats[i]).slerp(rightQuats[i + 1], p);
+
+		player.skin.leftArm.quaternion.copy(qLeft);
+		player.skin.rightArm.quaternion.copy(qRight);
+		const legFreq = 390 * toRad;
+		const legAmp = 17.2 * toRad;
+		const leftLegX = legAmp * Math.cos(this.progress * legFreq + Math.PI);
+		const rightLegX = legAmp * Math.cos(this.progress * legFreq);
+		player.skin.leftLeg.rotation.x = leftLegX;
+		player.skin.leftLeg.rotation.y = -0.1 * toRad;
+		player.skin.leftLeg.rotation.z = -0.1 * toRad;
+		player.skin.rightLeg.rotation.x = rightLegX;
+		player.skin.rightLeg.rotation.y = 0.1 * toRad;
+		player.skin.rightLeg.rotation.z = 0.1 * toRad;
 	}
 }

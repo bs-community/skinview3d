@@ -13,6 +13,7 @@ const availableAnimations = {
 	wave: new skinview3d.WaveAnimation(),
 	crouch: new skinview3d.CrouchAnimation(),
 	hit: new skinview3d.HitAnimation(),
+	swim: new skinview3d.SwimAnimation(),
 };
 
 let skinViewer: skinview3d.SkinViewer;
@@ -129,7 +130,9 @@ function reloadEars(skipSkinReload = false): void {
 
 function reloadPanorama(): void {
 	const input = document.getElementById("panorama_url") as HTMLInputElement;
+	const backgroundTypeInput = document.getElementById("background_type") as HTMLSelectElement;
 	const url = obtainTextureUrl("panorama_url");
+	backgroundTypeInput.value = "panorama";
 	if (url === "") {
 		skinViewer.background = null;
 		input?.setCustomValidity("");
@@ -438,7 +441,10 @@ function initializeControls(): void {
 	const backgroundColor = document.getElementById("background_color") as HTMLInputElement;
 
 	backgroundType?.addEventListener("change", updateBackground);
-	backgroundColor?.addEventListener("change", updateBackground);
+	backgroundColor?.addEventListener("change", () => {
+		backgroundType.value = "color";
+		updateBackground();
+	});
 
 	// Set panorama as default
 	if (backgroundType) {

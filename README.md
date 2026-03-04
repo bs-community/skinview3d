@@ -86,11 +86,11 @@ By default, there are two lights on the scene. One is an ambient light, and the 
 
 To change the light intensity:
 ```js
-skinViewer.cameraLight.intensity = 0.9;
-skinViewer.globalLight.intensity = 0.1;
+skinViewer.cameraLight.intensity = 0.6;
+skinViewer.globalLight.intensity = 3;
 ```
 
-Setting `globalLight.intensity` to `1.0` and `cameraLight.intensity` to `0.0`
+Setting `globalLight.intensity` to `3.0` and `cameraLight.intensity` to `0.0`
 will completely disable shadows.
 
 ## Ears
