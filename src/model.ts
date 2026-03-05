@@ -132,7 +132,8 @@ export class SkinObject extends Group {
 		this.head = new BodyPart(headMesh, head2Mesh);
 		this.head.name = "head";
 		this.head.add(headMesh, head2Mesh);
-		this.head.position.y = 4;
+		headMesh.position.y = 4;
+		head2Mesh.position.y = 4;
 		this.add(this.head);
 
 		// Body
@@ -500,6 +501,7 @@ export class ArmorObject {
 		const helmetBox = new BoxGeometry(10, 10, 10);
 		setUVs(helmetBox, 32, 0, 8, 8, 8, 64, 64);
 		const helmetMesh = new Mesh(helmetBox, this.helmetMat);
+		helmetMesh.position.y = 4;
 		
 		this.helmet = new Group();
 		this.helmet.name = "helmet";

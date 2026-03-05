@@ -282,7 +282,7 @@ export class ArmorType {
 	texture?: Texture;
 	promise?: Promise<void>;
 
-	constructor(layer1Src?: RemoteImage | TextureSource, layer2Src?: RemoteImage | TextureSource) {
+	constructor(layer1Src?: RemoteImage | TextureSource | null, layer2Src?: RemoteImage | TextureSource | null) {
 		this.promise = new Promise(async (resolve) => {
 			let layer1 = await this.loadLayer(layer1Src);
 			let layer2 = await this.loadLayer(layer2Src);
@@ -293,7 +293,7 @@ export class ArmorType {
 		});
 	}
 
-	private loadLayer(src: RemoteImage | TextureSource | undefined): Promise<TextureSource | undefined> {
+	private loadLayer(src: RemoteImage | TextureSource | undefined | null): Promise<TextureSource | undefined> {
 		return new Promise((resolve) => {
 			if (src === undefined || src === null) {
 				resolve(undefined);

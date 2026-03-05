@@ -14,6 +14,7 @@ Three.js powered Minecraft skin viewer.
 * Capes
 * Ears
 * Elytras
+* Armor
 * Slim Arms
   * Automatic model detection (Slim / Default)
 * FXAA (fast approximate anti-aliasing)
@@ -48,6 +49,20 @@ Three.js powered Minecraft skin viewer.
 
 	// Unload(hide) the cape / elytra
 	skinViewer.loadCape(null);
+
+	// Initialize armor types using their layer textures (as found in resource packs)
+	let diamondArmor = new skinview3d.ArmorType("img/armor/diamond_layer_1.png", "img/armor/diamond_layer_2.png");
+	let turtleHelmet = new skinview3d.ArmorType("img/armor/turtle_layer_1.png");
+	// Load the armor types on armor slots (in this case, a turtle helmet with diamond armor)
+	skinViewer.loadArmor({
+		helmet: turtleHelmet,
+		chestplate: diamondArmor,
+		leggings: diamondArmor,
+		boots, diamondArmor
+	});
+
+	// Unload(hide) the armor
+	skinViewer.loadArmor();
 
 	// Set the background color
 	skinViewer.background = 0x5a76f3;

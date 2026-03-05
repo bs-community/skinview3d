@@ -319,6 +319,60 @@
 			</div>
 
 			<div class="control-section">
+				<h1>Armor</h1>
+				<table id="armor-table">
+					<datalist id="armor-slots"></datalist>
+					<tbody>
+						<tr>
+							<th>helmet</th>
+							<td>
+								<input id="armor-helmet" type="text" value="" placeholder="none" list="armor-slots" size="20">
+							</td>
+						</tr>
+						<tr>
+							<th>chestplate</th>
+							<td>
+								<input id="armor-chestplate" type="text" value="" placeholder="none" list="armor-slots" size="20">
+							</td>
+						</tr>
+						<tr>
+							<th>leggings</th>
+							<td>
+								<input id="armor-leggings" type="text" value="" placeholder="none" list="armor-slots" size="20">
+							</td>
+						</tr>
+						<tr>
+							<th>boots</th>
+							<td>
+								<input id="armor-boots" type="text" value="" placeholder="none" list="armor-slots" size="20">
+							</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<div id="armor-types">
+					<datalist id="default_armor_layer1">
+						<option value="img/armor/netherite_layer_1.png">
+						<option value="img/armor/diamond_layer_1.png">
+						<option value="img/armor/gold_layer_1.png">
+						<option value="img/armor/iron_layer_1.png">
+						<option value="img/armor/chainmail_layer_1.png">
+						<option value="img/armor/leather_layer_1.png">
+						<option value="img/armor/turtle_layer_1.png">
+					</datalist>
+					<datalist id="default_armor_layer2">
+						<option value="img/armor/netherite_layer_2.png">
+						<option value="img/armor/diamond_layer_2.png">
+						<option value="img/armor/gold_layer_2.png">
+						<option value="img/armor/iron_layer_2.png">
+						<option value="img/armor/chainmail_layer_2.png">
+						<option value="img/armor/leather_layer_2.png">
+					</datalist>
+				</div>
+				<button type="button" class="control" onclick="newArmorBuilder()">New/Custom Armor Type</button>
+			</div>
+
+			<div class="control-section">
 				<h1>Background</h1>
 				<div class="control">
 					<label
