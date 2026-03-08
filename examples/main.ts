@@ -138,12 +138,14 @@ function reloadEars(skipSkinReload = false): void {
 	}
 }
 
-function reloadArmor(): void {
+async function reloadArmor(): Promise<void> {
+	const fallbackInput = document.getElementById("armor-fallback") as HTMLInputElement;
+	await skinViewer.fallbackArmor(armorTypes[fallbackInput.value] || null);
 	const helmet = document.getElementById("armor-helmet") as HTMLInputElement;
 	const chestplate = document.getElementById("armor-chestplate") as HTMLInputElement;
 	const leggings = document.getElementById("armor-leggings") as HTMLInputElement;
 	const boots = document.getElementById("armor-boots") as HTMLInputElement;
-	skinViewer.loadArmor({
+	await skinViewer.loadArmor({
 		helmet: armorTypes[helmet.value] || null,
 		chestplate: armorTypes[chestplate.value] || null,
 		leggings: armorTypes[leggings.value] || null,
@@ -164,7 +166,6 @@ function buildArmorTypes(): void {
 		const layer2Input = armorTypeElement.querySelector<HTMLInputElement>(".armor-type-layer2");
 		const layer1Texture = obtainTextureUrl(`armor${index}-layer1`) || null;
 		const layer2Texture = obtainTextureUrl(`armor${index}-layer2`) || null;
-		console.log(nameInput?.value, layer1Texture, layer2Texture);
 		if(nameInput?.value && ((layer1Texture && layer1Texture !== "") || (layer2Texture && layer2Texture !== ""))) {
 			armorTypes[nameInput.value] = new skinview3d.ArmorType(layer1Texture, layer2Texture);
 		}

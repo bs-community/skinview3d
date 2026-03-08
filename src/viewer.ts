@@ -254,16 +254,16 @@ export interface ArmorSlots {
 	/**
 	 * The types of armor to be used in each slot.
 	 * 
-	 * @defaultValue Unspecified slot causes said slot to be invisible.
+	 * @defaultValue Slots with a value of null will be invisible.
 	 */
 
-	helmet?: ArmorType;
+	helmet: ArmorType | null;
 
-	chestplate?: ArmorType;
+	chestplate: ArmorType | null;
 
-	leggings?: ArmorType;
+	leggings: ArmorType | null;
 
-	boots?: ArmorType;
+	boots: ArmorType | null;
 }
 
 export class ArmorType {
@@ -271,7 +271,8 @@ export class ArmorType {
 	 * Initializes an armor type.
 	 * The textures work the same as in Resource Packs which means that the textures are split into 2 layers,
 	 * with Layer 1 being the Helmet, Chestplate and Boots, and Layer 2 being the leggings.
-	 * This is because older skins didn't have outer layers and so there was no space in the texture to include the hip part of leggings, so they were split into 2 different textures.
+	 * 
+	 * This *could* be because older skins didn't have outer layers and so there was no image format to support having overlapping textures (leggings overlap with the boots and chestplate) so they were split into 2 different textures. But hey, that's just a theory, a game theory.
 	 * 
 	 * Armor types such as Turtle Shell use only one layer.
 	 * 
@@ -361,6 +362,8 @@ export class SkinViewer {
 	private capeTexture: Texture | null = null;
 	private earsTexture: Texture | null = null;
 	private backgroundTexture: Texture | null = null;
+	private armor: ArmorSlots | null = null;
+	private _fallbackArmor: ArmorSlots | null = null;
 
 	private _disposed: boolean = false;
 	private _renderPaused: boolean = false;
@@ -722,16 +725,38 @@ export class SkinViewer {
 		}
 	}
 
+	private toArmorSlots(armor: ArmorType | Partial<ArmorSlots> | null): ArmorSlots {
+		return {
+			helmet: armor instanceof ArmorType ? armor : (armor?.helmet ?? null),
+			chestplate: armor instanceof ArmorType ? armor : (armor?.chestplate ?? null),
+			leggings: armor instanceof ArmorType ? armor : (armor?.leggings ?? null),
+			boots: armor instanceof ArmorType ? armor : (armor?.boots ?? null),
+		};
+	}
+
+	async fallbackArmor(
+		armor: ArmorType | Partial<ArmorSlots> | null
+	): Promise<void> {
+		this._fallbackArmor = this.toArmorSlots(armor);
+		await this.loadArmor(this.armor);
+	}
+
 	async loadArmor(
-		slots?: ArmorSlots
+		armor?: ArmorType | Partial<ArmorSlots> | null
 	): Promise<void> {
 		this.resetArmor();
-		if (slots) {
-			for (let slot of Object.entries(slots)) {
-				if (!slot[1]) continue;
-				await slot[1].promise;
-				this.addTextureToSlot(slot[0], slot[1].texture);
-			}
+		armor = this.toArmorSlots(armor ?? null);
+		let slots: ArmorSlots = {
+			helmet: armor.helmet ?? this._fallbackArmor?.helmet ?? null,
+			chestplate: armor.chestplate ?? this._fallbackArmor?.chestplate ?? null,
+			leggings: armor.leggings ?? this._fallbackArmor?.leggings ?? null,
+			boots: armor.boots ?? this._fallbackArmor?.boots ?? null,
+		};
+		this.armor = slots;
+		for (let [slot, slotArmorType] of Object.entries(slots)) {
+			if (!slotArmorType) continue;
+			await slotArmorType.promise;
+			this.addTextureToSlot(slot, slotArmorType.texture);
 		}
 	}
 

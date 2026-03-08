@@ -58,11 +58,22 @@ Three.js powered Minecraft skin viewer.
 		helmet: turtleHelmet,
 		chestplate: diamondArmor,
 		leggings: diamondArmor,
-		boots, diamondArmor
+		boots: diamondArmor
 	});
+
+	// Short-hand for applying an armor type on all slots
+	skinViewer.loadArmor(diamondArmor);
 
 	// Unload(hide) the armor
 	skinViewer.loadArmor();
+
+	// Specify fallback armor that will always be applied if there is no other armor set
+	skinViewer.fallbackArmor(diamondArmor);
+	// Or you can specify slots
+	skinViewer.fallbackArmor({
+		helmet: diamondArmor,
+		chestplate: diamondArmor
+	});
 
 	// Set the background color
 	skinViewer.background = 0x5a76f3;
