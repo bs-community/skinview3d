@@ -309,6 +309,9 @@ export class ArmorType {
 	}
 
 	private recreateArmorTexture() {
+		if (this.texture) {
+			this.texture.dispose();
+		}
 		this.texture = new CanvasTexture(this.canvas);
 		this.texture.magFilter = NearestFilter;
 		this.texture.minFilter = NearestFilter;
