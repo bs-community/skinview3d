@@ -3,6 +3,12 @@ import type { ModelType } from "skinview-utils";
 import type { BackEquipment } from "../src/model";
 import "./style.css";
 
+declare global {
+	interface Window {
+		newArmorBuilder: (name: String, layer1: String, layer2: String) => void;
+	}
+};
+
 const skinParts = ["head", "body", "rightArm", "leftArm", "rightLeg", "leftLeg"];
 const skinLayers = ["innerLayer", "outerLayer"];
 const availableAnimations = {
@@ -15,6 +21,10 @@ const availableAnimations = {
 	hit: new skinview3d.HitAnimation(),
 	swim: new skinview3d.SwimAnimation(),
 };
+
+var armorTypes: {
+	[key: string]: skinview3d.ArmorType;
+} = {};
 
 let skinViewer: skinview3d.SkinViewer;
 
@@ -128,6 +138,92 @@ function reloadEars(skipSkinReload = false): void {
 	}
 }
 
+async function reloadArmor(): Promise<void> {
+	const fallbackInput = document.getElementById("armor-fallback") as HTMLInputElement;
+	await skinViewer.fallbackArmor(armorTypes[fallbackInput.value] || null);
+	const helmet = document.getElementById("armor-helmet") as HTMLInputElement;
+	const chestplate = document.getElementById("armor-chestplate") as HTMLInputElement;
+	const leggings = document.getElementById("armor-leggings") as HTMLInputElement;
+	const boots = document.getElementById("armor-boots") as HTMLInputElement;
+	await skinViewer.loadArmor({
+		helmet: armorTypes[helmet.value] || null,
+		chestplate: armorTypes[chestplate.value] || null,
+		leggings: armorTypes[leggings.value] || null,
+		boots: armorTypes[boots.value] || null,
+	});
+}
+
+function buildArmorTypes(): void {
+	const datalist = document.getElementById("armor-slots") as HTMLDataListElement;
+	datalist.innerHTML = "";
+	armorTypes = {};
+
+	const armorTypesElement = document.getElementById("armor-types") as HTMLDivElement;
+	for(const armorTypeElement of armorTypesElement.querySelectorAll<HTMLElement>(".armor-type")) {
+		const index = armorTypeElement.dataset.index;
+		const nameInput = armorTypeElement.querySelector<HTMLInputElement>(".armor-type-name");
+		const layer1Input = armorTypeElement.querySelector<HTMLInputElement>(".armor-type-layer1");
+		const layer2Input = armorTypeElement.querySelector<HTMLInputElement>(".armor-type-layer2");
+		const layer1Texture = obtainTextureUrl(`armor${index}-layer1`) || null;
+		const layer2Texture = obtainTextureUrl(`armor${index}-layer2`) || null;
+		if(nameInput?.value && ((layer1Texture && layer1Texture !== "") || (layer2Texture && layer2Texture !== ""))) {
+			armorTypes[nameInput.value] = new skinview3d.ArmorType(layer1Texture, layer2Texture);
+		}
+		const summaryElement = armorTypeElement.querySelector("summary") as HTMLElement;
+		if (summaryElement) {
+			summaryElement.innerText = nameInput?.value || `armor_${index}`;
+		}
+	}
+	
+	for(const name in armorTypes) {
+		const optionElement = document.createElement("option");
+		optionElement.value = name || "";
+		datalist.appendChild(optionElement);
+	}
+}
+
+function newArmorBuilder(name: String, layer1: String | null, layer2: String | null): void {
+	const armorTypesElement = document.getElementById("armor-types") as HTMLDivElement;
+	const index = armorTypesElement.querySelectorAll(".armor-type").length + 1;
+	name = name || `armor_${index}`;
+	layer1 = layer1 || "";
+	layer2 = layer2 || "";
+	const armorTypeElement = document.createElement("details");
+	armorTypeElement.dataset.index = index.toString();
+	armorTypeElement.classList.add("controls", "armor-type");
+	armorTypeElement.innerHTML = `
+		<summary>${name}</summary>
+		<label class="control">Name: <input class="armor-type-name" type="text" value="${name}" placeholder="none" size="20"></label>
+
+		<label class="control">Layer 1: <input id="armor${index}-layer1" class="armor-type-layer1" type="text" value="${layer1}" placeholder="none" list="default_armor_layer1" size="30"></label>
+		<input id="armor${index}-layer1_upload" type="file" class="hidden" accept="image/*">
+		<button id="armor${index}-layer1_unset" type="button" class="control hidden">Unset</button>
+		<button type="button" class="control"
+			onclick="document.getElementById('armor${index}-layer1_upload').click();">Browse...</button>
+
+		<label class="control">Layer 2: <input id="armor${index}-layer2" class="armor-type-layer2" type="text" value="${layer2}" placeholder="none" list="default_armor_layer2" size="30"></label>
+		<input id="armor${index}-layer2_upload" type="file" class="hidden" accept="image/*">
+		<button id="armor${index}-layer2_unset" type="button" class="control hidden">Unset</button>
+		<button type="button" class="control"
+			onclick="document.getElementById('armor${index}-layer2_upload').click();">Browse...</button>
+	`;
+	armorTypesElement.appendChild(armorTypeElement);
+
+	initializeUploadButton(`armor${index}-layer1`, () => {
+		buildArmorTypes();
+		reloadArmor();
+	});
+	initializeUploadButton(`armor${index}-layer2`, () => {
+		buildArmorTypes();
+		reloadArmor();
+	});
+	armorTypeElement.addEventListener("change", () => {
+		buildArmorTypes();
+		reloadArmor();
+	});
+}
+window.newArmorBuilder = newArmorBuilder;
+
 function reloadPanorama(): void {
 	const input = document.getElementById("panorama_url") as HTMLInputElement;
 	const backgroundTypeInput = document.getElementById("background_type") as HTMLSelectElement;
@@ -176,6 +272,31 @@ function reloadNameTag(): void {
 		skinViewer.nameTag = text;
 	}
 }
+
+function initializeUploadButton(id: string, callback: () => void) {
+	const urlInput = document.getElementById(id) as HTMLInputElement;
+	const fileInput = document.getElementById(`${id}_upload`) as HTMLInputElement;
+	const unsetButton = document.getElementById(`${id}_unset`);
+
+	const unsetAction = () => {
+		if (urlInput) {
+			urlInput.readOnly = false;
+			urlInput.value = "";
+		}
+		if (fileInput) {
+			fileInput.value = fileInput.defaultValue;
+		}
+		callback();
+	};
+
+	fileInput?.addEventListener("change", () => callback());
+	urlInput?.addEventListener("keydown", e => {
+		if (e.key === "Backspace" && urlInput?.readOnly) {
+			unsetAction();
+		}
+	});
+	unsetButton?.addEventListener("click", () => unsetAction());
+};
 
 function initializeControls(): void {
 	const canvasWidth = document.getElementById("canvas_width") as HTMLInputElement;
@@ -371,31 +492,6 @@ function initializeControls(): void {
 		}
 	}
 
-	const initializeUploadButton = (id: string, callback: () => void) => {
-		const urlInput = document.getElementById(id) as HTMLInputElement;
-		const fileInput = document.getElementById(`${id}_upload`) as HTMLInputElement;
-		const unsetButton = document.getElementById(`${id}_unset`);
-
-		const unsetAction = () => {
-			if (urlInput) {
-				urlInput.readOnly = false;
-				urlInput.value = "";
-			}
-			if (fileInput) {
-				fileInput.value = fileInput.defaultValue;
-			}
-			callback();
-		};
-
-		fileInput?.addEventListener("change", () => callback());
-		urlInput?.addEventListener("keydown", e => {
-			if (e.key === "Backspace" && urlInput?.readOnly) {
-				unsetAction();
-			}
-		});
-		unsetButton?.addEventListener("click", () => unsetAction());
-	};
-
 	initializeUploadButton("skin_url", reloadSkin);
 	initializeUploadButton("cape_url", reloadCape);
 	initializeUploadButton("ears_url", reloadEars);
@@ -407,12 +503,14 @@ function initializeControls(): void {
 	const earsSource = document.getElementById("ears_source") as HTMLSelectElement;
 	const earsUrl = document.getElementById("ears_url") as HTMLInputElement;
 	const panoramaUrl = document.getElementById("panorama_url") as HTMLInputElement;
+	const armorTable = document.getElementById("armor-table") as HTMLTableElement;
 
 	skinUrl?.addEventListener("change", reloadSkin);
 	skinModel?.addEventListener("change", reloadSkin);
 	capeUrl?.addEventListener("change", reloadCape);
 	earsSource?.addEventListener("change", () => reloadEars());
 	earsUrl?.addEventListener("change", () => reloadEars());
+	armorTable?.addEventListener("change", reloadArmor);
 	panoramaUrl?.addEventListener("change", reloadPanorama);
 
 	const backEquipmentRadios = document.querySelectorAll<HTMLInputElement>('input[type="radio"][name="back_equipment"]');
@@ -509,9 +607,19 @@ function initializeViewer(): void {
 		}
 	}
 
+	newArmorBuilder("netherite_armor", "img/armor/netherite_layer_1.png", "img/armor/netherite_layer_2.png");
+	newArmorBuilder("diamond_armor", "img/armor/diamond_layer_1.png", "img/armor/diamond_layer_2.png");
+	newArmorBuilder("gold_armor", "img/armor/gold_layer_1.png", "img/armor/gold_layer_2.png");
+	newArmorBuilder("iron_armor", "img/armor/iron_layer_1.png", "img/armor/iron_layer_2.png");
+	newArmorBuilder("leather_armor", "img/armor/leather_layer_1.png", "img/armor/leather_layer_2.png");
+	newArmorBuilder("chainmail_armor", "img/armor/chainmail_layer_1.png", "img/armor/chainmail_layer_2.png");
+	newArmorBuilder("turtle_armor", "img/armor/turtle_layer_1.png", null);
+	buildArmorTypes();
+
 	reloadSkin();
 	reloadCape();
 	reloadEars(true);
+	reloadArmor();
 	reloadPanorama();
 	reloadNameTag();
 }
