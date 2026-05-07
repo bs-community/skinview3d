@@ -17,7 +17,6 @@ const availableAnimations = {
 };
 
 let skinViewer: skinview3d.SkinViewer;
-
 function obtainTextureUrl(id: string): string {
 	const urlInput = document.getElementById(id) as HTMLInputElement;
 	const fileInput = document.getElementById(`${id}_upload`) as HTMLInputElement;
@@ -42,6 +41,7 @@ function obtainTextureUrl(id: string): string {
 }
 
 function reloadSkin(): void {
+	window.skinViewer = skinViewer; //Set window object to debug in console.
 	const input = document.getElementById("skin_url") as HTMLInputElement;
 	const url = obtainTextureUrl("skin_url");
 	if (url === "") {
@@ -50,7 +50,6 @@ function reloadSkin(): void {
 	} else {
 		const skinModel = document.getElementById("skin_model") as HTMLSelectElement;
 		const earsSource = document.getElementById("ears_source") as HTMLSelectElement;
-
 		skinViewer
 			.loadSkin(url, {
 				model: skinModel?.value as ModelType,
@@ -82,6 +81,41 @@ function reloadCape(): void {
 				console.error(e);
 			});
 	}
+}
+
+function reloadArmors(): void {
+	const input1 = document.getElementById("helmet_url") as HTMLInputElement;
+	const url1 = obtainTextureUrl("helmet_url");
+	const input2 = document.getElementById("chestplate_url") as HTMLInputElement;
+	const url2 = obtainTextureUrl("chestplate_url");
+	const input3 = document.getElementById("leggings_url") as HTMLInputElement;
+	const url3 = obtainTextureUrl("leggings_url");
+	const input4 = document.getElementById("boots_url") as HTMLInputElement;
+	const url4 = obtainTextureUrl("boots_url");
+	const textures = {
+		helmet: url1,
+		chestplate: url2,
+		leggings: url3,
+		boots: url4,
+	};
+	const inputs = [input1.input2, input3, input4];
+	Object.keys(textures).forEach((key, index) => {
+		if (textures[key] === "") {
+			inputs[index]?.setCustomValidity("");
+			textures[key] = null;
+		}
+	});
+	skinViewer
+		.loadArmors(textures)
+		?.then(() => {
+			inputs.forEach(input => {
+				input?.setCustomValidity("");
+			});
+		})
+		?.catch(e => {
+			input4?.setCustomValidity("One of the 4 images can't be loaded.");
+			console.error(e);
+		});
 }
 
 function reloadEars(skipSkinReload = false): void {
@@ -398,12 +432,20 @@ function initializeControls(): void {
 
 	initializeUploadButton("skin_url", reloadSkin);
 	initializeUploadButton("cape_url", reloadCape);
+	initializeUploadButton("helmet_url", reloadArmors);
+	initializeUploadButton("chestplate_url", reloadArmors);
+	initializeUploadButton("leggings_url", reloadArmors);
+	initializeUploadButton("boots_url", reloadArmors);
 	initializeUploadButton("ears_url", reloadEars);
 	initializeUploadButton("panorama_url", reloadPanorama);
 
 	const skinUrl = document.getElementById("skin_url") as HTMLInputElement;
 	const skinModel = document.getElementById("skin_model") as HTMLSelectElement;
 	const capeUrl = document.getElementById("cape_url") as HTMLInputElement;
+	const helmetUrl = document.getElementById("helmet_url") as HTMLInputElement;
+	const chestplateUrl = document.getElementById("chestplate_url") as HTMLInputElement;
+	const leggingsUrl = document.getElementById("leggings_url") as HTMLInputElement;
+	const bootsUrl = document.getElementById("boots_url") as HTMLInputElement;
 	const earsSource = document.getElementById("ears_source") as HTMLSelectElement;
 	const earsUrl = document.getElementById("ears_url") as HTMLInputElement;
 	const panoramaUrl = document.getElementById("panorama_url") as HTMLInputElement;
@@ -411,6 +453,10 @@ function initializeControls(): void {
 	skinUrl?.addEventListener("change", reloadSkin);
 	skinModel?.addEventListener("change", reloadSkin);
 	capeUrl?.addEventListener("change", reloadCape);
+	helmetUrl?.addEventListener("change", reloadArmors);
+	chestplateUrl?.addEventListener("change", reloadArmors);
+	leggingsUrl?.addEventListener("change", reloadArmors);
+	bootsUrl?.addEventListener("change", reloadArmors);
 	earsSource?.addEventListener("change", () => reloadEars());
 	earsUrl?.addEventListener("change", () => reloadEars());
 	panoramaUrl?.addEventListener("change", reloadPanorama);
@@ -511,6 +557,7 @@ function initializeViewer(): void {
 
 	reloadSkin();
 	reloadCape();
+	reloadArmors();
 	reloadEars(true);
 	reloadPanorama();
 	reloadNameTag();

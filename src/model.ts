@@ -57,6 +57,43 @@ function setUVs(
 	uvAttr.set(new Float32Array(newUVData));
 	uvAttr.needsUpdate = true;
 }
+function mirrorUVs(geometry: BoxGeometry) {
+	const uvAttr = geometry.attributes.uv;
+	const uvArray = uvAttr.array; // Float32Array
+	const floatsPerFace = 8; // 4 vertices * 2
+	const faceCount = 6;
+	const mirroredFaces = [];
+	for (let faceIdx = 0; faceIdx < faceCount; faceIdx++) {
+		const start = faceIdx * floatsPerFace;
+		const uValues = [];
+		for (let i = 0; i < 4; i++) {
+			uValues.push(uvArray[start + i * 2]);
+		}
+		const minU = Math.min(...uValues);
+		const maxU = Math.max(...uValues);
+		const faceUVs = [];
+		for (let i = 0; i < 4; i++) {
+			const oldU = uvArray[start + i * 2];
+			const oldV = uvArray[start + i * 2 + 1];
+			const newU = minU + maxU - oldU;
+			faceUVs.push(newU, oldV);
+		}
+		mirroredFaces.push(faceUVs);
+	}
+
+	[mirroredFaces[0], mirroredFaces[1]] = [mirroredFaces[1], mirroredFaces[0]];
+
+	for (let faceIdx = 0; faceIdx < faceCount; faceIdx++) {
+		const start = faceIdx * floatsPerFace;
+		const faceData = mirroredFaces[faceIdx];
+		for (let i = 0; i < 4; i++) {
+			uvArray[start + i * 2] = faceData[i * 2];
+			uvArray[start + i * 2 + 1] = faceData[i * 2 + 1];
+		}
+	}
+
+	uvAttr.needsUpdate = true;
+}
 
 function setSkinUVs(box: BoxGeometry, u: number, v: number, width: number, height: number, depth: number): void {
 	setUVs(box, u, v, width, height, depth, 64, 64);
@@ -467,6 +504,131 @@ export class EarsObject extends Group {
 	}
 }
 
+export class ArmorsObject extends Group {
+	readonly headArmor: Mesh;
+	readonly leftArmArmor: Mesh;
+	readonly rightArmArmor: Mesh;
+	readonly bodyArmor: Mesh;
+	readonly bodyArmor2: Mesh;
+	readonly leftLegArmor: Mesh;
+	readonly leftLegArmor2: Mesh;
+	readonly rightLegArmor: Mesh;
+	readonly rightLegArmor2: Mesh;
+	private armorHelmetMaterial: MeshStandardMaterial;
+	private armorChestplateMaterial: MeshStandardMaterial;
+	private armorLeggingsMaterial: MeshStandardMaterial;
+	private armorBootsMaterial: MeshStandardMaterial;
+	constructor() {
+		super();
+		this.armorHelmetMaterial = new MeshStandardMaterial({
+			side: DoubleSide,
+			transparent: true,
+			alphaTest: 1e-5,
+		});
+		this.armorChestplateMaterial = new MeshStandardMaterial({
+			side: DoubleSide,
+			transparent: true,
+			alphaTest: 1e-5,
+		});
+		this.armorLeggingsMaterial = new MeshStandardMaterial({
+			side: DoubleSide,
+			transparent: true,
+			alphaTest: 1e-5,
+		});
+		this.armorBootsMaterial = new MeshStandardMaterial({
+			side: DoubleSide,
+			transparent: true,
+			alphaTest: 1e-5,
+		});
+		const headArmorBox = new BoxGeometry(10, 10, 10);
+		setSkinUVs(headArmorBox, 0, 0, 8, 8, 8);
+		this.headArmor = new Mesh(headArmorBox, this.armorHelmetMaterial);
+		this.headArmor.name = "headArmor";
+		this.headArmor.position.y = 4;
+
+		const bodyArmorBox = new BoxGeometry(10, 14, 6);
+		setSkinUVs(bodyArmorBox, 16, 16, 8, 12, 4);
+		this.bodyArmor = new Mesh(bodyArmorBox, this.armorChestplateMaterial);
+		const bodyArmor2Box = new BoxGeometry(9.3, 13.3, 5.3);
+		setSkinUVs(bodyArmor2Box, 16, 16, 8, 12, 4);
+		this.bodyArmor2 = new Mesh(bodyArmor2Box, this.armorLeggingsMaterial);
+		this.bodyArmor.name = "bodyArmor";
+		this.bodyArmor2.name = "bodyArmor2";
+
+		const rightArmArmorBox = new BoxGeometry(6.5, 14.5, 6.5);
+		this.rightArmArmor = new Mesh(rightArmArmorBox, this.armorChestplateMaterial);
+		setSkinUVs(rightArmArmorBox, 40, 16, 4, 12, 4);
+		this.rightArmArmor.name = "rightArmArmor";
+		this.rightArmArmor.position.x = -1;
+		this.rightArmArmor.position.y = -4;
+
+		const leftArmArmorBox = new BoxGeometry(6.5, 14.5, 6.5);
+		this.leftArmArmor = new Mesh(leftArmArmorBox, this.armorChestplateMaterial);
+		setSkinUVs(leftArmArmorBox, 40, 16, 4, 12, 4);
+		mirrorUVs(leftArmArmorBox);
+		this.leftArmArmor.name = "leftArmArmor";
+		this.leftArmArmor.position.x = 1;
+		this.leftArmArmor.position.y = -4;
+
+		const rightLegArmorBox = new BoxGeometry(5, 13, 5);
+		setSkinUVs(rightLegArmorBox, 0, 16, 4, 12, 4);
+		this.rightLegArmor = new Mesh(rightLegArmorBox, this.armorLeggingsMaterial);
+
+		const rightLegArmor2Box = new BoxGeometry(5.5, 14.5, 6.5);
+		setSkinUVs(rightLegArmor2Box, 0, 16, 4, 12, 4);
+		this.rightLegArmor2 = new Mesh(rightLegArmor2Box, this.armorBootsMaterial);
+
+		this.rightLegArmor.name = "rightLegArmor";
+		this.rightLegArmor2.name = "rightLegArmor2";
+		this.rightLegArmor.position.y = -6;
+		this.rightLegArmor2.position.y = -6;
+
+		const leftLegArmorBox = new BoxGeometry(5, 13, 5);
+		setSkinUVs(leftLegArmorBox, 0, 16, 4, 12, 4);
+		this.leftLegArmor = new Mesh(leftLegArmorBox, this.armorLeggingsMaterial);
+		mirrorUVs(leftLegArmorBox);
+
+		const leftLegArmor2Box = new BoxGeometry(5.5, 14.5, 6.5);
+		setSkinUVs(leftLegArmor2Box, 0, 16, 4, 12, 4);
+		this.leftLegArmor2 = new Mesh(leftLegArmor2Box, this.armorBootsMaterial);
+		mirrorUVs(leftLegArmor2Box);
+		this.leftLegArmor.name = "leftLegArmor";
+		this.leftLegArmor2.name = "leftLegArmor2";
+		this.leftLegArmor.position.y = -6;
+		this.leftLegArmor2.position.y = -6;
+
+		this.add(
+			this.headArmor,
+			this.bodyArmor,
+			this.bodyArmor2,
+			this.rightArmArmor,
+			this.leftArmArmor,
+			this.rightLegArmor,
+			this.rightLegArmor2,
+			this.leftLegArmor,
+			this.leftLegArmor2
+		);
+	}
+	public setArmorMaps(map1: Texture | null, map2: Texture | null, map3: Texture | null, map4: Texture | null): void {
+		this.armorHelmetMaterial.map = map1;
+		this.armorHelmetMaterial.needsUpdate = true;
+		this.armorChestplateMaterial.map = map2;
+		this.armorChestplateMaterial.needsUpdate = true;
+		this.armorLeggingsMaterial.map = map3;
+		this.armorLeggingsMaterial.needsUpdate = true;
+		this.armorBootsMaterial.map = map4;
+		this.armorBootsMaterial.needsUpdate = true;
+	}
+	get maps(): (Texture | null)[] {
+		return [
+			this.armorHelmetMaterial.map,
+			this.armorChestplateMaterial.map,
+			this.armorLeggingsMaterial.map,
+			this.armorBootsMaterial.map,
+		];
+	}
+}
+
 export type BackEquipment = "cape" | "elytra";
 
 const CapeDefaultAngle = (10.8 * Math.PI) / 180;
@@ -476,6 +638,7 @@ export class PlayerObject extends Group {
 	readonly cape: CapeObject;
 	readonly elytra: ElytraObject;
 	readonly ears: EarsObject;
+	readonly armors: ArmorsObject;
 
 	constructor() {
 		super();
@@ -506,6 +669,27 @@ export class PlayerObject extends Group {
 		this.ears.position.z = 2 / 3;
 		this.ears.visible = false;
 		this.skin.head.add(this.ears);
+
+		this.armors = new ArmorsObject();
+		this.armors.name = "armors";
+		this.armors.headArmor.visible = false;
+		this.armors.bodyArmor.visible = false;
+		this.armors.bodyArmor2.visible = false;
+		this.armors.leftArmArmor.visible = false;
+		this.armors.rightArmArmor.visible = false;
+		this.armors.rightLegArmor.visible = false;
+		this.armors.rightLegArmor2.visible = false;
+		this.armors.leftLegArmor.visible = false;
+		this.armors.leftLegArmor2.visible = false;
+		this.skin.head.add(this.armors.headArmor);
+		this.skin.body.add(this.armors.bodyArmor);
+		this.skin.body.add(this.armors.bodyArmor2);
+		this.skin.leftArm.add(this.armors.leftArmArmor);
+		this.skin.rightArm.add(this.armors.rightArmArmor);
+		this.skin.rightLeg.add(this.armors.rightLegArmor);
+		this.skin.rightLeg.add(this.armors.rightLegArmor2);
+		this.skin.leftLeg.add(this.armors.leftLegArmor);
+		this.skin.leftLeg.add(this.armors.leftLegArmor2);
 	}
 
 	get backEquipment(): BackEquipment | null {

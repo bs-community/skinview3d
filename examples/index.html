@@ -289,6 +289,80 @@
 			</div>
 
 			<div class="control-section">
+				<h1>Armors</h1>
+				<div class="control">
+					<label
+						>Helmet: <input id="helmet_url" type="text" placeholder="none" list="default_helmets" size="20"
+					/></label>
+					<datalist id="default_helmets">
+						<option value=""></option>
+						<option value="img/copper_layer_1.png"></option>
+						<option value="img/chainmail_layer_1.png"></option>
+						<option value="img/iron_layer_1.png"></option>
+						<option value="img/gold_layer_1.png"></option>
+						<option value="img/diamond_layer_1.png"></option>
+						<option value="img/netherite_layer_1.png"></option>
+						<option value="img/turtle_layer_1.png"></option>
+					</datalist>
+					<input id="helmet_url_upload" type="file" class="hidden" accept="image/*" />
+					<button id="helmet_url_unset" type="button" class="control hidden">Unset</button>
+					<button type="button" class="control" onclick="document.getElementById('helmet_url_upload').click();">
+						Browse...
+					</button>
+					<br />
+					<label
+						>Chestplate: <input id="chestplate_url" type="text" placeholder="none" list="default_chestplates" size="20"
+					/></label>
+					<datalist id="default_chestplates">
+						<option value=""></option>
+						<option value="img/copper_layer_1.png"></option>
+						<option value="img/chainmail_layer_1.png"></option>
+						<option value="img/iron_layer_1.png"></option>
+						<option value="img/gold_layer_1.png"></option>
+						<option value="img/diamond_layer_1.png"></option>
+						<option value="img/netherite_layer_1.png"></option>
+					</datalist>
+					<input id="chestplate_url_upload" type="file" class="hidden" accept="image/*" />
+					<button id="chestplate_url_unset" type="button" class="control hidden">Unset</button>
+					<button type="button" class="control" onclick="document.getElementById('chestplate_url_upload').click();">
+						Browse...</button
+					><br />
+					<label
+						>Leggings: <input id="leggings_url" type="text" placeholder="none" list="default_leggings" size="20"
+					/></label>
+					<datalist id="default_leggings">
+						<option value=""></option>
+						<option value="img/copper_layer_2.png"></option>
+						<option value="img/chainmail_layer_2.png"></option>
+						<option value="img/iron_layer_2.png"></option>
+						<option value="img/gold_layer_2.png"></option>
+						<option value="img/diamond_layer_2.png"></option>
+						<option value="img/netherite_layer_2.png"></option>
+					</datalist>
+					<input id="leggings_url_upload" type="file" class="hidden" accept="image/*" />
+					<button id="leggings_url_unset" type="button" class="control hidden">Unset</button>
+					<button type="button" class="control" onclick="document.getElementById('leggings_url_upload').click();">
+						Browse...</button
+					><br />
+					<label>Boots: <input id="boots_url" type="text" placeholder="none" list="default_boots" size="20" /></label>
+					<datalist id="default_boots">
+						<option value=""></option>
+						<option value="img/copper_layer_1.png"></option>
+						<option value="img/chainmail_layer_1.png"></option>
+						<option value="img/iron_layer_1.png"></option>
+						<option value="img/gold_layer_1.png"></option>
+						<option value="img/diamond_layer_1.png"></option>
+						<option value="img/netherite_layer_1.png"></option>
+					</datalist>
+					<input id="boots_url_upload" type="file" class="hidden" accept="image/*" />
+					<button id="boots_url_unset" type="button" class="control hidden">Unset</button>
+					<button type="button" class="control" onclick="document.getElementById('boots_url_upload').click();">
+						Browse...
+					</button>
+				</div>
+			</div>
+
+			<div class="control-section">
 				<h1>Ears</h1>
 				<div>
 					<label class="control"

@@ -46,8 +46,19 @@ Three.js powered Minecraft skin viewer.
 	// Load an elytra (from a cape texture)
 	skinViewer.loadCape("img/cape.png", { backEquipment: "elytra" });
 
-	// Unload(hide) the cape / elytra
+	// Unload (hide) the cape / elytra
 	skinViewer.loadCape(null);
+
+	// Load armors
+	skinViewer.loadArmors(
+  	"img/turtle_layer_1.png",   // helmet (main)
+ 	 "img/diamond_layer_1.png",  // chestplate (main)
+  	"img/gold_layer_2.png",     // leggings (legs)
+ 	 "img/iron_layer_1.png"      // boots (main)
+	);
+
+	// Unload (hide) the armors
+	skinViewer.loadArmors(null);
 
 	// Set the background color
 	skinViewer.background = 0x5a76f3;
@@ -92,6 +103,84 @@ skinViewer.globalLight.intensity = 3;
 
 Setting `globalLight.intensity` to `3.0` and `cameraLight.intensity` to `0.0`
 will completely disable shadows.
+
+
+## Armors
+
+skinview3d supports loading armor textures for the player. Armor textures can be specified as an object with the following optional properties:
+
+- `helmet`, `chestplate`, `leggings`, `boots`: textures for the corresponding pieces.
+- `main`: a texture that will be used for helmet, chestplate, and boots if their specific textures are not provided.
+- `legs`: a texture that will be used for leggings if `leggings` is not provided.
+
+Each texture can be a `RemoteImage` (URL string), a `TextureSource` (HTML image element or canvas), or `null` to hide that piece.
+
+### Loading Armors
+
+You can load armors using the `loadArmors` method. It accepts an object conforming to the structure above, or `null` to hide all armor.
+
+Examples:
+
+```js
+// Hide all armor
+skinViewer.loadArmors(null);
+
+// Equip only helmet, chestplate, and boots using the same "main" texture
+skinViewer.loadArmors({ main: "img/diamond_layer_1.png" });
+
+// Equip only leggings using a "legs" texture
+skinViewer.loadArmors({ legs: "img/diamond_layer_2.png" });
+
+// Equip both main and legs textures
+skinViewer.loadArmors({
+  main: "img/diamond_layer_1.png",
+  legs: "img/diamond_layer_2.png"
+});
+
+// Equip all four pieces individually (helmet, chestplate, leggings, boots)
+skinViewer.loadArmors({
+  helmet: "img/turtle_layer_1.png",
+  chestplate: "img/diamond_layer_1.png",
+  leggings: "img/gold_layer_2.png",
+  boots: "img/iron_layer_1.png"
+});
+
+// Mix specific pieces with fallback textures
+skinViewer.loadArmors({
+  helmet: "img/turtle_layer_1.png",
+  main: "img/diamond_layer_1.png", // used for chestplate and boots
+  leggings: "img/gold_layer_2.png"
+});
+```
+
+### Using Armors in the Constructor
+
+You can specify armors directly in the `SkinViewer` options via the `armors` property. It accepts the same object format as `loadArmors`.
+
+```js
+new skinview3d.SkinViewer({
+  skin: "img/skin.png",
+  armors: {
+    helmet: "img/turtle_layer_1.png",
+    chestplate: "img/diamond_layer_1.png",
+    leggings: "img/gold_layer_2.png",
+    boots: "img/iron_layer_1.png"
+  }
+});
+```
+
+### Loading Armors Together with a Skin
+
+The `loadSkin` method also accepts an `armors` option, which behaves identically to the constructor option.
+
+```js
+skinViewer.loadSkin("img/skin.png", {
+  armors: {
+    main: "img/diamond_layer_1.png",
+    legs: "img/diamond_layer_2.png"
+  }
+});
+```
 
 ## Ears
 skinview3d supports two types of ear texture:
