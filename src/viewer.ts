@@ -31,7 +31,8 @@ import {
 	DepthTexture,
 	Clock,
 	Object3D,
-	ColorManagement,
+
+	SRGBColorSpace,
 } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
@@ -39,6 +40,7 @@ import { FullScreenQuad } from "three/examples/jsm/postprocessing/Pass.js";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
 import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
 import { FXAAShader } from "three/examples/jsm/shaders/FXAAShader.js";
+import { OutputPass } from "three/examples/jsm/postprocessing/OutputPass.js";
 import { PlayerAnimation } from "./animation.js";
 import { type BackEquipment, PlayerObject } from "./model.js";
 import { NameTagObject } from "./nametag.js";
@@ -343,12 +345,13 @@ export class SkinViewer {
 		this.camera.add(this.cameraLight);
 		this.scene.add(this.camera);
 		this.scene.add(this.globalLight);
-		ColorManagement.enabled = false;
 
 		this.renderer = new WebGLRenderer({
 			canvas: this.canvas,
 			preserveDrawingBuffer: options.preserveDrawingBuffer === true, // default: false
 		});
+
+		this.renderer.outputColorSpace = SRGBColorSpace;
 
 		this.onDevicePixelRatioChange = () => {
 			this.renderer.setPixelRatio(window.devicePixelRatio);
@@ -385,6 +388,7 @@ export class SkinViewer {
 		this.fxaaPass = new ShaderPass(FXAAShader);
 		this.composer.addPass(this.renderPass);
 		this.composer.addPass(this.fxaaPass);
+		this.composer.addPass(new OutputPass());
 
 		this.playerObject = new PlayerObject();
 		this.playerObject.name = "player";
@@ -510,6 +514,7 @@ export class SkinViewer {
 			this.skinTexture.dispose();
 		}
 		this.skinTexture = new CanvasTexture(this.skinCanvas);
+		this.skinTexture.colorSpace = SRGBColorSpace;
 		this.skinTexture.magFilter = NearestFilter;
 		this.skinTexture.minFilter = NearestFilter;
 		this.playerObject.skin.map = this.skinTexture;
@@ -520,6 +525,7 @@ export class SkinViewer {
 			this.capeTexture.dispose();
 		}
 		this.capeTexture = new CanvasTexture(this.capeCanvas);
+		this.capeTexture.colorSpace = SRGBColorSpace;
 		this.capeTexture.magFilter = NearestFilter;
 		this.capeTexture.minFilter = NearestFilter;
 		this.playerObject.cape.map = this.capeTexture;
@@ -531,6 +537,7 @@ export class SkinViewer {
 			this.earsTexture.dispose();
 		}
 		this.earsTexture = new CanvasTexture(this.earsCanvas);
+		this.earsTexture.colorSpace = SRGBColorSpace;
 		this.earsTexture.magFilter = NearestFilter;
 		this.earsTexture.minFilter = NearestFilter;
 		this.playerObject.ears.map = this.earsTexture;
@@ -676,6 +683,7 @@ export class SkinViewer {
 			if (mapping !== undefined) {
 				this.backgroundTexture.mapping = mapping;
 			}
+			this.backgroundTexture.colorSpace = SRGBColorSpace;
 			this.backgroundTexture.needsUpdate = true;
 			this.scene.background = this.backgroundTexture;
 		} else {
