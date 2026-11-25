@@ -81,6 +81,18 @@ Three.js powered Minecraft skin viewer.
 </script>
 ```
 
+## Panorama
+`skinViewer.loadPanorama(source)` maps the image onto the scene background with Three.js `EquirectangularReflectionMapping` (see `src/viewer.ts`).
+
+Expected image format:
+* A single 360-degree equirectangular projection image with a **2:1 aspect ratio** (for example `4320x2160`, matching [`examples/public/img/panorama.png`](examples/public/img/panorama.png)).
+* Standard image formats supported by the browser (PNG, JPEG, WebP).
+
+Ways to generate a compatible Minecraft panorama:
+* **Replay Mod**: render a 360-degree frame with Equirectangular / Panoramic camera mode at a 2:1 resolution.
+* **Blender**: set the camera type to **Panoramic** with **Equirectangular** projection and render at a 2:1 resolution (e.g. `4096x2048` or `2048x1024`).
+* **From 6 Minecraft cubemap faces (`panorama_0.png` .. `panorama_5.png`)**: stitch the six cube faces into one 2:1 equirectangular image (for example with `ffmpeg`'s `v360=c6x1:equirect` filter after arranging the faces into a cubemap strip).
+
 ## Lighting
 By default, there are two lights on the scene. One is an ambient light, and the other is a point light from the camera.
 
