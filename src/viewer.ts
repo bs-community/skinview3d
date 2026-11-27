@@ -40,6 +40,7 @@ import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
 import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass.js";
 import { FXAAShader } from "three/examples/jsm/shaders/FXAAShader.js";
 import { PlayerAnimation } from "./animation.js";
+import { createDefaultElytraCanvas, hasElytraTexture } from "./elytra.js";
 import { type BackEquipment, PlayerObject } from "./model.js";
 import { NameTagObject } from "./nametag.js";
 
@@ -294,6 +295,7 @@ export class SkinViewer {
 	readonly earsCanvas: HTMLCanvasElement;
 	private skinTexture: Texture | null = null;
 	private capeTexture: Texture | null = null;
+	private defaultElytraTexture: CanvasTexture | null = null;
 	private earsTexture: Texture | null = null;
 	private backgroundTexture: Texture | null = null;
 
@@ -390,6 +392,7 @@ export class SkinViewer {
 		this.playerObject.name = "player";
 		this.playerObject.skin.visible = false;
 		this.playerObject.cape.visible = false;
+		this.playerObject.elytra.map = this.getDefaultElytraTexture();
 		this.playerWrapper = new Group();
 		this.playerWrapper.add(this.playerObject);
 		this.scene.add(this.playerWrapper);
@@ -515,6 +518,15 @@ export class SkinViewer {
 		this.playerObject.skin.map = this.skinTexture;
 	}
 
+	private getDefaultElytraTexture(): CanvasTexture {
+		if (this.defaultElytraTexture === null) {
+			this.defaultElytraTexture = new CanvasTexture(createDefaultElytraCanvas());
+			this.defaultElytraTexture.magFilter = NearestFilter;
+			this.defaultElytraTexture.minFilter = NearestFilter;
+		}
+		return this.defaultElytraTexture;
+	}
+
 	private recreateCapeTexture(): void {
 		if (this.capeTexture !== null) {
 			this.capeTexture.dispose();
@@ -523,7 +535,9 @@ export class SkinViewer {
 		this.capeTexture.magFilter = NearestFilter;
 		this.capeTexture.minFilter = NearestFilter;
 		this.playerObject.cape.map = this.capeTexture;
-		this.playerObject.elytra.map = this.capeTexture;
+		this.playerObject.elytra.map = hasElytraTexture(this.capeCanvas)
+			? this.capeTexture
+			: this.getDefaultElytraTexture();
 	}
 
 	private recreateEarsTexture(): void {
@@ -584,7 +598,7 @@ export class SkinViewer {
 		}
 	}
 
-	loadCape(empty: null): void;
+	loadCape(empty: null, options?: CapeLoadOptions): void;
 	loadCape<S extends TextureSource | RemoteImage>(
 		source: S,
 		options?: CapeLoadOptions
@@ -593,6 +607,10 @@ export class SkinViewer {
 	loadCape(source: TextureSource | RemoteImage | null, options: CapeLoadOptions = {}): void | Promise<void> {
 		if (source === null) {
 			this.resetCape();
+			if (options.backEquipment === "elytra" && options.makeVisible !== false) {
+				this.playerObject.elytra.map = this.getDefaultElytraTexture();
+				this.playerObject.backEquipment = "elytra";
+			}
 		} else if (isTextureSource(source)) {
 			loadCapeToCanvas(this.capeCanvas, source);
 			this.recreateCapeTexture();
@@ -608,7 +626,7 @@ export class SkinViewer {
 	resetCape(): void {
 		this.playerObject.backEquipment = null;
 		this.playerObject.cape.map = null;
-		this.playerObject.elytra.map = null;
+		this.playerObject.elytra.map = this.defaultElytraTexture;
 		if (this.capeTexture !== null) {
 			this.capeTexture.dispose();
 			this.capeTexture = null;
@@ -736,6 +754,11 @@ export class SkinViewer {
 		this.renderer.dispose();
 		this.resetSkin();
 		this.resetCape();
+		this.playerObject.elytra.map = null;
+		if (this.defaultElytraTexture !== null) {
+			this.defaultElytraTexture.dispose();
+			this.defaultElytraTexture = null;
+		}
 		this.resetEars();
 		this.background = null;
 		(this.fxaaPass.fsQuad as FullScreenQuad).dispose();

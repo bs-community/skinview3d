@@ -46,6 +46,9 @@ Three.js powered Minecraft skin viewer.
 	// Load an elytra (from a cape texture)
 	skinViewer.loadCape("img/cape.png", { backEquipment: "elytra" });
 
+	// Show the default elytra without a cape
+	skinViewer.loadCape(null, { backEquipment: "elytra" });
+
 	// Unload(hide) the cape / elytra
 	skinViewer.loadCape(null);
 
