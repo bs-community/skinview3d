@@ -67,15 +67,20 @@ function reloadSkin(): void {
 function reloadCape(): void {
 	const input = document.getElementById("cape_url") as HTMLInputElement;
 	const url = obtainTextureUrl("cape_url");
+	const selectedBackEquipment = document.querySelector(
+		'input[type="radio"][name="back_equipment"]:checked'
+	) as HTMLInputElement;
+	const backEquipment = selectedBackEquipment?.value as BackEquipment | undefined;
 	if (url === "") {
-		skinViewer.loadCape(null);
+		if (backEquipment === "elytra") {
+			skinViewer.loadCape(null, { backEquipment: "elytra" });
+		} else {
+			skinViewer.loadCape(null);
+		}
 		input?.setCustomValidity("");
 	} else {
-		const selectedBackEquipment = document.querySelector(
-			'input[type="radio"][name="back_equipment"]:checked'
-		) as HTMLInputElement;
 		skinViewer
-			.loadCape(url, { backEquipment: selectedBackEquipment?.value as BackEquipment })
+			.loadCape(url, { backEquipment })
 			.then(() => input?.setCustomValidity(""))
 			.catch(e => {
 				input?.setCustomValidity("Image can't be loaded.");
@@ -419,9 +424,13 @@ function initializeControls(): void {
 	for (const el of backEquipmentRadios) {
 		el.addEventListener("change", e => {
 			const target = e.target as HTMLInputElement;
-			if (skinViewer.playerObject.backEquipment === null) {
-				// cape texture hasn't been loaded yet
-				// this option will be processed on texture loading
+			const hasCape = obtainTextureUrl("cape_url") !== "";
+			if (!hasCape) {
+				if (target.value === "elytra") {
+					skinViewer.loadCape(null, { backEquipment: "elytra" });
+				} else {
+					skinViewer.loadCape(null);
+				}
 			} else {
 				skinViewer.playerObject.backEquipment = target.value as BackEquipment;
 			}
