@@ -6,6 +6,7 @@ import {
 	loadEarsToCanvasFromSkin,
 	loadImage,
 	loadSkinToCanvas,
+	loadArmorToCanvas,
 	type ModelType,
 	type RemoteImage,
 	type TextureSource,
@@ -249,6 +250,74 @@ export interface SkinViewerOptions {
 	nameTag?: NameTagObject | string;
 }
 
+export interface ArmorSlots {
+	/**
+	 * The types of armor to be used in each slot.
+	 * 
+	 * @defaultValue Slots with a value of null will be invisible.
+	 */
+
+	helmet: ArmorType | null;
+
+	chestplate: ArmorType | null;
+
+	leggings: ArmorType | null;
+
+	boots: ArmorType | null;
+}
+
+export class ArmorType {
+	/**
+	 * Initializes an armor type.
+	 * The textures work the same as in Resource Packs which means that the textures are split into 2 layers,
+	 * with Layer 1 being the Helmet, Chestplate and Boots, and Layer 2 being the leggings.
+	 * 
+	 * This *could* be because older skins didn't have outer layers and so there was no image format to support having overlapping textures (leggings overlap with the boots and chestplate) so they were split into 2 different textures. But hey, that's just a theory, a game theory.
+	 * 
+	 * Armor types such as Turtle Shell use only one layer.
+	 * 
+	 * @defaultValue Unspecified layer causes said layer to be invisible.
+	 */
+	readonly canvas = document.createElement("canvas");
+
+	texture?: Texture;
+	promise?: Promise<void>;
+
+	constructor(layer1Src?: RemoteImage | TextureSource | null, layer2Src?: RemoteImage | TextureSource | null) {
+		this.promise = new Promise(async (resolve) => {
+			let layer1 = await this.loadLayer(layer1Src);
+			let layer2 = await this.loadLayer(layer2Src);
+			loadArmorToCanvas(this.canvas, layer1, layer2);
+			this.recreateArmorTexture();
+			this.canvas.remove();
+			resolve();
+		});
+	}
+
+	private loadLayer(src: RemoteImage | TextureSource | undefined | null): Promise<TextureSource | undefined> {
+		return new Promise((resolve) => {
+			if (src === undefined || src === null) {
+				resolve(undefined);
+			} else if (isTextureSource(src)) {
+				resolve(src);
+			} else {
+				loadImage(src).then(image => {
+					resolve(image);
+				});
+			}
+		});
+	}
+
+	private recreateArmorTexture() {
+		if (this.texture) {
+			this.texture.dispose();
+		}
+		this.texture = new CanvasTexture(this.canvas);
+		this.texture.magFilter = NearestFilter;
+		this.texture.minFilter = NearestFilter;
+	}
+}
+
 /**
  * The SkinViewer renders the player on a canvas.
  */
@@ -296,6 +365,8 @@ export class SkinViewer {
 	private capeTexture: Texture | null = null;
 	private earsTexture: Texture | null = null;
 	private backgroundTexture: Texture | null = null;
+	private armor: ArmorSlots | null = null;
+	private _fallbackArmor: ArmorSlots | null = null;
 
 	private _disposed: boolean = false;
 	private _renderPaused: boolean = false;
@@ -655,6 +726,86 @@ export class SkinViewer {
 			this.earsTexture.dispose();
 			this.earsTexture = null;
 		}
+	}
+
+	private toArmorSlots(armor: ArmorType | Partial<ArmorSlots> | null): ArmorSlots {
+		return {
+			helmet: armor instanceof ArmorType ? armor : (armor?.helmet ?? null),
+			chestplate: armor instanceof ArmorType ? armor : (armor?.chestplate ?? null),
+			leggings: armor instanceof ArmorType ? armor : (armor?.leggings ?? null),
+			boots: armor instanceof ArmorType ? armor : (armor?.boots ?? null),
+		};
+	}
+
+	async fallbackArmor(
+		armor: ArmorType | Partial<ArmorSlots> | null
+	): Promise<void> {
+		this._fallbackArmor = this.toArmorSlots(armor);
+		await this.loadArmor(this.armor);
+	}
+
+	async loadArmor(
+		armor?: ArmorType | Partial<ArmorSlots> | null
+	): Promise<void> {
+		this.resetArmor();
+		armor = this.toArmorSlots(armor ?? null);
+		let slots: ArmorSlots = {
+			helmet: armor.helmet ?? this._fallbackArmor?.helmet ?? null,
+			chestplate: armor.chestplate ?? this._fallbackArmor?.chestplate ?? null,
+			leggings: armor.leggings ?? this._fallbackArmor?.leggings ?? null,
+			boots: armor.boots ?? this._fallbackArmor?.boots ?? null,
+		};
+		this.armor = slots;
+		for (let [slot, slotArmorType] of Object.entries(slots)) {
+			if (!slotArmorType) continue;
+			await slotArmorType.promise;
+			this.addTextureToSlot(slot, slotArmorType.texture);
+		}
+	}
+
+	private addTextureToSlot(
+		slot: string,
+		texture: Texture
+	): void {
+		switch (slot) {
+			case "helmet":
+				this.playerObject.armor.helmetMat.map = texture;
+				this.playerObject.armor.helmet.visible = true;
+				break;
+			case "chestplate":
+				this.playerObject.armor.chestplateMat.map = texture;
+				this.playerObject.armor.chestplate.visible = true;
+				this.playerObject.armor.chestplateRight.visible = true;
+				this.playerObject.armor.chestplateLeft.visible = true;
+				break;
+			case "leggings":
+				this.playerObject.armor.leggingsMat.map = texture;
+				this.playerObject.armor.leggingsTop.visible = true;
+				this.playerObject.armor.leggingsRight.visible = true;
+				this.playerObject.armor.leggingsLeft.visible = true;
+				break;
+			case "boots":
+				this.playerObject.armor.bootsMat.map = texture;
+				this.playerObject.armor.bootsRight.visible = true;
+				this.playerObject.armor.bootsLeft.visible = true;
+				break;
+		}
+	}
+
+	resetArmor(): void {
+		this.playerObject.armor.helmetMat.dispose();
+		this.playerObject.armor.chestplateMat.dispose();
+		this.playerObject.armor.leggingsMat.dispose();
+		this.playerObject.armor.bootsMat.dispose();
+		this.playerObject.armor.helmet.visible = false;
+		this.playerObject.armor.chestplate.visible = false;
+		this.playerObject.armor.chestplateRight.visible = false;
+		this.playerObject.armor.chestplateLeft.visible = false;
+		this.playerObject.armor.leggingsTop.visible = false;
+		this.playerObject.armor.leggingsRight.visible = false;
+		this.playerObject.armor.leggingsLeft.visible = false;
+		this.playerObject.armor.bootsRight.visible = false;
+		this.playerObject.armor.bootsLeft.visible = false;
 	}
 
 	loadPanorama<S extends TextureSource | RemoteImage>(source: S): S extends TextureSource ? void : Promise<void> {
